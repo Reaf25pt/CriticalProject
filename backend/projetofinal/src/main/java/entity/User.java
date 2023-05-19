@@ -36,7 +36,7 @@ public class User implements Serializable {
     private String nickname;
 
     @Column(name="photo", nullable = true, unique = false, updatable = true)
-    private String photoUrl;
+    private String photo;
 
     @Column(name="bio", nullable = true, unique = false, updatable = true)
     private String bio;
@@ -140,12 +140,12 @@ public class User implements Serializable {
         this.nickname = nickname;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
+    public String getPhoto() {
+        return photo;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public void setPhoto(String photoUrl) {
+        this.photo = photoUrl;
     }
 
     public String getBio() {
