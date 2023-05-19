@@ -47,11 +47,11 @@ public class Hobby implements Serializable {
         this.hobbyTitle = hobbyTitle;
     }
 
-    public List<User> getListUsers() {
+    public List<User> getListUsers_Hobbies() {
         return listUsers_Hobbies;
     }
 
-    public void setListUsers(List<User> listUsers) {
-        this.listUsers_Hobbies = listUsers;
+    public void setListUsers_Hobbies(List<User> listUsers_Hobbies) {
+        this.listUsers_Hobbies = listUsers_Hobbies;
     }
 }

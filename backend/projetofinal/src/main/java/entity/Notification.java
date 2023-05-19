@@ -29,7 +29,7 @@ public class Notification implements Serializable {
     @Column (name="needsInput", nullable=false, unique=false, updatable=true)
     private boolean needsInput = false;
 
-    //To identify invitation to participate in project, that needs answer
+    //To identify invitation to participate in project, that needs answer. relationId is the id from ProjectMember class
     @Column (name="relationId", nullable=true, unique=false, updatable=false)
     private int relationId;
 

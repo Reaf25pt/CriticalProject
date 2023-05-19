@@ -74,10 +74,181 @@ public class User implements Serializable {
     @ManyToMany(mappedBy = "listUsers_Skills")
     private List<Skill> listSkills = new ArrayList<>();
 
+    @OneToMany(mappedBy = "userInvited")
+    private List<ProjectMember> listProjects = new ArrayList<>();
 
+    @OneToMany(mappedBy = "author")
+    private List<ProjectHistory> listRecords = new ArrayList<>();
 
     public User(){
 
 }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Office getOffice() {
+        return office;
+    }
+
+    public void setOffice(Office office) {
+        this.office = office;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public boolean isContestManager() {
+        return contestManager;
+    }
+
+    public void setContestManager(boolean contestManager) {
+        this.contestManager = contestManager;
+    }
+
+    public boolean isOpenProfile() {
+        return openProfile;
+    }
+
+    public void setOpenProfile(boolean openProfile) {
+        this.openProfile = openProfile;
+    }
+
+    public boolean isValidated() {
+        return validated;
+    }
+
+    public void setValidated(boolean validated) {
+        this.validated = validated;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public long getTimestampForToken() {
+        return timestampForToken;
+    }
+
+    public void setTimestampForToken(long timestampForToken) {
+        this.timestampForToken = timestampForToken;
+    }
+
+    public List<Token> getUserSessions() {
+        return userSessions;
+    }
+
+    public void setUserSessions(List<Token> userSessions) {
+        this.userSessions = userSessions;
+    }
+
+    public List<Notification> getUserNotificationList() {
+        return userNotificationList;
+    }
+
+    public void setUserNotificationList(List<Notification> userNotificationList) {
+        this.userNotificationList = userNotificationList;
+    }
+
+    public List<PersonalMessage> getReceivedMsgList() {
+        return receivedMsgList;
+    }
+
+    public void setReceivedMsgList(List<PersonalMessage> receivedMsgList) {
+        this.receivedMsgList = receivedMsgList;
+    }
+
+    public List<Hobby> getListHobbies() {
+        return listHobbies;
+    }
+
+    public void setListHobbies(List<Hobby> listHobbies) {
+        this.listHobbies = listHobbies;
+    }
+
+    public List<Skill> getListSkills() {
+        return listSkills;
+    }
+
+    public void setListSkills(List<Skill> listSkills) {
+        this.listSkills = listSkills;
+    }
+
+    public List<ProjectMember> getListProjects() {
+        return listProjects;
+    }
+
+    public void setListProjects(List<ProjectMember> listProjects) {
+        this.listProjects = listProjects;
+    }
+
+    public List<ProjectHistory> getListRecords() {
+        return listRecords;
+    }
+
+    public void setListRecords(List<ProjectHistory> listRecords) {
+        this.listRecords = listRecords;
+    }
 }

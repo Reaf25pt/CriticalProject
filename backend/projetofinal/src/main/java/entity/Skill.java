@@ -27,10 +27,17 @@ public class Skill implements Serializable {
 
     @ManyToMany
     @JoinTable(
-            name = "Skills",
+            name = "Skills_Users",
             joinColumns = @JoinColumn(name = "skill_Id"),
             inverseJoinColumns = @JoinColumn(name = "user_Id"))
     private List<User> listUsers_Skills = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "Skills_Projects",
+            joinColumns = @JoinColumn(name = "skill_Id"),
+            inverseJoinColumns = @JoinColumn(name = "project_Id"))
+    private List<Project> listProject_Skills = new ArrayList<>();
 
 
     public Skill(){}
@@ -65,6 +72,14 @@ public class Skill implements Serializable {
 
     public void setListUsers_Skills(List<User> listUsers_Skills) {
         this.listUsers_Skills = listUsers_Skills;
+    }
+
+    public List<Project> getListProject_Skills() {
+        return listProject_Skills;
+    }
+
+    public void setListProject_Skills(List<Project> listProject_Skills) {
+        this.listProject_Skills = listProject_Skills;
     }
 }
 
