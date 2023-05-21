@@ -3,7 +3,9 @@ package entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="Task")
@@ -38,12 +40,20 @@ public class Task implements Serializable {
     @Column(name = "status", nullable = false, unique = false, updatable = true)
     private StatusTask status;
 
+    /*
     // identifies task who needs to be completed before current one starts
     @Column(name = "precedence", nullable = true, unique = false, updatable = true)
     private int precedence;
-
+*/
     @ManyToOne
     private Project project;
+
+    @ManyToMany
+    @JoinTable(
+            name = "PrerequiredTasks",
+            joinColumns = @JoinColumn(name = "requiredTaskId"),
+            inverseJoinColumns = @JoinColumn(name = "currentTaskId"))
+    private List<Task> listPreRequiredTasks = new ArrayList<>();
 
 public Task(){}
 
@@ -111,19 +121,19 @@ public Task(){}
         this.status = status;
     }
 
-    public int getPrecedence() {
-        return precedence;
-    }
-
-    public void setPrecedence(int precedence) {
-        this.precedence = precedence;
-    }
-
     public Project getProject() {
         return project;
     }
 
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public List<Task> getListPreRequiredTasks() {
+        return listPreRequiredTasks;
+    }
+
+    public void setListPreRequiredTasks(List<Task> listPreRequiredTasks) {
+        this.listPreRequiredTasks = listPreRequiredTasks;
     }
 }
