@@ -2,47 +2,24 @@ package dto;
 
 import entity.Office;
 
-public class Login {
-    private int userId;
-// identifies the session
-    private String token;
-
-    private String email;
+public class EditProfile {
+    private int id;
     private String firstName;
     private String lastName;
     private Office office;
     private String nickname;
     private String photo;
     private String bio;
-    private boolean contestManager;
-    private boolean openProfile=false;
+    private boolean openProfile;
 
-    public Login(){
+    public EditProfile(){}
 
+    public int getId() {
+        return id;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -91,14 +68,6 @@ public class Login {
 
     public void setBio(String bio) {
         this.bio = bio;
-    }
-
-    public boolean isContestManager() {
-        return contestManager;
-    }
-
-    public void setContestManager(boolean contestManager) {
-        this.contestManager = contestManager;
     }
 
     public boolean isOpenProfile() {
