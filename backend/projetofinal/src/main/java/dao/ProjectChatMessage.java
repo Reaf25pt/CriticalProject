@@ -1,10 +1,10 @@
 package dao;
 
-public class ProjectChatMessage extends Abstract<ProjectChatMessage>{
+public class ProjectChatMessage extends Abstract<entity.ProjectChatMessage>{
     private static final long serialVersionUID = 1L;
 
     public ProjectChatMessage(){
-        super(ProjectChatMessage.class);
+        super(entity.ProjectChatMessage.class);
     }
 }
 

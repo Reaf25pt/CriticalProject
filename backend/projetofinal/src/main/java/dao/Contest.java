@@ -1,9 +1,9 @@
 package dao;
 
-public class Contest extends Abstract<Contest>{
+public class Contest extends Abstract<entity.Contest>{
     private static final long serialVersionUID = 1L;
 
     public Contest(){
-        super(Contest.class);
+        super(entity.Contest.class);
     }
 }

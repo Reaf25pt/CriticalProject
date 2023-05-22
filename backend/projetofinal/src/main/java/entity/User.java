@@ -9,6 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name="User")
+@NamedQuery(name = "User.findUserByEmail", query = "SELECT u FROM User u WHERE u.email = :email")
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -81,6 +82,9 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "author")
     private List<ProjectHistory> listRecords = new ArrayList<>();
 
+    public User() {
+
+    }
     public User(int userId, String email, String password, String firstName, String lastName, Office office, String nickname, String photo, String bio, boolean contestManager, boolean openProfile, boolean validated, String token, long timestampForToken, List<Token> userSessions, List<Notification> userNotificationList, List<PersonalMessage> receivedMsgList, List<Hobby> listHobbies, List<Skill> listSkills, List<ProjectMember> listProjects, List<ProjectHistory> listRecords) {
         this.userId = userId;
         this.email = email;
@@ -104,6 +108,8 @@ public class User implements Serializable {
         this.listProjects = listProjects;
         this.listRecords = listRecords;
     }
+
+
 
     public int getUserId() {
         return userId;

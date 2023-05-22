@@ -1,9 +1,9 @@
 package dao;
 
-public class Hobby extends Abstract<Hobby>{
+public class Hobby extends Abstract<entity.Hobby>{
     private static final long serialVersionUID = 1L;
 
     public Hobby(){
-        super(Hobby.class);
+        super(entity.Hobby.class);
     }
 }
