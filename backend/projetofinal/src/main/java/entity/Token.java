@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.*;
+import org.apache.commons.codec.digest.DigestUtils;
+
 import java.io.Serializable;
 import java.util.Calendar;
 
@@ -79,6 +81,12 @@ public class Token implements Serializable {
         long timestamp = Calendar.getInstance().getTimeInMillis() + timeOutSession;
 
         return timestamp;
+    }
+
+    // mascara o token do user
+    public String tokenMask(String token) {
+
+        return DigestUtils.md5Hex(token).toUpperCase();
     }
 
 

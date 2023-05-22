@@ -1,6 +1,7 @@
 package entity;
 
 import jakarta.persistence.*;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -80,9 +81,29 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "author")
     private List<ProjectHistory> listRecords = new ArrayList<>();
 
-    public User(){
-
-}
+    public User(int userId, String email, String password, String firstName, String lastName, Office office, String nickname, String photo, String bio, boolean contestManager, boolean openProfile, boolean validated, String token, long timestampForToken, List<Token> userSessions, List<Notification> userNotificationList, List<PersonalMessage> receivedMsgList, List<Hobby> listHobbies, List<Skill> listSkills, List<ProjectMember> listProjects, List<ProjectHistory> listRecords) {
+        this.userId = userId;
+        this.email = email;
+        this.password = this.passMask(password);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.office = office;
+        this.nickname = nickname;
+        this.photo = photo;
+        this.bio = bio;
+        this.contestManager = contestManager;
+        this.openProfile = openProfile;
+        this.validated = validated;
+        this.token = token;
+        this.timestampForToken = timestampForToken;
+        this.userSessions = userSessions;
+        this.userNotificationList = userNotificationList;
+        this.receivedMsgList = receivedMsgList;
+        this.listHobbies = listHobbies;
+        this.listSkills = listSkills;
+        this.listProjects = listProjects;
+        this.listRecords = listRecords;
+    }
 
     public int getUserId() {
         return userId;
@@ -251,4 +272,13 @@ public class User implements Serializable {
     public void setListRecords(List<ProjectHistory> listRecords) {
         this.listRecords = listRecords;
     }
+
+    // mascara a password introduzida
+    public String passMask(String password) {
+
+        return DigestUtils.md5Hex(password).toUpperCase();
+    }
+
+
+
 }

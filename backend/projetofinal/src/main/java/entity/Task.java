@@ -55,7 +55,18 @@ public class Task implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "currentTaskId"))
     private List<Task> listPreRequiredTasks = new ArrayList<>();
 
-public Task(){}
+    public Task(int id, String title, Date startDate, Date finishDate, String details, int taskOwnerId, String additionalExecutors, StatusTask status, Project project, List<Task> listPreRequiredTasks) {
+        this.id = id;
+        this.title = title;
+        this.startDate = startDate;
+        this.finishDate = finishDate;
+        this.details = details;
+        this.taskOwnerId = taskOwnerId;
+        this.additionalExecutors = additionalExecutors;
+        this.status = status;
+        this.project = project;
+        this.listPreRequiredTasks = listPreRequiredTasks;
+    }
 
     public int getId() {
         return id;
