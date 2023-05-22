@@ -1,0 +1,15 @@
+.inputcomponent {
+    border: none;
+    border-bottom: solid grey 0.5px;
+    padding: 2px;
+    margin: 3px;
+    outline: none;
+
+
+}
+
+
+.inputcomponent:focus {
+    border: none;
+    border-bottom: solid rgb(238, 8, 8) 0.5px;
+}
