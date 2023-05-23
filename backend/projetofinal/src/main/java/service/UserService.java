@@ -13,13 +13,14 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-// login, registo, alterar password, ver / editar perfil
+
 @Path("/user")
 public class UserService {
 
     @Inject
     User userBean;
 
+    // Login
     @POST
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -50,8 +51,10 @@ public class UserService {
 
     }
 
+    // Logout
     @Context
     private HttpServletRequest request;
+
     @POST
     @Path("/logout")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -77,9 +80,9 @@ public class UserService {
 
     }
 
-
+    // New regist in the app
     @POST
-    @Path("/newAccount")
+    @Path("/newaccount")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response newAccount(NewAccount account, @HeaderParam("password") String password) {
         Response r = null;
@@ -87,13 +90,13 @@ public class UserService {
         if (account == null || userBean.checkDataToRegister(account, password)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
-        } else if (userBean.checkEmailInDatabase(account.getEmail())==400) {
+        } else if (userBean.checkEmailInDatabase(account.getEmail()) == 400) {
 
             r = Response.status(400).entity("Email is already registered!").build();
-        } else if (userBean.checkEmailInDatabase(account.getEmail())==409) {
+        } else if (userBean.checkEmailInDatabase(account.getEmail()) == 409) {
 
             r = Response.status(409).entity("Account validation is missing!").build();
-        } else if (userBean.checkEmailInDatabase(account.getEmail())==401) {
+        } else if (userBean.checkEmailInDatabase(account.getEmail()) == 401) {
 
             r = Response.status(401).entity("Email is undefined").build();
         } else {
@@ -104,7 +107,7 @@ public class UserService {
             if (!newAccount) {
                 r = Response.status(404).entity("Not found!").build();
             } else {
-               // logger.info("A new regist is created for email " + u.getEmail() + "An email was sent to validate account");
+                // logger.info("A new regist is created for email " + u.getEmail() + "An email was sent to validate account");
 
                 r = Response.status(200).entity("Success!").build();
                 //TODO ask if better to use 200 ou 201 - created
@@ -116,6 +119,91 @@ public class UserService {
     }
 
 
+    // Validate account after new regist, through link
+    @POST
+    @Path("/accountvalidation")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response validation(@HeaderParam("tokenForValidation") String tokenForValidation) {
+        Response r = null;
+
+        if (tokenForValidation == null || tokenForValidation.isBlank()) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else {
+
+            // logger.info("Attempt to validate account through url sent to email");
+
+            int validationCode = userBean.validateNewAccount(tokenForValidation);
+            if (validationCode == 404) {
+                r = Response.status(404).entity("Not found!").build();
+            } else if (validationCode == 200) {
+
+                r = Response.status(200).entity("Success!").build();
+            } else if (validationCode == 400) {
+                r = Response.status(400).entity("link is not valid ").build();
+            }
+        }
+
+        return r;
+
+    }
+
+
+    // Ask to recover password
+    @POST
+    @Path("/recoverpassword")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response recoverPassword(@HeaderParam("email") String email) {
+        Response r = null;
+
+        if (email == null || email.isBlank()) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else {
+            // logger.info("Attempt to recover password for email " + email);
+
+            boolean res = userBean.askToRecoverPassword(email);
+            if (!res) {
+                r = Response.status(404).entity("Email not found in database!").build();
+            } else {
+
+                r = Response.status(200).entity("Success!").build();
+            }
+        }
+
+        return r;
+
+    }
+
+    // RECOVER PASSWORD THROUGH LINK
+    @POST
+    @Path("/newpasswordvialink")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response changePassword(@HeaderParam("tokenRecoverPassword") String tokenRecoverPassword,
+                                   @HeaderParam("password") String password) {
+        Response r = null;
+
+        if (tokenRecoverPassword == null || tokenRecoverPassword.isBlank() || password == null || password.isBlank()) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else {
+
+            // logger.info("Attempt to modify password through url sent to email ");
+
+            int res = userBean.newPasswordViaLink(tokenRecoverPassword, password);
+            if (res == 404) {
+                r = Response.status(404).entity("Not found!").build();
+            } else if (res == 200) {
+
+                r = Response.status(200).entity("Success!").build();
+            } else if (res == 400) {
+                r = Response.status(400).entity("link is not valid ").build();
+            }
+        }
+
+        return r;
+
+    }
 
 
 }
