@@ -5,6 +5,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Entity
@@ -286,5 +287,23 @@ public class User implements Serializable {
     }
 
 
+    public String createTokenForActivationOrRecoverPassword() {
+
+        long newtoken = System.currentTimeMillis();
+        String tokenString = this.firstName + newtoken;
+        this.token = tokenString;
+        return this.token;
+    }
+
+
+
+    public long createTimeoutTimeStamp() {
+
+        //final int timeOutForToken = 300000; // 5min
+        //long timestamp = Calendar.getInstance().getTimeInMillis() + timeOutSession;
+        long timestamp = Calendar.getInstance().getTimeInMillis();
+
+        return timestamp;
+    }
 
 }

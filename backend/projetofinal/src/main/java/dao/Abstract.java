@@ -18,7 +18,7 @@ public abstract class Abstract<T extends Serializable> implements Serializable {
 
     private final Class<T> clazz;
 
-    @PersistenceContext(unitName = "PersistenceUnit")
+    @PersistenceContext(unitName = "MyPersistenceUnit")
     protected EntityManager em;
 
     public Abstract(Class<T> clazz) {
