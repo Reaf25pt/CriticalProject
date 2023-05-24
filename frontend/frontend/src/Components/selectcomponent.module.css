@@ -1,0 +1,14 @@
+select {
+    appearance: none;
+    background-color: transparent;
+    border: none;
+
+    outline: none;
+    width: 100%;
+    border-bottom: 0.5px solid gray;
+}
+
+select:focus {
+    border: none;
+    border-bottom: solid rgb(238, 8, 8) 0.5px;
+}

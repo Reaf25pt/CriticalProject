@@ -15,8 +15,8 @@ import Footer from "./Components/Footer";
 
 function App() {
   return (
-    <Container>
-      <Row className="m-5">
+    <Container fluid>
+      <Row className="mb-5">
         <Col>
           <MainTitle />
         </Col>
@@ -31,6 +31,10 @@ function App() {
           <Form className=" m-auto d-flex flex-column ">
             <InputComponent placeholder={"Email"} type={"email"} />
             <InputComponent placeholder={"Password"} type={"password"} />
+            <div className="form-text">
+              {" "}
+              A senha deve ter entre 6 a 16 caracteres
+            </div>
             <Link className="text-dark" to="forgetpassword">
               Esqueceu a password
             </Link>
