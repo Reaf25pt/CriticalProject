@@ -40,9 +40,9 @@ public class ValidateNewAccount {
         Session session = Session.getInstance(props, auth);
 
         String about = "Innovation Lab App: Activação da conta / Account activation";
-        String subject = " Bem-vindo à aplicação Laboratório de Inovação.\n\n Para validar a sua conta tem de confirmar o email usado. Clique no url http://localhost:3000/activation/"
+        String subject = " Bem-vindo à aplicação Laboratório de Inovação.\n\n Para validar a sua conta tem de confirmar o email usado. Clique no url http://localhost:3000/ativateaccount/"
                 + tokenForActivaction
-                + " .\n\n Se não se registou na aplicação ignore este email.\n\n Obrigado pela preferência, \n Equipa Innovation Lab  \n\n\n Welcome to Innovation Lab App. To validate your account you must first confirm your email, by clicking in url  http://localhost:3000/activation/"
+                + " .\n\n Se não se registou na aplicação ignore este email.\n\n Obrigado pela preferência, \n Equipa Innovation Lab  \n\n\n Welcome to Innovation Lab App. To validate your account you must first confirm your email, by clicking in url  http://localhost:3000/ativateaccount/"
                 + tokenForActivaction
                 + " .\n\n In case you did not registered in the app, please ignore this email. \n\n Thank you for your preference, \n Innovation Lab App";
 

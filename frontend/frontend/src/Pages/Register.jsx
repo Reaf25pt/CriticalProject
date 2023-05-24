@@ -179,7 +179,7 @@ function Register() {
                 onChange={handleChange}
               />
             </Row>
-            <Button name={"Registar"} />
+            <Button name={"Registar"} type={"submit"} />
           </Form>
         </Col>
         <Col>

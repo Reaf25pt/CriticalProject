@@ -335,5 +335,48 @@ public class User implements Serializable {
 
         return res;
     }
+
+
+    public boolean checkUserPermission(String token){
+        // check if token has a valid session and user account is valid (check in another method)
+
+        boolean res= false;
+
+        Token tokenEnt = tokenDao.findTokenEntByToken(token);
+
+        if (tokenEnt!= null){
+            if (checkUserAccount(tokenEnt.getTokenOwner())){
+                res=true;
+            }
+        }
+
+return res;
+    }
+
+    private boolean checkUserAccount(entity.User user) {
+        // check if user has a valid account
+        boolean res= false;
+
+        if (user!= null){
+            if(user.isValidated()){
+                res=true;
+            }
+        }
+
+        return res;
+    }
+
+    public void updateSessionTime(String token) {
+        // updates session time for given token
+
+        Token tokenEnt = tokenDao.findTokenEntByToken(token);
+
+        if (tokenEnt != null) {
+            long newSessionTimeOut = tokenEnt.createTimeOutTimeStamp();
+            tokenEnt.setTimeOut(newSessionTimeOut);
+            tokenDao.merge(tokenEnt);
+        }
+    }
+
 }
 

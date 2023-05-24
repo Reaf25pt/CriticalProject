@@ -20,8 +20,8 @@ root.render(
       <Route path="/" element={<App />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgetpassword" element={<ForgetPassword />} />
-      <Route path="/changepassword" element={<ChangePassword />} />
-      <Route path="/ativateaccount" element={<ActivateAccount />} />
+      <Route path="/changepassword/:token" element={<ChangePassword />} />
+      <Route path="/ativateaccount/:token" element={<ActivateAccount />} />
       <Route path="/home" element={<Home />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/projects" element={<Projects />} />
