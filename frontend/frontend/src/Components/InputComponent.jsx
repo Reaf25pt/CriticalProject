@@ -8,6 +8,10 @@ function InputComponent(props) {
         name={props.name}
         onChange={props.onChange}
         placeholder={props.placeholder}
+        minLength={props.minLength}
+        pattern={props.pattern}
+        required={props.required}
+        id={props.id}
       />
     </div>
   );
