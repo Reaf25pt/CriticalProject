@@ -22,10 +22,11 @@ root.render(
       <Route path="/forgetpassword" element={<ForgetPassword />} />
       <Route path="/changepassword/:token" element={<ChangePassword />} />
       <Route path="/ativateaccount/:token" element={<ActivateAccount />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/projects" element={<Projects />} />
-      <Route path="/contest" element={<Contest />} />
+      <Route path="/home" element={<Home />}>
+        <Route path="profile" element={<Profile />} />
+        <Route path="projects" element={<Projects />} />
+        <Route path="contests" element={<Contest />} />
+      </Route>
     </Routes>
   </BrowserRouter>
 );

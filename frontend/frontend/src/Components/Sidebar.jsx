@@ -4,19 +4,32 @@ import { Link, Outlet } from "react-router-dom";
 
 function Sidebar() {
   return (
-    <Container>
-      <Row>
-        <Col className={style.sidebar} md={2}>
-          <Link to={"/home"}>Inicio</Link>
-          <Link to={"/projects"}>Projetos</Link>
-          <Link to={"/contests"}>Concursos</Link>
-          <Link to={"/profile"}>Perfil</Link>
-        </Col>{" "}
-        <Col md={10}>
-          <Outlet />
-        </Col>
-      </Row>
-    </Container>
+    <div>
+      <div>
+        <div className={style.sidebar}>
+          <div className={style.box}>
+            <Link className={style.linksidebar} to={"/home"}>
+              Inicio
+            </Link>
+          </div>
+          <div className={style.box}>
+            <Link className={style.linksidebar} to={"/home/projects"}>
+              Projetos
+            </Link>
+          </div>
+          <div className={style.box}>
+            <Link className={style.linksidebar} to={"/home/contests"}>
+              Concursos
+            </Link>
+          </div>
+          <div className={style.box}>
+            <Link className={style.linksidebar} to={"/home/profile"}>
+              Perfil
+            </Link>
+          </div>
+        </div>{" "}
+      </div>
+    </div>
   );
 }
 
