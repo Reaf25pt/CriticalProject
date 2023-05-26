@@ -177,6 +177,7 @@ function Register() {
                 id="officeInput"
                 required
                 onChange={handleChange}
+                placeholder={"Selecione uma opção *"}
               />
             </Row>
             <Button name={"Registar"} type={"submit"} />

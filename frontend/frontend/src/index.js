@@ -12,6 +12,7 @@ import Home from "./Pages/Home";
 import Profile from "./Pages/Profile";
 import Projects from "./Pages/Projects";
 import Contest from "./Pages/Contest";
+import ProjectsCreate from "./Pages/ProjectsCreate";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -26,6 +27,7 @@ root.render(
         <Route path="profile" element={<Profile />} />
         <Route path="projects" element={<Projects />} />
         <Route path="contests" element={<Contest />} />
+        <Route path="projectscreate" element={<ProjectsCreate />} />
       </Route>
     </Routes>
   </BrowserRouter>

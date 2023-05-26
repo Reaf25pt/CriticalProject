@@ -9,7 +9,7 @@ function SelectComponent(props) {
         onChange={props.onChange}
         required={props.required}
       >
-        <option value="8">Selecione uma opção *</option>
+        <option value="8">{props.placeholder}</option>
         <option value="0">Lisboa</option>
         <option value="1">Coimbra</option>
         <option value="2">Porto</option>

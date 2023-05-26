@@ -1,8 +1,16 @@
+import { Col, Container, Row } from "react-bootstrap";
+import LinkButton from "../Components/LinkButton";
+
 function Projects() {
   return (
-    <div>
-      <h3>Projetos</h3>
-    </div>
+    <Container>
+      <Row>
+        <Col md={2} className="m-5">
+          <LinkButton name={"+"} to={"/home/projectscreate"} />
+        </Col>
+        <Col md={10}></Col>
+      </Row>
+    </Container>
   );
 }
 

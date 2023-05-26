@@ -1,0 +1,7 @@
+.textareacomponent {
+    border: red solid 0.5px;
+    border-radius: 4px;
+    font-size: 16px;
+    resize: none;
+    width: 100%;
+}
