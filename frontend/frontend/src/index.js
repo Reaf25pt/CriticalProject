@@ -13,6 +13,9 @@ import Profile from "./Pages/Profile";
 import Projects from "./Pages/Projects";
 import Contest from "./Pages/Contest";
 import ProjectsCreate from "./Pages/ProjectsCreate";
+import AddMembers from "./Pages/AddMembers";
+import OtherInformations from "./Pages/OtherInformations";
+import ProjectOpen from "./Pages/ProjectOpen";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -28,7 +31,10 @@ root.render(
         <Route path="projects" element={<Projects />} />
         <Route path="contests" element={<Contest />} />
         <Route path="projectscreate" element={<ProjectsCreate />} />
+        <Route path="addmembers" element={<AddMembers />} />
+        <Route path="otherinformations" element={<OtherInformations />} />
       </Route>
+      <Route path="/projects/:id" element={<ProjectOpen />} />
     </Routes>
   </BrowserRouter>
 );

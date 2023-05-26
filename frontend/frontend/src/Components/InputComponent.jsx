@@ -1,7 +1,7 @@
 import styles from "./inputcomponent.module.css";
 function InputComponent(props) {
   return (
-    <div>
+    <div className="mt-3">
       <input
         className={styles.inputcomponent}
         type={props.type}

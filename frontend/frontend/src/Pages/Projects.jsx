@@ -3,7 +3,7 @@ import LinkButton from "../Components/LinkButton";
 
 function Projects() {
   return (
-    <Container>
+    <Container fluid>
       <Row>
         <Col md={2} className="m-5">
           <LinkButton name={"+"} to={"/home/projectscreate"} />

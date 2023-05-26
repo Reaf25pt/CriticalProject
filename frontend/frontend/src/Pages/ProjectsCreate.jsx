@@ -12,8 +12,9 @@ function ProjectsCreate() {
     <Container fluid>
       <Row className="mt-5 justify-content-md-center">
         <Col>
-          <LinkButton name={"Adicionar Membros"} />{" "}
-          <LinkButton name={"Outros Dados"} />
+          <LinkButton name={"Criar Projeto"} />{" "}
+          <LinkButton name={"Adicionar Membros"} to={"/home/addmembers"} />{" "}
+          <LinkButton name={"Outros Dados"} to={"/home/otherinformations"} />
         </Col>
       </Row>
       <Row className="mt-5 ">
