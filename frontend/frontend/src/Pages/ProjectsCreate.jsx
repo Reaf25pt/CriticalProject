@@ -9,40 +9,38 @@ function ProjectsCreate() {
   const handleSubmit = "";
 
   return (
-    <Container>
-      <Row className="mt-5">
-        <Col md={4}>
-          <Row>
-            <Col>
-              <LinkButton name={"Adicionar Membros"} />
-            </Col>
-            <Col>
-              {" "}
-              <LinkButton name={"Outros Dados"} />
-            </Col>
-            <Row className="mt-5 ">
-              <Form onSubmit={handleSubmit}>
-                <Row className="mb-3">
-                  <InputComponent placeholder={"Nome do Projeto"} />
-                </Row>
-                <Row className="mb-3">
-                  <SelectComponent
-                    placeholder={"Selecione as palavras-chaves"}
-                  />
-                </Row>
-                <Row className="mb-3">
-                  <InputComponent placeholder={"Nº Maximo de Membros"} />
-                </Row>
-                <Row className="mb-3">
-                  <SelectComponent placeholder={"Selecione o local"} />
-                </Row>
-                <TextAreaComponent />
-
-                <Button name={"Criar"} />
-              </Form>
-            </Row>
-          </Row>
+    <Container fluid>
+      <Row className="mt-5 justify-content-md-center">
+        <Col>
+          <LinkButton name={"Adicionar Membros"} />{" "}
+          <LinkButton name={"Outros Dados"} />
         </Col>
+      </Row>
+      <Row className="mt-5 ">
+        <Form onSubmit={handleSubmit}>
+          <Row>
+            <Col md={4}>
+              <Row className="mt-3">
+                <InputComponent placeholder={"Nome do Projeto"} />
+              </Row>
+              <Row className="mt-3">
+                <SelectComponent placeholder={"Selecione as palavras-chaves"} />
+              </Row>
+              <Row className="mt-3">
+                <InputComponent placeholder={"Nº Maximo de Membros"} />
+              </Row>
+              <Row className="mt-3">
+                <SelectComponent placeholder={"Selecione o local"} />
+              </Row>
+              <Row className="mt-5">
+                <Button name={"Criar"} />
+              </Row>
+            </Col>
+            <Col md={8}>
+              <TextAreaComponent name={"Descrição"} />
+            </Col>
+          </Row>
+        </Form>
       </Row>
     </Container>
   );
