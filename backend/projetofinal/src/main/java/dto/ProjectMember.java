@@ -1,7 +1,5 @@
 package dto;
 
-import entity.StatusProject;
-
 public class ProjectMember {
     private int id;
     private int projectId;

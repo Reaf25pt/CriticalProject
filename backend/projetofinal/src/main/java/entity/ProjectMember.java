@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "ProjectMembers")
+
 public class ProjectMember implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -20,10 +21,6 @@ public class ProjectMember implements Serializable {
     // user who is invited or self-invites to participate in project
     @ManyToOne
     private User userInvited;
-
-    // identifies user who invites someone to participate in project. Can be null if someone self-invites to participate
-    @Column(name = "userWhoInvitesid", nullable = true, unique = false, updatable = false)
-    private int whoInvitesid;
 
     @Column(name = "manager", nullable = false, unique = false, updatable = true)
     private boolean manager;
@@ -64,14 +61,6 @@ public ProjectMember(){}
 
     public void setUserInvited(User userInvited) {
         this.userInvited = userInvited;
-    }
-
-    public int getWhoInvitesid() {
-        return whoInvitesid;
-    }
-
-    public void setWhoInvitesid(int whoInvitesid) {
-        this.whoInvitesid = whoInvitesid;
     }
 
     public boolean isManager() {

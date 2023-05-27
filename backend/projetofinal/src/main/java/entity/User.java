@@ -1,5 +1,6 @@
 package entity;
 
+import ENUM.Office;
 import jakarta.persistence.*;
 import org.apache.commons.codec.digest.DigestUtils;
 

@@ -1,6 +1,6 @@
 package dto;
 
-import entity.Office;
+import ENUM.Office;
 
 public class Login {
     private int userId;

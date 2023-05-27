@@ -1,7 +1,7 @@
 package dto;
 
-import entity.Office;
-import entity.StatusProject;
+import ENUM.Office;
+import ENUM.StatusProject;
 
 import java.util.Date;
 
@@ -26,6 +26,8 @@ public class Project {
         this.membersNumber = membersNumber;
         this.creationDate = creationDate;
     }
+
+    public Project(){}
 
     public int getId() {
         return id;

@@ -1,6 +1,6 @@
 package dto;
 
-import entity.StatusContest;
+import ENUM.StatusContest;
 
 import java.util.Date;
 

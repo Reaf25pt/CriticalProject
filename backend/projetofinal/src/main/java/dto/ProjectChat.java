@@ -1,6 +1,6 @@
 package dto;
 
-import entity.StatusProject;
+import ENUM.StatusProject;
 
 import java.util.Date;
 

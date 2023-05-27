@@ -1,6 +1,7 @@
 package entity;
 
 
+import ENUM.SkillType;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
