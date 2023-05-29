@@ -1,5 +1,6 @@
 package entity;
 
+import ENUM.StatusTask;
 import jakarta.persistence.*;
 
 import java.io.Serializable;

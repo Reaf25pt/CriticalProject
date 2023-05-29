@@ -1,18 +1,24 @@
 package bean;
 
+import ENUM.Office;
 import dto.Login;
 import dto.EditProfile;
 import dto.NewAccount;
+import dto.Project;
+import entity.ProjectMember;
 import entity.Token;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import mail.AskRecoverPassword;
 import mail.ValidateNewAccount;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.glassfish.jaxb.core.v2.TODO;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 @RequestScoped
 public class User implements Serializable {
@@ -21,6 +27,10 @@ public class User implements Serializable {
     dao.User userDao;
     @EJB
     dao.Token tokenDao;
+    @EJB
+    dao.ProjectMember projMemberDao;
+    @Inject
+    bean.Project projBean;
 
     public User() {
     }
@@ -190,6 +200,7 @@ public class User implements Serializable {
         newUser.setFirstName(account.getFirstName());
         newUser.setLastName(account.getLastName());
         newUser.setOffice(account.getOffice());
+        //TODO pode ser necessário mudar para ficar registo de nome de cidade e não de valor numérico
         if (account.getNickname() != null) {
             newUser.setNickname(account.getNickname());
         }
@@ -377,6 +388,143 @@ return res;
             tokenDao.merge(tokenEnt);
         }
     }
+
+    public EditProfile updateProfile(String token, EditProfile newInfo) {
+        // update profile of logged user
+
+        EditProfile updatedUser = null;
+
+        if (newInfo != null) {   // TODO ainda que esta verificação tenha sido feita anteriormente, no endpoint, é preciso repetir?
+           /* Token tokenEnt = tokenDao.findTokenEntByToken(token);
+
+            if (tokenEnt != null) {
+                entity.User userEnt = tokenEnt.getTokenOwner();*/
+
+            entity.User userEnt = tokenDao.findUserEntByToken(token);
+
+                if (userEnt != null) {
+
+                     if(newInfo.getFirstName()!=null){
+                         userEnt.setFirstName(newInfo.getFirstName());
+                     }
+
+                     if(newInfo.getLastName()!=null){
+                         userEnt.setLastName(newInfo.getLastName());
+                     }
+
+                     if(newInfo.getNickname()!=null){
+                         userEnt.setNickname(newInfo.getNickname());
+                     }
+
+                     if(newInfo.getPhoto()!=null){
+                         userEnt.setPhoto(newInfo.getPhoto());
+                     }
+
+                     if(newInfo.getBio()!=null){
+                         userEnt.setBio(newInfo.getBio());
+                         //TODO se editar noutro lado, colocar noutro lado / mudar DTO
+                     }
+
+                     userEnt.setOpenProfile(newInfo.isOpenProfile());
+
+                        int office=newInfo.getOfficeInfo();
+                         //TODO is it correct?
+
+                         switch (office) {
+                             case 0:
+                                 userEnt.setOffice(Office.LISBOA);
+                                 break;
+                             case 1:
+                                 userEnt.setOffice(Office.COIMBRA);
+                                 break;
+                             case 2:
+                                 userEnt.setOffice(Office.PORTO);
+                                 break;
+                             case 3:
+                                 userEnt.setOffice(Office.TOMAR);
+                                 break;
+                             case 4:
+                                 userEnt.setOffice(Office.VISEU);
+                                 break;
+                             case 5:
+                                 userEnt.setOffice(Office.VILAREAL);
+                                 break;
+                         }
+                     }
+                    userDao.merge(userEnt);
+                    //TODO faz sentido ir buscar novamente à DB o user ou converter directamente o userEnt?
+
+                    updatedUser = convertToEditProfile(userEnt);
+                }
+
+        return updatedUser;
+    }
+    public EditProfile convertToEditProfile(entity.User user) {
+        EditProfile userDto=new EditProfile();
+
+        userDto.setId(user.getUserId());
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
+        userDto.setOffice(user.getOffice());
+        userDto.setNickname(user.getNickname());
+        userDto.setPhoto(user.getPhoto());
+        userDto.setBio(user.getBio());
+        userDto.setOpenProfile(user.isOpenProfile());
+
+        return userDto;
+    }
+
+    public int changeOwnPassword(String token, String oldPassword, String newPassword) {
+        // change own password (logged user)
+
+        int res;
+// TODO validar no frontend apenas a força da password ou no backend tb?
+        entity.User user= tokenDao.findUserEntByToken(token);
+
+        if (user!=null){
+            String oldPassMasked = passMask(oldPassword);
+            if (oldPassMasked.equals(user.getPassword())){
+                user.setPassword(passMask(newPassword));
+                userDao.merge(user);
+
+                res=200;
+            } else {
+                res=400; // bad request - old password does not match password saved in DB
+            }
+        } else {
+            res=404; // user not found for given token
+        }
+
+        return res;
+    }
+
+
+    public List<Project> getOwnProjectsList(String token) {
+        // get list of projects where user of given token participates or participated (not removed!)
+
+        List<Project> projectsList = new ArrayList<Project>();
+
+        List<ProjectMember> allProjectMembersInfo = projMemberDao.findAll();
+
+        if (allProjectMembersInfo!= null){
+            entity.User user = tokenDao.findUserEntByToken(token);
+
+            if (user!=null){
+                for (ProjectMember p : allProjectMembersInfo){
+                    if(p.getUserInvited().getUserId() == user.getUserId()){
+                        if (p.isAccepted() && !p.isRemoved()){
+                            projectsList.add( projBean.convertProjEntityToDto(p.getProjectToParticipate()));
+                        }
+                    }
+                }
+            }
+        }
+//TODO Falta testar
+
+return projectsList;
+    }
+
+
 
 }
 

@@ -1,7 +1,5 @@
 package dto;
 
-import entity.Office;
-
 public class UserFriendChat {
 
     private int id;

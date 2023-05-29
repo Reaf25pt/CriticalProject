@@ -1,5 +1,6 @@
 package entity;
 
+import ENUM.StatusContest;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -8,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name="Contest")
+@Table(name = "Contest")
 public class Contest implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -30,6 +31,10 @@ public class Contest implements Serializable {
     @Column(name = "details", nullable = true, unique = false, updatable = true)
     private String details;
 
+    @Column(name = "rules", nullable = true, unique = false, updatable = true)
+    private String rules;
+    //TODO rules ser nullable ou não ?!
+
     @Column(name = "maxNumberProjects", nullable = false, unique = false, updatable = true)
     private String maxNumberProjects;
 
@@ -42,7 +47,8 @@ public class Contest implements Serializable {
     @OneToMany(mappedBy = "contest")
     private List<Project> listProjects = new ArrayList<>();
 
-    public Contest (){}
+    public Contest() {
+    }
 
     public int getId() {
         return id;
@@ -82,6 +88,14 @@ public class Contest implements Serializable {
 
     public void setDetails(String details) {
         this.details = details;
+    }
+
+    public String getRules() {
+        return rules;
+    }
+
+    public void setRules(String rules) {
+        this.rules = rules;
     }
 
     public String getMaxNumberProjects() {

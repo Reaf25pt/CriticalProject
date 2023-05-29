@@ -1,6 +1,6 @@
 package dto;
 
-import entity.SkillType;
+import ENUM.SkillType;
 
 public class Skill {
 

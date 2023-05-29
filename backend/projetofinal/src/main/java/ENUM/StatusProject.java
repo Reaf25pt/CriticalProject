@@ -1,4 +1,4 @@
-package entity;
+package ENUM;
 
 public enum StatusProject {
     PLANNING("Planning"),

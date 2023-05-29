@@ -5,6 +5,7 @@ import bean.User;
 import dto.Login;
 import dto.EditProfile;
 import dto.NewAccount;
+import dto.Project;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -12,6 +13,9 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.glassfish.jaxb.core.v2.TODO;
+
+import java.util.List;
 
 
 @Path("/user")
@@ -20,7 +24,7 @@ public class UserService {
     @Inject
     User userBean;
 
-    // Login
+    // LOGIN
     @POST
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -51,7 +55,7 @@ public class UserService {
 
     }
 
-    // Logout
+    // LOGOUT
     @Context
     private HttpServletRequest request;
 
@@ -75,17 +79,21 @@ public class UserService {
                 r = Response.status(400).entity("Failed!").build();
             } else if (value == 403)
                 r = Response.status(403).entity("Forbidden").build();
+            // TODO incluir hipotese de res vir sem info? algo pode correr mal. nesse caso qual o erro apropriado?
         }
         return r;
 
     }
 
-    // New regist in the app
+    // NEW REGIST IN THE APP
     @POST
     @Path("/newaccount")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response newAccount(NewAccount account, @HeaderParam("password") String password) {
         Response r = null;
+
+        // TODO  haverá melhor forma de colocar as validações para não repetir o código  checkEmailInDatabase ?!?!
+        // TODO  faz sentido chamar método de createNewAccount dentro do checkEmailInDatabase ???
 
         if (account == null || userBean.checkDataToRegister(account, password)) {
             r = Response.status(401).entity("Unauthorized!").build();
@@ -119,7 +127,7 @@ public class UserService {
     }
 
 
-    // Validate account after new regist, through link
+    // VALIDATE ACCOUNT AFTER NEW REGIST, THROUGH LINK
     @POST
     @Path("/accountvalidation")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -149,7 +157,7 @@ public class UserService {
     }
 
 
-    // Ask to recover password
+    // ASK TO RECOVER PASSWORD
     @POST
     @Path("/recoverpassword")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -203,6 +211,116 @@ public class UserService {
 
         return r;
 
+    }
+
+    // EDIT OWN PROFILE INFORMATION, EXCEPT PASSWORD
+    @POST
+    @Path("/ownprofile")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editUser(@HeaderParam("token") String token, EditProfile newInfo) {
+
+        Response r = null;
+
+        if (token == null || token.isBlank() || token.isEmpty() || newInfo == null) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+
+        } else {
+
+            userBean.updateSessionTime(token);
+
+           // UserDto uDto = userBean.sendDtoFromToken(token);
+
+           // logger.info("User whose userId is " + uDto.getUserId() + " attempts to update its profile ");
+
+            // neste ponto o user tem autorização para fazer update da sua info e não é necessário validar se info vem preenchida ou existe na DB pq único campo que tem de ser único não é updated (email)
+
+                EditProfile userUpdated = userBean.updateProfile(token, newInfo);
+                if (userUpdated == null) {
+                    r = Response.status(404).entity("Not found!").build();
+                    //TODO erro 404 not found  ou  400 bad request?
+
+                } else {
+                    r = Response.status(200).entity(userUpdated).build();
+                    //TODO update info na userStore ou enviar LoginDto em x do EditProfile
+            }
+        }
+        return r;
+
+    }
+
+    // CHANGE PASSWORD ONCE LOGGED IN
+    @POST
+    @Path("/newpassword")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response changeOwnPassword(@HeaderParam("token") String token,
+                                      @HeaderParam("oldPassword") String oldPassword, @HeaderParam("newPassword") String newPassword) {
+        Response r = null;
+
+        if (token == null || token.isBlank() || oldPassword == null || oldPassword.isBlank() || newPassword == null
+                || newPassword.isBlank()) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else {
+            userBean.updateSessionTime(token);
+           // TokenEntity tEnt = tokenDao.findTokenEntByToken(token);
+           // logger.info("User whose userId is " + tEnt.getTokenOwner().getUserId() + " attempts to modify its password");
+
+            int a = userBean.changeOwnPassword(token, oldPassword, newPassword);
+            if (a == 404) {
+                r = Response.status(404).entity("Not found!").build();
+            } else if (a == 200) {
+
+                r = Response.status(200).entity("Success!").build();
+            } else if (a == 400) {
+                r = Response.status(400).entity("old password is not correct ").build();
+            } else {
+                r = Response.status(409).entity("Conflict!").build();
+
+                // TODO manter ou simplesmente apagar / alterar erro?
+            }
+        }
+
+        return r;
+
+    }
+
+
+    // GET LIST OF PROJECTS OF LOGGED USER
+    @GET
+    @Path("/ownprojects")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getOwnProjects(@HeaderParam("token") String token) {
+
+        // verificar se token tem sessão iniciada e válida, se sim actualizar session time
+        // ir buscar lista de projectos que user id do token logado seja membro (accepted and not removed)
+        Response r = null;
+
+        if (token == null || token.isBlank() || token.isEmpty()) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            // TokenEntity tEnt = tokenDao.findTokenEntByToken(token);
+            //logger.info("User whose userId is " + tEnt.getTokenOwner().getUserId() + " attempts to see list of all its activities, including those shared with its account");
+
+            List<Project> projects = userBean.getOwnProjectsList(token);
+
+            if (projects == null || projects.size() == 0) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+               // logger.info("Request from userId " + tEnt.getTokenOwner().getUserId() + " - List of all its activities is retrieved from database ");
+
+                r = Response.status(200).entity(projects).build();
+            }
+        }
+        //TODO falta testar
+        return r;
     }
 
 

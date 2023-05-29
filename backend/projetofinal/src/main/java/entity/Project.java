@@ -1,6 +1,8 @@
 package entity;
 
 
+import ENUM.Office;
+import ENUM.StatusProject;
 import jakarta.persistence.*;
 
 import java.io.Serializable;

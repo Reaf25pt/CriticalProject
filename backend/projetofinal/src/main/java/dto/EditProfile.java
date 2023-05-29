@@ -1,12 +1,14 @@
 package dto;
 
-import entity.Office;
+import ENUM.Office;
 
 public class EditProfile {
     private int id;
     private String firstName;
     private String lastName;
     private Office office;
+    //TODO office provavelmente tem de ser definido como int
+    private int officeInfo;
     private String nickname;
     private String photo;
     private String bio;
@@ -76,5 +78,13 @@ public class EditProfile {
 
     public void setOpenProfile(boolean openProfile) {
         this.openProfile = openProfile;
+    }
+
+    public int getOfficeInfo() {
+        return officeInfo;
+    }
+
+    public void setOfficeInfo(int officeInfo) {
+        this.officeInfo = officeInfo;
     }
 }

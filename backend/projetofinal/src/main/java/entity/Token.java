@@ -12,6 +12,7 @@ import java.util.Calendar;
 @Entity
 @Table(name="Token")
 @NamedQuery(name = "Token.findTokenEntByToken", query = "SELECT t FROM Token t WHERE t.token = :token")
+@NamedQuery(name = "Token.findUserEntByToken", query = "SELECT tokenOwner FROM Token t WHERE t.token = :token")
 
 public class Token implements Serializable {
 

@@ -1,6 +1,6 @@
 package dto;
 
-import entity.StatusTask;
+import ENUM.StatusTask;
 
 import java.util.Date;
 

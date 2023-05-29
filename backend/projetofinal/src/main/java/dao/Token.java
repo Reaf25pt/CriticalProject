@@ -26,4 +26,21 @@ public class Token extends Abstract<entity.Token>{
         return tEnt;
 
     }
+
+    public entity.User findUserEntByToken(String token) {
+        // to access user info
+        entity.User uEnt = null;
+        try {
+
+            uEnt = (entity.User) em.createNamedQuery("Token.findUserEntByToken").setParameter("token", token)
+                    .getSingleResult();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // return null;
+        }
+        return uEnt;
+
+    }
+
 }
