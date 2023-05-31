@@ -12,6 +12,7 @@ function InputComponent(props) {
         pattern={props.pattern}
         required={props.required}
         id={props.id}
+        title={props.title}
       />
     </div>
   );
