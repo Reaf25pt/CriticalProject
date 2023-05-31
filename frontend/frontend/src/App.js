@@ -7,7 +7,7 @@ import logo from "./images/logo-criticalsoftware.png";
 import Form from "react-bootstrap/Form";
 
 import MainTitle from "./Components/MainTitle";
-import Button from "./Components/Button";
+import ButtonComponent from "./Components/ButtonComponent";
 import LinkButton from "./Components/LinkButton";
 import InputComponent from "./Components/InputComponent";
 import { Link } from "react-router-dom";
@@ -96,7 +96,7 @@ function App() {
             <Link className="text-dark" to="forgetpassword">
               Esqueceu a password
             </Link>
-            <Button name={"Entrar"} type="submit" />
+            <ButtonComponent name={"Entrar"} type="submit" />
             <LinkButton name={"Registar"} to={"/register"} />
           </Form>
         </Col>

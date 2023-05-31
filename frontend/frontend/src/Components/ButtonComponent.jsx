@@ -1,5 +1,5 @@
-import styles from "./Button.module.css";
-function Button(props) {
+import styles from "./ButtonComponent.module.css";
+function ButtonComponent(props) {
   return (
     <button
       type={props.type}
@@ -12,4 +12,4 @@ function Button(props) {
   );
 }
 
-export default Button;
+export default ButtonComponent;

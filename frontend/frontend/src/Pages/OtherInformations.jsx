@@ -1,7 +1,7 @@
 import { Col, Container, Form, Row } from "react-bootstrap";
 import LinkButton from "../Components/LinkButton";
 import SelectComponent from "../Components/SelectComponent";
-import Button from "../Components/Button";
+import ButtonComponent from "../Components/ButtonComponent";
 import InputComponent from "../Components/InputComponent";
 
 function OtherInformations() {
@@ -22,7 +22,7 @@ function OtherInformations() {
             <InputComponent placeholder={"Recursos Necessarios"} />
             <SelectComponent placeholder={"Skills Necessarias"} />
 
-            <Button name={"Gravar"} type={"submit"} />
+            <ButtonComponent name={"Gravar"} type={"submit"} />
           </Form>
         </Col>
       </Row>

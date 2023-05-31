@@ -1,5 +1,5 @@
 import { Col, Container, Row } from "react-bootstrap";
-import Button from "../Components/Button";
+import ButtonComponent from "../Components/ButtonComponent";
 
 function ProjectOpen() {
   return (
@@ -19,7 +19,7 @@ function ProjectOpen() {
               <label>Palavras-chaves</label>
             </Col>
           </Row>
-          <Button name="Participar" />
+          <ButtonComponent name="Participar" />
         </Col>
         <Col md={9}>
           <div>

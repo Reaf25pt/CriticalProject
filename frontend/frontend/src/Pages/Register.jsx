@@ -7,7 +7,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import InputComponent from "../Components/InputComponent";
 import SelectComponent from "../Components/SelectComponent";
-import Button from "../Components/Button";
+import ButtonComponent from "../Components/ButtonComponent";
 import Footer from "../Components/Footer";
 import LinkImageComponent from "../Components/LinkImageComponent";
 import { useState } from "react";
@@ -180,7 +180,7 @@ function Register() {
                 placeholder={"Selecione uma opção *"}
               />
             </Row>
-            <Button name={"Registar"} type={"submit"} />
+            <ButtonComponent name={"Registar"} type={"submit"} />
           </Form>
         </Col>
         <Col>

@@ -2,14 +2,14 @@ import { Col, Container, Form, Row } from "react-bootstrap";
 import LinkButton from "../Components/LinkButton";
 import InputComponent from "../Components/InputComponent";
 import SelectComponent from "../Components/SelectComponent";
-import Button from "../Components/Button";
+import ButtonComponent from "../Components/ButtonComponent";
 import TextAreaComponent from "../Components/TextAreaComponent";
 
 function ProjectsCreate() {
   const handleSubmit = "";
 
   return (
-    <Container fluid>
+    <Container fluid className="ms-5">
       <Row className="mt-5 justify-content-md-center">
         <Col>
           <LinkButton name={"Criar Projeto"} />{" "}
@@ -34,7 +34,7 @@ function ProjectsCreate() {
                 <SelectComponent placeholder={"Selecione o local"} />
               </Row>
               <Row className="mt-5">
-                <Button name={"Criar"} />
+                <ButtonComponent name={"Criar"} />
               </Row>
             </Col>
             <Col md={8}>

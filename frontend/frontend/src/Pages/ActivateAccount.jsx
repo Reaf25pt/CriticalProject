@@ -1,5 +1,5 @@
 import Container from "react-bootstrap/esm/Container";
-import Button from "../Components/Button";
+import ButtonComponent from "../Components/ButtonComponent";
 import MainTitle from "../Components/MainTitle";
 import Row from "react-bootstrap/esm/Row";
 import Footer from "../Components/Footer";
@@ -46,7 +46,11 @@ function ActivateAccount() {
         </p>
       </Row>
       <Row className="mt-5">
-        <Button name={"Ativar conta"} type="button" onClick={handleClick} />
+        <ButtonComponent
+          name={"Ativar conta"}
+          type="button"
+          onClick={handleClick}
+        />
       </Row>
       <Row>
         <Footer />

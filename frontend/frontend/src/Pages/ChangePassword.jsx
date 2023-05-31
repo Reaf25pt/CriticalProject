@@ -5,7 +5,7 @@ import SecondTitle from "../Components/SecondTitle";
 import Form from "react-bootstrap/esm/Form";
 import Col from "react-bootstrap/esm/Col";
 import InputComponent from "../Components/InputComponent";
-import Button from "../Components/Button";
+import ButtonComponent from "../Components/ButtonComponent";
 import Footer from "../Components/Footer";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
@@ -98,7 +98,7 @@ function ChangePassword() {
               {" "}
               A senha deve ter entre 6 a 16 caracteres
             </span>
-            <Button type="submit" name={"Alterar password"} />
+            <ButtonComponent type="submit" name={"Alterar password"} />
           </Form>
         </Col>
       </Row>

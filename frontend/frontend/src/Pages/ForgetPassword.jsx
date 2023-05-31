@@ -5,7 +5,7 @@ import SecondTitle from "../Components/SecondTitle";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/esm/Col";
 import InputComponent from "../Components/InputComponent";
-import Button from "../Components/Button";
+import ButtonComponent from "../Components/ButtonComponent";
 import Footer from "../Components/Footer";
 import LinkImageComponent from "../Components/LinkImageComponent";
 import { useState } from "react";
@@ -72,7 +72,7 @@ function ForgetPassword() {
                 />
               </Col>
             </Row>
-            <Button name={"Enviar email"} type="submit" />
+            <ButtonComponent name={"Enviar email"} type="submit" />
           </Form>
         </Col>
         <Col>

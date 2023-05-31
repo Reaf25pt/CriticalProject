@@ -9,13 +9,24 @@ function Home() {
   return (
     <Container fluid>
       <Row>
+        <Col md={1}>
+          <Sidebar />
+        </Col>
+        <Col md={11}>
+          <HeaderComponent />
+          <MainTitle />
+          <Outlet />
+          <Footer />
+        </Col>
+      </Row>
+      {/* <Row>
         <HeaderComponent />
       </Row>
       <Row>
         <MainTitle />
       </Row>
       <Row>
-        <Col md={2}>
+        <Col md={0} className="m-0">
           <Sidebar />
         </Col>
         <Col md={10}>
@@ -24,7 +35,7 @@ function Home() {
       </Row>
       <Row>
         <Footer />
-      </Row>
+      </Row> */}
     </Container>
   );
 }

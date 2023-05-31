@@ -2,7 +2,7 @@ import { Card, Col, Container, Form, Row } from "react-bootstrap";
 import LinkButton from "../Components/LinkButton";
 import InputComponent from "../Components/InputComponent";
 import SelectComponent from "../Components/SelectComponent";
-import Button from "../Components/Button";
+import ButtonComponent from "../Components/ButtonComponent";
 import TextAreaComponent from "../Components/TextAreaComponent";
 const handleSubmit = "";
 
@@ -24,7 +24,7 @@ function AddMembers() {
                 <Row className="mt-3">
                   <SelectComponent placeholder={"Nome do Membro"} />
                   <Row className="mt-5">
-                    <Button name={"Convidar"} />
+                    <ButtonComponent name={"Convidar"} />
                   </Row>
                 </Row>
               </Col>
