@@ -16,6 +16,8 @@ import ProjectsCreate from "./Pages/ProjectsCreate";
 import AddMembers from "./Pages/AddMembers";
 import OtherInformations from "./Pages/OtherInformations";
 import ProjectOpen from "./Pages/ProjectOpen";
+import "./index.css";
+import ContestCreate from "./Pages/ContestCreate";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -33,6 +35,7 @@ root.render(
         <Route path="projectscreate" element={<ProjectsCreate />} />
         <Route path="addmembers" element={<AddMembers />} />
         <Route path="otherinformations" element={<OtherInformations />} />
+        <Route path="contestcreate" element={<ContestCreate />} />
       </Route>
       <Route path="/projects/:id" element={<ProjectOpen />} />
     </Routes>

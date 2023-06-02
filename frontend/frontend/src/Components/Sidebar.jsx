@@ -4,7 +4,7 @@ import { Link, Outlet } from "react-router-dom";
 
 function Sidebar() {
   return (
-    <div className="me-5">
+    <div>
       <div>
         <div className={style.sidebar}>
           <div className={style.box}>

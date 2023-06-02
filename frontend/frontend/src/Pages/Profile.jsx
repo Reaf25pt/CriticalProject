@@ -6,10 +6,10 @@ import ProjectComponent from "../Components/ProjectComponent";
 
 function Profile() {
   return (
-    <Container className="ms-5 mt-5 ">
+    <Container className="m-5">
       <Row>
-        <Col md={3} className="me-5">
-          <Form className="m-0">
+        <Col md={3}>
+          <Form>
             <Row className={style.box}>
               <Image
                 className={style.image}

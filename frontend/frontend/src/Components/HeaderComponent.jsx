@@ -5,7 +5,10 @@ import Logout from "./Logout";
 
 function HeaderComponent() {
   return (
-    <div className="d-flex justify-content-end align-items-center m-1 ">
+    <div
+      className="d-flex justify-content-end align-items-center bg-white
+    "
+    >
       <div className={style.buttons}>
         <BsFillChatLeftTextFill className={style.icon} />
         <BsFillEnvelopeFill className={style.icon} />

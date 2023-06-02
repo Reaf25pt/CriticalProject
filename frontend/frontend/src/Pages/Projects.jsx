@@ -6,7 +6,7 @@ function Projects() {
     <Container fluid>
       <Row>
         <Col md={2} className="m-5">
-          <LinkButton name={"+"} to={"/home/projectscreate"} />
+          <LinkButton name={"Adicionar Projeto"} to={"/home/projectscreate"} />
         </Col>
         <Col md={10}></Col>
       </Row>

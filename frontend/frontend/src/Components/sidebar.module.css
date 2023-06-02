@@ -10,8 +10,7 @@
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    position: fixed;
-    margin: 0;
+    position: absolute;
     justify-content: center;
     margin-left: -15px;
 }
@@ -19,7 +18,6 @@
 .linksidebar {
     text-decoration: none;
     color: white;
-    margin: 10px;
 
 }
 
@@ -30,7 +28,6 @@
 
 .box:hover {
     background-color: #A50D13;
-    width: 100%;
     color: white;
 
 }

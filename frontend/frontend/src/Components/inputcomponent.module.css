@@ -1,14 +1,12 @@
 .inputcomponent {
     border: none;
-    border-bottom: solid grey 0.5px;
-    padding: 2px;
-    margin: 3px;
+    padding: 5px;
     outline: none;
     width: 100%;
+    border-radius: 10px;
 
 
 }
-
 
 .inputcomponent:focus {
     border: none;
