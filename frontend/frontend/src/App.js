@@ -86,15 +86,17 @@ function App() {
               name="password"
               type="password"
               minLength={8}
+              title="Password válida deve ter no mínimo 8 caracteres e conter 1 letra maiúscula, 1 letra minúscula, 1 número e 1 símbolo !@#$&*"
               pattern="^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$"
               onChange={handleChange}
             />
-            <div className="form-text">
+            {/* <div className="form-text">
               {" "}
-              A senha deve ter entre 6 a 16 caracteres
-            </div>
+              Password válida deve ter no mínimo 8 caracteres e conter 1 letra
+              maiúscula, 1 letra minúscula, 1 número e 1 símbolo !@#$&*
+            </div> */}
             <Link className="text-dark" to="forgetpassword">
-              Esqueceu a password
+              Esqueceu a sua password?
             </Link>
             <ButtonComponent name={"Entrar"} type="submit" />
             <LinkButton name={"Registar"} to={"/register"} />
