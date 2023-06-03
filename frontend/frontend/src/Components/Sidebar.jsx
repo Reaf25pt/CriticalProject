@@ -1,4 +1,4 @@
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Container, Nav, Row } from "react-bootstrap";
 import style from "./sidebar.module.css";
 import { Link, Outlet } from "react-router-dom";
 
@@ -6,7 +6,7 @@ function Sidebar() {
   return (
     <div>
       <div>
-        <div className={style.sidebar}>
+        <Nav className={style.sidebar}>
           <div className={style.box}>
             <Link className={style.linksidebar} to={"/home"}>
               Inicio
@@ -27,7 +27,7 @@ function Sidebar() {
               Perfil
             </Link>
           </div>
-        </div>{" "}
+        </Nav>{" "}
       </div>
     </div>
   );

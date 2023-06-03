@@ -17,7 +17,7 @@ function Home() {
           <Row>
             <HeaderComponent />
           </Row>
-          <Row>
+          <Row className={style.outlet}>
             <Outlet />
           </Row>
         </Col>

@@ -7,8 +7,3 @@
 
 
 }
-
-.inputcomponent:focus {
-    border: none;
-    border-bottom: solid rgb(238, 8, 8) 0.5px;
-}
