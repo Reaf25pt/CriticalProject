@@ -1,11 +1,12 @@
-import { Image } from "react-bootstrap";
+import { Container, Image } from "react-bootstrap";
 import { BsFillChatLeftTextFill, BsFillEnvelopeFill } from "react-icons/bs";
 import style from "./headercomponent.module.css";
 import Logout from "./Logout";
 
 function HeaderComponent() {
   return (
-    <div
+    <Container
+      fluid
       className="d-flex justify-content-end align-items-center bg-light
     "
     >
@@ -23,7 +24,7 @@ function HeaderComponent() {
         roundedCircle
       />
       <Logout />
-    </div>
+    </Container>
   );
 }
 

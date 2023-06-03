@@ -10,10 +10,10 @@ function Home() {
   return (
     <Container fluid>
       <Row>
-        <Col md={1}>
+        <Col xl={1}>
           <Sidebar />
         </Col>
-        <Col md={11}>
+        <Col xl={11}>
           <Row>
             <HeaderComponent />
           </Row>
