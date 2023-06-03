@@ -7,12 +7,15 @@ import ButtonComponent from "../Components/ButtonComponent";
 
 function ContestCreate() {
   return (
-    <Container fluid className="ms-5">
+    <Container className="ms-2">
       {" "}
       <div>
         <SecondTitle name={"Criar concurso"} />
       </div>
-      <Form className="mt-5">
+      <Form
+        className="mt-5 
+"
+      >
         <Row className={style.boxform}>
           <InputComponent placeholder={"Titulo*"} />
           <Col>

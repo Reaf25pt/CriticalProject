@@ -6,7 +6,7 @@ import Logout from "./Logout";
 function HeaderComponent() {
   return (
     <div
-      className="d-flex justify-content-end align-items-center bg-white
+      className="d-flex justify-content-end align-items-center bg-light
     "
     >
       <div className={style.buttons}>
