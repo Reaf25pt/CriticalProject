@@ -27,17 +27,18 @@ function ContestCreate() {
               <InputComponent placeholder={"Nº Max de Projetos*"} />
             </Row>
             <Row className={style.boxform}>
-              <TextAreaComponent name={"Descrição"} />
+              <Col md={8}>
+                <TextAreaComponent name={"Descrição"} />
+              </Col>
+              <Col md={4}>
+                <TextAreaComponent name={"Regras"} />
+              </Col>
             </Row>
-            <Row className={style.boxform}>
-              {" "}
-              <TextAreaComponent name={"Regras"} />
-            </Row>
-            <Row className="mb-5 w-25 p-3 ">
+            <Container fluid className="mb-5 w-25 p-3 d-flex ">
               <Col>
                 <ButtonComponent name={"Adicionar"} />
               </Col>
-            </Row>
+            </Container>
           </Form>
         </Row>
       </Container>
