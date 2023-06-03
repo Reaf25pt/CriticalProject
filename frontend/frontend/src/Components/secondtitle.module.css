@@ -1,10 +1,11 @@
 .secondtitle {
     background-color: #A50D13;
     color: white;
-    margin-top: 10px;
+    margin-top: 0.5em;
     text-align: start;
     font-weight: 800;
-    padding: 1px;
+    padding: 0.1em;
     font-size: x-large;
     font-family: "Britannic Bold";
+    margin-left: 0.5em;
 }

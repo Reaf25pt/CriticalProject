@@ -7,37 +7,41 @@ import ButtonComponent from "../Components/ButtonComponent";
 
 function ContestCreate() {
   return (
-    <Container className="ms-2">
-      {" "}
-      <div>
+    <div>
+      <Row className="mb-5">
         <SecondTitle name={"Criar concurso"} />
-      </div>
-      <Form
-        className="mt-5 
-"
-      >
-        <Row className={style.boxform}>
-          <InputComponent placeholder={"Titulo*"} />
-          <Col>
-            <InputComponent placeholder={"Data Inicio*"} />
-          </Col>
-          <Col>
-            <InputComponent placeholder={"Data Fim*"} />
-          </Col>
-          <InputComponent placeholder={"Nº Max de Projetos*"} />
-        </Row>
-        <Row className={style.boxform}>
-          <TextAreaComponent name={"Descrição"} />
-        </Row>
-        <Row className={style.boxform}>
-          {" "}
-          <TextAreaComponent name={"Regras"} />
-        </Row>
+      </Row>
+      <Container fluid className="d-flex justify-content-center">
+        {" "}
+        <Row className="mb-5"></Row>
         <Row>
-          <ButtonComponent name={"Adicionar"} />
+          <Form>
+            <Row className={style.boxform}>
+              <InputComponent placeholder={"Titulo*"} />
+              <Col>
+                <InputComponent placeholder={"Data Inicio*"} />
+              </Col>
+              <Col>
+                <InputComponent placeholder={"Data Fim*"} />
+              </Col>
+              <InputComponent placeholder={"Nº Max de Projetos*"} />
+            </Row>
+            <Row className={style.boxform}>
+              <TextAreaComponent name={"Descrição"} />
+            </Row>
+            <Row className={style.boxform}>
+              {" "}
+              <TextAreaComponent name={"Regras"} />
+            </Row>
+            <Row className="mb-5 w-25 p-3 ">
+              <Col>
+                <ButtonComponent name={"Adicionar"} />
+              </Col>
+            </Row>
+          </Form>
         </Row>
-      </Form>
-    </Container>
+      </Container>
+    </div>
   );
 }
 
