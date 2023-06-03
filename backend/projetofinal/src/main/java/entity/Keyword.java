@@ -8,6 +8,8 @@ import java.util.List;
 
 @Entity
 @Table(name="Keyword")
+@NamedQuery(name = "Keyword.findKeywordByTitle", query = "SELECT k FROM Keyword k WHERE k.title = :title")
+
 public class Keyword implements Serializable {
 
     private static final long serialVersionUID = 1L;

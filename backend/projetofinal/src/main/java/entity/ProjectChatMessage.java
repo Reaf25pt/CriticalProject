@@ -22,8 +22,13 @@ public class ProjectChatMessage implements Serializable {
     @Column(name = "message", nullable = false, unique = false, updatable = false)
     private String message;
 
+    /*
     @Column(name = "userSenderId", nullable = false, unique = false, updatable = false)
     private int userSenderId;
+*/
+    // user que envia a mensagem
+    @ManyToOne
+    private User messageSender;
    /*
     @Column (name="seen", nullable=false, unique=false, updatable=true)
     private boolean seen = false;
@@ -60,12 +65,12 @@ public class ProjectChatMessage implements Serializable {
         this.message = message;
     }
 
-    public int getUserSenderId() {
-        return userSenderId;
+    public User getMessageSender() {
+        return messageSender;
     }
 
-    public void setUserSenderId(int userSenderId) {
-        this.userSenderId = userSenderId;
+    public void setMessageSender(User messageSender) {
+        this.messageSender = messageSender;
     }
 
     public Project getProject() {

@@ -4,6 +4,7 @@ import ENUM.Office;
 import ENUM.StatusProject;
 
 import java.util.Date;
+import java.util.List;
 
 public class Project {
 
@@ -15,6 +16,8 @@ public class Project {
     private StatusProject status;
     private int membersNumber;
     private Date creationDate;
+
+    private List<Keyword> keywords;
 
     public Project(int id, String title, Office office, String details, String resources, StatusProject status, int membersNumber, Date creationDate) {
         this.id = id;
@@ -91,5 +94,13 @@ public class Project {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public List<Keyword> getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(List<Keyword> keywords) {
+        this.keywords = keywords;
     }
 }

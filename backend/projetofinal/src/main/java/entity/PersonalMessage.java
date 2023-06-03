@@ -26,8 +26,13 @@ public class PersonalMessage implements Serializable {
     @Column (name="seen", nullable=false, unique=false, updatable=true)
     private boolean seen = false;
 
+    /*
     @Column (name="userSenderId", nullable=false, unique=false, updatable=false)
     private int userSenderId;
+*/
+    // user que envia a mensagem pessoal
+    @ManyToOne
+    private User messageSender;
 
     // user que recebe a mensagem pessoal
     @ManyToOne
@@ -69,13 +74,7 @@ public class PersonalMessage implements Serializable {
         this.seen = seen;
     }
 
-    public int getUserSenderId() {
-        return userSenderId;
-    }
 
-    public void setUserSenderId(int userSenderId) {
-        this.userSenderId = userSenderId;
-    }
 
     public User getMessageReceiver() {
         return messageReceiver;
@@ -83,5 +82,13 @@ public class PersonalMessage implements Serializable {
 
     public void setMessageReceiver(User messageReceiver) {
         this.messageReceiver = messageReceiver;
+    }
+
+    public User getMessageSender() {
+        return messageSender;
+    }
+
+    public void setMessageSender(User messageSender) {
+        this.messageSender = messageSender;
     }
 }

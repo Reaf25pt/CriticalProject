@@ -6,8 +6,10 @@ public class Keyword {
     private String title;
 
 
-    public Keyword(int id, String title) {
-        this.id = id;
+    public Keyword() {
+    }
+
+    public Keyword(String title) {
         this.title = title;
     }
 

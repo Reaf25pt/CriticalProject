@@ -70,6 +70,7 @@ public class User implements Serializable {
                     userDao.merge(userEnt);
                     tokenDao.merge(tokenEnt);
                     user = convertLoginDto(userEnt, tokenEnt);
+
                 }
             }
         }

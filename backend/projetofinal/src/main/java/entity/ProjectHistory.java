@@ -22,10 +22,13 @@ public class ProjectHistory implements Serializable {
     @Column (name="creationTime", nullable=false, unique=false, updatable=false)
     private Date creationTime;
 
-    // record can be associated with a given task
+    /*
     @Column(name = "taskId", nullable = true, unique = false, updatable = true)
     private int taskId;
-
+*/
+    // record can be associated with a given task
+    @ManyToOne
+    private Task task;
     @ManyToOne
     private User author;
 
@@ -57,12 +60,12 @@ public ProjectHistory(){
         this.creationTime = creationTime;
     }
 
-    public int getTaskId() {
-        return taskId;
+    public Task getTask() {
+        return task;
     }
 
-    public void setTaskId(int taskId) {
-        this.taskId = taskId;
+    public void setTask(Task task) {
+        this.task = task;
     }
 
     public User getAuthor() {
