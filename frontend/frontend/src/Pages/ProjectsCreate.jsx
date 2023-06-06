@@ -1,5 +1,3 @@
-import { Col, Container, Form, Row } from "react-bootstrap";
-import LinkButton from "../Components/LinkButton";
 import InputComponent from "../Components/InputComponent";
 import SelectComponent from "../Components/SelectComponent";
 import ButtonComponent from "../Components/ButtonComponent";
@@ -112,24 +110,27 @@ function ProjectsCreate() {
             role="tabpanel"
             aria-labelledby="profile-tab"
           >
-            <div className="row mx-auto col-10 col-md-8 col-lg-6">
-              <form className="mt-5 p-5 bg-secondary  ">
-                <div className="row mb-3 ">
-                  <div className="col ">
-                    <div className="form-outline">
-                      <InputComponent type="text" placeholder="Email" />
+            <div className="row">
+              <div className="mx-auto col-10 col-md-8 col-lg-6">
+                <form className="mt-5 p-5 bg-secondary  ">
+                  <div className="row mb-3 ">
+                    <div className="col ">
+                      <div className="form-outline">
+                        <InputComponent type="text" placeholder="Email" />
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <ButtonComponent name={"Convidar"} />
-              </form>
-              <div className=" col-2 col-md-4 col-lg-6">
+                  <ButtonComponent name={"Convidar"} />
+                </form>
+              </div>
+              <div className="col-6 col-md-7 col-lg-4 mx-auto bg-secondary mt-5">
                 <div>
-                  <h3>Membros</h3>
-                  <div>
-                    <p>Primeiro Nome</p>
-                    <p>Ultimo Nome</p>
+                  <h3 className="bg-white mt-5 text-center text-nowrap ">
+                    Membros do Projetos
+                  </h3>
+                  <div className="bg-black text-white p-1 m-1">
+                    <p>Rodrigo Ferreira</p>
                   </div>
                 </div>
               </div>
