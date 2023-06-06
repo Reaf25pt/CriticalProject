@@ -8,21 +8,13 @@ import style from "./home.module.css";
 
 function Home() {
   return (
-    <Container fluid>
-      <Row>
-        <Col xl={1}>
+    <div>
+      <div className="container-fluid">
+        <div className="row">
           <Sidebar />
-        </Col>
-        <Col xl={11}>
-          <Row>
-            <HeaderComponent />
-          </Row>
-          <Row className={style.outlet}>
-            <Outlet />
-          </Row>
-        </Col>
-      </Row>
-    </Container>
+        </div>
+      </div>
+    </div>
   );
 }
 

@@ -1,9 +1,9 @@
 import styles from "./inputcomponent.module.css";
 function InputComponent(props) {
   return (
-    <div className="mt-3">
+    <div>
       <input
-        className={styles.inputcomponent}
+        className="form-control bg-light"
         type={props.type}
         name={props.name}
         onChange={props.onChange}
@@ -12,7 +12,6 @@ function InputComponent(props) {
         pattern={props.pattern}
         required={props.required}
         id={props.id}
-        title={props.title}
       />
     </div>
   );

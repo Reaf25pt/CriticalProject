@@ -1,13 +1,12 @@
-import style from "./selectcomponent.module.css";
-
 function SelectComponent(props) {
   return (
-    <div className={style.selectcomponent}>
+    <div>
       <select
         name={props.name}
         id={props.id}
         onChange={props.onChange}
         required={props.required}
+        className="form-control"
       >
         <option value="8">{props.placeholder}</option>
         <option value="0">Lisboa</option>
