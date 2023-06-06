@@ -180,7 +180,7 @@ if (userEnt != null) {
                 LOGGER.info("Keyword " + newKeyW.getId() + " is persisted in database and associated with project, project ID: "+newProjEnt.getId()+". IP Address of request is " + userBean.getIPAddress());
             }
         }
-
+// TODO  colocar TRIM() e testar - associado a keywords
 
     }
 

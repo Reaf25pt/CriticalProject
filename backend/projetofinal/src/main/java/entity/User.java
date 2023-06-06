@@ -55,6 +55,10 @@ public class User implements Serializable {
     @Column(name = "openProfile", nullable = false, unique = false, updatable = true)
     private boolean openProfile = false;
 
+    // coluna que permite redireccionar no frontend no 1º login para 1 página específica para preencher os restantes dados pessoais
+    @Column(name = "fillInfo", nullable = false, unique = false, updatable = true)
+    private boolean fillInfo = false;  // TODO não esquecer
+
     @Column(name = "validated", nullable = false, unique = false, updatable = true)
     private boolean validated = false;
 
@@ -203,6 +207,14 @@ public class User implements Serializable {
 
     public void setOpenProfile(boolean openProfile) {
         this.openProfile = openProfile;
+    }
+
+    public boolean isFillInfo() {
+        return fillInfo;
+    }
+
+    public void setFillInfo(boolean fillInfo) {
+        this.fillInfo = fillInfo;
     }
 
     public boolean isValidated() {

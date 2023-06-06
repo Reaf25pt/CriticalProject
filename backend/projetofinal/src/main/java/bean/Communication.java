@@ -70,7 +70,7 @@ public class Communication implements Serializable {
         dto.Notification notifDto = convertNotifEntToDto(notif);
 
         for (String t : listTokens) {
-// TODO falta testar
+// TODO falta testar socket
             Notifier.sendNotification(notifDto, t);
         }
 
