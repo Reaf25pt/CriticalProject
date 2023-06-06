@@ -8,10 +8,13 @@ public class Notification {
     private int id;
     private Date creationTime;
     private String message;
+    private String messageEng;
     private boolean seen;
     private boolean needsInput;
     private int relationId;
 
+    public Notification() {
+    }
 
     public Notification(int id, Date creationTime, String message, boolean seen, boolean needsInput, int relationId) {
         this.id = id;
@@ -69,5 +72,13 @@ public class Notification {
 
     public void setRelationId(int relationId) {
         this.relationId = relationId;
+    }
+
+    public String getMessageEng() {
+        return messageEng;
+    }
+
+    public void setMessageEng(String messageEng) {
+        this.messageEng = messageEng;
     }
 }

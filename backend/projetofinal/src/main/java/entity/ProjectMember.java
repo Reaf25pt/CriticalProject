@@ -7,6 +7,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "ProjectMembers")
 @NamedQuery(name = "ProjectMember.findListOfProjectsByUserId", query = "SELECT p.projectToParticipate FROM ProjectMember p WHERE p.userInvited.userId = :userId AND p.accepted = true AND p.removed = false")
+@NamedQuery(name = "ProjectMember.findListOfManagersByProjectId", query = "SELECT p.userInvited FROM ProjectMember p WHERE p.projectToParticipate.id = :id AND p.accepted = true AND p.removed = false AND p.manager=true")
+@NamedQuery(name = "ProjectMember.findProjectMemberByProjectIdAndUserId", query = "SELECT p FROM ProjectMember p WHERE p.projectToParticipate.id = :projId AND p.userInvited.userId = :userId")
 
 public class ProjectMember implements Serializable {
 

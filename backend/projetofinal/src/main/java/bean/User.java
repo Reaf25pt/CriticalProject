@@ -567,7 +567,6 @@ return projectsList;
         List<Project> projectsList = new ArrayList<Project>();
         entity.User user = tokenDao.findUserEntByToken(token);
 
-
         List<entity.Project> list =projMemberDao.findListOfProjectsByUserId(user.getUserId());
 
 for (entity.Project p:list){

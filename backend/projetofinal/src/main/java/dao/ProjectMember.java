@@ -1,8 +1,10 @@
 package dao;
 
 import entity.Project;
+import entity.User;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.NoResultException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,5 +28,29 @@ public class ProjectMember extends Abstract<entity.ProjectMember>{
         }
         return projectList;
     }
+
+    public List<entity.User> findListOfManagersByProjectId(int id) {
+        List<entity.User> managersList = new ArrayList<entity.User>();
+        try {
+            managersList = (List<User>) em.createNamedQuery("ProjectMember.findListOfManagersByProjectId").setParameter("id", id).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return managersList;
+    }
+
+    public entity.ProjectMember findProjectMemberByProjectIdAndUserId(int projId, int userId) {
+        entity.ProjectMember ent = null;
+        try {
+            ent = (entity.ProjectMember) em.createNamedQuery("ProjectMember.findProjectMemberByProjectIdAndUserId").setParameter("projId", projId).setParameter("userId", userId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            // e.printStackTrace();
+            return null;
+        }
+        return ent;
+    }
+
 
 }

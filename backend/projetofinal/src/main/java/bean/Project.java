@@ -31,6 +31,8 @@ public class Project implements Serializable {
     User userBean;
     @EJB
     dao.ProjectMember projMemberDao;
+    @Inject
+    Communication communicationBean;
 
 
     public Project(){
@@ -208,6 +210,8 @@ if (userEnt != null) {
 
 
     public boolean addMemberToProject (int projId, int userId, String token){
+        // TODO validar aqui se ja existe relação??
+        // 1º valida se já há relação entre user convidado e projecto na tabela projectMember. Se houver, apenas actualiza as infos
         // add member to given project. If userId of token == userId to add (self-invitation) sends notification to managers of project
         // if token ID NOT == userID to invite, send notification to user invited
         // TODO verify if userID is in active project or not even show in the frontend those users?! papel de gestor ou participante é definido posteriorment, de acordo com enunciado
@@ -220,18 +224,17 @@ if (userEnt != null) {
 
         if(user!=null && userEnt!= null && project!=null) {
 
-            associateUserToProject(user, project);
+            int relationId= associateUserToProject(user, project);
 
             if (userEnt.getUserId()== userId){
                 // self-invitation to participate in project
                 //TODO colocar aqui o log de ter convite para participar no projecto ?!!?!
-
-                // TODO notify all managers of project
-
-
+                communicationBean.notifyNewPossibleProjectMember(relationId, project, user, false);
+                res=true;
             } else {
                 // not self-invitation
-                // TODO notify user invited
+                communicationBean.notifyNewPossibleProjectMember(relationId, project, user, true);
+                res=true;
             }
         }
 
@@ -239,7 +242,7 @@ if (userEnt != null) {
         return res;
     }
 
-    private void associateUserToProject(entity.User user, entity.Project project/*, boolean manager*/) {
+    private int associateUserToProject(entity.User user, entity.Project project/*, boolean manager*/) {
         // associa o membro ao projecto, inserindo a info na 3ª tabela e definindo a relação (gestor / participante)
         // se boolean manager for true - relação do user com projecto é de GESTOR.
 
@@ -265,7 +268,7 @@ if (userEnt != null) {
 
         projDao.merge(project);
         userDao.merge(user);
-
+int relationId = projMember.getId();
         LOGGER.info("User whose ID is " + user.getUserId()+" is invited to participate in project, project ID: "+project.getId()+". IP Address of request is " + userBean.getIPAddress());
 //TODO change log accordingly self-invitation or not ?!  colocar este log no método de addMember ?
 
@@ -277,8 +280,28 @@ if (userEnt != null) {
             //relação PARTICIPANTE
             LOGGER.info("User whose ID is " + user.getUserId()+" participates in project, project ID: "+project.getId()+". IP Address of request is " + userBean.getIPAddress());
         }*/
-
+return relationId;
     }
 
 
+    public boolean isProjManager(String token, int projId) {
+        // check if token has permission to modify project's info (is projManager of given project)
+        // ir a tabela projMember buscar todas as entradas cujo user associado ao token tenha relação com o projecto cujo id== projId.
+        // TODO assume-se que cada user tem apenas 1a relação com cada projecto. Talvez seja necessário mudar e proteger no método addMember para verificar 1º se relação já existe
+        boolean res = false;
+
+        entity.User user = tokenDao.findUserEntByToken(token);
+       if (user!=null){
+        ProjectMember projMember = projMemberDao.findProjectMemberByProjectIdAndUserId(projId, user.getUserId());
+
+        if(projMember!= null){
+            if(projMember.isManager()){
+                res=true;
+                // token que faz request é manager do projecto, tendo permissão para fazer o request
+            }
+
+        }}
+
+        return res;
+    }
 }

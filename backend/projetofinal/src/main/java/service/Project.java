@@ -47,13 +47,13 @@ public class Project {
     @Path("/newmember")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addMember(int projId, int userId, @HeaderParam("token") String token) {
+    public Response addMember(@HeaderParam("projId") int projId, @HeaderParam("userId") int userId, @HeaderParam("token") String token) {
         // TODO send id de proj e user ou objecto com + info?? SE for ID, como verificar se a info vem nula?
         Response r = null;
 
         if (token == null || token.isBlank() || token.isEmpty() ) {
             r = Response.status(401).entity("Unauthorized!").build();
-        }  else if (!userBean.checkUserPermission(token)) {
+        }  else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId)) {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
