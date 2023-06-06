@@ -8,6 +8,10 @@ function TextAreaComponent(props) {
         // rows="13"
         // style={{ resize: "none", height: "100%" }}
         placeholder={props.placeholder}
+        name={props.name}
+        onChange={props.onChange}
+        required={props.required}
+        id={props.id}
       ></textarea>
     </div>
   );

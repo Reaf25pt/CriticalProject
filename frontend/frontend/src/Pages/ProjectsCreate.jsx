@@ -3,9 +3,53 @@ import SelectComponent from "../Components/SelectComponent";
 import ButtonComponent from "../Components/ButtonComponent";
 import TextAreaComponent from "../Components/TextAreaComponent";
 import { BsSearch, BsArrowDown } from "react-icons/bs";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { userStore } from "../stores/UserStore";
 
 function ProjectsCreate() {
-  const handleSubmit = "";
+  const [credentials, setCredentials] = useState({});
+  const navigate = useNavigate();
+  const user = userStore((state) => state.user);
+
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+
+    setCredentials((values) => {
+      return { ...values, [name]: value };
+    });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const project = {
+      // falta office e permitir lista de keywords
+      title: credentials.projectName,
+      keywords: [credentials.keyword],
+      membersNumber: credentials.maxMembers,
+      resources: credentials.resources,
+      details: credentials.details,
+    };
+
+    fetch("http://localhost:8080/projetofinal/rest/project/newproject", {
+      method: "POST",
+      headers: {
+        Accept: "*/*",
+        "Content-Type": "application/json",
+        token: user.token,
+      },
+      body: JSON.stringify(project),
+    }).then((response) => {
+      if (response.status === 200) {
+        alert("Projecto criado com sucesso");
+        navigate("/home", { replace: true });
+      } else {
+        alert("Algo correu mal");
+      }
+    });
+  };
 
   return (
     <div>
@@ -49,16 +93,34 @@ function ProjectsCreate() {
           aria-labelledby="home-tab"
         >
           <div className="row mx-auto col-10 col-md-8 col-lg-6">
-            <form className="mt-5 p-5 bg-secondary rounded-5  ">
+            <form
+              className="mt-5 p-5 bg-secondary rounded-5  "
+              onSubmit={handleSubmit}
+            >
               <div className="row mb-3 ">
                 <div className="col ">
                   <div className="form-outline">
-                    <InputComponent type="text" placeholder="Nome do Projeto" />
+                    <InputComponent
+                      placeholder={"Nome do projecto *"}
+                      id="projectName"
+                      required
+                      name="projectName"
+                      type="text"
+                      onChange={handleChange}
+                    />
                   </div>
                 </div>
                 <div class="form-group mt-3">
                   <div class="input-group rounded">
-                    <input
+                    <InputComponent
+                      placeholder={"Palavra-chave *"}
+                      id="keyword"
+                      required
+                      name="keyword"
+                      type="text"
+                      onChange={handleChange}
+                    />
+                    {/* <input
                       type="search"
                       class="form-control rounded"
                       placeholder="Search"
@@ -67,7 +129,7 @@ function ProjectsCreate() {
                     />
                     <span class="input-group-text border-0">
                       <BsSearch />
-                    </span>
+                    </span> */}
                   </div>
                 </div>
                 <div className="form-outline mt-3">
@@ -79,7 +141,13 @@ function ProjectsCreate() {
               </div>
 
               <div className="form-outline mb-4">
-                <InputComponent type="text" placeholder="Nº Max. membros" />
+                <InputComponent
+                  placeholder={"Número máximo membros"}
+                  id="maxMembers"
+                  name="maxMembers"
+                  type="number"
+                  onChange={handleChange}
+                />
 
                 <div class="form-group mt-3">
                   <div class="input-group rounded">
@@ -93,13 +161,23 @@ function ProjectsCreate() {
 
               <div class="form-outline mb-4">
                 <TextAreaComponent
-                  placeholder={"Recursos Necessarios(separar por virgula)"}
+                  placeholder={"Recursos (separar por vírgula"}
+                  id="resources"
+                  name="resources"
+                  type="text"
+                  onChange={handleChange}
                 />
               </div>
               <div class="form-outline mb-4">
-                <TextAreaComponent placeholder={"Descrição do Projeto"} />
+                <TextAreaComponent
+                  placeholder={"Descrição do projecto *"}
+                  id="details"
+                  name="details"
+                  type="text"
+                  onChange={handleChange}
+                />
               </div>
-              <ButtonComponent name={"Criar"} />
+              <ButtonComponent name={"Criar"} type="submit" />
             </form>{" "}
           </div>
         </div>
