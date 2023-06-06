@@ -9,11 +9,15 @@ import entity.ProjectMember;
 import entity.Token;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 import mail.AskRecoverPassword;
 import mail.ValidateNewAccount;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.glassfish.jaxb.core.v2.TODO;
+import org.jboss.logging.Logger;
+
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,6 +27,7 @@ import java.util.List;
 @RequestScoped
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
+    private static final Logger LOGGER = Logger.getLogger(User.class);
     @EJB
     dao.User userDao;
     @EJB
@@ -31,6 +36,8 @@ public class User implements Serializable {
     dao.ProjectMember projMemberDao;
     @Inject
     bean.Project projBean;
+    @Inject
+    HttpServletRequest req;
 
     public User() {
     }
@@ -71,6 +78,15 @@ public class User implements Serializable {
                     tokenDao.merge(tokenEnt);
                     user = convertLoginDto(userEnt, tokenEnt);
 
+                  /*  HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+                    String ipAddress = req.getHeader("X-FORWARDED-FOR");
+                    if (ipAddress == null) {
+		  ipAddress = req.getRemoteAddr();
+          //Logger.info("IP of request is " + ipAddress);
+                    }*/
+
+                    LOGGER.info("User whose user ID is " + userEnt.getUserId() + " has logged in its account. IP Address of request is " +getIPAddress());
+
                 }
             }
         }
@@ -78,6 +94,14 @@ public class User implements Serializable {
         return user;
     }
 
+public String getIPAddress (){
+    String ipAddress = req.getHeader("X-FORWARDED-FOR");
+
+    if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+        ipAddress = req.getRemoteAddr();
+    }
+    return ipAddress;
+}
 
     private Login convertLoginDto(entity.User user, Token token) {
         Login loginDto = new Login();
@@ -122,6 +146,8 @@ public class User implements Serializable {
 
                 tokenDao.remove(tokenEnt);
                 //               logger.info("UserId " + userEnt.getUserId() + " logs out of its account");
+                LOGGER.info("User whose user ID is " + userEnt.getUserId() + " has logged out of its account. IP Address of request is " +getIPAddress());
+
 
                 res = 200;
             } else
@@ -190,6 +216,8 @@ public class User implements Serializable {
             userDao.persist(newUser);
             ValidateNewAccount.main(newUser.getEmail(), newUser.getToken());
             res = true;
+            LOGGER.info("A new account is created for email "+ newUser.getEmail()+" User ID is " + newUser.getUserId() + " . IP Address of request is " +getIPAddress());
+
         }
         return res;
     }
@@ -234,6 +262,8 @@ public class User implements Serializable {
                 // logger.info("Account of userId " + uEnt.getUserId() + " is activated");
 //TODO use 200 ou 202 - accepted
                 res = 200;
+                LOGGER.info("Account of user ID " + userEnt.getUserId() + " is validated. IP Address of request is " +getIPAddress());
+
             } else {
 
                 reNewTokenToValidateAccount(userEnt);
@@ -300,6 +330,8 @@ public class User implements Serializable {
                 //logger.info("Email to recover password of userId " + uEnt.getUserId() + " is sent to email " + email);
 
                 res = true;
+                LOGGER.info("User ID " + userEnt.getUserId() + " ask to recover password. IP Address of request is " +getIPAddress());
+
             }
         }
 
@@ -328,6 +360,8 @@ public class User implements Serializable {
                 // logger.info("Password of userId " + uEnt.getUserId() + " is modified through recover password email");
 
                 res = 200;
+                LOGGER.info("User ID " + userEnt.getUserId() + " recovers its password. IP Address of request is " +getIPAddress());
+
             } else {
 
                 String newToken = userEnt.createTokenToRecoverPassword();
@@ -455,6 +489,8 @@ return res;
                     userDao.merge(userEnt);
                     //TODO faz sentido ir buscar novamente à DB o user ou converter directamente o userEnt?
 
+                    LOGGER.info("User ID " + userEnt.getUserId() + " updates its profile. IP Address of request is " +getIPAddress());
+
                     updatedUser = convertToEditProfile(userEnt);
                 }
 
@@ -489,6 +525,8 @@ return res;
                 userDao.merge(user);
 
                 res=200;
+                LOGGER.info("User ID " + user.getUserId() + " changes own password. IP Address of request is " +getIPAddress());
+
             } else {
                 res=400; // bad request - old password does not match password saved in DB
             }
@@ -500,7 +538,7 @@ return res;
     }
 
 
-    public List<Project> getOwnProjectsList(String token) {
+ /*   public List<Project> getOwnProjectsList(String token) {
         // get list of projects where user of given token participates or participated (not removed!)
 
         List<Project> projectsList = new ArrayList<Project>();
@@ -520,11 +558,25 @@ return res;
                 }
             }
         }
-//TODO Falta testar
 
 return projectsList;
-    }
+    }*/
 
+    public List<Project> getOwnProjectsList(String token){
+
+        List<Project> projectsList = new ArrayList<Project>();
+        entity.User user = tokenDao.findUserEntByToken(token);
+
+
+        List<entity.Project> list =projMemberDao.findListOfProjectsByUserId(user.getUserId());
+
+for (entity.Project p:list){
+    projectsList.add( projBean.convertProjEntityToDto(p));
+
+}
+//TODO confirmar que está certo, e proteger de nulos !!!
+        return projectsList;
+    }
 
 
 }

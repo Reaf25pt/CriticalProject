@@ -1,7 +1,5 @@
 package service;
 
-import bean.User;
-
 import dto.Login;
 import dto.EditProfile;
 import dto.NewAccount;
@@ -13,16 +11,15 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.glassfish.jaxb.core.v2.TODO;
 
 import java.util.List;
 
 
 @Path("/user")
-public class UserService {
+public class User {
 
     @Inject
-    User userBean;
+    bean.User userBean;
 
     // LOGIN
     @POST
@@ -319,7 +316,7 @@ public class UserService {
                 r = Response.status(200).entity(projects).build();
             }
         }
-        //TODO falta testar
+
         return r;
     }
 

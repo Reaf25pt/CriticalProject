@@ -14,7 +14,7 @@ public class Keyword extends Abstract<entity.Keyword>{
     public entity.Keyword findKeywordByTitle(String title) {
         entity.Keyword ent = null;
         try {
-            ent = (entity.Keyword) em.createNamedQuery("Keyword.findKeywordByTitle").setParameter("title", title)
+            ent = (entity.Keyword) em.createNamedQuery("Keyword.findKeywordByTitle").setParameter("title", title.toLowerCase())
                     .getSingleResult();
         } catch (NoResultException e) {
             // e.printStackTrace();

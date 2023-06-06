@@ -2,11 +2,15 @@ package bean;
 
 import ENUM.StatusProject;
 import dto.Keyword;
+import entity.ProjectMember;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import org.jboss.logging.Logger;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +18,7 @@ import java.util.List;
 public class Project implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static final Logger LOGGER = Logger.getLogger(User.class);
     @EJB
     dao.User userDao;
     @EJB
@@ -22,6 +27,10 @@ public class Project implements Serializable {
     dao.Project projDao;
     @EJB
     dao.Keyword keywordDao;
+    @Inject
+    User userBean;
+    @EJB
+    dao.ProjectMember projMemberDao;
 
 
     public Project(){
@@ -40,7 +49,28 @@ public class Project implements Serializable {
         projDto.setMembersNumber(p.getMembersNumber());
         projDto.setCreationDate(p.getCreationDate());
 
+        if(p.getListKeywords()!=null) {
+            // converter keyword ENT to DTO
+
+            projDto.setKeywords(retrieveListKeywordsDTO(p.getListKeywords()));
+        }
 return projDto;
+    }
+
+    private List<Keyword> retrieveListKeywordsDTO(List<entity.Keyword> listKeywords) {
+        // get and convert keyword ENTITY associated with project to keyword DTO
+
+        List<Keyword> listKeywordDTO = new ArrayList<Keyword>();
+
+        for (entity.Keyword k : listKeywords){
+            Keyword keyw = new Keyword();
+            keyw.setId(k.getId());
+            keyw.setTitle(k.getTitle());
+
+            listKeywordDTO.add(keyw);
+        }
+
+        return listKeywordDTO;
     }
 
 
@@ -48,43 +78,72 @@ return projDto;
 
         boolean res= false;
 
-        if(project!=null && !projInfoIsFilledIn(project)){
+        entity.User userEnt = tokenDao.findUserEntByToken(token);
 
-            entity.Project newProjEnt = new entity.Project();
-            newProjEnt.setCreationDate(Date.from(Instant.now()));
-            newProjEnt.setStatus(StatusProject.PLANNING);
-            newProjEnt.setTitle(project.getTitle());
-            newProjEnt.setDetails(project.getDetails());
+if (userEnt != null) {
+    if (project != null && !projInfoIsFilledIn(project)) {
 
-            if(project.getOffice()!=null){
-                newProjEnt.setOffice(project.getOffice());
-            }
+        entity.Project newProjEnt = new entity.Project();
+        newProjEnt.setCreationDate(Date.from(Instant.now()));
+        newProjEnt.setStatus(StatusProject.PLANNING);
+        newProjEnt.setTitle(project.getTitle());
+        newProjEnt.setDetails(project.getDetails());
 
-            if(project.getResources()!= null){
-                newProjEnt.setResources(project.getResources());
-            }
-
-            if(project.getMembersNumber()!=0){
-                // TODO no frontend colocar 0 se não houver input ?!
-                newProjEnt.setMembersNumber(project.getMembersNumber());
-            } else {
-                newProjEnt.setMembersNumber(4);
-            }
-
-            projDao.persist(newProjEnt);
-            System.out.println(newProjEnt.getId());
-
-            //TODO persist keywords connection to project
-            associateKeywordsWithProject(project.getKeywords(), newProjEnt);
-
-
-
-
-            res=true;
-
+        if (project.getOffice() != null) {
+            newProjEnt.setOffice(project.getOffice());
         }
 
+        if (project.getResources() != null) {
+            newProjEnt.setResources(project.getResources());
+        }
+
+        if (project.getMembersNumber() != 0) {
+            // TODO no frontend colocar 0 se não houver input ?!
+            newProjEnt.setMembersNumber(project.getMembersNumber());
+        } else {
+            newProjEnt.setMembersNumber(4);
+        }
+
+        projDao.persist(newProjEnt);
+        System.out.println(newProjEnt.getId());
+
+
+        LOGGER.info("User whose user ID is " + userEnt.getUserId() + " creates a new project, project ID: "+newProjEnt.getId()+". IP Address of request is " + userBean.getIPAddress());
+
+        associateCreatorToProject(userEnt, newProjEnt);
+
+        //TODO log project before associating keywords? what if something goes wrong in that process?
+        associateKeywordsWithProject(project.getKeywords(), newProjEnt);
+
+        res = true;
+
+    }
+}
         return res;
+    }
+
+    private void associateCreatorToProject(entity.User user, entity.Project project) {
+
+            ProjectMember projMember = new ProjectMember();
+            projMember.setProjectToParticipate(project);
+            projMember.setUserInvited(user);
+
+            projMember.setManager(true);
+
+            projMember.setAnswered(true);
+            projMember.setAccepted(true);
+            projMember.setRemoved(false);
+
+            projMemberDao.persist(projMember);
+
+            project.getListPotentialMembers().add(projMember);
+            user.getListProjects().add(projMember);
+
+            projDao.merge(project);
+            userDao.merge(user);
+
+            LOGGER.info("User whose ID is " + user.getUserId()+" is a manager of project, project ID: "+project.getId()+". IP Address of request is " + userBean.getIPAddress());
+
     }
 
     private void associateKeywordsWithProject(List<Keyword> keywords, entity.Project newProjEnt) {
@@ -102,6 +161,9 @@ return projDto;
                 projDao.merge(newProjEnt);
                 keywordDao.merge(keyw);
 
+                LOGGER.info("Keyword " + keyw.getId() + " is associated with project, project ID: "+newProjEnt.getId()+". IP Address of request is " + userBean.getIPAddress());
+
+
             } else {
                 // não existe keyword para o title usado. É necessário criar e adicionar à DB
 
@@ -112,6 +174,8 @@ return projDto;
                 keywordDao.persist(newKeyW);
                 newProjEnt.getListKeywords().add(newKeyW);
                 projDao.merge(newProjEnt);
+
+                LOGGER.info("Keyword " + newKeyW.getId() + " is persisted in database and associated with project, project ID: "+newProjEnt.getId()+". IP Address of request is " + userBean.getIPAddress());
             }
         }
 
@@ -141,5 +205,80 @@ return projDto;
 
         return res;
     }
+
+
+    public boolean addMemberToProject (int projId, int userId, String token){
+        // add member to given project. If userId of token == userId to add (self-invitation) sends notification to managers of project
+        // if token ID NOT == userID to invite, send notification to user invited
+        // TODO verify if userID is in active project or not even show in the frontend those users?! papel de gestor ou participante é definido posteriorment, de acordo com enunciado
+
+        boolean res = false;
+
+        entity.User user = userDao.findUserById(userId);
+        entity.User userEnt = tokenDao.findUserEntByToken(token);
+        entity.Project project= projDao.findProjectById(projId);
+
+        if(user!=null && userEnt!= null && project!=null) {
+
+            associateUserToProject(user, project);
+
+            if (userEnt.getUserId()== userId){
+                // self-invitation to participate in project
+                //TODO colocar aqui o log de ter convite para participar no projecto ?!!?!
+
+                // TODO notify all managers of project
+
+
+            } else {
+                // not self-invitation
+                // TODO notify user invited
+            }
+        }
+
+
+        return res;
+    }
+
+    private void associateUserToProject(entity.User user, entity.Project project/*, boolean manager*/) {
+        // associa o membro ao projecto, inserindo a info na 3ª tabela e definindo a relação (gestor / participante)
+        // se boolean manager for true - relação do user com projecto é de GESTOR.
+
+        ProjectMember projMember = new ProjectMember();
+        projMember.setProjectToParticipate(project);
+        projMember.setUserInvited(user);
+      /*  if(manager) {
+            // relação GESTOR
+            projMember.setManager(true);
+        } else {
+            //relação PARTICIPANTE
+            projMember.setManager(false);}
+*/
+        projMember.setManager(false);
+        projMember.setAnswered(false);
+        projMember.setAccepted(false);
+        projMember.setRemoved(false);
+
+        projMemberDao.persist(projMember);
+
+        project.getListPotentialMembers().add(projMember);
+        user.getListProjects().add(projMember);
+
+        projDao.merge(project);
+        userDao.merge(user);
+
+        LOGGER.info("User whose ID is " + user.getUserId()+" is invited to participate in project, project ID: "+project.getId()+". IP Address of request is " + userBean.getIPAddress());
+//TODO change log accordingly self-invitation or not ?!  colocar este log no método de addMember ?
+
+       /* if(manager) {
+            // relação GESTOR
+            LOGGER.info("User whose ID is " + user.getUserId()+" is a manager of project, project ID: "+project.getId()+". IP Address of request is " + userBean.getIPAddress());
+
+        } else {
+            //relação PARTICIPANTE
+            LOGGER.info("User whose ID is " + user.getUserId()+" participates in project, project ID: "+project.getId()+". IP Address of request is " + userBean.getIPAddress());
+        }*/
+
+    }
+
 
 }

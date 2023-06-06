@@ -13,6 +13,8 @@ import java.util.List;
 @Table(name = "User")
 @NamedQuery(name = "User.findUserByEmail", query = "SELECT u FROM User u WHERE u.email = :email")
 @NamedQuery(name = "User.findUserByTokenForActivationOrRecoverPass", query = "SELECT u FROM User u WHERE u.token = :token")
+@NamedQuery(name = "User.findUserById", query = "SELECT u FROM User u WHERE u.userId = :userId")
+
 
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
