@@ -49,7 +49,7 @@ function ProjectsCreate() {
           aria-labelledby="home-tab"
         >
           <div className="row mx-auto col-10 col-md-8 col-lg-6">
-            <form className="mt-5 p-5 bg-secondary  ">
+            <form className="mt-5 p-5 bg-secondary rounded-5  ">
               <div className="row mb-3 ">
                 <div className="col ">
                   <div className="form-outline">
@@ -112,7 +112,7 @@ function ProjectsCreate() {
           >
             <div className="row">
               <div className="mx-auto col-10 col-md-8 col-lg-6">
-                <form className="mt-5 p-5 bg-secondary  ">
+                <form className="mt-5 p-5 bg-secondary rounded-5 ">
                   <div className="row mb-3 ">
                     <div className="col ">
                       <div className="form-outline">
@@ -124,12 +124,12 @@ function ProjectsCreate() {
                   <ButtonComponent name={"Convidar"} />
                 </form>
               </div>
-              <div className="col-6 col-md-7 col-lg-4 mx-auto bg-secondary mt-5">
+              <div className="col-8 col-sm-10 col-md-7 col-lg-5 mx-auto bg-secondary mt-5 rounded-5 ">
                 <div>
-                  <h3 className="bg-white mt-5 text-center text-nowrap ">
+                  <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">
                     Membros do Projetos
                   </h3>
-                  <div className="bg-black text-white p-1 m-1">
+                  <div className="bg-black text-white p-1 m-1 rounded-3 w-75 p-3 mx-auto">
                     <p>Rodrigo Ferreira</p>
                   </div>
                 </div>
