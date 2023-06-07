@@ -9,11 +9,7 @@ import style from "./home.module.css";
 function Home() {
   return (
     <div>
-      <div className="container-fluid">
-        <div className="row">
-          <Sidebar />
-        </div>
-      </div>
+      <Sidebar />
     </div>
   );
 }
