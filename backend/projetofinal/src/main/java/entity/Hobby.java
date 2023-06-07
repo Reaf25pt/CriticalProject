@@ -8,6 +8,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "Hobby")
+@NamedQuery(name = "Hobby.findHobbyByTitle", query = "SELECT h FROM Hobby h WHERE LOWER(h.hobbyTitle)  = LOWER(:title) ")
+
 public class Hobby implements Serializable {
 
     private static final long serialVersionUID = 1L;

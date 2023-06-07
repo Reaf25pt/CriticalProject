@@ -10,6 +10,9 @@ public class Hobby {
         this.title = title;
     }
 
+    public Hobby() {
+    }
+
     public int getId() {
         return id;
     }

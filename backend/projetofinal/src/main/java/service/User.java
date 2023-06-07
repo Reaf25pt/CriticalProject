@@ -1,8 +1,6 @@
 package service;
 
-import dto.Login;
-import dto.EditProfile;
-import dto.NewAccount;
+import dto.*;
 import dto.Project;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
@@ -229,20 +227,20 @@ public class User {
 
             userBean.updateSessionTime(token);
 
-           // UserDto uDto = userBean.sendDtoFromToken(token);
+            // UserDto uDto = userBean.sendDtoFromToken(token);
 
-           // logger.info("User whose userId is " + uDto.getUserId() + " attempts to update its profile ");
+            // logger.info("User whose userId is " + uDto.getUserId() + " attempts to update its profile ");
 
             // neste ponto o user tem autorização para fazer update da sua info e não é necessário validar se info vem preenchida ou existe na DB pq único campo que tem de ser único não é updated (email)
 
-                EditProfile userUpdated = userBean.updateProfile(token, newInfo);
-                if (userUpdated == null) {
-                    r = Response.status(404).entity("Not found!").build();
-                    //TODO erro 404 not found  ou  400 bad request?
+            EditProfile userUpdated = userBean.updateProfile(token, newInfo);
+            if (userUpdated == null) {
+                r = Response.status(404).entity("Not found!").build();
+                //TODO erro 404 not found  ou  400 bad request?
 
-                } else {
-                    r = Response.status(200).entity(userUpdated).build();
-                    //TODO update info na userStore ou enviar LoginDto em x do EditProfile
+            } else {
+                r = Response.status(200).entity(userUpdated).build();
+                //TODO update info na userStore ou enviar LoginDto em x do EditProfile
             }
         }
         return r;
@@ -263,8 +261,8 @@ public class User {
 
         } else {
             userBean.updateSessionTime(token);
-           // TokenEntity tEnt = tokenDao.findTokenEntByToken(token);
-           // logger.info("User whose userId is " + tEnt.getTokenOwner().getUserId() + " attempts to modify its password");
+            // TokenEntity tEnt = tokenDao.findTokenEntByToken(token);
+            // logger.info("User whose userId is " + tEnt.getTokenOwner().getUserId() + " attempts to modify its password");
 
             int a = userBean.changeOwnPassword(token, oldPassword, newPassword);
             if (a == 404) {
@@ -311,13 +309,45 @@ public class User {
             if (projects == null || projects.size() == 0) {
                 r = Response.status(404).entity("Not found").build();
             } else {
-               // logger.info("Request from userId " + tEnt.getTokenOwner().getUserId() + " - List of all its activities is retrieved from database ");
+                // logger.info("Request from userId " + tEnt.getTokenOwner().getUserId() + " - List of all its activities is retrieved from database ");
 
                 r = Response.status(200).entity(projects).build();
             }
         }
 
         return r;
+    }
+
+    // ADICIONAR HOBBY À PP LISTA DE HOBBIES
+    @POST
+    @Path("/hobby")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addHobby(@HeaderParam("token") String token, String title) {
+
+        Response r = null;
+
+        if (token == null || token.isBlank() || token.isEmpty() || title == null || title.isBlank() || title.isEmpty()) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+
+        } else {
+
+            userBean.updateSessionTime(token);
+
+            Hobby hobby = userBean.addHobby(token, title);
+            if (hobby == null) {
+                r = Response.status(404).entity("Not found!").build();
+
+            } else {
+                r = Response.status(200).entity(hobby).build();
+                // permite apresentar logo no frontend com id do hobby para poder eventualmente apagar
+            }
+        }
+        return r;
+
     }
 
 

@@ -1,9 +1,7 @@
 package bean;
 
 import ENUM.Office;
-import dto.Login;
-import dto.EditProfile;
-import dto.NewAccount;
+import dto.*;
 import dto.Project;
 import entity.ProjectMember;
 import entity.Token;
@@ -38,6 +36,8 @@ public class User implements Serializable {
     bean.Project projBean;
     @Inject
     HttpServletRequest req;
+    @EJB
+    dao.Hobby hobbyDao;
 
     public User() {
     }
@@ -85,7 +85,7 @@ public class User implements Serializable {
           //Logger.info("IP of request is " + ipAddress);
                     }*/
 
-                    LOGGER.info("User whose user ID is " + userEnt.getUserId() + " has logged in its account. IP Address of request is " +getIPAddress());
+                    LOGGER.info("User whose user ID is " + userEnt.getUserId() + " has logged in its account. IP Address of request is " + getIPAddress());
 
                 }
             }
@@ -94,14 +94,14 @@ public class User implements Serializable {
         return user;
     }
 
-public String getIPAddress (){
-    String ipAddress = req.getHeader("X-FORWARDED-FOR");
+    public String getIPAddress() {
+        String ipAddress = req.getHeader("X-FORWARDED-FOR");
 
-    if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
-        ipAddress = req.getRemoteAddr();
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = req.getRemoteAddr();
+        }
+        return ipAddress;
     }
-    return ipAddress;
-}
 
     private Login convertLoginDto(entity.User user, Token token) {
         Login loginDto = new Login();
@@ -146,7 +146,7 @@ public String getIPAddress (){
 
                 tokenDao.remove(tokenEnt);
                 //               logger.info("UserId " + userEnt.getUserId() + " logs out of its account");
-                LOGGER.info("User whose user ID is " + userEnt.getUserId() + " has logged out of its account. IP Address of request is " +getIPAddress());
+                LOGGER.info("User whose user ID is " + userEnt.getUserId() + " has logged out of its account. IP Address of request is " + getIPAddress());
 
 
                 res = 200;
@@ -216,7 +216,7 @@ public String getIPAddress (){
             userDao.persist(newUser);
             ValidateNewAccount.main(newUser.getEmail(), newUser.getToken());
             res = true;
-            LOGGER.info("A new account is created for email "+ newUser.getEmail()+" User ID is " + newUser.getUserId() + " . IP Address of request is " +getIPAddress());
+            LOGGER.info("A new account is created for email " + newUser.getEmail() + " User ID is " + newUser.getUserId() + " . IP Address of request is " + getIPAddress());
 
         }
         return res;
@@ -262,7 +262,7 @@ public String getIPAddress (){
                 // logger.info("Account of userId " + uEnt.getUserId() + " is activated");
 //TODO use 200 ou 202 - accepted
                 res = 200;
-                LOGGER.info("Account of user ID " + userEnt.getUserId() + " is validated. IP Address of request is " +getIPAddress());
+                LOGGER.info("Account of user ID " + userEnt.getUserId() + " is validated. IP Address of request is " + getIPAddress());
 
             } else {
 
@@ -330,7 +330,7 @@ public String getIPAddress (){
                 //logger.info("Email to recover password of userId " + uEnt.getUserId() + " is sent to email " + email);
 
                 res = true;
-                LOGGER.info("User ID " + userEnt.getUserId() + " ask to recover password. IP Address of request is " +getIPAddress());
+                LOGGER.info("User ID " + userEnt.getUserId() + " ask to recover password. IP Address of request is " + getIPAddress());
 
             }
         }
@@ -360,7 +360,7 @@ public String getIPAddress (){
                 // logger.info("Password of userId " + uEnt.getUserId() + " is modified through recover password email");
 
                 res = 200;
-                LOGGER.info("User ID " + userEnt.getUserId() + " recovers its password. IP Address of request is " +getIPAddress());
+                LOGGER.info("User ID " + userEnt.getUserId() + " recovers its password. IP Address of request is " + getIPAddress());
 
             } else {
 
@@ -383,29 +383,29 @@ public String getIPAddress (){
     }
 
 
-    public boolean checkUserPermission(String token){
+    public boolean checkUserPermission(String token) {
         // check if token has a valid session and user account is valid (check in another method)
 
-        boolean res= false;
+        boolean res = false;
 
         Token tokenEnt = tokenDao.findTokenEntByToken(token);
 
-        if (tokenEnt!= null){
-            if (checkUserAccount(tokenEnt.getTokenOwner())){
-                res=true;
+        if (tokenEnt != null) {
+            if (checkUserAccount(tokenEnt.getTokenOwner())) {
+                res = true;
             }
         }
 
-return res;
+        return res;
     }
 
     private boolean checkUserAccount(entity.User user) {
         // check if user has a valid account
-        boolean res= false;
+        boolean res = false;
 
-        if (user!= null){
-            if(user.isValidated()){
-                res=true;
+        if (user != null) {
+            if (user.isValidated()) {
+                res = true;
             }
         }
 
@@ -437,67 +437,68 @@ return res;
 
             entity.User userEnt = tokenDao.findUserEntByToken(token);
 
-                if (userEnt != null) {
+            if (userEnt != null) {
 
-                     if(newInfo.getFirstName()!=null){
-                         userEnt.setFirstName(newInfo.getFirstName());
-                     }
-
-                     if(newInfo.getLastName()!=null){
-                         userEnt.setLastName(newInfo.getLastName());
-                     }
-
-                     if(newInfo.getNickname()!=null){
-                         userEnt.setNickname(newInfo.getNickname());
-                     }
-
-                     if(newInfo.getPhoto()!=null){
-                         userEnt.setPhoto(newInfo.getPhoto());
-                     }
-
-                     if(newInfo.getBio()!=null){
-                         userEnt.setBio(newInfo.getBio());
-                         //TODO se editar noutro lado, colocar noutro lado / mudar DTO
-                     }
-
-                     userEnt.setOpenProfile(newInfo.isOpenProfile());
-
-                        int office=newInfo.getOfficeInfo();
-                         //TODO is it correct?
-
-                         switch (office) {
-                             case 0:
-                                 userEnt.setOffice(Office.LISBOA);
-                                 break;
-                             case 1:
-                                 userEnt.setOffice(Office.COIMBRA);
-                                 break;
-                             case 2:
-                                 userEnt.setOffice(Office.PORTO);
-                                 break;
-                             case 3:
-                                 userEnt.setOffice(Office.TOMAR);
-                                 break;
-                             case 4:
-                                 userEnt.setOffice(Office.VISEU);
-                                 break;
-                             case 5:
-                                 userEnt.setOffice(Office.VILAREAL);
-                                 break;
-                         }
-                     }
-                    userDao.merge(userEnt);
-                    //TODO faz sentido ir buscar novamente à DB o user ou converter directamente o userEnt?
-
-                    LOGGER.info("User ID " + userEnt.getUserId() + " updates its profile. IP Address of request is " +getIPAddress());
-
-                    updatedUser = convertToEditProfile(userEnt);
+                if (newInfo.getFirstName() != null) {
+                    userEnt.setFirstName(newInfo.getFirstName());
                 }
+
+                if (newInfo.getLastName() != null) {
+                    userEnt.setLastName(newInfo.getLastName());
+                }
+
+                if (newInfo.getNickname() != null) {
+                    userEnt.setNickname(newInfo.getNickname());
+                }
+
+                if (newInfo.getPhoto() != null) {
+                    userEnt.setPhoto(newInfo.getPhoto());
+                }
+
+                if (newInfo.getBio() != null) {
+                    userEnt.setBio(newInfo.getBio());
+                    //TODO se editar noutro lado, colocar noutro lado / mudar DTO
+                }
+
+                userEnt.setOpenProfile(newInfo.isOpenProfile());
+
+                int office = newInfo.getOfficeInfo();
+                //TODO is it correct?
+
+                switch (office) {
+                    case 0:
+                        userEnt.setOffice(Office.LISBOA);
+                        break;
+                    case 1:
+                        userEnt.setOffice(Office.COIMBRA);
+                        break;
+                    case 2:
+                        userEnt.setOffice(Office.PORTO);
+                        break;
+                    case 3:
+                        userEnt.setOffice(Office.TOMAR);
+                        break;
+                    case 4:
+                        userEnt.setOffice(Office.VISEU);
+                        break;
+                    case 5:
+                        userEnt.setOffice(Office.VILAREAL);
+                        break;
+                }
+            }
+            userDao.merge(userEnt);
+            //TODO faz sentido ir buscar novamente à DB o user ou converter directamente o userEnt?
+
+            LOGGER.info("User ID " + userEnt.getUserId() + " updates its profile. IP Address of request is " + getIPAddress());
+
+            updatedUser = convertToEditProfile(userEnt);
+        }
 
         return updatedUser;
     }
+
     public EditProfile convertToEditProfile(entity.User user) {
-        EditProfile userDto=new EditProfile();
+        EditProfile userDto = new EditProfile();
 
         userDto.setId(user.getUserId());
         userDto.setFirstName(user.getFirstName());
@@ -516,22 +517,22 @@ return res;
 
         int res;
 // TODO validar no frontend apenas a força da password ou no backend tb?
-        entity.User user= tokenDao.findUserEntByToken(token);
+        entity.User user = tokenDao.findUserEntByToken(token);
 
-        if (user!=null){
+        if (user != null) {
             String oldPassMasked = passMask(oldPassword);
-            if (oldPassMasked.equals(user.getPassword())){
+            if (oldPassMasked.equals(user.getPassword())) {
                 user.setPassword(passMask(newPassword));
                 userDao.merge(user);
 
-                res=200;
-                LOGGER.info("User ID " + user.getUserId() + " changes own password. IP Address of request is " +getIPAddress());
+                res = 200;
+                LOGGER.info("User ID " + user.getUserId() + " changes own password. IP Address of request is " + getIPAddress());
 
             } else {
-                res=400; // bad request - old password does not match password saved in DB
+                res = 400; // bad request - old password does not match password saved in DB
             }
         } else {
-            res=404; // user not found for given token
+            res = 404; // user not found for given token
         }
 
         return res;
@@ -562,22 +563,67 @@ return res;
 return projectsList;
     }*/
 
-    public List<Project> getOwnProjectsList(String token){
+    public List<Project> getOwnProjectsList(String token) {
 
         List<Project> projectsList = new ArrayList<Project>();
         entity.User user = tokenDao.findUserEntByToken(token);
 
+        List<entity.Project> list = projMemberDao.findListOfProjectsByUserId(user.getUserId());
 
-        List<entity.Project> list =projMemberDao.findListOfProjectsByUserId(user.getUserId());
+        for (entity.Project p : list) {
+            projectsList.add(projBean.convertProjEntityToDto(p));
 
-for (entity.Project p:list){
-    projectsList.add( projBean.convertProjEntityToDto(p));
-
-}
+        }
 //TODO confirmar que está certo, e proteger de nulos !!!
         return projectsList;
     }
 
 
+    public Hobby addHobby(String token, String title) {
+        // adicionar hobby a DB, se não existir, e à lista de hobbies do token
+
+        Hobby hobbyDto = new Hobby();
+
+        entity.User user = tokenDao.findUserEntByToken(token);
+        if (user != null) {
+            entity.Hobby hobby = hobbyDao.findHobbyByTitle(title.trim());
+            if (hobby != null) {
+                // significa que hobby já está na DB, basta adicionar a lista de user
+
+                user.getListHobbies().add(hobby);
+                hobby.getListUsers_Hobbies().add(user);
+
+                userDao.merge(user);
+                hobbyDao.merge(hobby);
+
+                hobbyDto = convertToHobbyDto(hobby);
+                LOGGER.info("Hobby " + hobby.getHobbyId() + " is associated with user, user ID: " + user.getUserId() + ". IP Address of request is " + getIPAddress());
+
+            } else {
+                // hobby n está na DB, precisa de ser persisted
+
+                entity.Hobby newHobby = new entity.Hobby();
+                newHobby.setHobbyTitle(title);
+                newHobby.getListUsers_Hobbies().add(user);
+                hobbyDao.persist(newHobby);
+
+                user.getListHobbies().add(newHobby);
+                userDao.merge(user);
+                LOGGER.info("Hobby " + newHobby.getHobbyId() + " is persisted in database and associated with user, user ID: " + user.getUserId() + ". IP Address of request is " + getIPAddress());
+                hobbyDto = convertToHobbyDto(newHobby);
+            }
+
+        }
+        return hobbyDto;
+    }
+
+    private Hobby convertToHobbyDto(entity.Hobby hobby) {
+        Hobby hobbyDto = new Hobby();
+
+        hobbyDto.setId(hobby.getHobbyId());
+        hobbyDto.setTitle(hobby.getHobbyTitle());
+
+        return hobbyDto;
+    }
 }
 

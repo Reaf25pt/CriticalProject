@@ -1,6 +1,11 @@
 package dao;
 
+import entity.User;
 import jakarta.ejb.Stateless;
+import jakarta.persistence.NamedQuery;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Stateless
 public class Token extends Abstract<entity.Token>{
@@ -42,5 +47,21 @@ public class Token extends Abstract<entity.Token>{
         return uEnt;
 
     }
+
+    public List<String> findTokenListByUserId(int userId) {
+
+        List<String> tokenList = new ArrayList<String>();
+        try {
+            tokenList = (List<String>) em.createNamedQuery("Token.findTokenListByUserId").setParameter("userId", userId).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return tokenList;
+    }
+
+
+
+
 
 }

@@ -22,7 +22,8 @@ public class Notification implements Serializable {
 
     @Column (name="message", nullable=false, unique=false, updatable=false)
     private String message;
-
+    @Column (name="messageEng", nullable=false, unique=false, updatable=false)
+    private String messageEng;
     @Column (name="seen", nullable=false, unique=false, updatable=true)
     private boolean seen = false;
 
@@ -95,5 +96,13 @@ public class Notification implements Serializable {
 
     public void setNotificationOwner(User notificationOwner) {
         this.notificationOwner = notificationOwner;
+    }
+
+    public String getMessageEng() {
+        return messageEng;
+    }
+
+    public void setMessageEng(String messageEng) {
+        this.messageEng = messageEng;
     }
 }
