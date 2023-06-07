@@ -57,56 +57,62 @@ function App() {
   };
 
   return (
-    <Container fluid>
-      <Row className="mb-5">
-        <Col>
-          <MainTitle />
-        </Col>
-      </Row>
-      <Row>
-        <Col className="border-end border-dark">
+    <div className="container-fluid vh-100 bg-dark">
+      <div className="row mb-5 ">
+        <MainTitle />
+      </div>
+      <div className="row ">
+        <div className="col-xl-6 col-lg-6 d-flex justify-content-around   ">
           {" "}
-          <Image src={logo} width={500} height={500} />
-        </Col>
+          <img className="" src={logo} width={500} height={500} />
+        </div>
 
-        <Col className=" d-flex justify-content-around">
-          <Form className=" m-auto d-flex flex-column " onSubmit={handleSubmit}>
-            <InputComponent
-              placeholder={"Email *"}
-              id="emailInput"
-              required
-              name="email"
-              type="text"
-              onChange={handleChange}
-            />
-            <InputComponent
-              placeholder={"Password *"}
-              id="passwordInput"
-              required
-              name="password"
-              type="password"
-              minLength={8}
-              title="Password válida deve ter no mínimo 8 caracteres e conter 1 letra maiúscula, 1 letra minúscula, 1 número e 1 símbolo !@#$&*"
-              pattern="^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$"
-              onChange={handleChange}
-            />
-            {/* <div className="form-text">
-              {" "}
-              Password válida deve ter no mínimo 8 caracteres e conter 1 letra
-              maiúscula, 1 letra minúscula, 1 número e 1 símbolo !@#$&*
-            </div> */}
-            <Link className="text-dark" to="forgetpassword">
-              Esqueceu a sua password?
-            </Link>
-            <ButtonComponent name={"Entrar"} type="submit" />
-            <LinkButton name={"Registar"} to={"/register"} />
-          </Form>
-        </Col>
-      </Row>
-      <Row>
+        <div className="col-xl-6 col-xl-6 col-lg-6 d-flex justify-content-around ">
+          <form
+            className=" m-auto d-flex flex-column bg-secondary p-5 rounded-5 "
+            onSubmit={handleSubmit}
+          >
+            <div className="mb-3 form-outline">
+              <InputComponent
+                placeholder={"Email *"}
+                id="emailInput"
+                required
+                name="email"
+                type="text"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-outline">
+              <InputComponent
+                placeholder={"Password *"}
+                id="passwordInput"
+                required
+                name="password"
+                type="password"
+                minLength={8}
+                title="Password válida deve ter no mínimo 8 caracteres e conter 1 letra maiúscula, 1 letra minúscula, 1 número e 1 símbolo !@#$&*"
+                pattern="^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="row mb-3 mt-1">
+              <Link className="text-dark" to="forgetpassword">
+                Esqueceu a sua password?
+              </Link>
+            </div>
+            <div className="row mb-3">
+              <ButtonComponent name={"Entrar"} type="submit" />
+            </div>
+            <div className="row">
+              <LinkButton name={"Registar"} to={"/register"} />
+            </div>
+          </form>
+        </div>
+      </div>
+      <div className="row">
         <Footer />
-      </Row>
-    </Container>
+      </div>
+    </div>
   );
 }
 
