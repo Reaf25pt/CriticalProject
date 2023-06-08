@@ -3,7 +3,7 @@ function InputComponent(props) {
   return (
     <div>
       <input
-        className="form-control bg-light"
+        className="form-control bg-light h-100"
         type={props.type}
         name={props.name}
         onChange={props.onChange}

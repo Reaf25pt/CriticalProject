@@ -97,7 +97,7 @@ function ProjectsCreate() {
               className="mt-5 p-5 bg-secondary rounded-5  "
               onSubmit={handleSubmit}
             >
-              <div className="row mb-3 ">
+              <div className="row mb-3">
                 <div className="col ">
                   <div className="form-outline">
                     <InputComponent
@@ -110,26 +110,23 @@ function ProjectsCreate() {
                     />
                   </div>
                 </div>
-                <div class="form-group mt-3">
-                  <div class="input-group rounded">
+                <div className="row mt-3 ">
+                  <div className="col-lg-6 d-flex ">
                     <InputComponent
                       placeholder={"Palavra-chave *"}
                       id="keyword"
                       required
                       name="keyword"
-                      type="text"
+                      type="search"
                       onChange={handleChange}
                     />
-                    {/* <input
-                      type="search"
-                      class="form-control rounded"
-                      placeholder="Search"
-                      aria-label="Search"
-                      aria-describedby="search-addon"
-                    />
-                    <span class="input-group-text border-0">
+                    <div className="col-lg-2 input-group-text border-0 ">
                       <BsSearch />
-                    </span> */}
+                    </div>
+                  </div>
+
+                  <div className="col-lg-3">
+                    <ButtonComponent name={"+"} />
                   </div>
                 </div>
                 <div className="form-outline mt-3">
@@ -177,7 +174,9 @@ function ProjectsCreate() {
                   onChange={handleChange}
                 />
               </div>
-              <ButtonComponent name={"Criar"} type="submit" />
+              <div className="row">
+                <ButtonComponent name={"Criar"} type="submit" />
+              </div>
             </form>{" "}
           </div>
         </div>

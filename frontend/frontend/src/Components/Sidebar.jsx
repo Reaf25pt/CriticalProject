@@ -58,13 +58,16 @@ function Sidebar() {
                     Concursos
                   </span>
                 </Link>
-                <Link href="#" className="nav-link align-middle px-0">
+                <Link to={"/home/chat"} className="nav-link align-middle px-0">
                   <BsWechat color="white" />
                   <span className="ms-1 d-none d-sm-inline text-white">
                     Mensagens
                   </span>
                 </Link>
-                <Link href="#" className="nav-link align-middle px-0">
+                <Link
+                  to={"/home/notifications"}
+                  className="nav-link align-middle px-0"
+                >
                   <BsEnvelopeFill color="white" />{" "}
                   <span className="ms-1 d-none d-sm-inline text-white">
                     Notificações

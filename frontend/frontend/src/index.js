@@ -14,10 +14,11 @@ import Projects from "./Pages/Projects";
 import Contest from "./Pages/Contest";
 import ProjectsCreate from "./Pages/ProjectsCreate";
 import AddMembers from "./Pages/AddMembers";
-import OtherInformations from "./Pages/OtherInformations";
 import ProjectOpen from "./Pages/ProjectOpen";
 import "./index.css";
 import ContestCreate from "./Pages/ContestCreate";
+import Chat from "./Pages/Chat";
+import Notifications from "./Pages/Notifications";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -34,8 +35,9 @@ root.render(
         <Route path="contests" element={<Contest />} />
         <Route path="projectscreate" element={<ProjectsCreate />} />
         <Route path="addmembers" element={<AddMembers />} />
-        <Route path="otherinformations" element={<OtherInformations />} />
         <Route path="contestcreate" element={<ContestCreate />} />
+        <Route path="chat" element={<Chat />} />
+        <Route path="notifications" element={<Notifications />} />
       </Route>
       <Route path="/projects/:id" element={<ProjectOpen />} />
     </Routes>

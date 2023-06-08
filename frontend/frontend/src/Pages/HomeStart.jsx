@@ -1,7 +1,4 @@
-import { Col, Container, Row } from "react-bootstrap";
-import LinkButton from "../Components/LinkButton";
-
-function Contest() {
+function HomeStart() {
   return (
     <div>
       <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -17,7 +14,7 @@ function Contest() {
             aria-selected="true"
             style={{ background: "#C01722", color: "white" }}
           >
-            Concursos
+            Inicio
           </button>
         </li>
       </ul>
@@ -28,19 +25,11 @@ function Contest() {
           role="tabpanel"
           aria-labelledby="home-tab"
         >
-          <div className="row">
-            <div className="col mt-5">
-              //{" "}
-              <LinkButton
-                name={"Adicionar Concurso"}
-                to={"/home/contestcreate"}
-              />
-            </div>
-          </div>
+          <div className="row mx-auto col-10 col-md-8 col-lg-6"></div>
         </div>
       </div>
     </div>
   );
 }
 
-export default Contest;
+export default HomeStart;
