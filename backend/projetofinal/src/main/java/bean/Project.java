@@ -77,7 +77,7 @@ return projDto;
 
 
     public boolean createNewProject (dto.Project project, String token){
-
+//TODO verificar se criador tem projecto e n pode criar novo
         boolean res= false;
 
         entity.User userEnt = tokenDao.findUserEntByToken(token);
@@ -210,11 +210,13 @@ if (userEnt != null) {
 
 
     public boolean addMemberToProject (int projId, int userId, String token){
-        // TODO validar aqui se ja existe relação??
+        // TODO validar aqui se ja existe relação??  SIM
         // 1º valida se já há relação entre user convidado e projecto na tabela projectMember. Se houver, apenas actualiza as infos
         // add member to given project. If userId of token == userId to add (self-invitation) sends notification to managers of project
         // if token ID NOT == userID to invite, send notification to user invited
         // TODO verify if userID is in active project or not even show in the frontend those users?! papel de gestor ou participante é definido posteriorment, de acordo com enunciado
+
+        //TODO preparar para receber do frontend email, alcunha ou nome
 
         boolean res = false;
 
@@ -287,7 +289,7 @@ return relationId;
     public boolean isProjManager(String token, int projId) {
         // check if token has permission to modify project's info (is projManager of given project)
         // ir a tabela projMember buscar todas as entradas cujo user associado ao token tenha relação com o projecto cujo id== projId.
-        // TODO assume-se que cada user tem apenas 1a relação com cada projecto. Talvez seja necessário mudar e proteger no método addMember para verificar 1º se relação já existe
+        // TODO SIM FAZER assume-se que cada user tem apenas 1a relação com cada projecto. Talvez seja necessário mudar e proteger no método addMember para verificar 1º se relação já existe
         boolean res = false;
 
         entity.User user = tokenDao.findUserEntByToken(token);

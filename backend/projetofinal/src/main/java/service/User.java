@@ -84,33 +84,30 @@ public class User {
     @POST
     @Path("/newaccount")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response newAccount(NewAccount account, @HeaderParam("password") String password) {
+    public Response newAccount(@HeaderParam("email") String email, @HeaderParam("password") String password) {
         Response r = null;
 
         // TODO  haverá melhor forma de colocar as validações para não repetir o código  checkEmailInDatabase ?!?!
         // TODO  faz sentido chamar método de createNewAccount dentro do checkEmailInDatabase ???
 
-        if (account == null || userBean.checkDataToRegister(account, password)) {
+        if (userBean.checkDataToRegister(email, password)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
-        } else if (userBean.checkEmailInDatabase(account.getEmail()) == 400) {
+        } else if (userBean.checkEmailInDatabase(email) == 400) {
 
             r = Response.status(400).entity("Email is already registered!").build();
-        } else if (userBean.checkEmailInDatabase(account.getEmail()) == 409) {
+        } else if (userBean.checkEmailInDatabase(email) == 409) {
 
             r = Response.status(409).entity("Account validation is missing!").build();
-        } else if (userBean.checkEmailInDatabase(account.getEmail()) == 401) {
+        } else if (userBean.checkEmailInDatabase(email) == 401) {
 
             r = Response.status(401).entity("Email is undefined").build();
         } else {
 
-            //logger.info("New regist attempt: email used is " + u.getEmail());
-
-            boolean newAccount = userBean.createNewAccount(account, password);
+            boolean newAccount = userBean.createNewAccount(email, password);
             if (!newAccount) {
                 r = Response.status(404).entity("Not found!").build();
             } else {
-                // logger.info("A new regist is created for email " + u.getEmail() + "An email was sent to validate account");
 
                 r = Response.status(200).entity("Success!").build();
                 //TODO ask if better to use 200 ou 201 - created
@@ -133,8 +130,6 @@ public class User {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else {
-
-            // logger.info("Attempt to validate account through url sent to email");
 
             int validationCode = userBean.validateNewAccount(tokenForValidation);
             if (validationCode == 404) {
@@ -163,8 +158,6 @@ public class User {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else {
-            // logger.info("Attempt to recover password for email " + email);
-
             boolean res = userBean.askToRecoverPassword(email);
             if (!res) {
                 r = Response.status(404).entity("Email not found in database!").build();
@@ -191,8 +184,6 @@ public class User {
 
         } else {
 
-            // logger.info("Attempt to modify password through url sent to email ");
-
             int res = userBean.newPasswordViaLink(tokenRecoverPassword, password);
             if (res == 404) {
                 r = Response.status(404).entity("Not found!").build();
@@ -207,6 +198,46 @@ public class User {
         return r;
 
     }
+
+    // FILL MANDATORY PROFILE INFO OF USER IN ITS 1ST LOGIN
+    @PUT
+    @Path("/ownprofile")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addMandatoryInfo(@HeaderParam("token") String token, EditProfile newInfo) {
+
+        Response r = null;
+
+        if (token == null || token.isBlank() || token.isEmpty() || userBean.checkMandatoryData(newInfo)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+            // TODO permitir apenas se fillInfo for false?
+
+        } else {
+
+            userBean.updateSessionTime(token);
+
+            // neste ponto o user tem autorização para fazer update da sua info e não é necessário validar se info vem preenchida ou existe na DB pq único campo que tem de ser único não é updated (email)
+
+            EditProfile userUpdated = userBean.addMandatoryInfo(token, newInfo);
+            if (userUpdated == null) {
+                r = Response.status(404).entity("Not found!").build();
+                //TODO erro 404 not found  ou  400 bad request?
+
+            } else {
+                r = Response.status(200).entity(userUpdated).build();
+                //TODO update info na userStore ou enviar LoginDto em x do EditProfile
+            }
+        }
+        return r;
+
+    }
+
+
+
+
 
     // EDIT OWN PROFILE INFORMATION, EXCEPT PASSWORD
     @POST
@@ -226,10 +257,6 @@ public class User {
         } else {
 
             userBean.updateSessionTime(token);
-
-            // UserDto uDto = userBean.sendDtoFromToken(token);
-
-            // logger.info("User whose userId is " + uDto.getUserId() + " attempts to update its profile ");
 
             // neste ponto o user tem autorização para fazer update da sua info e não é necessário validar se info vem preenchida ou existe na DB pq único campo que tem de ser único não é updated (email)
 

@@ -24,31 +24,18 @@ function Register() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (
-      credentials.password === credentials.password2 &&
-      credentials.office !== "8"
-    ) {
-      const user = {
-        firstName: credentials.firstName,
-        lastName: credentials.lastName,
-        email: credentials.email,
-        office: credentials.office,
-        nickname: credentials.nickname,
-        photo: credentials.photo,
-      };
-
+    if (credentials.password === credentials.password2) {
       fetch("http://localhost:8080/projetofinal/rest/user/newaccount", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-
+          email: credentials.email,
           password: credentials.password,
         },
-        body: JSON.stringify(user),
       }).then((response) => {
         if (response.status === 200) {
           alert(
-            "Conta criada com sucesso. Active a conta através do email enviado para a sua conte de email"
+            "Conta criada com sucesso. Active a conta através do link enviado para o email registado"
           );
           navigate("/", { replace: true });
         } else {
@@ -57,11 +44,6 @@ function Register() {
         document.getElementById("emailInput").value = "";
         document.getElementById("passwordInput").value = "";
         document.getElementById("passwordInput2").value = "";
-        document.getElementById("firstNameInput").value = "";
-        document.getElementById("lastNameInput").value = "";
-        document.getElementById("nicknameInput").value = "";
-        document.getElementById("photoInput").value = "";
-        document.getElementById("officeInput").value = "8";
       });
     } else {
       alert(

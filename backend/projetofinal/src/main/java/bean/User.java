@@ -13,8 +13,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import mail.AskRecoverPassword;
 import mail.ValidateNewAccount;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.glassfish.jaxb.core.v2.TODO;
-import org.jboss.logging.Logger;
 
 
 import java.io.Serializable;
@@ -25,7 +26,11 @@ import java.util.List;
 @RequestScoped
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
-    private static final Logger LOGGER = Logger.getLogger(User.class);
+    private static final Logger LOGGER = LogManager.getLogger(User.class);
+
+    @Inject
+    private HttpServletRequest request;
+
     @EJB
     dao.User userDao;
     @EJB
@@ -85,7 +90,7 @@ public class User implements Serializable {
           //Logger.info("IP of request is " + ipAddress);
                     }*/
 
-                    LOGGER.info("User whose user ID is " + userEnt.getUserId() + " has logged in its account. IP Address of request is " + getIPAddress());
+                    LOGGER.info("User whose user ID is " + userEnt.getUserId() + " has logged in its account. IP Address of request is " + request.getRemoteAddr());
 
                 }
             }
@@ -117,6 +122,7 @@ public class User implements Serializable {
         loginDto.setBio(user.getBio());
         loginDto.setContestManager(user.isContestManager());
         loginDto.setOpenProfile(user.isOpenProfile());
+        loginDto.setFillInfo(user.isFillInfo());
 
         return loginDto;
     }
@@ -159,15 +165,13 @@ public class User implements Serializable {
     }
 
 
-    public boolean checkDataToRegister(NewAccount user, String password) {
+    public boolean checkDataToRegister(String email, String password) {
         // check if new regist has mandatory camps filled in from frontend
         boolean res = false;
 
-        if (user.getEmail() == null || password == null || user.getFirstName() == null || user.getLastName() == null || user.getOffice() == null) {
+        if (email == null || password == null || email.isBlank() || password.isBlank()) {
             res = true;
 
-        } else if (user.getEmail().isBlank() || password.isBlank() || user.getFirstName().isBlank() || user.getLastName().isBlank()) {
-            res = true;
         }
 
         return res;
@@ -198,7 +202,33 @@ public class User implements Serializable {
         return res;
     }
 
+    public boolean createNewAccount(String email, String password){
+        //Create new account and send email to ask for account validation
+        boolean res = false;
+        entity.User newUser = new entity.User();
+        newUser.setEmail(email);
+        newUser.setPassword(passMask(password));
+        newUser.setFirstName("nd");
+        newUser.setLastName("nd");
+        newUser.setOffice(Office.COIMBRA);
+        // TODO  colocar assim para nomes e office ou permitir q seja nulo
+        newUser.setContestManager(false);
+        newUser.setOpenProfile(false);
+        newUser.setValidated(false);
+        newUser.setFillInfo(false);
+        newUser.setToken(newUser.createTokenForActivation());
+        newUser.setTimestampForToken(newUser.createTimeoutTimeStamp());
 
+        userDao.persist(newUser);
+        ValidateNewAccount.main(newUser.getEmail(), newUser.getToken());
+        res = true;
+        LOGGER.info("A new account is created for email " + newUser.getEmail() + " User ID is " + newUser.getUserId() + " . IP Address of request is " + getIPAddress());
+
+
+        return res;
+    }
+
+/*
     public boolean createNewAccount(NewAccount account, String password) {
         //Create new account and send email to ask for account validation
 
@@ -221,7 +251,7 @@ public class User implements Serializable {
         }
         return res;
     }
-
+*/
     private entity.User convertToUserEntity(NewAccount account) {
         entity.User newUser = new entity.User();
 
@@ -424,6 +454,63 @@ public class User implements Serializable {
         }
     }
 
+    public EditProfile addMandatoryInfo(String token, EditProfile newInfo){
+        // adicionar dados obrigatórios sem a qual n pode avançar na app
+        EditProfile updatedUser = null;
+
+        if (newInfo!=null){
+            entity.User user = tokenDao.findUserEntByToken(token);
+
+            if (user!= null){
+                user.setFirstName(newInfo.getFirstName());
+                user.setLastName(newInfo.getLastName());
+
+                if (newInfo.getPhoto() != null) {
+                    user.setPhoto(newInfo.getPhoto());
+                }
+                // TODO add bio, nickname ?!
+                // TODO verify if link is image
+
+                int office = newInfo.getOfficeInfo();
+                //TODO is it correct?
+
+                switch (office) {
+                    case 0:
+                        user.setOffice(Office.LISBOA);
+                        break;
+                    case 1:
+                        user.setOffice(Office.COIMBRA);
+                        break;
+                    case 2:
+                        user.setOffice(Office.PORTO);
+                        break;
+                    case 3:
+                        user.setOffice(Office.TOMAR);
+                        break;
+                    case 4:
+                        user.setOffice(Office.VISEU);
+                        break;
+                    case 5:
+                        user.setOffice(Office.VILAREAL);
+                        break;
+                }
+
+                user.setFillInfo(true);
+            }
+
+            userDao.merge(user);
+            //TODO faz sentido ir buscar novamente à DB o user ou converter directamente o userEnt?
+
+            LOGGER.info("User ID " + user.getUserId() + " updates its profile. IP Address of request is " + getIPAddress());
+
+            updatedUser = convertToEditProfile(user);
+        }
+
+        return updatedUser;
+    }
+
+
+
     public EditProfile updateProfile(String token, EditProfile newInfo) {
         // update profile of logged user
 
@@ -508,6 +595,7 @@ public class User implements Serializable {
         userDto.setPhoto(user.getPhoto());
         userDto.setBio(user.getBio());
         userDto.setOpenProfile(user.isOpenProfile());
+        userDto.setFillInfo(user.isFillInfo());
 
         return userDto;
     }
@@ -589,7 +677,7 @@ return projectsList;
             entity.Hobby hobby = hobbyDao.findHobbyByTitle(title.trim());
             if (hobby != null) {
                 // significa que hobby já está na DB, basta adicionar a lista de user
-
+// TODO verificar situação de trim ao inserir na DB
                 user.getListHobbies().add(hobby);
                 hobby.getListUsers_Hobbies().add(user);
 
@@ -624,6 +712,18 @@ return projectsList;
         hobbyDto.setTitle(hobby.getHobbyTitle());
 
         return hobbyDto;
+    }
+
+    public boolean checkMandatoryData(EditProfile newInfo) {
+        // verifica se dados obrigatórios: first name / last name / office chegam do frontend
+        boolean res= false;
+
+        if (newInfo.getFirstName() == null || newInfo.getFirstName().isBlank() || newInfo.getLastName()==null || newInfo.getLastName().isBlank()){
+            res=true;
+            // TODO decidir como verificar se office vem preenchido do frontend e validar em conformidade
+        }
+
+        return res;
     }
 }
 

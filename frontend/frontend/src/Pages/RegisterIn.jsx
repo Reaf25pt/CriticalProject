@@ -4,10 +4,55 @@ import ButtonComponent from "../Components/ButtonComponent";
 import logo from "../images/logo-criticalsoftware.png";
 import SelectComponent from "../Components/SelectComponent";
 import { BsArrowDown } from "react-icons/bs";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { userStore } from "../stores/UserStore";
 
 function RegisterIn() {
-  const handleSubmit = "";
-  const handleChange = "";
+  const [credentials, setCredentials] = useState({});
+  const navigate = useNavigate();
+  const user = userStore((state) => state.user);
+  const userUpdate = userStore((state) => state.setUser);
+
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+
+    setCredentials((values) => {
+      return { ...values, [name]: value };
+    });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const newInfo = {
+      firstName: credentials.firstName,
+      lastName: credentials.lastName,
+      officeInfo: credentials.office,
+    };
+
+    fetch("http://localhost:8080/projetofinal/rest/user/ownprofile", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        token: user.token,
+      },
+      body: JSON.stringify(newInfo),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+          //navigate("/home", { replace: true });
+        } else {
+          alert("Algo correu mal. Tente novamente");
+        }
+      })
+      .then((loggedUser) => {
+        userUpdate(loggedUser);
+        // navigate("/home", { replace: true });
+      });
+  };
 
   return (
     <div className="container-fluid vh-100 position-relative">
@@ -45,17 +90,23 @@ function RegisterIn() {
             </div>
             <div className="mb-3 form-outline">
               <InputComponent
-                placeholder={"Ultimo Nome*"}
-                id="firstNameInput"
+                placeholder={"Último Nome *"}
+                id="lastNameInput"
                 required
-                name="firstName"
+                name="lastName"
                 type="text"
                 onChange={handleChange}
               />
             </div>
             <div class="form-group mt-3 mb-3">
               <div class="input-group rounded">
-                <SelectComponent placeholder={"Local"} />
+                <SelectComponent
+                  name="office"
+                  id="officeInput"
+                  required
+                  onChange={handleChange}
+                  placeholder={"Local de trabalho *"}
+                />
                 <span class="input-group-text border-0" id="search-addon">
                   <BsArrowDown />
                 </span>
@@ -64,7 +115,7 @@ function RegisterIn() {
             <div className="row">
               <label class="custom-file-label mb-2" for="inputGroupFile01">
                 {" "}
-                Selecione Imagem de perfil:
+                Selecione imagem de perfil:
               </label>
               <div className="col-lg-12">
                 <div class="input-group mb-3">

@@ -108,4 +108,12 @@ public class Login {
     public void setOpenProfile(boolean openProfile) {
         this.openProfile = openProfile;
     }
+
+    public boolean isFillInfo() {
+        return fillInfo;
+    }
+
+    public void setFillInfo(boolean fillInfo) {
+        this.fillInfo = fillInfo;
+    }
 }

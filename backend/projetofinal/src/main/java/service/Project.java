@@ -14,6 +14,17 @@ public class Project {
     @Inject
     User userBean;
 
+    @GET
+    @Path("/")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getALl(@DefaultValue("ola") @QueryParam("statecode") String statecode) {
+        System.out.println(statecode);
+        Response r = null;
+
+return r;
+    }
+
 
     // CRIAR NOVO PROJECTO
     @POST

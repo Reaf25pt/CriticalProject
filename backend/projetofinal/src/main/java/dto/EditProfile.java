@@ -14,6 +14,8 @@ public class EditProfile {
     private String bio;
     private boolean openProfile;
 
+    private boolean fillInfo;
+
     public EditProfile(){}
 
     public int getId() {
@@ -86,5 +88,13 @@ public class EditProfile {
 
     public void setOfficeInfo(int officeInfo) {
         this.officeInfo = officeInfo;
+    }
+
+    public boolean isFillInfo() {
+        return fillInfo;
+    }
+
+    public void setFillInfo(boolean fillInfo) {
+        this.fillInfo = fillInfo;
     }
 }
