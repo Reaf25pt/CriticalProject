@@ -13,7 +13,6 @@ import Profile from "./Pages/Profile";
 import Projects from "./Pages/Projects";
 import Contest from "./Pages/Contest";
 import ProjectsCreate from "./Pages/ProjectsCreate";
-import AddMembers from "./Pages/AddMembers";
 import ProjectOpen from "./Pages/ProjectOpen";
 import "./index.css";
 import ContestCreate from "./Pages/ContestCreate";
@@ -34,7 +33,6 @@ root.render(
         <Route path="projects" element={<Projects />} />
         <Route path="contests" element={<Contest />} />
         <Route path="projectscreate" element={<ProjectsCreate />} />
-        <Route path="addmembers" element={<AddMembers />} />
         <Route path="contestcreate" element={<ContestCreate />} />
         <Route path="chat" element={<Chat />} />
         <Route path="notifications" element={<Notifications />} />
