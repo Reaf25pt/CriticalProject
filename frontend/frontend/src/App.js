@@ -57,17 +57,17 @@ function App() {
   };
 
   return (
-    <div className="container-fluid vh-100 bg-dark">
-      <div className="row mb-5 ">
+    <div className="container-fluid bg-dark vh-100">
+      <div className="row">
         <MainTitle />
       </div>
-      <div className="row ">
+      <div className="row">
         <div className="col-xl-6 col-lg-6 d-flex justify-content-around   ">
           {" "}
           <img className="" src={logo} width={500} height={500} />
         </div>
 
-        <div className="col-xl-6 col-xl-6 col-lg-6 d-flex justify-content-around ">
+        <div className="col-xl-6 col-lg-6 d-flex justify-content-around">
           <form
             className=" m-auto d-flex flex-column bg-secondary p-5 rounded-5 "
             onSubmit={handleSubmit}

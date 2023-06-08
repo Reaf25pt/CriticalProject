@@ -1,17 +1,12 @@
-import Container from "react-bootstrap/esm/Container";
 import MainTitle from "../Components/MainTitle";
-import SecondTitle from "../Components/SecondTitle";
 import React from "react";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
+
 import InputComponent from "../Components/InputComponent";
-import SelectComponent from "../Components/SelectComponent";
 import ButtonComponent from "../Components/ButtonComponent";
 import Footer from "../Components/Footer";
-import LinkImageComponent from "../Components/LinkImageComponent";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LinkButton from "../Components/LinkButton";
 
 function Register() {
   const [credentials, setCredentials] = useState({});
@@ -77,17 +72,19 @@ function Register() {
   };
 
   return (
-    <Container fluid>
-      <Row>
+    <div className="container-fluid bg-dark vh-100">
+      <div className="row">
         <MainTitle />
-      </Row>
-      <Row>
-        <SecondTitle name={"Registar"} />
-      </Row>
-      <Row className="mt-5">
-        <Col md={11} className=" d-flex justify-content-around">
-          <Form className="d-flex flex-column mb-5" onSubmit={handleSubmit}>
-            <Row>
+      </div>
+
+      <div className="row h-75 d-flex align-items-center justify-content-center">
+        <div className="mx-auto col-8 col-md-8 col-lg-4 ">
+          <form
+            className="mb-5 bg-secondary rounded-5 p-5"
+            onSubmit={handleSubmit}
+          >
+            <h3 className="bg-dange text-white text-center mb-3">Registo</h3>
+            <div className="form-outline mb-3">
               <InputComponent
                 placeholder={"Email *"}
                 id="emailInput"
@@ -96,39 +93,35 @@ function Register() {
                 type="text"
                 onChange={handleChange}
               />
-            </Row>
-            <Row>
-              <Col>
-                {" "}
-                <InputComponent
-                  placeholder={"Password *"}
-                  id="passwordInput"
-                  required
-                  name="password"
-                  type="password"
-                  minLength={8}
-                  title="Password válida deve ter no mínimo 8 caracteres e conter 1 letra maiúscula, 1 letra minúscula, 1 número e 1 símbolo !@#$&*"
-                  pattern="^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$"
-                  onChange={handleChange}
-                />
-              </Col>
-              <Col>
-                {" "}
-                <InputComponent
-                  placeholder={"Confirmar Password *"}
-                  id="passwordInput2"
-                  required
-                  name="password2"
-                  type="password"
-                  minLength={8}
-                  title="Password válida deve ter no mínimo 8 caracteres e conter 1 letra maiúscula, 1 letra minúscula, 1 número e 1 símbolo !@#$&*"
-                  pattern="^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$"
-                  onChange={handleChange}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col>
+            </div>
+            <div className="form-outline mb-3">
+              <InputComponent
+                placeholder={"Password *"}
+                id="passwordInput"
+                required
+                name="password"
+                type="password"
+                minLength={8}
+                title="Password válida deve ter no mínimo 8 caracteres e conter 1 letra maiúscula, 1 letra minúscula, 1 número e 1 símbolo !@#$&*"
+                pattern="^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-outline mb-3">
+              <InputComponent
+                placeholder={"Confirmar Password *"}
+                id="passwordInput2"
+                required
+                name="password2"
+                type="password"
+                minLength={8}
+                title="Password válida deve ter no mínimo 8 caracteres e conter 1 letra maiúscula, 1 letra minúscula, 1 número e 1 símbolo !@#$&*"
+                pattern="^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$"
+                onChange={handleChange}
+              />
+            </div>{" "}
+            {/* <div className="row">
+              <div className="col">
                 <InputComponent
                   placeholder={"Primeiro Nome *"}
                   id="firstNameInput"
@@ -137,8 +130,8 @@ function Register() {
                   type="text"
                   onChange={handleChange}
                 />
-              </Col>
-              <Col>
+              </div>
+              <div className="col">
                 {" "}
                 <InputComponent
                   placeholder={"Último Nome *"}
@@ -148,11 +141,11 @@ function Register() {
                   type="text"
                   onChange={handleChange}
                 />
-              </Col>
-            </Row>
+              </div>
+            </div>
 
-            <Row>
-              <Col>
+            <div className="row">
+              <div className="col">
                 {" "}
                 <InputComponent
                   placeholder={"Alcunha"}
@@ -161,8 +154,8 @@ function Register() {
                   type="text"
                   onChange={handleChange}
                 />
-              </Col>
-              <Col>
+              </div>
+              <div className="col">
                 {" "}
                 <InputComponent
                   placeholder={"Foto"}
@@ -171,9 +164,9 @@ function Register() {
                   type="url"
                   onChange={handleChange}
                 />
-              </Col>
-            </Row>
-            <Row>
+              </div>
+            </div>
+            <div className="row">
               <SelectComponent
                 name="office"
                 id="officeInput"
@@ -181,18 +174,22 @@ function Register() {
                 onChange={handleChange}
                 placeholder={"Selecione uma opção *"}
               />
-            </Row>
-            <ButtonComponent name={"Registar"} type={"submit"} />
-          </Form>
-        </Col>
-        <Col>
-          <LinkImageComponent to={"/"} />
-        </Col>
-      </Row>
-      <Row>
+            </div> */}
+            <div className="row mb-2">
+              <div className="row mb-2">
+                <ButtonComponent name={"Registar"} type={"submit"} />
+              </div>
+              <div className="row">
+                <LinkButton name={"Voltar"} to={"/"} />
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div className="row">
         <Footer />
-      </Row>
-    </Container>
+      </div>
+    </div>
   );
 }
 
