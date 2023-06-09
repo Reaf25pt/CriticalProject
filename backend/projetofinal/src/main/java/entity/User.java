@@ -31,13 +31,13 @@ public class User implements Serializable {
     @Column(name = "password", nullable = false, unique = false, updatable = true)
     private String password;
 
-    @Column(name = "firstName", nullable = false, unique = false, updatable = true)
+    @Column(name = "firstName", nullable = true, unique = false, updatable = true)
     private String firstName;
 
-    @Column(name = "lastName", nullable = false, unique = false, updatable = true)
+    @Column(name = "lastName", nullable = true, unique = false, updatable = true)
     private String lastName;
 
-    @Column(name = "office", nullable = false, unique = false, updatable = true)
+    @Column(name = "office", nullable = true, unique = false, updatable = true)
     private Office office;
 
     @Column(name = "nickname", nullable = true, unique = false, updatable = true)

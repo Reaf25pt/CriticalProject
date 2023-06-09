@@ -9,7 +9,7 @@ public class Login {
     private String email;
     private String firstName;
     private String lastName;
-    private Office office;
+    private String office;
     private String nickname;
     private String photo;
     private String bio;
@@ -61,11 +61,11 @@ public class Login {
         this.lastName = lastName;
     }
 
-    public Office getOffice() {
+    public String getOffice() {
         return office;
     }
 
-    public void setOffice(Office office) {
+    public void setOffice(String office) {
         this.office = office;
     }
 

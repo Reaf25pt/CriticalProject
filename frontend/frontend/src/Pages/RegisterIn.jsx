@@ -17,7 +17,7 @@ function RegisterIn() {
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-
+    console.log(credentials.office);
     setCredentials((values) => {
       return { ...values, [name]: value };
     });
@@ -26,32 +26,46 @@ function RegisterIn() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const newInfo = {
-      firstName: credentials.firstName,
-      lastName: credentials.lastName,
-      officeInfo: credentials.office,
-    };
+    console.log(credentials.office);
 
-    fetch("http://localhost:8080/projetofinal/rest/user/ownprofile", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        token: user.token,
-      },
-      body: JSON.stringify(newInfo),
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          return response.json();
-          //navigate("/home", { replace: true });
-        } else {
-          alert("Algo correu mal. Tente novamente");
-        }
+    if (
+      credentials.office === null ||
+      credentials.office === "undefined" ||
+      credentials.office === 20 ||
+      credentials.office === "20" ||
+      credentials.office === undefined
+      /*  Acho que basta ter undefined */
+    ) {
+      alert("Seleccione o local de trabalho");
+    } else {
+      const newInfo = {
+        firstName: credentials.firstName,
+        lastName: credentials.lastName,
+        officeInfo: credentials.office,
+        photo: credentials.photo,
+      };
+
+      fetch("http://localhost:8080/projetofinal/rest/user/ownprofile", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          token: user.token,
+        },
+        body: JSON.stringify(newInfo),
       })
-      .then((loggedUser) => {
-        userUpdate(loggedUser);
-        // navigate("/home", { replace: true });
-      });
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json();
+            //navigate("/home", { replace: true });
+          } else {
+            alert("Algo correu mal. Tente novamente");
+          }
+        })
+        .then((loggedUser) => {
+          userUpdate(loggedUser);
+          // navigate("/home", { replace: true });
+        });
+    }
   };
 
   return (
@@ -103,7 +117,7 @@ function RegisterIn() {
                 <SelectComponent
                   name="office"
                   id="officeInput"
-                  required
+                  required={true}
                   onChange={handleChange}
                   placeholder={"Local de trabalho *"}
                 />
@@ -121,9 +135,13 @@ function RegisterIn() {
                 <div class="input-group mb-3">
                   <div class="custom-file">
                     <InputComponent
+                      name="photo"
+                      onChange={handleChange}
                       type="file"
                       class="custom-file-input"
                       id="inputGroupFile01"
+                      /*  // TODO colocar accept para limitar file a text https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file
+                       */
                     />
                   </div>
                 </div>

@@ -37,6 +37,7 @@ root.render(
         <Route path="chat" element={<Chat />} />
         <Route path="notifications" element={<Notifications />} />
       </Route>
+
       <Route path="/projects/:id" element={<ProjectOpen />} />
     </Routes>
   </BrowserRouter>

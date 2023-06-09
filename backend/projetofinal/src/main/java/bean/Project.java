@@ -188,7 +188,7 @@ if (userEnt != null) {
         // registo inicial do proj tem de incluir, no mínimo nome e descrição e ainda 1 keyword associada ao proj
         boolean res= false;
 
-        if(checkStringInfo(project.getTitle()) || checkStringInfo(project.getDetails()) || project.getKeywords().isEmpty()){
+        if(userBean.checkStringInfo(project.getTitle()) || userBean.checkStringInfo(project.getDetails()) || project.getKeywords().isEmpty()){
             res=true;
             // projecto não inclui info indispensável no momento da sua criação
         }
@@ -196,17 +196,7 @@ if (userEnt != null) {
         return res;
     }
 
-    private boolean checkStringInfo(String str) {
-        // check if a string info is null or blank
-        boolean res = false;
 
-        if(str == null || str.isBlank()){
-            res=true;
-            // info is not filled in as it should
-        }
-
-        return res;
-    }
 
 
     public boolean addMemberToProject (int projId, int userId, String token){

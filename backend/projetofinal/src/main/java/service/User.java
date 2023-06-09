@@ -1,5 +1,6 @@
 package service;
 
+import ENUM.Office;
 import dto.*;
 import dto.Project;
 import jakarta.inject.Inject;
@@ -10,6 +11,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -37,14 +39,6 @@ public class User {
         } else {
             r = Response.status(401).entity("Unauthorized").build();
         }
-
-        /*
-         * HttpServletRequest request = (HttpServletRequest)
-         * FacesContext.getCurrentInstance().getExternalContext().getRequest(); String
-         * ipAddress = request.getHeader("X-FORWARDED-FOR"); if (ipAddress == null) {
-         * ipAddress = request.getRemoteAddr(); logger.info("IP of request is " +
-         * ipAddress); }
-         */
 
         return r;
 
@@ -90,32 +84,29 @@ public class User {
         // TODO  haverá melhor forma de colocar as validações para não repetir o código  checkEmailInDatabase ?!?!
         // TODO  faz sentido chamar método de createNewAccount dentro do checkEmailInDatabase ???
 
-        if (userBean.checkDataToRegister(email, password)) {
+        if (userBean.checkStringInfo(email) || userBean.checkStringInfo(password)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
-        } else if (userBean.checkEmailInDatabase(email) == 400) {
-
-            r = Response.status(400).entity("Email is already registered!").build();
-        } else if (userBean.checkEmailInDatabase(email) == 409) {
-
-            r = Response.status(409).entity("Account validation is missing!").build();
-        } else if (userBean.checkEmailInDatabase(email) == 401) {
-
-            r = Response.status(401).entity("Email is undefined").build();
         } else {
+            int statusCode = userBean.checkEmailInDatabase(email);
 
-            boolean newAccount = userBean.createNewAccount(email, password);
-            if (!newAccount) {
-                r = Response.status(404).entity("Not found!").build();
+            if (statusCode== 400){
+                r = Response.status(400).entity("Email is already registered!").build();
+            } else if (statusCode==409){
+                r = Response.status(409).entity("Account validation is missing!").build();
+            } else if(statusCode==401){
+                r = Response.status(401).entity("Email is undefined").build();
             } else {
-
-                r = Response.status(200).entity("Success!").build();
-                //TODO ask if better to use 200 ou 201 - created
+                boolean newAccount = userBean.createNewAccount(email, password);
+                if (!newAccount) {
+                    r = Response.status(404).entity("Not found!").build();
+                } else {
+                    r = Response.status(200).entity("Success!").build();
+                    //TODO ask if better to use 200 ou 201 - created
+                }
             }
         }
-
         return r;
-
     }
 
 
@@ -126,11 +117,9 @@ public class User {
     public Response validation(@HeaderParam("tokenForValidation") String tokenForValidation) {
         Response r = null;
 
-        if (tokenForValidation == null || tokenForValidation.isBlank()) {
+        if (userBean.checkStringInfo(tokenForValidation)) {
             r = Response.status(401).entity("Unauthorized!").build();
-
         } else {
-
             int validationCode = userBean.validateNewAccount(tokenForValidation);
             if (validationCode == 404) {
                 r = Response.status(404).entity("Not found!").build();
@@ -141,7 +130,6 @@ public class User {
                 r = Response.status(400).entity("link is not valid ").build();
             }
         }
-
         return r;
 
     }
@@ -154,7 +142,7 @@ public class User {
     public Response recoverPassword(@HeaderParam("email") String email) {
         Response r = null;
 
-        if (email == null || email.isBlank()) {
+        if (userBean.checkStringInfo(email)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else {
@@ -179,7 +167,7 @@ public class User {
                                    @HeaderParam("password") String password) {
         Response r = null;
 
-        if (tokenRecoverPassword == null || tokenRecoverPassword.isBlank() || password == null || password.isBlank()) {
+        if ( userBean.checkStringInfo(tokenRecoverPassword) || userBean.checkStringInfo(password)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else {
@@ -200,7 +188,7 @@ public class User {
     }
 
     // FILL MANDATORY PROFILE INFO OF USER IN ITS 1ST LOGIN
-    @PUT
+    @PATCH
     @Path("/ownprofile")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -208,8 +196,9 @@ public class User {
 
         Response r = null;
 
-        if (token == null || token.isBlank() || token.isEmpty() || userBean.checkMandatoryData(newInfo)) {
+        if (userBean.checkStringInfo(token) || userBean.checkStringInfo(newInfo.getFirstName()) || userBean.checkStringInfo(newInfo.getLastName())) {
             r = Response.status(401).entity("Unauthorized!").build();
+            // TODO decidir como verificar se office vem preenchido do frontend e validar em conformidade
 
         } else if (!userBean.checkUserPermission(token)) {
             r = Response.status(403).entity("Forbidden!").build();
@@ -248,7 +237,7 @@ public class User {
 
         Response r = null;
 
-        if (token == null || token.isBlank() || token.isEmpty() || newInfo == null) {
+        if (userBean.checkStringInfo(token)|| newInfo == null) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else if (!userBean.checkUserPermission(token)) {
@@ -282,14 +271,11 @@ public class User {
                                       @HeaderParam("oldPassword") String oldPassword, @HeaderParam("newPassword") String newPassword) {
         Response r = null;
 
-        if (token == null || token.isBlank() || oldPassword == null || oldPassword.isBlank() || newPassword == null
-                || newPassword.isBlank()) {
+        if (userBean.checkStringInfo(token)|| userBean.checkStringInfo(oldPassword) || userBean.checkStringInfo(newPassword)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else {
             userBean.updateSessionTime(token);
-            // TokenEntity tEnt = tokenDao.findTokenEntByToken(token);
-            // logger.info("User whose userId is " + tEnt.getTokenOwner().getUserId() + " attempts to modify its password");
 
             int a = userBean.changeOwnPassword(token, oldPassword, newPassword);
             if (a == 404) {
@@ -321,22 +307,18 @@ public class User {
         // ir buscar lista de projectos que user id do token logado seja membro (accepted and not removed)
         Response r = null;
 
-        if (token == null || token.isBlank() || token.isEmpty()) {
+        if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
         } else if (!userBean.checkUserPermission(token)) {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
 
-            // TokenEntity tEnt = tokenDao.findTokenEntByToken(token);
-            //logger.info("User whose userId is " + tEnt.getTokenOwner().getUserId() + " attempts to see list of all its activities, including those shared with its account");
-
             List<Project> projects = userBean.getOwnProjectsList(token);
 
             if (projects == null || projects.size() == 0) {
                 r = Response.status(404).entity("Not found").build();
             } else {
-                // logger.info("Request from userId " + tEnt.getTokenOwner().getUserId() + " - List of all its activities is retrieved from database ");
 
                 r = Response.status(200).entity(projects).build();
             }
@@ -354,7 +336,7 @@ public class User {
 
         Response r = null;
 
-        if (token == null || token.isBlank() || token.isEmpty() || title == null || title.isBlank() || title.isEmpty()) {
+        if (userBean.checkStringInfo(token) ||userBean.checkStringInfo(title)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else if (!userBean.checkUserPermission(token)) {
@@ -376,6 +358,34 @@ public class User {
         return r;
 
     }
+
+    // GET LIST OF OFFICES
+    @GET
+    @Path("/offices")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getListOffices(@HeaderParam("token") String token) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            HashMap<Integer, String> list = userBean.getOfficeList();
+
+            if (list == null ) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+                r = Response.status(200).entity(list).build();
+            }
+        }
+
+        return r;
+    }
+
 
 
 }

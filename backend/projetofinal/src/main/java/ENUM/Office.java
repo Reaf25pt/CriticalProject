@@ -17,4 +17,15 @@ public enum Office {
 
     // TODO guardar na DB valor numérico, nome da cidade ou outra forma ? trabalhar no frontend ou backend ?
 
+
+    public String getCity() {
+        return city;
+    }
+
+    @Override
+    public String toString() {
+        return "Office{" +
+                "city='" + city + '\'' +
+                '}';
+    }
 }

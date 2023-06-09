@@ -20,22 +20,20 @@ function Logout() {
       },
     }).then((response) => {
       if (response.status === 200) {
-        localStorage.clear();
-        sessionStorage.clear();
-        clearLoggedUser();
         navigate("/", { replace: true });
       } else {
-        localStorage.clear();
-        sessionStorage.clear();
-        clearLoggedUser();
         navigate("/", { replace: true });
       }
+      clearLoggedUser();
+      localStorage.clear();
+      sessionStorage.clear();
     });
   };
 
   return (
-    <Link to="/" onClick={handleLogout}>
-      <BsBoxArrowLeft className={style.linkimagecomponent} />
+    <Link class="dropdown-item" onClick={handleLogout}>
+      Logout
+      {/*       <BsBoxArrowLeft className={style.linkimagecomponent} /> */}
     </Link>
   );
 }

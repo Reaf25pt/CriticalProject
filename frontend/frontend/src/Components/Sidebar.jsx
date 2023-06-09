@@ -6,8 +6,14 @@ import {
   BsWechat,
   BsEnvelopeFill,
 } from "react-icons/bs";
+import { userStore } from "../stores/UserStore";
+import Logout from "./Logout";
 
 function Sidebar() {
+  const user = userStore((state) => state.user);
+
+  const fullName = user.firstName + " " + user.lastName;
+
   return (
     <div className="container-fluid ">
       <div className="row flex-nowrap min-vh-100">
@@ -33,7 +39,7 @@ function Sidebar() {
                 <Link to={"/home"} className="nav-link align-middle px-0">
                   <BsFillHouseFill color="white" />{" "}
                   <span className="ms-1 d-none d-sm-inline text-white">
-                    Inicio
+                    Início
                   </span>
                 </Link>
               </li>
@@ -85,14 +91,33 @@ function Sidebar() {
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
-              <img
+              {user.photo != null ? (
+                <img
+                  src={user.photo}
+                  /*   src="https://github.com/mdo.png" */
+                  alt="hugenerd"
+                  width="30"
+                  height="30"
+                  class="rounded-circle"
+                />
+              ) : (
+                <img
+                  src="https://github.com/mdo.png"
+                  alt="hugenerd"
+                  width="30"
+                  height="30"
+                  class="rounded-circle"
+                />
+              )}
+              {/*  <img
+               
                 src="https://github.com/mdo.png"
                 alt="hugenerd"
                 width="30"
                 height="30"
                 class="rounded-circle"
-              />
-              <span class="d-none d-sm-inline mx-1">Rodrigo Ferreira</span>
+              /> */}
+              <span class="d-none d-sm-inline mx-1">{fullName}</span>
             </a>
             <ul
               class="dropdown-menu dropdown-menu-dark text-small shadow"
@@ -107,9 +132,10 @@ function Sidebar() {
                 <hr class="dropdown-divider" />
               </li>
               <li>
-                <Link class="dropdown-item" to="/">
+                <Logout />
+                {/*   <Link class="dropdown-item" to={"/"}>
                   Logout
-                </Link>
+                </Link> */}
               </li>
             </ul>
           </div>

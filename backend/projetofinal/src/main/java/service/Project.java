@@ -34,7 +34,7 @@ return r;
     public Response addProject(dto.Project project, @HeaderParam("token") String token) {
         Response r = null;
 
-        if (token == null || token.isBlank() || token.isEmpty() || project==null) {
+        if (userBean.checkStringInfo(token) || project==null) {
             r = Response.status(401).entity("Unauthorized!").build();
         }  else if (!userBean.checkUserPermission(token)) {
             r = Response.status(403).entity("Forbidden!").build();
@@ -62,7 +62,7 @@ return r;
         // TODO send id de proj e user ou objecto com + info?? SE for ID, como verificar se a info vem nula?
         Response r = null;
 
-        if (token == null || token.isBlank() || token.isEmpty() ) {
+        if (userBean.checkStringInfo(token) ) {
             r = Response.status(401).entity("Unauthorized!").build();
         }  else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId)) {
             r = Response.status(403).entity("Forbidden!").build();

@@ -18,6 +18,10 @@ function Home() {
     }
   }, [user]);
 
+  if (!user) {
+    return null;
+  }
+
   if (user.fillInfo) {
     return (
       <div>
@@ -27,6 +31,7 @@ function Home() {
       </div>
     );
   }
+
   return (
     <div>
       <div>

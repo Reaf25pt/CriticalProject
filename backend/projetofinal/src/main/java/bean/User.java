@@ -21,6 +21,7 @@ import org.glassfish.jaxb.core.v2.TODO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 @RequestScoped
@@ -116,7 +117,7 @@ public class User implements Serializable {
         loginDto.setEmail(user.getEmail());
         loginDto.setFirstName(user.getFirstName());
         loginDto.setLastName(user.getLastName());
-        loginDto.setOffice(user.getOffice());
+        loginDto.setOffice(user.getOffice().getCity());
         loginDto.setNickname(user.getNickname());
         loginDto.setPhoto(user.getPhoto());
         loginDto.setBio(user.getBio());
@@ -137,6 +138,18 @@ public class User implements Serializable {
     private String tokenMask(String token) {
 
         return DigestUtils.md5Hex(token).toUpperCase();
+    }
+
+    public boolean checkStringInfo(String str) {
+        // check if a string info is null or blank
+        boolean res = false;
+
+        if(str == null || str.isBlank() || str.isEmpty()){
+            res=true;
+            // info is not filled in as it should
+        }
+
+        return res;
     }
 
     public int validateLogout(String token) {
@@ -177,6 +190,10 @@ public class User implements Serializable {
         return res;
     }
 
+
+
+
+
     public int checkEmailInDatabase(String email) {
         // check if email used to create new account is already in Database - Email must be unique
         // if it is in Database, check if account is validated (could be that user forgot previous regist and never validated account
@@ -208,10 +225,10 @@ public class User implements Serializable {
         entity.User newUser = new entity.User();
         newUser.setEmail(email);
         newUser.setPassword(passMask(password));
-        newUser.setFirstName("nd");
+        /*newUser.setFirstName("nd");
         newUser.setLastName("nd");
         newUser.setOffice(Office.COIMBRA);
-        // TODO  colocar assim para nomes e office ou permitir q seja nulo
+        // TODO  colocar assim para nomes e office ou permitir q seja nulo*/
         newUser.setContestManager(false);
         newUser.setOpenProfile(false);
         newUser.setValidated(false);
@@ -714,16 +731,15 @@ return projectsList;
         return hobbyDto;
     }
 
-    public boolean checkMandatoryData(EditProfile newInfo) {
-        // verifica se dados obrigatórios: first name / last name / office chegam do frontend
-        boolean res= false;
 
-        if (newInfo.getFirstName() == null || newInfo.getFirstName().isBlank() || newInfo.getLastName()==null || newInfo.getLastName().isBlank()){
-            res=true;
-            // TODO decidir como verificar se office vem preenchido do frontend e validar em conformidade
-        }
+    public HashMap<Integer, String> getOfficeList() {
+        HashMap<Integer, String> officeList = new HashMap<>();
+Office[] list = Office.values();
 
-        return res;
+for (int i = 0; i< list.length; i++){
+    officeList.put(i, list[i].getCity());
+}
+        return officeList;
     }
 }
 

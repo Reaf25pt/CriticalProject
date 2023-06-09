@@ -46,14 +46,16 @@ function App() {
           return response.json();
         } else {
           alert("Dados inválidos");
+          document.getElementById("emailInput").value = "";
+          document.getElementById("passwordInput").value = "";
         }
-        document.getElementById("emailInput").value = "";
-        document.getElementById("passwordInput").value = "";
       })
       .then((loggedUser) => {
         user(loggedUser);
         navigate("/home", { replace: true });
-      });
+      })
+      .catch(console.error);
+    // TODO confirmar que está certo?
   };
 
   return (
