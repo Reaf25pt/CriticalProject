@@ -10,6 +10,8 @@ import java.util.List;
 
 @Entity
 @Table(name="Skill")
+@NamedQuery(name = "Skill.findSkillByTitle", query = "SELECT s FROM Skill s WHERE LOWER(s.title)  = LOWER(:title)  ")
+
 public class Skill implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -21,10 +23,10 @@ public class Skill implements Serializable {
 
     //Como podem ser partilhados por vários users, o título não poderá ser alterado
     @Column(name = "title", nullable = false, unique = true, updatable = false)
-    private String skillTitle;
+    private String title;
 
     @Column(name="skillType", nullable = false, unique = false, updatable = true)
-    private SkillType skillType;
+    private SkillType type;
 
     @ManyToMany
     @JoinTable(
@@ -51,20 +53,20 @@ public class Skill implements Serializable {
         this.skillId = skillId;
     }
 
-    public String getSkillTitle() {
-        return skillTitle;
+    public String getTitle() {
+        return title;
     }
 
-    public void setSkillTitle(String skillTitle) {
-        this.skillTitle = skillTitle;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public SkillType getSkillType() {
-        return skillType;
+    public SkillType getType() {
+        return type;
     }
 
-    public void setSkillType(SkillType skillType) {
-        this.skillType = skillType;
+    public void setType(SkillType type) {
+        this.type = type;
     }
 
     public List<User> getListUsers_Skills() {

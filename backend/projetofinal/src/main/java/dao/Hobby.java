@@ -1,6 +1,7 @@
 package dao;
 
 import jakarta.ejb.Stateless;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.NoResultException;
 
 @Stateless
@@ -22,4 +23,17 @@ public class Hobby extends Abstract<entity.Hobby>{
         }
         return ent;
     }
+
+    public Long findRelationBetweenUserAndHobby(int hobbyId, int userId) {
+        Long count;
+        try {
+            count = (Long) em.createNamedQuery("Hobby.findRelationBetweenUserAndHobby").setParameter("hobbyId", hobbyId).setParameter("userId", userId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            // e.printStackTrace();
+            return null;
+        }
+        return count;
+    }
+
 }

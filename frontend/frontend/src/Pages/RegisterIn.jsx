@@ -17,7 +17,7 @@ function RegisterIn() {
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-    console.log(credentials.office);
+
     setCredentials((values) => {
       return { ...values, [name]: value };
     });
@@ -25,8 +25,6 @@ function RegisterIn() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    console.log(credentials.office);
 
     if (
       credentials.office === null ||

@@ -6,12 +6,17 @@ public class Skill {
 
     private int id;
     private String title;
-    private SkillType skillType;
+   // private SkillType skillType;
+
+    private int skillType;
+
+    public Skill() {
+    }
 
     public Skill(int id, String title, SkillType skillType) {
         this.id = id;
         this.title = title;
-        this.skillType = skillType;
+     //   this.skillType = skillType;
     }
 
     public int getId() {
@@ -30,11 +35,11 @@ public class Skill {
         this.title = title;
     }
 
-    public SkillType getSkillType() {
+    public int getSkillType() {
         return skillType;
     }
 
-    public void setSkillType(SkillType skillType) {
+    public void setSkillType(int skillType) {
         this.skillType = skillType;
     }
 }

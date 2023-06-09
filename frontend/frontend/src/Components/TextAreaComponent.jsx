@@ -7,6 +7,7 @@ function TextAreaComponent(props) {
         name={props.name}
         onChange={props.onChange}
         required={props.required}
+        disabled={props.disabled}
         id={props.id}
       ></textarea>
     </div>

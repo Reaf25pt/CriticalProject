@@ -349,7 +349,7 @@ public class User {
             Hobby hobby = userBean.addHobby(token, title);
             if (hobby == null) {
                 r = Response.status(404).entity("Not found!").build();
-
+//TODO melhorar texto de resposta? aqui o not found na verdade significa que a relação já existe ...
             } else {
                 r = Response.status(200).entity(hobby).build();
                 // permite apresentar logo no frontend com id do hobby para poder eventualmente apagar
@@ -386,6 +386,62 @@ public class User {
         return r;
     }
 
+    // GET LIST OF SKILL TYPES
+    @GET
+    @Path("/skilltypes")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getListOfSkillTypes(@HeaderParam("token") String token) {
 
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            HashMap<Integer, String> list = userBean.getSkillTypesList();
+
+            if (list == null ) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+                r = Response.status(200).entity(list).build();
+            }
+        }
+
+        return r;
+    }
+
+    // ADICIONAR SKILL À PP LISTA DE SKILLS
+    @POST
+    @Path("/skill")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addSkill(@HeaderParam("token") String token, Skill skill) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) || userBean.checkSkillInfo(skill)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+
+        } else {
+
+            userBean.updateSessionTime(token);
+
+            Skill newSkill = userBean.addSkillToOwnProfile(token, skill);
+            if (newSkill == null) {
+                r = Response.status(404).entity("Not found!").build();
+            } else {
+                r = Response.status(200).entity(newSkill).build();
+                // permite apresentar logo no frontend com id da skill para poder eventualmente apagar
+            }
+        }
+        return r;
+
+    }
 
 }

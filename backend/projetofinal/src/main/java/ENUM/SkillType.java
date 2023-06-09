@@ -13,4 +13,7 @@ public enum SkillType {
         this.type = type;
     }
 
+    public String getType() {
+        return type;
+    }
 }

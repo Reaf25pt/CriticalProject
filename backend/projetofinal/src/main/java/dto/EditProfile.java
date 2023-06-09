@@ -4,9 +4,11 @@ import ENUM.Office;
 
 public class EditProfile {
     private int id;
+
+    private String token;
     private String firstName;
     private String lastName;
-    private Office office;
+    private String office;
     //TODO office provavelmente tem de ser definido como int
     private int officeInfo;
     private String nickname;
@@ -26,6 +28,14 @@ public class EditProfile {
         this.id = id;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -42,11 +52,11 @@ public class EditProfile {
         this.lastName = lastName;
     }
 
-    public Office getOffice() {
+    public String getOffice() {
         return office;
     }
 
-    public void setOffice(Office office) {
+    public void setOffice(String office) {
         this.office = office;
     }
 

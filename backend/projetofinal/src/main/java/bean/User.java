@@ -1,6 +1,7 @@
 package bean;
 
 import ENUM.Office;
+import ENUM.SkillType;
 import dto.*;
 import dto.Project;
 import entity.ProjectMember;
@@ -16,6 +17,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jaxb.core.v2.TODO;
+import org.jetbrains.annotations.NotNull;
 
 
 import java.io.Serializable;
@@ -44,6 +46,8 @@ public class User implements Serializable {
     HttpServletRequest req;
     @EJB
     dao.Hobby hobbyDao;
+    @EJB
+    dao.Skill skillDao;
 
     public User() {
     }
@@ -84,13 +88,6 @@ public class User implements Serializable {
                     tokenDao.merge(tokenEnt);
                     user = convertLoginDto(userEnt, tokenEnt);
 
-                  /*  HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-                    String ipAddress = req.getHeader("X-FORWARDED-FOR");
-                    if (ipAddress == null) {
-		  ipAddress = req.getRemoteAddr();
-          //Logger.info("IP of request is " + ipAddress);
-                    }*/
-
                     LOGGER.info("User whose user ID is " + userEnt.getUserId() + " has logged in its account. IP Address of request is " + request.getRemoteAddr());
 
                 }
@@ -115,12 +112,30 @@ public class User implements Serializable {
         loginDto.setUserId(user.getUserId());
         loginDto.setToken(token.getToken());
         loginDto.setEmail(user.getEmail());
+
         loginDto.setFirstName(user.getFirstName());
         loginDto.setLastName(user.getLastName());
-        loginDto.setOffice(user.getOffice().getCity());
-        loginDto.setNickname(user.getNickname());
+
+       /* if(user.getFirstName()!=null){  }
+      if(user.getLastName()!=null){
+
+      }*/
+
+        if(user.getOffice()!=null){ loginDto.setOffice(user.getOffice().getCity());}
+
+        if(user.getNickname()!=null){
+            loginDto.setNickname(user.getNickname());
+        }
+
+        if (user.getBio() != null) {
+            loginDto.setBio(user.getBio());
+        }
+
+      if(user.getPhoto()!=null){
+
         loginDto.setPhoto(user.getPhoto());
-        loginDto.setBio(user.getBio());
+      }
+
         loginDto.setContestManager(user.isContestManager());
         loginDto.setOpenProfile(user.isOpenProfile());
         loginDto.setFillInfo(user.isFillInfo());
@@ -607,7 +622,11 @@ public class User implements Serializable {
         userDto.setId(user.getUserId());
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
-        userDto.setOffice(user.getOffice());
+        if(user.getOffice()!=null){
+           userDto.setOffice( user.getOffice().getCity());
+        }
+
+      //  userDto.setOffice(user.getOffice());
         userDto.setNickname(user.getNickname());
         userDto.setPhoto(user.getPhoto());
         userDto.setBio(user.getBio());
@@ -693,22 +712,28 @@ return projectsList;
         if (user != null) {
             entity.Hobby hobby = hobbyDao.findHobbyByTitle(title.trim());
             if (hobby != null) {
-                // significa que hobby já está na DB, basta adicionar a lista de user
-// TODO verificar situação de trim ao inserir na DB
-                user.getListHobbies().add(hobby);
-                hobby.getListUsers_Hobbies().add(user);
+                // significa que hobby já está na DB, 1º verificar se já existe relação hobby-user para, n havendo, adicionar a lista de user
 
-                userDao.merge(user);
-                hobbyDao.merge(hobby);
+                Long res=hobbyDao.findRelationBetweenUserAndHobby(hobby.getHobbyId(), user.getUserId());
 
-                hobbyDto = convertToHobbyDto(hobby);
-                LOGGER.info("Hobby " + hobby.getHobbyId() + " is associated with user, user ID: " + user.getUserId() + ". IP Address of request is " + getIPAddress());
+                if(res==0) {
+                    user.getListHobbies().add(hobby);
+                    hobby.getListUsers_Hobbies().add(user);
 
+                    userDao.merge(user);
+                    hobbyDao.merge(hobby);
+
+                    hobbyDto = convertToHobbyDto(hobby);
+                    LOGGER.info("Hobby " + hobby.getHobbyId() + " is associated with user, user ID: " + user.getUserId() + ". IP Address of request is " + getIPAddress());
+                } else {
+                    // TODO n faz nada, mas deveria avisar ou passa assim ?!
+hobbyDto=null;
+                }
             } else {
                 // hobby n está na DB, precisa de ser persisted
 
                 entity.Hobby newHobby = new entity.Hobby();
-                newHobby.setHobbyTitle(title);
+                newHobby.setHobbyTitle(title.trim());
                 newHobby.getListUsers_Hobbies().add(user);
                 hobbyDao.persist(newHobby);
 
@@ -721,6 +746,7 @@ return projectsList;
         }
         return hobbyDto;
     }
+
 
     private Hobby convertToHobbyDto(entity.Hobby hobby) {
         Hobby hobbyDto = new Hobby();
@@ -740,6 +766,113 @@ for (int i = 0; i< list.length; i++){
     officeList.put(i, list[i].getCity());
 }
         return officeList;
+    }
+
+    public HashMap<Integer, String> getSkillTypesList() {
+        HashMap<Integer, String> skillTypesList = new HashMap<>();
+        SkillType[] list = SkillType.values();
+
+        for (int i = 0; i< list.length; i++){
+            skillTypesList.put(i, list[i].getType());
+        }
+        return skillTypesList;
+    }
+
+    public Skill addSkillToOwnProfile(String token, Skill skill) {
+        // adicionar skill ao perfil do token,se n houver já relação user-skill. Se n existir deve-se 1º persistir na DB
+
+        Skill skillDto = new Skill();
+
+        entity.User user = tokenDao.findUserEntByToken(token);
+        if (user != null) {
+            entity.Skill skillInDB = skillDao.findSkillByTitle(skill.getTitle().trim());
+            if (skillInDB != null) {
+                // significa que skill já está na DB, 1º verificar se já existe relação skill-user para, n havendo, adicionar a lista de user
+
+                System.out.println(skillInDB.getType());
+               /* Long res=hobbyDao.findRelationBetweenUserAndHobby(hobby.getHobbyId(), user.getUserId());
+
+                if(res==0) {
+                    user.getListHobbies().add(hobby);
+                    hobby.getListUsers_Hobbies().add(user);
+
+                    userDao.merge(user);
+                    hobbyDao.merge(hobby);
+
+                    hobbyDto = convertToHobbyDto(hobby);
+                    LOGGER.info("Hobby " + hobby.getHobbyId() + " is associated with user, user ID: " + user.getUserId() + ". IP Address of request is " + getIPAddress());
+                } else {
+                    // TODO n faz nada, mas deveria avisar ou passa assim ?!
+                    hobbyDto=null;
+                }*/
+            } else {
+                // skill n está na DB, precisa de ser persisted
+
+                entity.Skill newSkill = new entity.Skill();
+                newSkill.setTitle(skill.getTitle().trim());
+                attributeSkillType(skill.getSkillType(), newSkill);
+                newSkill.getListUsers_Skills().add(user);
+
+                skillDao.persist(newSkill);
+
+                user.getListSkills().add(newSkill);
+                userDao.merge(user);
+                LOGGER.info("Skill " + newSkill.getSkillId() + " is persisted in database and associated with user, user ID: " + user.getUserId() + ". IP Address of request is " + getIPAddress());
+                skillDto = convertToSkillDto(newSkill);
+            }
+
+        }
+        return skillDto;
+
+
+
+
+    }
+
+    private Skill convertToSkillDto(entity.Skill skill) {
+Skill skillDto = new Skill();
+
+
+        skillDto.setId(skill.getSkillId());
+        skillDto.setTitle(skill.getTitle());
+        skillDto.setSkillType(skill.getType().ordinal());
+
+        return skillDto;
+    }
+
+    private void attributeSkillType(int skillType, entity.Skill newSkill) {
+
+        switch (skillType) {
+            case 0:
+                newSkill.setType(SkillType.KNOWLEDGE);
+                break;
+            case 1:
+                newSkill.setType(SkillType.SOFTWARE);
+                break;
+            case 2:
+                newSkill.setType(SkillType.HARDWARE);
+                break;
+            case 3:
+                newSkill.setType(SkillType.TOOL);
+                break;
+
+    }}
+
+    public boolean checkSkillInfo(Skill skill) {
+        // verifica se info obrigatória vem do frontend
+        boolean res = false;
+
+        if (skill==null){
+            res=true;
+        } else {
+            if(checkStringInfo(skill.getTitle())){
+                // TODO falta validar info do skillType ENUM que tem de vir preenchido
+                // falta info obrigatória
+                res=true;
+            }
+        }
+
+     return res;
     }
 }
 
