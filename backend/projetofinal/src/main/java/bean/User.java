@@ -535,7 +535,7 @@ public class User implements Serializable {
 
             LOGGER.info("User ID " + user.getUserId() + " updates its profile. IP Address of request is " + getIPAddress());
 
-            updatedUser = convertToEditProfile(user);
+            updatedUser = convertToEditProfile(user, token);
         }
 
         return updatedUser;
@@ -610,18 +610,21 @@ public class User implements Serializable {
 
             LOGGER.info("User ID " + userEnt.getUserId() + " updates its profile. IP Address of request is " + getIPAddress());
 
-            updatedUser = convertToEditProfile(userEnt);
+            updatedUser = convertToEditProfile(userEnt, token);
         }
 
         return updatedUser;
     }
 
-    public EditProfile convertToEditProfile(entity.User user) {
+    public EditProfile convertToEditProfile(entity.User user, String token) {
         EditProfile userDto = new EditProfile();
 
         userDto.setId(user.getUserId());
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
+
+        userDto.setToken(token);
+
         if(user.getOffice()!=null){
            userDto.setOffice( user.getOffice().getCity());
         }
