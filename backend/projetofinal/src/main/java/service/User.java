@@ -297,6 +297,7 @@ public class User {
     }
 
 
+
     // GET LIST OF PROJECTS OF LOGGED USER
     @GET
     @Path("/ownprojects")
@@ -327,9 +328,38 @@ public class User {
         return r;
     }
 
+    // GET LIST OF OWN HOBBIES
+    @GET
+    @Path("/ownhobbies")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getOwnHobbies(@HeaderParam("token") String token) {
+
+        // verificar se token tem sessão iniciada e válida, se sim actualizar session time
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<Hobby> hobbies = userBean.getOwnHobbiesList(token);
+
+            if (hobbies == null || hobbies.size() == 0) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+
+                r = Response.status(200).entity(hobbies).build();
+            }
+        }
+
+        return r;
+    }
+
     // ADICIONAR HOBBY À PP LISTA DE HOBBIES
     @POST
-    @Path("/hobby")
+    @Path("/newhobby")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addHobby(@HeaderParam("token") String token, String title) {

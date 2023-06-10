@@ -296,4 +296,17 @@ return relationId;
 
         return res;
     }
+
+    public List<dto.Project> getAllProjectsList(String token) {
+
+        List<dto.Project> projectsList = new ArrayList<>();
+
+        List<entity.Project> list = projDao.findAll();
+
+        for (entity.Project p : list) {
+            projectsList.add(convertProjEntityToDto(p));
+
+        }
+        return projectsList;
+    }
 }

@@ -45,25 +45,35 @@ function ProfileSee({ onEdit }) {
             )}
             {/*                     <p class="text-white mb-4">Privado</p>
              */}{" "}
-            <div class="d-flex justify-content-around">
+            {/*  <div class="d-flex justify-content-around">
               <ButtonComponent type="button" name="Editar" onClick={onEdit} />
 
               {/*   <LinkButton name="Alterar password" /> */}
-            </div>
+            {/*   </div> */}
           </div>
         </div>
       </div>
       <div class="col-12 col-sm-12 col-md-12 col-lg-8 mt-3 ">
         <div class="p-5 mb-4 bg-secondary h-100 rounded-5">
-          <textarea
-            class="text-dark bg-white h-75 w-100 rounded-2 mb-5"
-            placeholder="Biografia..."
-            disabled
-          ></textarea>
-          <div className="row">
+          {user.bio ? (
+            <p class="text-white mb-4">{user.bio}</p>
+          ) : (
+            <textarea
+              class="text-dark bg-white h-75 w-100 rounded-2 mb-5"
+              placeholder=" Pode escrever aqui a sua biografia"
+              disabled
+            ></textarea>
+          )}
+
+          {/*  <div className="row">
             <ButtonComponent name={"Editar"} />
-          </div>
+          </div> */}
         </div>
+      </div>
+      <div class="d-flex justify-content-around">
+        <ButtonComponent type="button" name="Editar" onClick={onEdit} />
+
+        {/*   <LinkButton name="Alterar password" /> */}
       </div>
     </>
   );

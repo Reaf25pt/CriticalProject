@@ -10,7 +10,8 @@ import java.util.List;
 
 @Entity
 @Table(name="Skill")
-@NamedQuery(name = "Skill.findSkillByTitle", query = "SELECT s FROM Skill s WHERE LOWER(s.title)  = LOWER(:title)  ")
+@NamedQuery(name = "Skill.findSkillByTitle", query = "SELECT s FROM Skill s WHERE LOWER(s.title)  = LOWER(:title) ")
+@NamedQuery(name = "Skill.findRelationBetweenUserAndSkill", query = "SELECT COUNT(s) FROM Skill s JOIN s.listUsers_Skills u WHERE s.skillId = :skillId AND u.userId = :userId")
 
 public class Skill implements Serializable {
 

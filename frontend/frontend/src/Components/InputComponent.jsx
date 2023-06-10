@@ -12,6 +12,8 @@ function InputComponent(props) {
         pattern={props.pattern}
         required={props.required}
         id={props.id}
+        accept={props.accept}
+        defaultValue={props.defaultValue}
       />
     </div>
   );

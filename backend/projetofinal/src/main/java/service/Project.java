@@ -6,6 +6,8 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.List;
+
 @Path("/project")
 public class Project {
 
@@ -79,6 +81,35 @@ return r;
             }
         }
         return r;}
+
+    // GET LIST OF ALL PROJECTS IN DB
+    @GET
+    @Path("/allprojects")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllProjects(@HeaderParam("token") String token) {
+
+        // verificar se token tem sessão iniciada e válida, se sim actualizar session time
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<dto.Project> projects = projBean.getAllProjectsList(token);
+
+            if (projects == null || projects.size() == 0) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+
+                r = Response.status(200).entity(projects).build();
+            }
+        }
+
+        return r;
+    }
 
 }
 

@@ -6,6 +6,7 @@ public class EditProfile {
     private int id;
 
     private String token;
+    private String email;
     private String firstName;
     private String lastName;
     private String office;
@@ -30,6 +31,14 @@ public class EditProfile {
 
     public String getToken() {
         return token;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void setToken(String token) {

@@ -8,7 +8,7 @@ import InputComponent from "../Components/InputComponent";
 import { userStore } from "../stores/UserStore";
 import { useState } from "react";
 
-function ProfileEdit({ onChange, onSubmit }) {
+function ProfileEdit({ onChange, onSubmit, onClick }) {
   const user = userStore((state) => state.user);
   const fullName = user.firstName + " " + user.lastName;
 
@@ -46,6 +46,7 @@ function ProfileEdit({ onChange, onSubmit }) {
                       required
                       name="firstName"
                       type="text"
+                      defaultValue={user.firstName || ""}
                       onChange={onChange}
                     />
                   </div>
@@ -56,6 +57,7 @@ function ProfileEdit({ onChange, onSubmit }) {
                       required
                       name="lastName"
                       type="text"
+                      defaultValue={user.lastName || ""}
                       onChange={onChange}
                     />
                   </div>
@@ -65,6 +67,7 @@ function ProfileEdit({ onChange, onSubmit }) {
                       id="nicknameInput"
                       name="nickname"
                       type="text"
+                      defaultValue={user.nickname || ""}
                       onChange={onChange}
                     />
                   </div>
@@ -74,6 +77,7 @@ function ProfileEdit({ onChange, onSubmit }) {
                         name="office"
                         id="officeInput"
                         required={true}
+                        defaultValue={user.office || ""}
                         onChange={onChange}
                         placeholder={"Local de trabalho *"}
                       />
@@ -89,11 +93,11 @@ function ProfileEdit({ onChange, onSubmit }) {
               )} */}
                   {/*                     <p class="text-white mb-4">Privado</p>
                    */}{" "}
-                  <div class="d-flex justify-content-around">
+                  {/* <div class="d-flex justify-content-around">
                     <ButtonComponent type="submit" name="Guardar" />
 
                     {/*   <LinkButton name="Alterar password" /> */}
-                  </div>
+                  {/*  </div> */}
                 </div>
               </div>
             </div>
@@ -101,16 +105,27 @@ function ProfileEdit({ onChange, onSubmit }) {
               <div class="p-5 mb-4 bg-secondary h-100 rounded-5">
                 <textarea
                   class="text-dark bg-white h-75 w-100 rounded-2 mb-5"
-                  placeholder="Biografia..."
+                  placeholder="Biografia"
                   id="bioInput"
                   name="bio"
                   type="text"
+                  defaultValue={user.bio || ""}
                   onChange={onChange}
                 ></textarea>
-                <div className="row">
+                {/*  <div className="row">
                   <ButtonComponent name={"Editar"} />
-                </div>
+                </div> */}
               </div>
+            </div>
+            <div class="d-flex justify-content-around">
+              <ButtonComponent type="submit" name="Guardar" />
+
+              {/*   <LinkButton name="Alterar password" /> */}
+            </div>
+            <div class="d-flex justify-content-around">
+              <ButtonComponent type="click" name="Cancelar" onClick={onClick} />
+
+              {/*   <LinkButton name="Alterar password" /> */}
             </div>
           </form>
         </div>

@@ -40,7 +40,7 @@ function RegisterIn() {
         firstName: credentials.firstName,
         lastName: credentials.lastName,
         officeInfo: credentials.office,
-        photo: credentials.photo,
+        nickname: credentials.nickname,
       };
 
       fetch("http://localhost:8080/projetofinal/rest/user/ownprofile", {
@@ -110,6 +110,15 @@ function RegisterIn() {
                 onChange={handleChange}
               />
             </div>
+            <div className="mb-3 form-outline">
+              <InputComponent
+                placeholder={"Alcunha "}
+                id="nicknameInput"
+                name="nickname"
+                type="text"
+                onChange={handleChange}
+              />
+            </div>
             <div class="form-group mt-3 mb-3">
               <div class="input-group rounded">
                 <SelectComponent
@@ -134,8 +143,8 @@ function RegisterIn() {
                   <div class="custom-file">
                     <InputComponent
                       name="photo"
-                      onChange={handleChange}
                       type="file"
+                      accept="image/png, image/jpeg"
                       class="custom-file-input"
                       id="inputGroupFile01"
                       /*  // TODO colocar accept para limitar file a text https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file

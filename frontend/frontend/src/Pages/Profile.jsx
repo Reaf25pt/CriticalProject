@@ -8,15 +8,21 @@ import { userStore } from "../stores/UserStore";
 import { useState } from "react";
 import SeeProfileComponenent from "../Components/SeeProfileComponent";
 import EditProfileComponent from "../Components/EditProfileComponent";
+import Hobby from "../Components/Hobby";
 
 function Profile() {
   const user = userStore((state) => state.user);
   const fullName = user.firstName + " " + user.lastName;
   const [isEditing, setIsEditing] = useState(false);
   const [credentials, setCredentials] = useState({});
+  const userUpdate = userStore((state) => state.setUser);
 
   const handleEdit = (event) => {
     setIsEditing(true);
+  };
+
+  const handleClick = (event) => {
+    setIsEditing(false);
   };
 
   const handleChange = (event) => {
@@ -30,7 +36,47 @@ function Profile() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setIsEditing(false);
+    console.log(credentials.office);
+
+    if (
+      credentials.office === null ||
+      credentials.office === "undefined" ||
+      credentials.office === 20 ||
+      credentials.office === "20" ||
+      credentials.office === undefined
+    ) {
+      alert("Seleccione o local de trabalho");
+    } else {
+      const editedUser = {
+        firstName: credentials.firstName,
+        lastName: credentials.lastName,
+        officeInfo: credentials.office,
+        nickname: credentials.nickname,
+        bio: credentials.bio,
+      };
+
+      fetch("http://localhost:8080/projetofinal/rest/user/ownprofile", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: user.token,
+        },
+        body: JSON.stringify(editedUser),
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json();
+            //navigate("/home", { replace: true });
+          } else {
+            alert("Algo correu mal. Tente novamente");
+          }
+        })
+        .then((loggedUser) => {
+          userUpdate(loggedUser);
+          // navigate("/home", { replace: true });
+          setIsEditing(false);
+        });
+    }
   };
 
   return (
@@ -81,6 +127,7 @@ function Profile() {
                 <EditProfileComponent
                   onChange={handleChange}
                   onSubmit={handleSubmit}
+                  onClick={handleClick}
                 />
               )}
               {/*   <div class="col-12 col-sm-12 col-md-12 col-lg-4 mt-3 ">
@@ -200,7 +247,8 @@ function Profile() {
                 </div>
               </div>
               <div class="col-lg-4 ">
-                <div class=" bg-secondary rounded-3 p-4 h-100">
+                <Hobby />
+                {/*  <div class=" bg-secondary rounded-3 p-4 h-100">
                   <div class="input-group rounded mb-3">
                     <input
                       type="search"
@@ -221,7 +269,7 @@ function Profile() {
                       <p>Hobbies x</p>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

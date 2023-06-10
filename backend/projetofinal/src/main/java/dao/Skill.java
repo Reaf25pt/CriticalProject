@@ -25,6 +25,17 @@ public class Skill extends Abstract<entity.Skill>{
         return ent;
     }
 
+    public Long findRelationBetweenUserAndSkill(int skillId, int userId) {
+        Long count;
+        try {
+            count = (Long) em.createNamedQuery("Skill.findRelationBetweenUserAndSkill").setParameter("skillId", skillId).setParameter("userId", userId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            // e.printStackTrace();
+            return null;
+        }
+        return count;
+    }
 
 
 }

@@ -10,6 +10,7 @@ import java.util.List;
 @Table(name = "Hobby")
 @NamedQuery(name = "Hobby.findHobbyByTitle", query = "SELECT h FROM Hobby h WHERE LOWER(h.hobbyTitle)  = LOWER(:title) ")
 @NamedQuery(name = "Hobby.findRelationBetweenUserAndHobby", query = "SELECT COUNT(h) FROM Hobby h JOIN h.listUsers_Hobbies u WHERE h.hobbyId = :hobbyId AND u.userId = :userId")
+@NamedQuery(name = "Hobby.findListOfHobbiesByUserId", query = "SELECT h FROM Hobby h  JOIN h.listUsers_Hobbies u WHERE u.userId = :userId")
 
 public class Hobby implements Serializable {
 

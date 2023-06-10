@@ -1,8 +1,12 @@
 package dao;
 
+import entity.Project;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.NoResultException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Stateless
 public class Hobby extends Abstract<entity.Hobby>{
@@ -35,5 +39,20 @@ public class Hobby extends Abstract<entity.Hobby>{
         }
         return count;
     }
+
+    public List<entity.Hobby> findListOfHobbiesByUserId(int id) {
+        List<entity.Hobby> hobbiesList = new ArrayList<entity.Hobby>();
+        try {
+            hobbiesList = (List<entity.Hobby>) em.createNamedQuery("Hobby.findListOfHobbiesByUserId").setParameter("userId", id).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return hobbiesList;
+    }
+
+
+
+
 
 }

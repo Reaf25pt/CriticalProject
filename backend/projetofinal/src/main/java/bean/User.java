@@ -624,6 +624,7 @@ public class User implements Serializable {
         userDto.setLastName(user.getLastName());
 
         userDto.setToken(token);
+        userDto.setEmail(user.getEmail());
 
         if(user.getOffice()!=null){
            userDto.setOffice( user.getOffice().getCity());
@@ -692,7 +693,7 @@ return projectsList;
 
     public List<Project> getOwnProjectsList(String token) {
 
-        List<Project> projectsList = new ArrayList<Project>();
+        List<Project> projectsList = new ArrayList<>();
         entity.User user = tokenDao.findUserEntByToken(token);
 
         List<entity.Project> list = projMemberDao.findListOfProjectsByUserId(user.getUserId());
@@ -705,6 +706,19 @@ return projectsList;
         return projectsList;
     }
 
+    public List<Hobby> getOwnHobbiesList(String token) {
+List<Hobby> hobbiesList = new ArrayList<>();
+        entity.User user = tokenDao.findUserEntByToken(token);
+
+        List<entity.Hobby> list = hobbyDao.findListOfHobbiesByUserId(user.getUserId());
+
+        for (entity.Hobby h : list) {
+            hobbiesList.add(convertToHobbyDto(h));
+
+        }
+//TODO confirmar que está certo, e proteger de nulos !!!
+        return hobbiesList;
+    }
 
     public Hobby addHobby(String token, String title) {
         // adicionar hobby a DB, se não existir, e à lista de hobbies do token
@@ -792,22 +806,24 @@ for (int i = 0; i< list.length; i++){
             if (skillInDB != null) {
                 // significa que skill já está na DB, 1º verificar se já existe relação skill-user para, n havendo, adicionar a lista de user
 
-                System.out.println(skillInDB.getType());
-               /* Long res=hobbyDao.findRelationBetweenUserAndHobby(hobby.getHobbyId(), user.getUserId());
+                Long res=skillDao.findRelationBetweenUserAndSkill(skillInDB.getSkillId(), user.getUserId());
 
+                // TODO verificar situação do enum que vem do frontend ou assumir q será o q ja está na DB ?
+                System.out.println(skillInDB.getSkillId() +"   " + user.getUserId());
                 if(res==0) {
-                    user.getListHobbies().add(hobby);
-                    hobby.getListUsers_Hobbies().add(user);
+
+                    user.getListSkills().add(skillInDB);
+                    skillInDB.getListUsers_Skills().add(user);
 
                     userDao.merge(user);
-                    hobbyDao.merge(hobby);
+                    skillDao.merge(skillInDB);
 
-                    hobbyDto = convertToHobbyDto(hobby);
-                    LOGGER.info("Hobby " + hobby.getHobbyId() + " is associated with user, user ID: " + user.getUserId() + ". IP Address of request is " + getIPAddress());
+                    skillDto = convertToSkillDto(skillInDB);
+                    LOGGER.info("Skill " + skillInDB.getTitle() + " is associated with user, user ID: " + user.getUserId() + ". IP Address of request is " + getIPAddress());
                 } else {
                     // TODO n faz nada, mas deveria avisar ou passa assim ?!
-                    hobbyDto=null;
-                }*/
+                    skillDto=null;
+                }
             } else {
                 // skill n está na DB, precisa de ser persisted
 
@@ -826,10 +842,6 @@ for (int i = 0; i< list.length; i++){
 
         }
         return skillDto;
-
-
-
-
     }
 
     private Skill convertToSkillDto(entity.Skill skill) {
@@ -877,5 +889,7 @@ Skill skillDto = new Skill();
 
      return res;
     }
+
+
 }
 
