@@ -2,13 +2,14 @@ import { BsArrowDown, BsSearch } from "react-icons/bs";
 import ButtonComponent from "../Components/ButtonComponent";
 import LinkButton from "../Components/LinkButton";
 import TextAreaComponent from "../Components/TextAreaComponent";
-import SelectComponent from "../Components/SelectComponent";
+import SelectSkillType from "../Components/SelectSkillType";
 import ChangePasswordIn from "./ChangePasswordIn";
 import { userStore } from "../stores/UserStore";
 import { useState } from "react";
 import SeeProfileComponenent from "../Components/SeeProfileComponent";
 import EditProfileComponent from "../Components/EditProfileComponent";
 import Hobby from "../Components/Hobby";
+import Skill from "../Components/Skill";
 
 function Profile() {
   const user = userStore((state) => state.user);
@@ -36,7 +37,6 @@ function Profile() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(credentials.office);
 
     if (
       credentials.office === null ||
@@ -206,7 +206,8 @@ function Profile() {
                 </div>
               </div>
               <div class="col-lg-4 ">
-                <div class="bg-secondary rounded-3 p-4 h-100">
+                <Skill />
+                {/* <div class="bg-secondary rounded-3 p-4 h-100">
                   <div class="input-group rounded mb-3">
                     <input
                       type="search"
@@ -217,7 +218,7 @@ function Profile() {
                     />
                     <div class="form-group">
                       <div class="input-group rounded">
-                        <SelectComponent placeholder={"Tipos"} />
+                        <SelectSkillType placeholder={"Categoria"} />
                         <span
                           class="input-group-text border-0"
                           id="search-addon"
@@ -244,7 +245,7 @@ function Profile() {
                       <p>skills x</p>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
               <div class="col-lg-4 ">
                 <Hobby />

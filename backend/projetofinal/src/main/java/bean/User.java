@@ -891,5 +891,19 @@ Skill skillDto = new Skill();
     }
 
 
+    public List<Skill> getOwnSkillsList(String token) {
+
+        List<Skill> skillsList = new ArrayList<>();
+        entity.User user = tokenDao.findUserEntByToken(token);
+
+        List<entity.Skill> list = skillDao.findListOfSkillsByUserId(user.getUserId());
+
+        for (entity.Skill s : list) {
+            skillsList.add(convertToSkillDto(s));
+
+        }
+//TODO confirmar que está certo, e proteger de nulos !!!
+        return skillsList;
+    }
 }
 

@@ -1,9 +1,13 @@
 package dao;
 
 import ENUM.SkillType;
+import entity.Hobby;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.NoResultException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Stateless
 public class Skill extends Abstract<entity.Skill>{
@@ -37,6 +41,17 @@ public class Skill extends Abstract<entity.Skill>{
         return count;
     }
 
+
+    public List<entity.Skill> findListOfSkillsByUserId(int id) {
+        List<entity.Skill> skillsList = new ArrayList<>();
+        try {
+            skillsList = (List<entity.Skill>) em.createNamedQuery("Skill.findListOfSkillsByUserId").setParameter("userId", id).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return skillsList;
+    }
 
 }
 

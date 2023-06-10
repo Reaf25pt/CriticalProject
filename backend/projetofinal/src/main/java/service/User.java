@@ -474,4 +474,35 @@ public class User {
 
     }
 
+    // GET LIST OF OWN SKILLS
+    @GET
+    @Path("/ownskills")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getOwnSkills(@HeaderParam("token") String token) {
+
+        // verificar se token tem sessão iniciada e válida, se sim actualizar session time
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<Skill> skills = userBean.getOwnSkillsList(token);
+
+            if (skills == null || skills.size() == 0) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+
+                r = Response.status(200).entity(skills).build();
+            }
+        }
+
+        return r;
+    }
+
+
+
 }
