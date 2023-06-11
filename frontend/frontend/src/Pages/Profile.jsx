@@ -5,7 +5,7 @@ import TextAreaComponent from "../Components/TextAreaComponent";
 import SelectSkillType from "../Components/SelectSkillType";
 import ChangePasswordIn from "./ChangePasswordIn";
 import { userStore } from "../stores/UserStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SeeProfileComponenent from "../Components/SeeProfileComponent";
 import EditProfileComponent from "../Components/EditProfileComponent";
 import Hobby from "../Components/Hobby";
@@ -17,6 +17,7 @@ function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [credentials, setCredentials] = useState({});
   const userUpdate = userStore((state) => state.setUser);
+  const [projects, setProjects] = useState([]);
 
   const handleEdit = (event) => {
     setIsEditing(true);
@@ -78,6 +79,22 @@ function Profile() {
         });
     }
   };
+  useEffect(() => {
+    fetch("http://localhost:8080/projetofinal/rest/user/ownprojects", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        token: user.tokenValue,
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log(data);
+        setProjects(data);
+        console.log(projects);
+      })
+      .catch((err) => console.log(err));
+  }, [projects]);
 
   return (
     <div>
@@ -196,7 +213,7 @@ function Profile() {
                     </h3>
                     <div className="text-white p-1 m-1 rounded-3 w-75 p-3 ">
                       <div className="mb-2 bg-black rounded-3">
-                        <p>Projeto 1</p>
+                        <div>{projects.title}</div>
                       </div>
                       <div className="mb-2 bg-black rounded-3">
                         <p>Projeto 2</p>

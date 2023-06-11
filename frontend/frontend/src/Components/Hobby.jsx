@@ -87,7 +87,7 @@ function Hobby() {
         </div>
 
         {showHobbies && showHobbies.length !== 0 ? (
-          <div className="d-flex">
+          <div className="row d-flex">
             {showHobbies.map((hobby) => (
               <div key={hobby.id} className="w-25  bg-white m-1 rounded-3">
                 <p>{hobby.title} </p>

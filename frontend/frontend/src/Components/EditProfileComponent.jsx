@@ -13,14 +13,12 @@ function ProfileEdit({ onChange, onSubmit, onClick }) {
   const fullName = user.firstName + " " + user.lastName;
 
   return (
-    <>
-      <div className="container-fluid">
-        <div className="row d-flex">
-          <form onSubmit={onSubmit}>
-            <div class="col-6 col-sm-6 col-md-6 col-lg-6 mt-3 ">
-              <div class="p-5 mb-4 bg-secondary h-100 rounded-5 ">
-                <div class="text-center">
-                  {/*  {user.photo != null ? (
+    <div className="container-fluid">
+      <form className="row d-flex" onSubmit={onSubmit}>
+        <div class="col-12 col-sm-12 col-md-12 col-lg-4 mt-3">
+          <div class="p-5 mb-4 bg-secondary h-100 rounded-5 ">
+            <div class="text-center">
+              {/*  {user.photo != null ? (
                 <img
                   src={user.photo}
                   alt="avatar"
@@ -33,104 +31,109 @@ function ProfileEdit({ onChange, onSubmit, onClick }) {
                   class="rounded-circle img-responsive"
                 />
               )} */}
-                  {/*  <img
+              {/*  <img
       src="https://randomuser.me/api/portraits/women/22.jpg"
       alt="avatar"
       class="rounded-circle img-responsive"
     /> */}
-                  <h5 class="my-3 text-white">{user.email}</h5>
-                  <div className="mb-3 form-outline">
-                    <InputComponent
-                      placeholder={"Primeiro Nome*"}
-                      id="firstNameInput"
-                      required
-                      name="firstName"
-                      type="text"
-                      defaultValue={user.firstName || ""}
-                      onChange={onChange}
+              <h5 class="my-3 text-white">{user.email}</h5>
+              <div className="mb-3 form-outline">
+                <InputComponent
+                  placeholder={"Primeiro Nome*"}
+                  id="firstNameInput"
+                  required
+                  name="firstName"
+                  type="text"
+                  defaultValue={user.firstName || ""}
+                  onChange={onChange}
+                />
+              </div>
+              <div className="mb-3 form-outline">
+                <InputComponent
+                  placeholder={"Último Nome *"}
+                  id="lastNameInput"
+                  required
+                  name="lastName"
+                  type="text"
+                  defaultValue={user.lastName || ""}
+                  onChange={onChange}
+                />
+              </div>
+              <div className="mb-3 form-outline">
+                <InputComponent
+                  placeholder={"Alcunha "}
+                  id="nicknameInput"
+                  name="nickname"
+                  type="text"
+                  defaultValue={user.nickname || ""}
+                  onChange={onChange}
+                />
+              </div>
+              <div class="form-group mt-3">
+                <div class="input-group rounded">
+                  <SelectComponent
+                    name="office"
+                    id="officeInput"
+                    required={true}
+                    defaultValue={user.office || ""}
+                    onChange={onChange}
+                    placeholder={"Local de trabalho *"}
+                    local={user.office}
+                  />
+                  <span class="input-group-text border-0" id="search-addon">
+                    <BsArrowDown />
+                  </span>
+                </div>
+                <div className="row mt-5">
+                  <div class="d-flex justify-content-around mb-1">
+                    <ButtonComponent type="submit" name="Guardar" />
+
+                    {/*   <LinkButton name="Alterar password" /> */}
+                  </div>
+                  <div class="d-flex justify-content-around">
+                    <ButtonComponent
+                      type="click"
+                      name="Cancelar"
+                      onClick={onClick}
                     />
+
+                    {/*   <LinkButton name="Alterar password" /> */}
                   </div>
-                  <div className="mb-3 form-outline">
-                    <InputComponent
-                      placeholder={"Último Nome *"}
-                      id="lastNameInput"
-                      required
-                      name="lastName"
-                      type="text"
-                      defaultValue={user.lastName || ""}
-                      onChange={onChange}
-                    />
-                  </div>
-                  <div className="mb-3 form-outline">
-                    <InputComponent
-                      placeholder={"Alcunha "}
-                      id="nicknameInput"
-                      name="nickname"
-                      type="text"
-                      defaultValue={user.nickname || ""}
-                      onChange={onChange}
-                    />
-                  </div>
-                  <div class="form-group mt-3 mb-3">
-                    <div class="input-group rounded">
-                      <SelectComponent
-                        name="office"
-                        id="officeInput"
-                        required={true}
-                        defaultValue={user.office || ""}
-                        onChange={onChange}
-                        placeholder={"Local de trabalho *"}
-                      />
-                      <span class="input-group-text border-0" id="search-addon">
-                        <BsArrowDown />
-                      </span>
-                    </div>
-                  </div>
-                  {/* {user.openProfile ? (
+                </div>
+              </div>
+              {/* {user.openProfile ? (
                 <p class="text-white mb-4">Público</p>
               ) : (
                 <p class="text-white mb-4">Privado</p>
               )} */}
-                  {/*                     <p class="text-white mb-4">Privado</p>
-                   */}{" "}
-                  {/* <div class="d-flex justify-content-around">
+              {/*                     <p class="text-white mb-4">Privado</p>
+               */}{" "}
+              {/* <div class="d-flex justify-content-around">
                     <ButtonComponent type="submit" name="Guardar" />
 
                     {/*   <LinkButton name="Alterar password" /> */}
-                  {/*  </div> */}
-                </div>
-              </div>
+              {/*  </div> */}
             </div>
-            <div class="col-6 col-sm-6 col-md-6 col-lg-6 mt-3 ">
-              <div class="p-5 mb-4 bg-secondary h-100 rounded-5">
-                <textarea
-                  class="text-dark bg-white h-75 w-100 rounded-2 mb-5"
-                  placeholder="Biografia"
-                  id="bioInput"
-                  name="bio"
-                  type="text"
-                  defaultValue={user.bio || ""}
-                  onChange={onChange}
-                ></textarea>
-                {/*  <div className="row">
+          </div>
+        </div>
+        <div class="col-12 col-sm-12 col-md-12 col-lg-8 mt-3">
+          <div class="p-5 bg-secondary h-100 rounded-5">
+            <textarea
+              class="text-dark bg-white h-100 w-100 rounded-2  "
+              placeholder="Biografia"
+              id="bioInput"
+              name="bio"
+              type="text"
+              defaultValue={user.bio || ""}
+              onChange={onChange}
+            ></textarea>
+            {/*  <div className="row">
                   <ButtonComponent name={"Editar"} />
                 </div> */}
-              </div>
-            </div>
-            <div class="d-flex justify-content-around">
-              <ButtonComponent type="submit" name="Guardar" />
-
-              {/*   <LinkButton name="Alterar password" /> */}
-            </div>
-            <div class="d-flex justify-content-around">
-              <ButtonComponent type="click" name="Cancelar" onClick={onClick} />
-
-              {/*   <LinkButton name="Alterar password" /> */}
-            </div>
-          </form>
+          </div>
         </div>
-      </div>
-    </>
+      </form>
+    </div>
   );
 }
 export default ProfileEdit;

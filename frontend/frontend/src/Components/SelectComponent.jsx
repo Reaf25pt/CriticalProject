@@ -33,7 +33,7 @@ function SelectComponent(props) {
         placeholder={props.placeholder}
         className="form-control"
       >
-        <option value="20">{"Local de trabalho *"}</option>
+        <option value="20">{props.local} </option>
         {Object.entries(officeList).map(([key, value]) => (
           <option key={key} value={key}>
             {value}

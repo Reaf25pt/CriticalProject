@@ -117,7 +117,7 @@ function Skill() {
       </div>
       <div className="row mx-auto">
         {showSkills && showSkills.length !== 0 ? (
-          <div className="d-flex">
+          <div className="row d-flex">
             {showSkills.map((skill) => (
               <div key={skill.id} className="w-25  bg-white m-1 rounded-3">
                 <p>{skill.title} </p>

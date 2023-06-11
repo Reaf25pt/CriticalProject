@@ -13,7 +13,11 @@ function RegisterIn() {
   const navigate = useNavigate();
   const user = userStore((state) => state.user);
   const userUpdate = userStore((state) => state.setUser);
-
+  const [file, setFile] = useState();
+  function handleChangeImage(e) {
+    console.log(e.target.files[0]);
+    setFile(e.target.files[0]);
+  }
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -147,9 +151,12 @@ function RegisterIn() {
                       accept="image/png, image/jpeg"
                       class="custom-file-input"
                       id="inputGroupFile01"
+                      onChange={handleChangeImage}
+
                       /*  // TODO colocar accept para limitar file a text https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file
                        */
                     />
+                    <img src={file} />
                   </div>
                 </div>
               </div>
