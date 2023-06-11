@@ -3,14 +3,14 @@ package entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "Hobby")
 @NamedQuery(name = "Hobby.findHobbyByTitle", query = "SELECT h FROM Hobby h WHERE LOWER(h.hobbyTitle)  = LOWER(:title) ")
 @NamedQuery(name = "Hobby.findRelationBetweenUserAndHobby", query = "SELECT COUNT(h) FROM Hobby h JOIN h.listUsers_Hobbies u WHERE h.hobbyId = :hobbyId AND u.userId = :userId")
 @NamedQuery(name = "Hobby.findListOfHobbiesByUserId", query = "SELECT h FROM Hobby h  JOIN h.listUsers_Hobbies u WHERE u.userId = :userId")
+@NamedQuery(name = "Hobby.findHobbyOfUserById", query = "SELECT h FROM Hobby h  JOIN h.listUsers_Hobbies u WHERE u.userId = :userId AND h.hobbyId = :hobbyId")
 
 public class Hobby implements Serializable {
 
@@ -57,5 +57,18 @@ public class Hobby implements Serializable {
 
     public void setListUsers_Hobbies(List<User> listUsers_Hobbies) {
         this.listUsers_Hobbies = listUsers_Hobbies;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Hobby hobby = (Hobby) o;
+        return hobbyId == hobby.hobbyId && Objects.equals(hobbyTitle, hobby.hobbyTitle);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(hobbyId, hobbyTitle);
     }
 }

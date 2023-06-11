@@ -51,6 +51,17 @@ public class Hobby extends Abstract<entity.Hobby>{
         return hobbiesList;
     }
 
+    public entity.Hobby findHobbyOfUserById(int userId, int hobbyId) {
+        entity.Hobby ent = null;
+        try {
+            ent = (entity.Hobby) em.createNamedQuery("Hobby.findHobbyOfUserById").setParameter("userId", userId).setParameter("hobbyId", hobbyId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            // e.printStackTrace();
+            return null;
+        }
+        return ent;
+    }
 
 
 

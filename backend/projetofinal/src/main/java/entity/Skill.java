@@ -7,12 +7,14 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name="Skill")
 @NamedQuery(name = "Skill.findSkillByTitle", query = "SELECT s FROM Skill s WHERE LOWER(s.title)  = LOWER(:title) ")
 @NamedQuery(name = "Skill.findRelationBetweenUserAndSkill", query = "SELECT COUNT(s) FROM Skill s JOIN s.listUsers_Skills u WHERE s.skillId = :skillId AND u.userId = :userId")
 @NamedQuery(name = "Skill.findListOfSkillsByUserId", query = "SELECT s FROM Skill s  JOIN s.listUsers_Skills u WHERE u.userId = :userId")
+@NamedQuery(name = "Skill.findSkillOfUserById", query = "SELECT s FROM Skill s  JOIN s.listUsers_Skills u WHERE u.userId = :userId AND s.skillId = :skillId")
 
 public class Skill implements Serializable {
 
@@ -85,6 +87,19 @@ public class Skill implements Serializable {
 
     public void setListProject_Skills(List<Project> listProject_Skills) {
         this.listProject_Skills = listProject_Skills;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Skill skill = (Skill) o;
+        return skillId == skill.skillId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(skillId);
     }
 }
 

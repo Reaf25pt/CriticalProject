@@ -3,6 +3,7 @@ import { BsArrowDown, BsSearch, BsXLg } from "react-icons/bs";
 import { userStore } from "../stores/UserStore";
 import { useEffect, useState } from "react";
 import SelectSkillType from "../Components/SelectSkillType";
+import ModalDeleteUserSkill from "../Components/ModalDeleteUserSkill";
 
 function Skill() {
   const [credentials, setCredentials] = useState({});
@@ -129,7 +130,8 @@ function Skill() {
                 <div className="col-lg-10">{skill.title} </div>
                 <div className="col-lg-2">
                   {" "}
-                  <BsXLg />
+                  <ModalDeleteUserSkill skill={skill} set={setSkills} />
+                  {/*  <BsXLg onclick={handleDelete} /> */}
                 </div>
               </div>
             ))}

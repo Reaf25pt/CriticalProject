@@ -148,6 +148,7 @@ function RegisterIn() {
                       id="photoInput"
                       class="custom-file-input"
                       onChange={handleChange}
+                      title="Url deve terminar em .jpg, .gif ou .png"
                       pattern="(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)"
 
                       /*  // TODO colocar accept para limitar file a text https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file

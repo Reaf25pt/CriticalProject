@@ -732,7 +732,7 @@ List<Hobby> hobbiesList = new ArrayList<>();
                 // significa que hobby já está na DB, 1º verificar se já existe relação hobby-user para, n havendo, adicionar a lista de user
 
                 Long res=hobbyDao.findRelationBetweenUserAndHobby(hobby.getHobbyId(), user.getUserId());
-
+                System.out.println(res);
                 if(res==0) {
                     user.getListHobbies().add(hobby);
                     hobby.getListUsers_Hobbies().add(user);
@@ -905,5 +905,55 @@ Skill skillDto = new Skill();
 //TODO confirmar que está certo, e proteger de nulos !!!
         return skillsList;
     }
+
+
+    public boolean deleteHobby (String token, int id){
+        // apaga hobby da lista de hobbies do user se existir na sua lista
+        boolean res=false;
+
+        entity.User user = tokenDao.findUserEntByToken(token);
+        if (user != null) {
+            entity.Hobby hobby = hobbyDao.findHobbyOfUserById(user.getUserId(), id);
+
+            if(hobby!=null){
+                // apagar apenas da lista do user
+
+            hobby.getListUsers_Hobbies().remove(user);
+             user.getListHobbies().remove(hobby);
+
+                userDao.merge(user);
+                hobbyDao.merge(hobby);
+
+                res=true;
+            }
+        }
+        return res;
+    }
+
+    public boolean deleteSkill (String token, int id){
+        // apaga skill da lista de skills do user se existir na sua lista
+        boolean res=false;
+
+        entity.User user = tokenDao.findUserEntByToken(token);
+        if (user != null) {
+            entity.Skill skill = skillDao.findSkillOfUserById(user.getUserId(), id);
+
+            if(skill!=null){
+                // apagar apenas da lista do user
+
+                skill.getListUsers_Skills().remove(user);
+                user.getListSkills().remove(skill);
+
+                userDao.merge(user);
+                skillDao.merge(skill);
+
+                res=true;
+            }
+        }
+        return res;
+    }
+
+
+
 }
 

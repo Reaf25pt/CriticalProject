@@ -75,6 +75,7 @@ function ProfileEdit({ onChange, onSubmit, onClick }) {
                       type="text"
                       defaultValue={user.photo || ""}
                       onChange={onChange}
+                      title="Url deve terminar em .jpg, .gif ou .png"
                       pattern="(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)"
                     />
                   </div>

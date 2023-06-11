@@ -5,9 +5,7 @@ import jakarta.persistence.*;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "User")
@@ -330,4 +328,16 @@ public class User implements Serializable {
         return timestamp;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return userId == user.userId && Objects.equals(email, user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, email);
+    }
 }

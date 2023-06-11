@@ -504,5 +504,67 @@ public class User {
     }
 
 
+    // DELETE HOBBY
+    @DELETE
+    @Path("/hobby")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteHobbyOfUser(@HeaderParam("token") String token, int id) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) ) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+
+        } else {
+
+            userBean.updateSessionTime(token);
+
+            boolean res = userBean.deleteHobby(token, id);
+            if (!res) {
+                r = Response.status(404).entity("Not found!").build();
+            } else {
+                r = Response.status(200).entity("Success").build();
+
+            }
+        }
+        return r;
+
+    }
+
+    // DELETE SKILL
+
+    @DELETE
+    @Path("/skill")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteSkillOfUser(@HeaderParam("token") String token, int id) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) ) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+
+        } else {
+
+            userBean.updateSessionTime(token);
+
+            boolean res = userBean.deleteSkill(token, id);
+            if (!res) {
+                r = Response.status(404).entity("Not found!").build();
+            } else {
+                r = Response.status(200).entity("Success").build();
+
+            }
+        }
+        return r;
+
+    }
 
 }

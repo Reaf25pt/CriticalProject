@@ -14,6 +14,7 @@ function InputComponent(props) {
         id={props.id}
         accept={props.accept}
         defaultValue={props.defaultValue}
+        title={props.title}
       />
     </div>
   );

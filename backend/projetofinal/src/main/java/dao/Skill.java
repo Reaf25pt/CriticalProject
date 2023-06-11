@@ -53,5 +53,17 @@ public class Skill extends Abstract<entity.Skill>{
         return skillsList;
     }
 
+    public entity.Skill findSkillOfUserById(int userId, int skillId) {
+        entity.Skill ent = null;
+        try {
+            ent = (entity.Skill) em.createNamedQuery("Skill.findSkillOfUserById").setParameter("userId", userId).setParameter("skillId", skillId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            // e.printStackTrace();
+            return null;
+        }
+        return ent;
+    }
+
 }
 
