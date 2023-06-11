@@ -18,24 +18,6 @@ function ProfileEdit({ onChange, onSubmit, onClick }) {
         <div class="col-12 col-sm-12 col-md-12 col-lg-4 mt-3">
           <div class="p-5 mb-4 bg-secondary h-100 rounded-5 ">
             <div class="text-center">
-              {/*  {user.photo != null ? (
-                <img
-                  src={user.photo}
-                  alt="avatar"
-                  class="rounded-circle img-responsive"
-                />
-              ) : (
-                <img
-                  src="https://randomuser.me/api/portraits/women/22.jpg"
-                  alt="avatar"
-                  class="rounded-circle img-responsive"
-                />
-              )} */}
-              {/*  <img
-      src="https://randomuser.me/api/portraits/women/22.jpg"
-      alt="avatar"
-      class="rounded-circle img-responsive"
-    /> */}
               <h5 class="my-3 text-white">{user.email}</h5>
               <div className="mb-3 form-outline">
                 <InputComponent
@@ -69,7 +51,7 @@ function ProfileEdit({ onChange, onSubmit, onClick }) {
                   onChange={onChange}
                 />
               </div>
-              <div class="form-group mt-3">
+              <div class="form-group ">
                 <div class="input-group rounded">
                   <SelectComponent
                     name="office"
@@ -84,6 +66,20 @@ function ProfileEdit({ onChange, onSubmit, onClick }) {
                     <BsArrowDown />
                   </span>
                 </div>
+                <div className="row mt-3">
+                  <div className="form-outline">
+                    <InputComponent
+                      placeholder={"Link da fotografia "}
+                      id="photoInput"
+                      name="photo"
+                      type="text"
+                      defaultValue={user.photo || ""}
+                      onChange={onChange}
+                      pattern="(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)"
+                    />
+                  </div>
+                </div>
+
                 <div className="row mt-5">
                   <div class="d-flex justify-content-around mb-1">
                     <ButtonComponent type="submit" name="Guardar" />

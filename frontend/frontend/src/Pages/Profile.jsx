@@ -54,6 +54,7 @@ function Profile() {
         officeInfo: credentials.office,
         nickname: credentials.nickname,
         bio: credentials.bio,
+        photo: credentials.photo,
       };
 
       fetch("http://localhost:8080/projetofinal/rest/user/ownprofile", {
@@ -208,8 +209,8 @@ function Profile() {
               <div class="col-lg-4 ">
                 <div class="p-4 bg-secondary rounded-3">
                   <div>
-                    <h3 className="bg-white text-center text-nowrap rounded-5  ">
-                      Projetos
+                    <h3 className="bg-white text-center text-nowrap rounded-5 p-0  ">
+                      Os meus Projetos:
                     </h3>
                     <div className="text-white p-1 m-1 rounded-3 w-75 p-3 ">
                       <div className="mb-2 bg-black rounded-3">

@@ -1,5 +1,5 @@
 import styles from "./footer.module.css";
-import { BsArrowDown, BsSearch } from "react-icons/bs";
+import { BsXLg, BsSearch } from "react-icons/bs";
 import { userStore } from "../stores/UserStore";
 import { useEffect, useState } from "react";
 
@@ -60,52 +60,54 @@ function Hobby() {
   };
 
   return (
-    <div class=" bg-secondary rounded-3 p-4 h-100">
-      <div class="input-group rounded mb-3">
-        <label className="text-white mb-2">Os meus interesses</label>
+    <div class=" bg-secondary rounded-3 p-4 h-100 ">
+      <h3 className="bg-white text-center  rounded-5 p-0  ">
+        Os meus Interesses:
+      </h3>{" "}
+      <div className="row">
         <div class="input-group rounded mb-3">
-          <input
-            type="search"
-            class="form-control rounded "
-            placeholder="Adicionar interesse"
-            required
-            aria-label="Search"
-            aria-describedby="search-addon"
-            id="hobbyInput"
-            name="hobbyInput"
-            defaultValue={""}
-            onChange={handleChange}
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                handleClick(event);
-              }
-            }}
-          />
-          <span class="input-group-text border-0">
-            <BsSearch />
-          </span>
+          <div class="input-group rounded mb-3 mt-2">
+            <input
+              type="search"
+              class="form-control rounded "
+              placeholder="Adicionar interesse"
+              required
+              aria-label="Search"
+              aria-describedby="search-addon"
+              id="hobbyInput"
+              name="hobbyInput"
+              defaultValue={""}
+              onChange={handleChange}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  handleClick(event);
+                }
+              }}
+            />
+            <span class="input-group-text border-0">
+              <BsSearch />
+            </span>
+          </div>
         </div>
-
-        {showHobbies && showHobbies.length !== 0 ? (
-          <div className="row d-flex">
-            {showHobbies.map((hobby) => (
-              <div key={hobby.id} className="w-25  bg-white m-1 rounded-3">
-                <p>{hobby.title} </p>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p>Adicione os seus interesses</p>
-        )}
-
-        {/*  <div className="d-flex">
-          <div className="w-25  bg-white m-1 rounded-3">
-            <p>Hobbies x</p>
-          </div>
-          <div className="w-25 m-1 bg-danger rounded-3">
-            <p>Hobbies x</p>
-          </div>
-        </div> */}
+        <div className="row d-flex">
+          {showHobbies && showHobbies.length !== 0 ? (
+            <div className="row d-flex justify-content-around  align-items-center ">
+              {showHobbies.map((hobby) => (
+                <div
+                  key={hobby.id}
+                  className="d-flex justify-content-between  align-items-center  w-25  bg-white m-1 rounded-3 p-2"
+                >
+                  <div className="col-lg-10">{hobby.title} </div>
+                  <div className="col-lg-2">
+                    <BsXLg />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div>Adicione os seus interesses</div>
+          )}
+        </div>
       </div>
     </div>
   );

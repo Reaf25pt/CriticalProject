@@ -13,11 +13,7 @@ function RegisterIn() {
   const navigate = useNavigate();
   const user = userStore((state) => state.user);
   const userUpdate = userStore((state) => state.setUser);
-  const [file, setFile] = useState();
-  function handleChangeImage(e) {
-    console.log(e.target.files[0]);
-    setFile(e.target.files[0]);
-  }
+
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -45,6 +41,7 @@ function RegisterIn() {
         lastName: credentials.lastName,
         officeInfo: credentials.office,
         nickname: credentials.nickname,
+        photo: credentials.photo,
       };
 
       fetch("http://localhost:8080/projetofinal/rest/user/ownprofile", {
@@ -130,7 +127,7 @@ function RegisterIn() {
                   id="officeInput"
                   required={true}
                   onChange={handleChange}
-                  placeholder={"Local de trabalho *"}
+                  local={"Local de trabalho *"}
                 />
                 <span class="input-group-text border-0" id="search-addon">
                   <BsArrowDown />
@@ -147,16 +144,15 @@ function RegisterIn() {
                   <div class="custom-file">
                     <InputComponent
                       name="photo"
-                      type="file"
-                      accept="image/png, image/jpeg"
+                      type="text"
+                      id="photoInput"
                       class="custom-file-input"
-                      id="inputGroupFile01"
-                      onChange={handleChangeImage}
+                      onChange={handleChange}
+                      pattern="(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)"
 
                       /*  // TODO colocar accept para limitar file a text https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file
                        */
                     />
-                    <img src={file} />
                   </div>
                 </div>
               </div>

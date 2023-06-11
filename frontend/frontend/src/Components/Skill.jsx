@@ -1,5 +1,5 @@
 import styles from "./footer.module.css";
-import { BsArrowDown, BsSearch } from "react-icons/bs";
+import { BsArrowDown, BsSearch, BsXLg } from "react-icons/bs";
 import { userStore } from "../stores/UserStore";
 import { useEffect, useState } from "react";
 import SelectSkillType from "../Components/SelectSkillType";
@@ -79,7 +79,10 @@ function Skill() {
 
   return (
     <div class="bg-secondary rounded-3 p-4 h-100">
-      <div class="input-group rounded mb-3">
+      <h3 className="bg-white text-center text-nowrap rounded-5 p-0  ">
+        As Minhas Skills:
+      </h3>
+      <div class="input-group rounded mb-3 mt-3">
         <input
           type="search"
           class="form-control rounded "
@@ -115,12 +118,19 @@ function Skill() {
           <BsSearch />
         </span>
       </div>
-      <div className="row mx-auto">
+      <div className="row  d-flex justify-content-around ">
         {showSkills && showSkills.length !== 0 ? (
-          <div className="row d-flex">
+          <div className="row d-flex   ">
             {showSkills.map((skill) => (
-              <div key={skill.id} className="w-25  bg-white m-1 rounded-3">
-                <p>{skill.title} </p>
+              <div
+                key={skill.id}
+                className="d-flex justify-content-between  align-items-center  w-25  bg-white m-1 rounded-3 pb-1"
+              >
+                <div className="col-lg-10">{skill.title} </div>
+                <div className="col-lg-2">
+                  {" "}
+                  <BsXLg />
+                </div>
               </div>
             ))}
           </div>
