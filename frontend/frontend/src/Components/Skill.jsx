@@ -4,13 +4,16 @@ import { userStore } from "../stores/UserStore";
 import { useEffect, useState } from "react";
 import SelectSkillType from "../Components/SelectSkillType";
 import ModalDeleteUserSkill from "../Components/ModalDeleteUserSkill";
+import SkillCss from "../Components/SkillCss.css";
 
 function Skill() {
   const [credentials, setCredentials] = useState({});
+  const [search, setSearch] = useState("");
   const user = userStore((state) => state.user);
   const [skills, setSkills] = useState([]);
   const [showSkills, setShowSkills] = useState([]);
   const [selectedValue, setSelectedValue] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
 
   useEffect(() => {
     fetch("http://localhost:8080/projetofinal/rest/user/ownskills", {
@@ -23,22 +26,55 @@ function Skill() {
       .then((response) => response.json())
       .then((response) => {
         setShowSkills(response);
-      });
+      })
+      .catch((err) => console.log(err));
   }, [skills]);
 
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
 
+    if (name === "skillInput") {
+      setSearch(event.target.value);
+    }
+
     setCredentials((values) => {
       return { ...values, [name]: value };
     });
+  };
+
+  const handleSearch = (searchStr) => {
+    console.log(searchStr);
+    //setValue(searchStr);
+
+    fetch(
+      `http://localhost:8080/projetofinal/rest/user/skills?title=${searchStr}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          token: user.token,
+        },
+      }
+    )
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+          //navigate("/home", { replace: true });
+        }
+      })
+      .then((response) => {
+        setSuggestions(response);
+        console.log(suggestions);
+      });
   };
 
   const handleClick = (event) => {
     event.preventDefault();
 
     if (
+      credentials.skillInput === undefined ||
+      credentials.skillInput === "undefined" ||
       credentials.skillType === null ||
       credentials.skillType === "undefined" ||
       credentials.skillType === 20 ||
@@ -46,7 +82,7 @@ function Skill() {
       credentials.skillType === undefined
       /*  Acho que basta ter undefined */
     ) {
-      alert("Seleccione a categoria");
+      alert("Insira nome e / ou categoria ");
     } else {
       const skill = {
         title: credentials.skillInput,
@@ -73,9 +109,19 @@ function Skill() {
           setSkills((values) => [...values, response]);
         });
       document.getElementById("skillInput").value = "";
-      document.getElementById("skillType").value = "";
+      document.getElementById("skillType").value = "20";
+      setCredentials({});
+
       setSelectedValue("");
     }
+  };
+
+  const handleSelection = (skill) => {
+    credentials.skillInput = skill.title;
+    credentials.skillType = skill.skillType;
+    document.getElementById("skillInput").value = skill.title;
+
+    setSuggestions([]);
   };
 
   return (
@@ -84,23 +130,52 @@ function Skill() {
         As Minhas Skills:
       </h3>
       <div class="input-group rounded mb-3 mt-3">
-        <input
-          type="search"
-          class="form-control rounded "
-          placeholder="Adicionar skill"
-          required
-          aria-label="Search"
-          aria-describedby="search-addon"
-          id="skillInput"
-          name="skillInput"
-          defaultValue={""}
-          onChange={handleChange}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") {
-              handleClick(event);
-            }
-          }}
-        />
+        <div>
+          <input
+            type="search"
+            class="form-control rounded "
+            placeholder="Adicionar skill"
+            required={true}
+            aria-label="Search"
+            aria-describedby="search-addon"
+            id="skillInput"
+            name="skillInput"
+            defaultValue={""}
+            onChange={handleChange}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                handleClick(event);
+              } else {
+                handleSearch(search);
+              }
+            }}
+          />
+
+          <div>
+            {" "}
+            <div className="dropdownz">
+              {suggestions &&
+                suggestions
+                  .filter((item) => {
+                    return (
+                      item &&
+                      item.title.toLowerCase().includes(search) /* !== search */
+                    );
+                  })
+                  .slice(0, 10)
+                  .map((item) => (
+                    <div
+                      key={item.id}
+                      onClick={() => handleSelection(item)}
+                      className="dropdownz-row"
+                    >
+                      {item.title}
+                    </div>
+                  ))}
+            </div>
+          </div>
+        </div>
+
         <div class="form-group">
           <div class="input-group rounded">
             <SelectSkillType
@@ -119,6 +194,7 @@ function Skill() {
           <BsSearch />
         </span>
       </div>
+
       <div className="row  d-flex justify-content-around ">
         {showSkills && showSkills.length !== 0 ? (
           <div className="row d-flex   ">

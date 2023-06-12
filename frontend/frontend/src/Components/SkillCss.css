@@ -1,0 +1,20 @@
+.dropdownz {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid gray;
+  overflow-y: scroll;
+}
+
+.dropdownz:empty {
+  border: none;
+}
+
+.dropdownz-row {
+  cursor: pointer;
+  text-align: start;
+  margin: 2px 0;
+}
+.dropdownz-row:hover {
+  background-color: #efefef;
+}
