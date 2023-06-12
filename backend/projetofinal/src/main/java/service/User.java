@@ -595,5 +595,32 @@ public class User {
         return r;
     }
 
+    // GET LIST OF HOBBIES
+    @GET
+    @Path("/hobby")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getHobbies(@QueryParam("title") String title,  @HeaderParam("token") String token) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<Hobby> hobbies = userBean.getHobbiesList(title);
+
+            if (hobbies == null || hobbies.size() == 0) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+
+                r = Response.status(200).entity(hobbies).build();
+            }
+        }
+
+        return r;
+    }
 
 }

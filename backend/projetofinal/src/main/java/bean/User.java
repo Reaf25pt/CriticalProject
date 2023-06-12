@@ -966,5 +966,19 @@ if(list!=null){
                 listSkillDto.add(convertToSkillDto(s));
         }}return listSkillDto;
     }
+
+    public List<Hobby> getHobbiesList(String str) {
+        // retrieves list of hobbies that match string used to search DB
+
+        List<Hobby> listHobbiesDto = new ArrayList<>();
+        List<entity.Hobby> list = hobbyDao.findHobbyListContainingStr(str);
+
+        if(list!=null){
+            for(entity.Hobby h:list){
+                listHobbiesDto.add(convertToHobbyDto(h));
+            }
+        }
+return listHobbiesDto;
+    }
 }
 

@@ -63,6 +63,16 @@ public class Hobby extends Abstract<entity.Hobby>{
         return ent;
     }
 
+    public List<entity.Hobby> findHobbyListContainingStr(String str) {
+        List<entity.Hobby> hobbiesList = new ArrayList<>();
+        try {
+            hobbiesList = (List<entity.Hobby>) em.createNamedQuery("Hobby.findHobbyListContainingStr").setParameter("str", "%"+ str.toLowerCase()+"%").getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return hobbiesList;
+    }
 
 
 

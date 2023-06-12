@@ -11,6 +11,7 @@ import java.util.*;
 @NamedQuery(name = "Hobby.findRelationBetweenUserAndHobby", query = "SELECT COUNT(h) FROM Hobby h JOIN h.listUsers_Hobbies u WHERE h.hobbyId = :hobbyId AND u.userId = :userId")
 @NamedQuery(name = "Hobby.findListOfHobbiesByUserId", query = "SELECT h FROM Hobby h  JOIN h.listUsers_Hobbies u WHERE u.userId = :userId")
 @NamedQuery(name = "Hobby.findHobbyOfUserById", query = "SELECT h FROM Hobby h  JOIN h.listUsers_Hobbies u WHERE u.userId = :userId AND h.hobbyId = :hobbyId")
+@NamedQuery(name = "Hobby.findHobbyListContainingStr", query = "SELECT h FROM Hobby h WHERE LOWER(h.hobbyTitle) LIKE LOWER(:str) ")
 
 public class Hobby implements Serializable {
 
