@@ -3,6 +3,8 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle";
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+import "primereact/resources/primereact.min.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Register from "./Pages/Register";
 import ForgetPassword from "./Pages/ForgetPassword";
