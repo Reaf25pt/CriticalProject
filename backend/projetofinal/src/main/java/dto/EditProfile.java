@@ -101,6 +101,7 @@ public class EditProfile {
         this.openProfile = openProfile;
     }
 
+
     public int getOfficeInfo() {
         return officeInfo;
     }
@@ -108,6 +109,7 @@ public class EditProfile {
     public void setOfficeInfo(int officeInfo) {
         this.officeInfo = officeInfo;
     }
+
 
     public boolean isFillInfo() {
         return fillInfo;

@@ -65,5 +65,19 @@ public class Skill extends Abstract<entity.Skill>{
         return ent;
     }
 
+    public List<entity.Skill> findSkillListContainingStr(String str) {
+        List<entity.Skill> skillsList = new ArrayList<>();
+        try {
+            skillsList = (List<entity.Skill>) em.createNamedQuery("Skill.findSkillListContainingStr").setParameter("str", "%"+ str.toLowerCase()+"%").getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return skillsList;
+    }
+
+
+
+
 }
 

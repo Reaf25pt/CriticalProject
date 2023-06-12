@@ -15,6 +15,7 @@ import java.util.Objects;
 @NamedQuery(name = "Skill.findRelationBetweenUserAndSkill", query = "SELECT COUNT(s) FROM Skill s JOIN s.listUsers_Skills u WHERE s.skillId = :skillId AND u.userId = :userId")
 @NamedQuery(name = "Skill.findListOfSkillsByUserId", query = "SELECT s FROM Skill s  JOIN s.listUsers_Skills u WHERE u.userId = :userId")
 @NamedQuery(name = "Skill.findSkillOfUserById", query = "SELECT s FROM Skill s  JOIN s.listUsers_Skills u WHERE u.userId = :userId AND s.skillId = :skillId")
+@NamedQuery(name = "Skill.findSkillListContainingStr", query = "SELECT s FROM Skill s WHERE LOWER(s.title) LIKE LOWER(:str) ")
 
 public class Skill implements Serializable {
 

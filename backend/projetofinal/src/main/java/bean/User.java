@@ -284,7 +284,7 @@ public class User implements Serializable {
         return res;
     }
 */
-    private entity.User convertToUserEntity(NewAccount account) {
+ /*   private entity.User convertToUserEntity(NewAccount account) {
         entity.User newUser = new entity.User();
 
         newUser.setEmail(account.getEmail());
@@ -300,7 +300,7 @@ public class User implements Serializable {
         }
 
         return newUser;
-    }
+    }*/
 
     public int validateNewAccount(String tokenForValidation) {
         // user clicks in button to confirm / validate email used for new regist
@@ -496,6 +496,7 @@ public class User implements Serializable {
             if (user!= null){
                 user.setFirstName(newInfo.getFirstName());
                 user.setLastName(newInfo.getLastName());
+
 
                 if (newInfo.getPhoto() != null) {
                     user.setPhoto(newInfo.getPhoto());
@@ -897,10 +898,10 @@ Skill skillDto = new Skill();
         entity.User user = tokenDao.findUserEntByToken(token);
 
         List<entity.Skill> list = skillDao.findListOfSkillsByUserId(user.getUserId());
-
+if(list!=null){
         for (entity.Skill s : list) {
             skillsList.add(convertToSkillDto(s));
-
+        }
         }
 //TODO confirmar que está certo, e proteger de nulos !!!
         return skillsList;
@@ -954,6 +955,15 @@ Skill skillDto = new Skill();
     }
 
 
+    public List<Skill> getSkillsList(String str) {
+        // retrieve list of skills that contain title
+        List<Skill> listSkillDto= new ArrayList<>();
+        List<entity.Skill> list = skillDao.findSkillListContainingStr(str.toLowerCase());
 
+        if(list!=null){
+            for (entity.Skill s : list) {
+                listSkillDto.add(convertToSkillDto(s));
+        }}return listSkillDto;
+    }
 }
 
