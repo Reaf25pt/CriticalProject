@@ -122,7 +122,59 @@ function Skill() {
       <div className="row  d-flex justify-content-around ">
         {showSkills && showSkills.length !== 0 ? (
           <div className="row d-flex   ">
-            {showSkills.map((skill) => (
+            {showSkills.map(
+              (skill) =>
+                skill.skillType === 0 ? (
+                  <div
+                    key={skill.id}
+                    className="d-flex justify-content-between  align-items-center  w-50  bg-danger m-0 rounded-3 pb-1 p-2"
+                  >
+                    <div className="col-lg-10">{skill.title} </div>
+                    <div className="col-lg-2">
+                      {" "}
+                      <ModalDeleteUserSkill skill={skill} set={setSkills} />
+                      {/*  <BsXLg onclick={handleDelete} /> */}
+                    </div>
+                  </div>
+                ) : skill.skillType === 1 ? (
+                  <div
+                    key={skill.id}
+                    className="d-flex justify-content-between  align-items-center  w-50  bg-success m-0 rounded-3 pb-1 p-2"
+                  >
+                    <div className="col-lg-10">{skill.title} </div>
+                    <div className="col-lg-2">
+                      {" "}
+                      <ModalDeleteUserSkill skill={skill} set={setSkills} />
+                      {/*  <BsXLg onclick={handleDelete} /> */}
+                    </div>
+                  </div>
+                ) : skill.skillType === 2 ? (
+                  <div
+                    key={skill.id}
+                    className="d-flex justify-content-between  align-items-center  w-50  bg-primary m-0 rounded-3 pb-1 p-2"
+                  >
+                    <div className="col-lg-10">{skill.title} </div>
+                    <div className="col-lg-2">
+                      {" "}
+                      <ModalDeleteUserSkill skill={skill} set={setSkills} />
+                      {/*  <BsXLg onclick={handleDelete} /> */}
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    key={skill.id}
+                    className="d-flex justify-content-between  align-items-center  w-50  bg-warning m-0 rounded-3 pb-1 p-2"
+                  >
+                    <div className="col-lg-10">{skill.title} </div>
+                    <div className="col-lg-2">
+                      {" "}
+                      <ModalDeleteUserSkill skill={skill} set={setSkills} />
+                      {/*  <BsXLg onclick={handleDelete} /> */}
+                    </div>
+                  </div>
+                )
+
+              /* 
               <div
                 key={skill.id}
                 className="d-flex justify-content-between  align-items-center  w-50  bg-white m-0 rounded-3 pb-1 p-2"
@@ -131,10 +183,10 @@ function Skill() {
                 <div className="col-lg-2">
                   {" "}
                   <ModalDeleteUserSkill skill={skill} set={setSkills} />
-                  {/*  <BsXLg onclick={handleDelete} /> */}
-                </div>
-              </div>
-            ))}
+                  {/*  <BsXLg onclick={handleDelete} />  
+                 </div>
+              </div>  */
+            )}
           </div>
         ) : (
           <p>Adicione as suas skills</p>

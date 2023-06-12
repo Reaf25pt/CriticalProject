@@ -67,6 +67,21 @@ function ProfileEdit({ onChange, onSubmit, onClick }) {
                   </span>
                 </div>
                 <div className="row mt-3">
+                  <div class="input-group rounded">
+                    <select
+                      name="openProfile"
+                      id="openProfileInput"
+                      /*  defaultValue={user.openProfile || ""} */
+                      onChange={onChange}
+                      placeholder={"Visibilidade do perfil"}
+                    >
+                      <option value="0">Visibilidade do perfil</option>
+                      <option value="1">Público</option>
+                      <option value="2">Privado</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="row mt-3">
                   <div className="form-outline">
                     <InputComponent
                       placeholder={"Link da fotografia "}

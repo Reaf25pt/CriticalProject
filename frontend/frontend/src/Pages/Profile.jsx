@@ -36,24 +36,40 @@ function Profile() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
+    console.log(credentials.openProfile);
     if (
       credentials.office === null ||
       credentials.office === "undefined" ||
       credentials.office === 20 ||
       credentials.office === "20" ||
-      credentials.office === undefined
+      credentials.office === undefined ||
+      credentials.openProfile === "0"
     ) {
-      alert("Seleccione o local de trabalho");
+      alert("Seleccione o local de trabalho e/ou visibilidade do perfil");
     } else {
-      const editedUser = {
-        firstName: credentials.firstName,
-        lastName: credentials.lastName,
-        officeInfo: credentials.office,
-        nickname: credentials.nickname,
-        bio: credentials.bio,
-        photo: credentials.photo,
-      };
+      var editedUser;
+      if (credentials.openProfile === "1") {
+        // profile to be public
+        editedUser = {
+          firstName: credentials.firstName,
+          lastName: credentials.lastName,
+          officeInfo: credentials.office,
+          nickname: credentials.nickname,
+          bio: credentials.bio,
+          photo: credentials.photo,
+          openProfile: "true",
+        };
+      } else if (credentials.openProfile === "2") {
+        editedUser = {
+          firstName: credentials.firstName,
+          lastName: credentials.lastName,
+          officeInfo: credentials.office,
+          nickname: credentials.nickname,
+          bio: credentials.bio,
+          photo: credentials.photo,
+          openProfile: "false",
+        };
+      }
 
       fetch("http://localhost:8080/projetofinal/rest/user/ownprofile", {
         method: "POST",

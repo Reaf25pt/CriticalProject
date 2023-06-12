@@ -579,6 +579,7 @@ public class User implements Serializable {
                     userEnt.setBio(newInfo.getBio());
                     //TODO se editar noutro lado, colocar noutro lado / mudar DTO
                 }
+                System.out.println(newInfo.isOpenProfile());
 
                 userEnt.setOpenProfile(newInfo.isOpenProfile());
 

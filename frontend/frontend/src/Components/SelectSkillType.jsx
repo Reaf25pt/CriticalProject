@@ -33,10 +33,24 @@ function SelectSkillType(props) {
         placeholder={props.placeholder}
         className="form-control"
         defaultValue={props.defaultValue}
+        style={{ backgroundColor: "white" }}
       >
         <option value="20">{"Categoria *"}</option>
         {Object.entries(skillType).map(([key, value]) => (
-          <option key={key} value={key}>
+          <option
+            key={key}
+            value={key}
+            style={{
+              backgroundColor:
+                key === "0"
+                  ? "red"
+                  : key === "1"
+                  ? "green"
+                  : key === "2"
+                  ? "blue"
+                  : "yellow",
+            }}
+          >
             {value}
           </option>
         ))}

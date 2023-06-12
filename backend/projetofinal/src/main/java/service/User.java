@@ -244,7 +244,7 @@ public class User {
             r = Response.status(403).entity("Forbidden!").build();
 
         } else {
-
+            System.out.println(newInfo.isOpenProfile());
             userBean.updateSessionTime(token);
 
             // neste ponto o user tem autorização para fazer update da sua info e não é necessário validar se info vem preenchida ou existe na DB pq único campo que tem de ser único não é updated (email)
