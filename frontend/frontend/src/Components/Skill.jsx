@@ -125,7 +125,7 @@ function Skill() {
             {showSkills.map((skill) => (
               <div
                 key={skill.id}
-                className="d-flex justify-content-between  align-items-center  w-25  bg-white m-1 rounded-3 pb-1"
+                className="d-flex justify-content-between  align-items-center  w-50  bg-white m-0 rounded-3 pb-1 p-2"
               >
                 <div className="col-lg-10">{skill.title} </div>
                 <div className="col-lg-2">
@@ -139,19 +139,6 @@ function Skill() {
         ) : (
           <p>Adicione as suas skills</p>
         )}
-
-        {/* <div className="w-25  bg-white m-1 rounded-3">
-                      <p>skills x</p>
-                    </div>
-                    <div className="w-25 m-1 bg-danger rounded-3">
-                      <p>skills x</p>
-                    </div>
-                    <div className="w-25 m-1 bg-danger rounded-3">
-                      <p>skills x</p>
-                    </div>
-                    <div className="w-25  bg-white m-1 rounded-3">
-                      <p>skills x</p>
-                    </div> */}
       </div>
     </div>
   );
