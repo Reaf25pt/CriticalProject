@@ -110,4 +110,68 @@ return listDto;
 }
 
 
+    public dto.Notification markNotifAsRead(String token, int id) {
+        // marca como lida uma notificação que não precise de resposta e pertença ao token
+        dto.Notification notifDto = null;
+
+        User user = tokenDao.findUserEntByToken(token);
+        if(user!=null){
+            Notification notif = notifDao.find(id);
+            if(notif != null){
+                // TODO raciocinio correcto ou ir logo buscar se owner for o token
+                if(!notif.isNeedsInput() && notif.getNotificationOwner().getUserId()== user.getUserId()){
+                    notif.setSeen(true);
+                    notifDao.merge(notif);
+                    notifDto=convertNotifEntToDto(notif);
+                }
+            }
+        }
+        return notifDto;
+    }
+
+    public boolean deleteNotif(String token, int id) {
+        // apaga notificação que pertença ao token, se n precisar de resposta
+        boolean res = false;
+
+        User user = tokenDao.findUserEntByToken(token);
+        if(user!=null){
+            Notification notif = notifDao.find(id);
+            if(notif != null) {
+                if(!notif.isNeedsInput() && notif.getNotificationOwner().getUserId()== user.getUserId()) {
+
+notifDao.remove(notif);
+res=true;
+                }
+                }
+            }
+
+        return res;
+    }
+
+    public dto.Notification answerInvitation(String token, int notifId, int answer) {
+        // responde a convite enviado por notificação. answer == 0 -> false REFUSE INVITE / answer == 1 -> true ACCEPT INVITE
+
+        dto.Notification notifDto = null;
+
+        User user = tokenDao.findUserEntByToken(token);
+        if(user!=null){
+            Notification notif = notifDao.find(notifId);
+            if(notif != null) {
+                if(notif.getNotificationOwner().getUserId()== user.getUserId()) {
+                    // tem de marcar notif como lida e já n precisa de input
+                    // tem de ir buscar a relationId a que convite diz respeito para alterar os dados em conformidade com a resposta
+                }
+
+
+        if (answer== 0){
+            // recusar convite para participar no projecto
+
+        }
+
+
+
+
+
+return notifDto;
+    }
 }

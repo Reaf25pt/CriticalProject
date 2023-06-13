@@ -33,8 +33,10 @@ public class Notification implements Serializable {
     private boolean needsInput = false;
 
     //To identify invitation to participate in project, that needs answer. relationId is the id from ProjectMember class
-    @Column (name="relationId", nullable=true, unique=false, updatable=false)
-    private int relationId;
+   // @Column (name="relationId", nullable=true, unique=false, updatable=false)
+   // private int relationId;
+@OneToOne
+    private ProjectMember relationId;
 
     // user que recebe a notificação do sistema / convite
     @ManyToOne
@@ -84,13 +86,20 @@ public class Notification implements Serializable {
         this.needsInput = needsInput;
     }
 
-    public int getRelationId() {
+    public ProjectMember getRelationId() {
+        return relationId;
+    }
+
+    public void setRelationId(ProjectMember relationId) {
+        this.relationId = relationId;
+    }
+/*  public int getRelationId() {
         return relationId;
     }
 
     public void setRelationId(int relationId) {
         this.relationId = relationId;
-    }
+    }*/
 
     public User getNotificationOwner() {
         return notificationOwner;
