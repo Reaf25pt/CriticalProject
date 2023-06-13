@@ -16,6 +16,7 @@ function Profile() {
   const userUpdate = userStore((state) => state.setUser);
   const [projects, setProjects] = useState([]);
   const [showProjects, setShowProjects] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
 
   const handleEdit = (event) => {
     setIsEditing(true);
@@ -110,6 +111,17 @@ function Profile() {
       .catch((err) => console.log(err));
   }, [projects]);
 
+  const columns = [
+    { field: "title", header: "Nome do Projeto" },
+    { field: "status", header: "Estado" },
+    { field: "creationDate", header: "Data do Registo" },
+  ];
+
+  const onRowSelect = (event) => {
+    setSelectedItems(event.value.id);
+    console.log(event.value.id);
+  };
+
   return (
     <div>
       <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -171,26 +183,17 @@ function Profile() {
                     </h3>
                     <DataTable
                       value={showProjects}
-                      tableStyle={{ minWidth: "25rem" }}
+                      selection={selectedItems}
+                      onSelectionChange={onRowSelect}
+                      selectionMode="single"
                     >
-                      <Column
-                        field="title"
-                        header="Nome do Projeto"
-                        sortable
-                        style={{ width: "30%" }}
-                      ></Column>
-                      <Column
-                        field="status"
-                        header="Estado"
-                        sortable
-                        style={{ width: "10%" }}
-                      ></Column>
-                      <Column
-                        field="creationDate"
-                        header="Data do Registo"
-                        sortable
-                        style={{ width: "10%" }}
-                      ></Column>
+                      {columns.map((column) => (
+                        <Column
+                          key={column.field}
+                          field={column.field}
+                          header={column.header}
+                        />
+                      ))}
                     </DataTable>
                   </div>
                 </div>
