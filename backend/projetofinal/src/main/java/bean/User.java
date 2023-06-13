@@ -956,28 +956,40 @@ if(list!=null){
     }
 
 
-    public List<Skill> getSkillsList(String str) {
+    public List<Skill> getSkillsList(String str, String token) {
         // retrieve list of skills that contain title
         List<Skill> listSkillDto= new ArrayList<>();
+
+        entity.User user=tokenDao.findUserEntByToken(token);
+        if(user!=null){
         List<entity.Skill> list = skillDao.findSkillListContainingStr(str.toLowerCase());
 
         if(list!=null){
             for (entity.Skill s : list) {
-                listSkillDto.add(convertToSkillDto(s));
-        }}return listSkillDto;
+                Long count = skillDao.findRelationBetweenUserAndSkill(s.getSkillId(), user.getUserId());
+
+                if(count==0) {
+                    listSkillDto.add(convertToSkillDto(s));
+                }}}}return listSkillDto;
     }
 
-    public List<Hobby> getHobbiesList(String str) {
+    public List<Hobby> getHobbiesList(String str, String token) {
         // retrieves list of hobbies that match string used to search DB
 
         List<Hobby> listHobbiesDto = new ArrayList<>();
-        List<entity.Hobby> list = hobbyDao.findHobbyListContainingStr(str);
+
+        entity.User user=tokenDao.findUserEntByToken(token);
+        if(user!=null){
+        List<entity.Hobby> list = hobbyDao.findHobbyListContainingStr(str.toLowerCase());
 
         if(list!=null){
             for(entity.Hobby h:list){
+                Long count = hobbyDao.findRelationBetweenUserAndHobby(h.getHobbyId(), user.getUserId());
+                if (count== 0){
+                    // significa que não tem relação com hobby h podendo ser sugerido no frontend
                 listHobbiesDto.add(convertToHobbyDto(h));
-            }
-        }
+            }}
+        }}
 return listHobbiesDto;
     }
 }

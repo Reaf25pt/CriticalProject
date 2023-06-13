@@ -582,7 +582,7 @@ public class User {
         } else {
             userBean.updateSessionTime(token);
 
-            List<Skill> skills = userBean.getSkillsList(title);
+            List<Skill> skills = userBean.getSkillsList(title, token);
 
             if (skills == null || skills.size() == 0) {
                 r = Response.status(404).entity("Not found").build();
@@ -610,7 +610,7 @@ public class User {
         } else {
             userBean.updateSessionTime(token);
 
-            List<Hobby> hobbies = userBean.getHobbiesList(title);
+            List<Hobby> hobbies = userBean.getHobbiesList(title, token);
 
             if (hobbies == null || hobbies.size() == 0) {
                 r = Response.status(404).entity("Not found").build();
