@@ -21,12 +21,16 @@ function ProfileSee({ onEdit }) {
                   src={user.photo}
                   alt="avatar"
                   class="rounded-circle img-responsive"
+                  width={"200px"}
+                  height={"200px"}
                 />
               ) : (
                 <img
-                  src="https://randomuser.me/api/portraits/women/22.jpg"
+                  src="https://cdn-icons-png.flaticon.com/512/21/21104.png"
                   alt="avatar"
                   class="rounded-circle img-responsive"
+                  width={"200px"}
+                  height={"200px"}
                 />
               )}
               <h5 class="my-3 text-white">{user.email}</h5>

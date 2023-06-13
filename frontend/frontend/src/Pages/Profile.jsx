@@ -7,6 +7,9 @@ import Hobby from "../Components/Hobby";
 import Skill from "../Components/Skill";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { Link } from "react-router-dom";
+import { BsEyeFill } from "react-icons/bs";
+import { Rating } from "primereact/rating";
 
 function Profile() {
   const user = userStore((state) => state.user);
@@ -16,7 +19,8 @@ function Profile() {
   const userUpdate = userStore((state) => state.setUser);
   const [projects, setProjects] = useState([]);
   const [showProjects, setShowProjects] = useState([]);
-  const [selectedItems, setSelectedItems] = useState([]);
+  // const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedRow, setSelectedRow] = useState(null); // State to keep track of the selected row
 
   const handleEdit = (event) => {
     setIsEditing(true);
@@ -111,15 +115,12 @@ function Profile() {
       .catch((err) => console.log(err));
   }, [projects]);
 
-  const columns = [
-    { field: "title", header: "Nome do Projeto" },
-    { field: "status", header: "Estado" },
-    { field: "creationDate", header: "Data do Registo" },
-  ];
-
-  const onRowSelect = (event) => {
-    setSelectedItems(event.value.id);
-    console.log(event.value.id);
+  const renderLink = (rowData) => {
+    return (
+      <Link to={`/projects/${rowData.id}`}>
+        <BsEyeFill />
+      </Link>
+    );
   };
 
   return (
@@ -181,19 +182,16 @@ function Profile() {
                     <h3 className="bg-white text-center text-nowrap rounded-5 p-0  ">
                       Os meus Projetos:
                     </h3>
-                    <DataTable
-                      value={showProjects}
-                      selection={selectedItems}
-                      onSelectionChange={onRowSelect}
-                      selectionMode="single"
-                    >
-                      {columns.map((column) => (
-                        <Column
-                          key={column.field}
-                          field={column.field}
-                          header={column.header}
-                        />
-                      ))}
+                    <DataTable value={showProjects} selectionMode="single ">
+                      <Column field="title" header="Nome do Projeto" sortable />
+                      <Column field="status" header="Estado" sortable />
+                      <Column
+                        field="creationDate"
+                        header="Data de Registo"
+                        sortable
+                      />
+
+                      <Column body={renderLink} header="#" />
                     </DataTable>
                   </div>
                 </div>
