@@ -157,18 +157,18 @@ res=true;
         if(user!=null){
             Notification notif = notifDao.find(notifId);
             if(notif != null) {
-                if(notif.getNotificationOwner().getUserId()== user.getUserId()) {
+                if (notif.getNotificationOwner().getUserId() == user.getUserId()) {
                     // tem de marcar notif como lida e já n precisa de input
                     // tem de ir buscar a relationId a que convite diz respeito para alterar os dados em conformidade com a resposta
                 }
 
 
-        if (answer== 0){
-            // recusar convite para participar no projecto
+                if (answer == 0) {
+                    // recusar convite para participar no projecto
 
-        }
+                }
 
-
+            }}
 
 
 
