@@ -567,7 +567,7 @@ public class User {
 
     }
 
-    // GET LIST OF SKILLS
+    // GET LIST OF SKILLS TO SUGGEST
     @GET
     @Path("/skills")
     @Produces(MediaType.APPLICATION_JSON)
@@ -595,7 +595,7 @@ public class User {
         return r;
     }
 
-    // GET LIST OF HOBBIES
+    // GET LIST OF HOBBIES TO SUGGEST
     @GET
     @Path("/hobby")
     @Produces(MediaType.APPLICATION_JSON)

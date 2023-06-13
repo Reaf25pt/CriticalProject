@@ -8,6 +8,8 @@ import java.util.Date;
 
 @Entity
  @Table(name="Notification")
+@NamedQuery(name = "Notification.findNotificationListByUserId", query = "SELECT n FROM Notification n WHERE n.notificationOwner.userId = :userId")
+
 public class Notification implements Serializable {
 
     private static final long serialVersionUID = 1L;

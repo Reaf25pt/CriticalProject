@@ -11,6 +11,7 @@ import websocket.Notifier;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -89,6 +90,24 @@ public class Communication implements Serializable {
 
         return dto;
     }
+
+
+    public List<dto.Notification> getOwnNotificationList(String token) {
+
+List<dto.Notification> listDto = new ArrayList<>();
+
+User user = tokenDao.findUserEntByToken(token);
+if (user!=null) {
+
+    List<Notification> list = notifDao.findNotificationListByUserId(user.getUserId());
+if (list!=null){
+    for (Notification n : list){
+        listDto.add(convertNotifEntToDto(n));
+    }
+}
+}
+return listDto;
+}
 
 
 }
