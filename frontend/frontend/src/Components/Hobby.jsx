@@ -24,7 +24,8 @@ function Hobby() {
       .then((response) => response.json())
       .then((response) => {
         setShowHobbies(response);
-      });
+      })
+      .catch((err) => console.log(err));
   }, [hobbies]);
 
   const handleChange = (event) => {
@@ -120,25 +121,27 @@ function Hobby() {
           <div class="input-group rounded mb-3  ">
             <div class="input-group rounded mb-3 mt-2  ">
               <div className="d-flex align-items-stretch">
-                <input
-                  type="search"
-                  class="form-control rounded "
-                  placeholder="Adicionar interesse"
-                  required={true}
-                  aria-label="Search"
-                  aria-describedby="search-addon"
-                  id="hobbyInput"
-                  name="hobbyInput"
-                  defaultValue={""}
-                  onChange={handleChange}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter") {
-                      handleClick(event);
-                    } else {
-                      handleSearch(search);
-                    }
-                  }}
-                />
+                <div className="search-select-container">
+                  <input
+                    type="search"
+                    class="form-control rounded "
+                    placeholder="Adicionar interesse"
+                    required={true}
+                    aria-label="Search"
+                    aria-describedby="search-addon"
+                    id="hobbyInput"
+                    name="hobbyInput"
+                    defaultValue={""}
+                    onChange={handleChange}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        handleClick(event);
+                      } else {
+                        handleSearch(search);
+                      }
+                    }}
+                  />
+                </div>
                 <div className="dropdownz">
                   {suggestions &&
                     suggestions
@@ -163,9 +166,9 @@ function Hobby() {
                 </div>
               </div>
               <div>
-                <span class="input-group-text border-0">
+                {/*  <span class="input-group-text border-0">
                   <BsSearch />
-                </span>
+                </span> */}
               </div>
             </div>
           </div>

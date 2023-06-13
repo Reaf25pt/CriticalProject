@@ -24,7 +24,7 @@ function SelectComponent(props) {
   }, []);
 
   return (
-    <div>
+    <div className="arrow-select-container">
       <select
         name={props.name}
         id={props.id}

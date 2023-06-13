@@ -131,26 +131,27 @@ function Skill() {
       </h3>
       <div class="input-group rounded mb-3 mt-3">
         <div>
-          <input
-            type="search"
-            class="form-control rounded "
-            placeholder="Adicionar skill"
-            required={true}
-            aria-label="Search"
-            aria-describedby="search-addon"
-            id="skillInput"
-            name="skillInput"
-            defaultValue={""}
-            onChange={handleChange}
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                handleClick(event);
-              } else {
-                handleSearch(search);
-              }
-            }}
-          />
-
+          <div className="search-select-container">
+            <input
+              type="search"
+              class="form-control rounded "
+              placeholder="Adicionar skill"
+              required={true}
+              aria-label="Search"
+              aria-describedby="search-addon"
+              id="skillInput"
+              name="skillInput"
+              defaultValue={""}
+              onChange={handleChange}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  handleClick(event);
+                } else {
+                  handleSearch(search);
+                }
+              }}
+            />
+          </div>
           <div>
             {" "}
             <div className="dropdownz">
@@ -185,14 +186,14 @@ function Skill() {
               placeholder={"Categoria"}
               defaultValue={selectedValue}
             />
-            <span class="input-group-text border-0" id="search-addon">
+            {/* <span class="input-group-text border-0" id="search-addon">
               <BsArrowDown />
-            </span>
+            </span> */}
           </div>
         </div>
-        <span class="input-group-text border-0">
+        {/*  <span class="input-group-text border-0">
           <BsSearch />
-        </span>
+        </span> */}
       </div>
 
       <div className="row  d-flex justify-content-around ">

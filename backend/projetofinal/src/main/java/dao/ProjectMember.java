@@ -19,7 +19,7 @@ public class ProjectMember extends Abstract<entity.ProjectMember>{
 
     // encontra todos os projectos em que userId participa / participou AND not removed!
     public List<entity.Project> findListOfProjectsByUserId(int id) {
-        List<entity.Project> projectList = new ArrayList<Project>();
+        List<entity.Project> projectList = new ArrayList<>();
         try {
             projectList = (List<Project>) em.createNamedQuery("ProjectMember.findListOfProjectsByUserId").setParameter("userId", id).getResultList();
         } catch (Exception e) {
@@ -51,6 +51,21 @@ public class ProjectMember extends Abstract<entity.ProjectMember>{
         }
         return ent;
     }
+
+    public List<entity.User> findListOfUsersByProjectId(int id) {
+        List<entity.User> membersList = new ArrayList<>();
+        try {
+            membersList = (List<User>) em.createNamedQuery("ProjectMember.findListOfUsersByProjectId").setParameter("id", id).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return membersList;
+    }
+
+
+
+
 
 
 }

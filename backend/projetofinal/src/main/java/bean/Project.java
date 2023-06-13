@@ -216,16 +216,18 @@ if (userEnt != null) {
 
         if(user!=null && userEnt!= null && project!=null) {
 
-            int relationId= associateUserToProject(user, project);
+
 
             if (userEnt.getUserId()== userId){
                 // self-invitation to participate in project
                 //TODO colocar aqui o log de ter convite para participar no projecto ?!!?!
-                communicationBean.notifyNewPossibleProjectMember(relationId, project, user, false);
+                ProjectMember projMember= associateUserToProject(user, project, false);
+                communicationBean.notifyNewPossibleProjectMember(projMember, project, user, false);
                 res=true;
             } else {
                 // not self-invitation
-                communicationBean.notifyNewPossibleProjectMember(relationId, project, user, true);
+                ProjectMember projMember= associateUserToProject(user, project, true);
+                communicationBean.notifyNewPossibleProjectMember(projMember, project, user, true);
                 res=true;
             }
         }
@@ -234,9 +236,9 @@ if (userEnt != null) {
         return res;
     }
 
-    private int associateUserToProject(entity.User user, entity.Project project/*, boolean manager*/) {
+    private ProjectMember associateUserToProject(entity.User user, entity.Project project, boolean selfInvite/*, boolean manager*/) {
         // associa o membro ao projecto, inserindo a info na 3ª tabela e definindo a relação (gestor / participante)
-        // se boolean manager for true - relação do user com projecto é de GESTOR.
+        // se boolean selfInvite == true, auto-convite .
 
         ProjectMember projMember = new ProjectMember();
         projMember.setProjectToParticipate(project);
@@ -252,6 +254,13 @@ if (userEnt != null) {
         projMember.setAnswered(false);
         projMember.setAccepted(false);
         projMember.setRemoved(false);
+
+        if(selfInvite){
+            projMember.setSelfInvitation(true);
+        } else {
+            projMember.setSelfInvitation(false);
+        }
+
 
         projMemberDao.persist(projMember);
 
@@ -272,7 +281,7 @@ int relationId = projMember.getId();
             //relação PARTICIPANTE
             LOGGER.info("User whose ID is " + user.getUserId()+" participates in project, project ID: "+project.getId()+". IP Address of request is " + userBean.getIPAddress());
         }*/
-return relationId;
+return projMember;
     }
 
 

@@ -26,7 +26,7 @@ function ProfileSee({ onEdit }) {
                 />
               ) : (
                 <img
-                  src="https://cdn-icons-png.flaticon.com/512/21/21104.png"
+                  src="https://t3.ftcdn.net/jpg/00/36/94/26/360_F_36942622_9SUXpSuE5JlfxLFKB1jHu5Z07eVIWQ2W.jpg"
                   alt="avatar"
                   class="rounded-circle img-responsive"
                   width={"200px"}
@@ -70,7 +70,7 @@ function ProfileSee({ onEdit }) {
               ) : (
                 <textarea
                   class="text-dark bg-white h-100 w-100 rounded-2"
-                  placeholder=" Pode escrever aqui a sua biografia"
+                  placeholder="Edite o seu perfil para adicionar a sua biografia"
                   disabled
                 ></textarea>
               )}

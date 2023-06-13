@@ -9,6 +9,7 @@ import java.io.Serializable;
 @NamedQuery(name = "ProjectMember.findListOfProjectsByUserId", query = "SELECT p.projectToParticipate FROM ProjectMember p WHERE p.userInvited.userId = :userId AND p.accepted = true AND p.removed = false")
 @NamedQuery(name = "ProjectMember.findListOfManagersByProjectId", query = "SELECT p.userInvited FROM ProjectMember p WHERE p.projectToParticipate.id = :id AND p.accepted = true AND p.removed = false AND p.manager=true")
 @NamedQuery(name = "ProjectMember.findProjectMemberByProjectIdAndUserId", query = "SELECT p FROM ProjectMember p WHERE p.projectToParticipate.id = :projId AND p.userInvited.userId = :userId")
+@NamedQuery(name = "ProjectMember.findListOfUsersByProjectId", query = "SELECT p.userInvited FROM ProjectMember p WHERE p.projectToParticipate.id = :id AND p.accepted = true AND p.removed = false")
 
 public class ProjectMember implements Serializable {
 
@@ -39,6 +40,13 @@ public class ProjectMember implements Serializable {
     // False by default. Changes to true if a member is removed from a project
     @Column(name = "removed", nullable = false, unique = false, updatable = true)
     private boolean removed = false;
+
+    // auto-convite == true
+    @Column(name = "selfInvite", nullable = false, unique = false, updatable = true)
+    private boolean selfInvitation;
+
+    @OneToOne(mappedBy = "projectMember")
+    private Notification notification;
 
 public ProjectMember(){}
 
@@ -96,5 +104,21 @@ public ProjectMember(){}
 
     public void setRemoved(boolean removed) {
         this.removed = removed;
+    }
+
+    public Notification getNotification() {
+        return notification;
+    }
+
+    public void setNotification(Notification notification) {
+        this.notification = notification;
+    }
+
+    public boolean isSelfInvitation() {
+        return selfInvitation;
+    }
+
+    public void setSelfInvitation(boolean selfInvitation) {
+        this.selfInvitation = selfInvitation;
     }
 }

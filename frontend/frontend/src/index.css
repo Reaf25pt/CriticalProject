@@ -1,5 +1,35 @@
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.arrow-select-container {
+  position: relative;
+}
+
+.arrow-select-container:after {
+  content: "keyboard_arrow_down";
+  font-family: "material icons";
+  position: absolute;
+  right: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* .search-input-container {
+  position: relative;
+} */
+
+.search-select-container::after {
+  content: "search";
+  font-family: "material icons";
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
 }

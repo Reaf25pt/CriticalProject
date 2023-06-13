@@ -3,6 +3,7 @@ import ButtonComponent from "../Components/ButtonComponent";
 import LinkButton from "../Components/LinkButton";
 import TextAreaComponent from "../Components/TextAreaComponent";
 import SelectComponent from "../Components/SelectComponent";
+import ProfileVisibilitySelect from "./ProfileVisibilitySelect";
 import InputComponent from "../Components/InputComponent";
 
 import { userStore } from "../stores/UserStore";
@@ -62,23 +63,30 @@ function ProfileEdit({ onChange, onSubmit, onClick }) {
                     placeholder={"Local de trabalho *"}
                     local={user.office}
                   />
-                  <span class="input-group-text border-0" id="search-addon">
+                  {/*  <span class="input-group-text border-0" id="search-addon">
                     <BsArrowDown />
-                  </span>
+                  </span> */}
                 </div>
                 <div className="row mt-3">
                   <div class="input-group rounded">
-                    <select
+                    <ProfileVisibilitySelect
+                      name="openProfile"
+                      id="openProfileInput"
+                      placeholder={"Visibilidade do perfil"}
+                      onChange={onChange}
+                    />
+
+                    {/*     <select
                       name="openProfile"
                       id="openProfileInput"
                       /*  defaultValue={user.openProfile || ""} */
-                      onChange={onChange}
+                    /*    onChange={onChange}
                       placeholder={"Visibilidade do perfil"}
                     >
                       <option value="0">Visibilidade do perfil</option>
                       <option value="1">Público</option>
                       <option value="2">Privado</option>
-                    </select>
+                    </select> */}
                   </div>
                 </div>
                 <div className="row mt-3">
@@ -132,7 +140,7 @@ function ProfileEdit({ onChange, onSubmit, onClick }) {
           <div class="p-5 bg-secondary h-100 rounded-5">
             <textarea
               class="text-dark bg-white h-100 w-100 rounded-2  "
-              placeholder="Biografia"
+              placeholder="Escreva aqui a sua biografia"
               id="bioInput"
               name="bio"
               type="text"

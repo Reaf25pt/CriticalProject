@@ -129,9 +129,9 @@ function RegisterIn() {
                   onChange={handleChange}
                   local={"Local de trabalho *"}
                 />
-                <span class="input-group-text border-0" id="search-addon">
+                {/* <span class="input-group-text border-0" id="search-addon">
                   <BsArrowDown />
-                </span>
+                </span> */}
               </div>
             </div>
             <div className="row">
