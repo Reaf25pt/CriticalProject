@@ -111,76 +111,76 @@ function Hobby() {
   };
 
   return (
-    <div class=" bg-secondary rounded-3 p-4 h-100 ">
-      <h3 className="bg-white text-center  rounded-5 p-0  ">
-        Os meus Interesses:
-      </h3>{" "}
-      <div className="row">
-        <div class="input-group rounded mb-3">
-          <div class="input-group rounded mb-3 mt-2">
-            <div>
-              <input
-                type="search"
-                class="form-control rounded "
-                placeholder="Adicionar interesse"
-                required={true}
-                aria-label="Search"
-                aria-describedby="search-addon"
-                id="hobbyInput"
-                name="hobbyInput"
-                defaultValue={""}
-                onChange={handleChange}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    handleClick(event);
-                  } else {
-                    handleSearch(search);
-                  }
-                }}
-              />
-              <div className="dropdownz">
-                {suggestions &&
-                  suggestions
-                    .filter((item) => {
-                      return (
-                        item &&
-                        item.title
-                          .toLowerCase()
-                          .includes(search) /* !== search */
-                      );
-                    })
-                    .slice(0, 10)
-                    .map((item) => (
-                      <div
-                        key={item.id}
-                        onClick={() => handleSelection(item)}
-                        className="dropdownz-row"
-                      >
-                        {item.title}
-                      </div>
-                    ))}
+    <div className="container-fluid">
+      <div class=" bg-secondary rounded-3 p-4 h-100 ">
+        <h3 className="bg-white text-center rounded-5 p-0 w-5  ">
+          Os meus Interesses:
+        </h3>{" "}
+        <div className="row ">
+          <div class="input-group rounded mb-3  ">
+            <div class="input-group rounded mb-3 mt-2  ">
+              <div className="d-flex align-items-stretch">
+                <input
+                  type="search"
+                  class="form-control rounded "
+                  placeholder="Adicionar interesse"
+                  required={true}
+                  aria-label="Search"
+                  aria-describedby="search-addon"
+                  id="hobbyInput"
+                  name="hobbyInput"
+                  defaultValue={""}
+                  onChange={handleChange}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      handleClick(event);
+                    } else {
+                      handleSearch(search);
+                    }
+                  }}
+                />
+                <div className="dropdownz">
+                  {suggestions &&
+                    suggestions
+                      .filter((item) => {
+                        return (
+                          item &&
+                          item.title
+                            .toLowerCase()
+                            .includes(search) /* !== search */
+                        );
+                      })
+                      .slice(0, 10)
+                      .map((item) => (
+                        <div
+                          key={item.id}
+                          onClick={() => handleSelection(item)}
+                          className="dropdownz-row"
+                        >
+                          {item.title}
+                        </div>
+                      ))}
+                </div>
               </div>
-            </div>
-            <div>
-              <span class="input-group-text border-0">
-                <BsSearch />
-              </span>
+              <div>
+                <span class="input-group-text border-0">
+                  <BsSearch />
+                </span>
+              </div>
             </div>
           </div>
         </div>
-        <div className="row d-flex ">
+        <div className="row d-flex  ">
           {showHobbies && showHobbies.length !== 0 ? (
             <div className="row d-flex  ">
               {showHobbies.map((hobby) => (
                 <div
                   key={hobby.id}
-                  className="d-flex justify-content-between  align-items-center  w-25  bg-white m-1 rounded-3 p-2"
+                  className="bg-dark d-flex justify-content-between  w-50  m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
                 >
                   <div className="col-lg-10">{hobby.title} </div>
                   <div className="col-lg-2">
                     <ModalDeleteHobby hobby={hobby} set={setHobbies} />
-
-                    {/*  <BsXLg /> */}
                   </div>
                 </div>
               ))}

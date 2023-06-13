@@ -203,33 +203,39 @@ function Skill() {
                 skill.skillType === 0 ? (
                   <div
                     key={skill.id}
-                    className="d-flex justify-content-between  align-items-center  w-50  bg-danger m-0 rounded-3 pb-1 p-2"
+                    className="d-flex justify-content-between  w-50  bg-danger m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
                   >
-                    <div className="col-lg-10">{skill.title} </div>
-                    <div className="col-lg-2">
+                    <div className="col-lg-10 ">
+                      <h4>{skill.title} </h4>{" "}
+                    </div>
+                    <div className="col-lg-2  ">
                       {" "}
                       <ModalDeleteUserSkill skill={skill} set={setSkills} />
-                      {/*  <BsXLg onclick={handleDelete} /> */}
                     </div>
                   </div>
                 ) : skill.skillType === 1 ? (
                   <div
                     key={skill.id}
-                    className="d-flex justify-content-between  align-items-center  w-50  bg-success m-0 rounded-3 pb-1 p-2"
+                    className="d-flex justify-content-between  w-50  bg-success m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
                   >
-                    <div className="col-lg-10">{skill.title} </div>
-                    <div className="col-lg-2">
+                    <div className="col-lg-10  ">
+                      {" "}
+                      <h4>{skill.title} </h4>{" "}
+                    </div>
+                    <div className="col-lg-2 ">
                       {" "}
                       <ModalDeleteUserSkill skill={skill} set={setSkills} />
-                      {/*  <BsXLg onclick={handleDelete} /> */}
                     </div>
                   </div>
                 ) : skill.skillType === 2 ? (
                   <div
                     key={skill.id}
-                    className="d-flex justify-content-between  align-items-center  w-50  bg-primary m-0 rounded-3 pb-1 p-2"
+                    className="bg-primary d-flex justify-content-between  w-50   m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
                   >
-                    <div className="col-lg-10">{skill.title} </div>
+                    <div className="col-lg-10">
+                      {" "}
+                      <h4>{skill.title} </h4>{" "}
+                    </div>
                     <div className="col-lg-2">
                       {" "}
                       <ModalDeleteUserSkill skill={skill} set={setSkills} />
@@ -239,9 +245,12 @@ function Skill() {
                 ) : (
                   <div
                     key={skill.id}
-                    className="d-flex justify-content-between  align-items-center  w-50  bg-warning m-0 rounded-3 pb-1 p-2"
+                    className="bg-warning d-flex justify-content-between  w-50  m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1 "
                   >
-                    <div className="col-lg-10">{skill.title} </div>
+                    <div className="col-lg-10">
+                      {" "}
+                      <h4>{skill.title} </h4>{" "}
+                    </div>
                     <div className="col-lg-2">
                       {" "}
                       <ModalDeleteUserSkill skill={skill} set={setSkills} />

@@ -43,12 +43,13 @@ function SelectSkillType(props) {
             style={{
               backgroundColor:
                 key === "0"
-                  ? "red"
+                  ? "#dc3545"
                   : key === "1"
-                  ? "green"
+                  ? "#28a745"
                   : key === "2"
-                  ? "blue"
-                  : "yellow",
+                  ? "#007bff"
+                  : "#ffc107",
+              color: "white",
             }}
           >
             {value}
