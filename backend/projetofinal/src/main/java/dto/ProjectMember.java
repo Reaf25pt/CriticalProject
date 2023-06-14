@@ -21,6 +21,9 @@ public class ProjectMember {
         this.manager = manager;
     }
 
+    public ProjectMember() {
+    }
+
     public int getId() {
         return id;
     }

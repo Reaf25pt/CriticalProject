@@ -2,6 +2,7 @@ package bean;
 
 import ENUM.StatusProject;
 import dto.Keyword;
+import dto.Skill;
 import entity.ProjectMember;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
@@ -56,13 +57,20 @@ public class Project implements Serializable {
 
             projDto.setKeywords(retrieveListKeywordsDTO(p.getListKeywords()));
         }
+
+        if(p.getListSkills()!=null) {
+            // converter skill ENT to DTO
+
+            projDto.setSkills(retrieveListSkillsDTO(p.getListSkills()));
+        }
+
 return projDto;
     }
 
     private List<Keyword> retrieveListKeywordsDTO(List<entity.Keyword> listKeywords) {
         // get and convert keyword ENTITY associated with project to keyword DTO
 
-        List<Keyword> listKeywordDTO = new ArrayList<Keyword>();
+        List<Keyword> listKeywordDTO = new ArrayList<>();
 
         for (entity.Keyword k : listKeywords){
             Keyword keyw = new Keyword();
@@ -75,6 +83,22 @@ return projDto;
         return listKeywordDTO;
     }
 
+    private List<Skill> retrieveListSkillsDTO(List<entity.Skill> listSkills) {
+        // get and convert keyword ENTITY associated with project to keyword DTO
+
+        List<Skill> listSkillsDTO = new ArrayList<>();
+
+        for (entity.Skill s : listSkills){
+            Skill skill = new Skill();
+            skill.setId(s.getSkillId());
+            skill.setTitle(s.getTitle());
+            skill.setSkillType(s.getType().ordinal());
+
+            listSkillsDTO.add(skill);
+        }
+
+        return listSkillsDTO;
+    }
 
     public boolean createNewProject (dto.Project project, String token){
 //TODO verificar se criador tem projecto e n pode criar novo
@@ -317,5 +341,71 @@ return projMember;
 
         }
         return projectsList;
+    }
+
+    public dto.Project getProject(String token, int id) {
+        // Obter info de projecto pelo seu ID, incluindo lista de keywords e skills (pode ser nula). Enviar ainda o papel do token no projecto
+
+        dto.Project project = new dto.Project();
+
+        entity.Project projEnt = projDao.findProjectById(id);
+
+        if(projEnt!= null){
+            entity.User user = tokenDao.findUserEntByToken(token);
+            if(user!=null){
+project = convertProjEntityToDto(projEnt);
+
+// definir relação do token com projecto: membro / gestor ou apenas alguém com interesse em ver detalhes do projecto
+ProjectMember projMember = projMemberDao.findProjectMemberByProjectIdAndUserId(projEnt.getId(), user.getUserId());
+
+if (projMember != null){
+    if (projMember.isAccepted() && !projMember.isRemoved()) {
+        // significa que user tem relação com projecto. Resta saber se membro ou gestor
+        project.setMember(true);
+        if (projMember.isManager()){
+            project.setManager(true);
+        } else {
+            project.setManager(false);
+        }
+    } else if (projMember.isRemoved()) {
+        // já teve relação mas já não tem
+        project.setManager(false);
+        project.setMember(false);
+    }
+} else {
+    // significa que user n tem relação com projecto
+    project.setMember(false);
+    project.setManager(false);
+}
+            }
+        }
+return project;
+    }
+
+    public List<dto.ProjectMember> getProjectMembers(int id) {
+        // obter lista de membros activos de um projecto pelo seu ID
+
+        List<dto.ProjectMember> members = new ArrayList<>();
+
+        List<ProjectMember> membersList= projMemberDao.findListOfMembersByProjectId(id);
+
+        if(membersList!=null) {
+            for (ProjectMember p : membersList) {
+                dto.ProjectMember pm = new dto.ProjectMember();
+                pm.setId(p.getId());
+                pm.setProjectId(p.getProjectToParticipate().getId());
+                pm.setUserInvitedId(p.getUserInvited().getUserId());
+                pm.setUserInvitedFirstName(p.getUserInvited().getFirstName());
+                pm.setUserInvitedLastName(p.getUserInvited().getLastName());
+                if (p.getUserInvited().getPhoto() != null) {
+                    pm.setUserInvitedPhoto(p.getUserInvited().getPhoto());
+                }
+                pm.setManager(p.isManager());
+
+                members.add(pm);
+            }
+        }
+
+        return members;
     }
 }
