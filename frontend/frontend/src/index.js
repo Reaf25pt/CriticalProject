@@ -39,9 +39,10 @@ root.render(
         <Route path="contestcreate" element={<ContestCreate />} />
         <Route path="chat" element={<Chat />} />
         <Route path="notifications" element={<Notifications />} />
+        <Route path="projects/:id" element={<ProjectOpen />} />
       </Route>
 
-      <Route path="/projects/:id" element={<ProjectOpen />} />
+      {/* <Route path="/projects/:id" element={<ProjectOpen />} /> */}
     </Routes>
   </BrowserRouter>
 );

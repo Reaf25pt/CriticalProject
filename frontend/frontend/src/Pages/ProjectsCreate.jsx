@@ -70,7 +70,7 @@ function ProjectsCreate() {
             Criar Projeto
           </button>
         </li>
-        <li className="nav-item" role="presentation">
+        {/* <li className="nav-item" role="presentation">
           <button
             className="nav-link"
             id="profile-tab"
@@ -84,7 +84,7 @@ function ProjectsCreate() {
           >
             Convidar Membros
           </button>
-        </li>
+        </li> */}
       </ul>
       <div className="tab-content" id="myTabContent">
         <div
@@ -198,7 +198,7 @@ function ProjectsCreate() {
             </form>{" "}
           </div>
         </div>
-        <div className="tab-content" id="myTabContent">
+        {/* <div className="tab-content" id="myTabContent">
           <div
             className="tab-pane fade"
             id="profile"
@@ -231,7 +231,7 @@ function ProjectsCreate() {
               </div>
             </div>{" "}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
 

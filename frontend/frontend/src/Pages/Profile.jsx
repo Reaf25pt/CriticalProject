@@ -117,7 +117,7 @@ function Profile() {
 
   const renderLink = (rowData) => {
     return (
-      <Link to={`/projects/${rowData.id}`}>
+      <Link to={`/home/projects/${rowData.id}`}>
         <BsEyeFill />
       </Link>
     );
