@@ -6,6 +6,7 @@ import { BsSearch, BsArrowDown } from "react-icons/bs";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { userStore } from "../stores/UserStore";
+import Keyword from "../Components/Keyword";
 
 function ProjectsCreate() {
   const [credentials, setCredentials] = useState({});
@@ -110,6 +111,9 @@ function ProjectsCreate() {
                     />
                   </div>
                 </div>
+
+                <Keyword />
+
                 <div className="row mt-3 ">
                   <div className="col-lg-6 d-flex ">
                     <InputComponent
@@ -137,34 +141,6 @@ function ProjectsCreate() {
                 </div>
               </div>
 
-              <div className="form-outline mb-4">
-                <InputComponent
-                  placeholder={"Número máximo membros"}
-                  id="maxMembers"
-                  name="maxMembers"
-                  type="number"
-                  onChange={handleChange}
-                />
-
-                <div class="form-group mt-3">
-                  <div class="input-group rounded">
-                    <SelectComponent placeholder={"Local"} />
-                    <span class="input-group-text border-0" id="search-addon">
-                      <BsArrowDown />
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-outline mb-4">
-                <TextAreaComponent
-                  placeholder={"Recursos (separar por vírgula"}
-                  id="resources"
-                  name="resources"
-                  type="text"
-                  onChange={handleChange}
-                />
-              </div>
               <div class="form-outline mb-4">
                 <TextAreaComponent
                   placeholder={"Descrição do projecto *"}
@@ -174,6 +150,48 @@ function ProjectsCreate() {
                   onChange={handleChange}
                 />
               </div>
+
+              <div class="form-group mt-3">
+                <div class="input-group rounded">
+                  <SelectComponent
+                    name="office"
+                    id="officeInput"
+                    required={true}
+                    /*  onChange={onChange} */
+                    placeholder={"Local de trabalho *"}
+                    local={"Local de trabalho *"}
+                  />
+                  {/*  <span class="input-group-text border-0" id="search-addon">
+                    <BsArrowDown />
+                  </span> */}
+                </div>
+                {/* 
+                  <SelectComponent placeholder={"Local"} />
+                  <span class="input-group-text border-0" id="search-addon">
+                    <BsArrowDown />
+                  </span> */}
+              </div>
+
+              <div className="form-outline mb-4">
+                <InputComponent
+                  placeholder={"Número máximo de participantes"}
+                  id="maxMembers"
+                  name="maxMembers"
+                  type="number"
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div class="form-outline mb-4">
+                <TextAreaComponent
+                  placeholder={"Recursos (separar por vírgula)"}
+                  id="resources"
+                  name="resources"
+                  type="text"
+                  onChange={handleChange}
+                />
+              </div>
+
               <div className="row">
                 <ButtonComponent name={"Criar"} type="submit" />
               </div>
