@@ -15,6 +15,7 @@ function InputComponent(props) {
         accept={props.accept}
         defaultValue={props.defaultValue}
         title={props.title}
+        min={props.min}
       />
     </div>
   );

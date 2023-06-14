@@ -1,5 +1,6 @@
 package bean;
 
+import ENUM.Office;
 import ENUM.StatusProject;
 import dto.Keyword;
 import dto.Skill;
@@ -45,30 +46,33 @@ public class Project implements Serializable {
 
         projDto.setId(p.getId());
         projDto.setTitle(p.getTitle());
-        projDto.setOffice(p.getOffice());
+        if(p.getOffice()!=null){
+
+        projDto.setOffice(p.getOffice().ordinal());
+        }
         projDto.setDetails(p.getDetails());
         projDto.setResources(p.getResources());
-        projDto.setStatus(p.getStatus());
+        projDto.setStatus(p.getStatus().ordinal());
         projDto.setMembersNumber(p.getMembersNumber());
         projDto.setCreationDate(p.getCreationDate());
 
         if(p.getListKeywords()!=null) {
             // converter keyword ENT to DTO
 
-            projDto.setKeywords(retrieveListKeywordsDTO(p.getListKeywords()));
+            projDto.setKeywords(convertListKeywordsDTO(p.getListKeywords()));
         }
 
         if(p.getListSkills()!=null) {
             // converter skill ENT to DTO
 
-            projDto.setSkills(retrieveListSkillsDTO(p.getListSkills()));
+            projDto.setSkills(convertListSkillsDTO(p.getListSkills()));
         }
 
 return projDto;
     }
 
-    private List<Keyword> retrieveListKeywordsDTO(List<entity.Keyword> listKeywords) {
-        // get and convert keyword ENTITY associated with project to keyword DTO
+    private List<Keyword> convertListKeywordsDTO(List<entity.Keyword> listKeywords) {
+        // convert keyword ENTITY  to keyword DTO list
 
         List<Keyword> listKeywordDTO = new ArrayList<>();
 
@@ -83,8 +87,8 @@ return projDto;
         return listKeywordDTO;
     }
 
-    private List<Skill> retrieveListSkillsDTO(List<entity.Skill> listSkills) {
-        // get and convert keyword ENTITY associated with project to keyword DTO
+    private List<Skill> convertListSkillsDTO(List<entity.Skill> listSkills) {
+        // convert skill ENTITY list to skill DTO list
 
         List<Skill> listSkillsDTO = new ArrayList<>();
 
@@ -115,8 +119,30 @@ if (userEnt != null) {
         newProjEnt.setTitle(project.getTitle());
         newProjEnt.setDetails(project.getDetails());
 
-        if (project.getOffice() != null) {
-            newProjEnt.setOffice(project.getOffice());
+        if (project.getOffice() != 20) {
+
+            switch (project.getOffice()) {
+                case 0:
+                    newProjEnt.setOffice(Office.LISBOA);
+                    break;
+                case 1:
+                    newProjEnt.setOffice(Office.COIMBRA);
+                    break;
+                case 2:
+                    newProjEnt.setOffice(Office.PORTO);
+                    break;
+                case 3:
+                    newProjEnt.setOffice(Office.TOMAR);
+                    break;
+                case 4:
+                    newProjEnt.setOffice(Office.VISEU);
+                    break;
+                case 5:
+                    newProjEnt.setOffice(Office.VILAREAL);
+                    break;
+            }
+
+
         }
 
         if (project.getResources() != null) {
@@ -124,14 +150,14 @@ if (userEnt != null) {
         }
 
         if (project.getMembersNumber() != 0) {
-            // TODO no frontend colocar 0 se não houver input ?!
+            // TODO penso que esta verificação já n é precisa pq input tem atributo min
             newProjEnt.setMembersNumber(project.getMembersNumber());
         } else {
             newProjEnt.setMembersNumber(4);
         }
 
         projDao.persist(newProjEnt);
-        System.out.println(newProjEnt.getId());
+       // System.out.println(newProjEnt.getId());
 
 
         LOGGER.info("User whose user ID is " + userEnt.getUserId() + " creates a new project, project ID: "+newProjEnt.getId()+". IP Address of request is " + userBean.getIPAddress());
@@ -177,7 +203,7 @@ if (userEnt != null) {
         // se encontrar keyword entity pelo title, apenas associa ao proj.
 
         for (Keyword k: keywords) {
-            entity.Keyword keyw = keywordDao.findKeywordByTitle(k.getTitle());
+            entity.Keyword keyw = keywordDao.findKeywordByTitle(k.getTitle().trim());
 
             if (keyw!= null){
                 // já existe na DB, basta associar ao proj ---- adicionar a cada uma das listas ?!
@@ -194,7 +220,7 @@ if (userEnt != null) {
                 // não existe keyword para o title usado. É necessário criar e adicionar à DB
 
                 entity.Keyword newKeyW = new entity.Keyword();
-                newKeyW.setTitle(k.getTitle());
+                newKeyW.setTitle(k.getTitle().trim());
                 newKeyW.getListProject_Keywords().add(newProjEnt);
 
                 keywordDao.persist(newKeyW);
@@ -204,7 +230,7 @@ if (userEnt != null) {
                 LOGGER.info("Keyword " + newKeyW.getId() + " is persisted in database and associated with project, project ID: "+newProjEnt.getId()+". IP Address of request is " + userBean.getIPAddress());
             }
         }
-// TODO  colocar TRIM() e testar - associado a keywords
+
 
     }
 
@@ -407,5 +433,19 @@ return project;
         }
 
         return members;
+    }
+
+    public List<Keyword> getKeywordsList(String title) {
+        // lista de keywords da DB que match title inserido
+
+        List<Keyword> listDto = new ArrayList<>();
+
+        List<entity.Keyword> listEnt = keywordDao.findKeywordListContainingStr(title.toLowerCase());
+
+        if(listEnt!= null){
+
+                listDto = convertListKeywordsDTO(listEnt);
+        }
+        return listDto;
     }
 }

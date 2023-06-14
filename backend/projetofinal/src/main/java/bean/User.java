@@ -700,10 +700,11 @@ return projectsList;
 
         List<entity.Project> list = projMemberDao.findListOfProjectsByUserId(user.getUserId());
 
+        if(list!=null){
         for (entity.Project p : list) {
             projectsList.add(projBean.convertProjEntityToDto(p));
 
-        }
+        }}
 //TODO confirmar que está certo, e proteger de nulos !!!
         return projectsList;
     }

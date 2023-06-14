@@ -12,6 +12,10 @@ function ProjectsCreate() {
   const [credentials, setCredentials] = useState({});
   const navigate = useNavigate();
   const user = userStore((state) => state.user);
+  const [keywords, setKeywords] = useState([]); // lista para enviar para backend
+  const addKeywords = (newKeyword) => {
+    setKeywords((state) => [...state, newKeyword]);
+  };
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -25,31 +29,55 @@ function ProjectsCreate() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const project = {
-      // falta office e permitir lista de keywords
-      title: credentials.projectName,
-      keywords: [credentials.keyword],
-      membersNumber: credentials.maxMembers,
-      resources: credentials.resources,
-      details: credentials.details,
-    };
+    console.log(typeof keywords);
+    console.log(keywords);
 
-    fetch("http://localhost:8080/projetofinal/rest/project/newproject", {
-      method: "POST",
-      headers: {
-        Accept: "*/*",
-        "Content-Type": "application/json",
-        token: user.token,
-      },
-      body: JSON.stringify(project),
-    }).then((response) => {
-      if (response.status === 200) {
-        alert("Projecto criado com sucesso");
-        navigate("/home", { replace: true });
+    if (keywords.length === 0) {
+      alert("Tem de inserir 1 palavra-chave");
+    } else {
+      if (
+        credentials.office === null ||
+        credentials.office === "undefined" ||
+        credentials.office === 20 ||
+        credentials.office === "20" ||
+        credentials.office === undefined
+      ) {
+        var project = {
+          title: credentials.projectName,
+          keywords: keywords,
+          membersNumber: credentials.maxMembers,
+          resources: credentials.resources,
+          details: credentials.details,
+          office: "20",
+        };
       } else {
-        alert("Algo correu mal");
+        var project = {
+          title: credentials.projectName,
+          keywords: keywords,
+          membersNumber: credentials.maxMembers,
+          resources: credentials.resources,
+          details: credentials.details,
+          office: credentials.office,
+        };
       }
-    });
+
+      fetch("http://localhost:8080/projetofinal/rest/project/newproject", {
+        method: "POST",
+        headers: {
+          Accept: "*/*",
+          "Content-Type": "application/json",
+          token: user.token,
+        },
+        body: JSON.stringify(project),
+      }).then((response) => {
+        if (response.status === 200) {
+          alert("Projecto criado com sucesso");
+          navigate("/home", { replace: true });
+        } else {
+          alert("Algo correu mal");
+        }
+      });
+    }
   };
 
   return (
@@ -111,10 +139,14 @@ function ProjectsCreate() {
                     />
                   </div>
                 </div>
+              </div>
+              <Keyword
+                keywords={keywords}
+                setKeywords={setKeywords}
+                addKeywords={addKeywords}
+              />
 
-                <Keyword />
-
-                <div className="row mt-3 ">
+              {/* <div className="row mt-3 ">
                   <div className="col-lg-6 d-flex ">
                     <InputComponent
                       placeholder={"Palavra-chave *"}
@@ -138,14 +170,14 @@ function ProjectsCreate() {
                     <p>Keywords</p>
                     <p>Keywords</p>
                   </div>
-                </div>
-              </div>
+                </div> */}
 
               <div class="form-outline mb-4">
                 <TextAreaComponent
                   placeholder={"Descrição do projecto *"}
                   id="details"
                   name="details"
+                  required
                   type="text"
                   onChange={handleChange}
                 />
@@ -156,10 +188,10 @@ function ProjectsCreate() {
                   <SelectComponent
                     name="office"
                     id="officeInput"
-                    required={true}
-                    /*  onChange={onChange} */
-                    placeholder={"Local de trabalho *"}
-                    local={"Local de trabalho *"}
+                    onChange={handleChange}
+                    defaultValue={"20"}
+                    placeholder={"Local de trabalho "}
+                    local={"Local de trabalho "}
                   />
                   {/*  <span class="input-group-text border-0" id="search-addon">
                     <BsArrowDown />
@@ -178,6 +210,7 @@ function ProjectsCreate() {
                   id="maxMembers"
                   name="maxMembers"
                   type="number"
+                  min="1"
                   onChange={handleChange}
                 />
               </div>

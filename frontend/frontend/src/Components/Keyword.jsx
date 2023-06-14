@@ -8,15 +8,16 @@ import InputComponent from "../Components/InputComponent";
 import SelectComponent from "../Components/SelectComponent";
 import ButtonComponent from "../Components/ButtonComponent";
 
-function Keyword() {
+function Keyword({ keywords, setKeywords, addKeywords }) {
   const [credentials, setCredentials] = useState({});
   const user = userStore((state) => state.user);
   const [search, setSearch] = useState("");
+
   const [suggestions, setSuggestions] = useState([]);
-  const [keywords, setKeywords] = useState([]);
+  /*   const [keywords, setKeywords] = useState([]); // lista para enviar para backend
   const addKeyword = (newKeyword) => {
     setKeywords((state) => [...state, newKeyword]);
-  };
+  }; */
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -24,11 +25,14 @@ function Keyword() {
 
     if (name === "keywordInput") {
       setSearch(event.target.value);
+      console.log(event.target.value);
+      console.log(search);
     }
 
     setCredentials((values) => {
       return { ...values, [name]: value };
     });
+    console.log(credentials.keywordInput);
   };
 
   const handleSearch = (searchStr) => {
@@ -36,7 +40,7 @@ function Keyword() {
     //setValue(searchStr);
 
     fetch(
-      `http://localhost:8080/projetofinal/rest/user/keyword?title=${searchStr}`,
+      `http://localhost:8080/projetofinal/rest/project/keywords?title=${searchStr}`,
       {
         method: "GET",
         headers: {
@@ -58,11 +62,11 @@ function Keyword() {
   };
 
   const handleClick = (event) => {
-    event.preventDefault();
-
     if (
+      credentials.keywordInput === "" ||
       credentials.keywordInput === undefined ||
-      credentials.keywordInput === "undefined"
+      credentials.keywordInput === "undefined" ||
+      credentials === {}
     ) {
       alert("Insira nome ");
     } else {
@@ -75,8 +79,8 @@ function Keyword() {
         };
       }
 
-      addKeyword(newKeyword);
-
+      addKeywords(newKeyword);
+      //console.log(keywords);
       document.getElementById("keywordInput").value = "";
       setCredentials({});
     }
@@ -99,11 +103,12 @@ function Keyword() {
             <InputComponent
               placeholder={"Adicionar palavra-chave *"}
               id="keywordInput"
-              required
               name="keywordInput"
               type="search"
-              onChange={handleChange}
+              aria-label="Search"
+              aria-describedby="search-addon"
               defaultValue={""}
+              onChange={handleChange}
               onKeyDown={(event) => {
                 if (event.key === "Enter") {
                   handleClick(event);
@@ -147,11 +152,7 @@ function Keyword() {
           {keywords &&
             keywords.map((item) => (
               <>
-                <p>
-                  {" "}
-                  {item.title} {""}
-                </p>
-                <p>{"    "}</p>
+                <div className="keyword-create-project">{item.title}</div>
               </>
             ))}
           {/* <p>Keywords</p>

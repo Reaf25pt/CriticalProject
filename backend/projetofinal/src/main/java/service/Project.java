@@ -1,6 +1,8 @@
 package service;
 
 import bean.User;
+import dto.Hobby;
+import dto.Keyword;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -39,7 +41,7 @@ return r;
     @Produces(MediaType.APPLICATION_JSON)
     public Response addProject(dto.Project project, @HeaderParam("token") String token) {
         Response r = null;
-
+        System.out.println("num members input "+project.getMembersNumber());
         if (userBean.checkStringInfo(token) || project==null) {
             r = Response.status(401).entity("Unauthorized!").build();
         }  else if (!userBean.checkUserPermission(token)) {
@@ -172,7 +174,33 @@ return r;
         return r;
     }
 
+    // GET LIST OF KEYWORDS TO SUGGEST
+    @GET
+    @Path("/keywords")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getKeywords(@QueryParam("title") String title,  @HeaderParam("token") String token) {
 
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<Keyword> keywords = projBean.getKeywordsList(title);
+
+            if (keywords == null || keywords.size() == 0) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+
+                r = Response.status(200).entity(keywords).build();
+            }
+        }
+
+        return r;
+    }
 
 }
 

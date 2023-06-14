@@ -10,10 +10,10 @@ public class Project {
 
     private int id;
     private String title;
-    private Office office;
+    private int office;
     private String details;
     private String resources;
-    private StatusProject status;
+    private int status;
     private int membersNumber;
     private Date creationDate;
 
@@ -28,10 +28,10 @@ public class Project {
     public Project(int id, String title, Office office, String details, String resources, StatusProject status, int membersNumber, Date creationDate) {
         this.id = id;
         this.title = title;
-        this.office = office;
+       // this.office = office;
         this.details = details;
         this.resources = resources;
-        this.status = status;
+       // this.status = status;
         this.membersNumber = membersNumber;
         this.creationDate = creationDate;
     }
@@ -54,12 +54,16 @@ public class Project {
         this.title = title;
     }
 
-    public Office getOffice() {
+    public int getOffice() {
         return office;
     }
 
-    public void setOffice(Office office) {
+    public void setOffice(int office) {
         this.office = office;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public String getDetails() {
@@ -78,13 +82,7 @@ public class Project {
         this.resources = resources;
     }
 
-    public StatusProject getStatus() {
-        return status;
-    }
 
-    public void setStatus(StatusProject status) {
-        this.status = status;
-    }
 
     public int getMembersNumber() {
         return membersNumber;

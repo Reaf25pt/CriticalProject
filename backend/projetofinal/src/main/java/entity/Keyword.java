@@ -9,6 +9,7 @@ import java.util.List;
 @Entity
 @Table(name="Keyword")
 @NamedQuery(name = "Keyword.findKeywordByTitle", query = "SELECT k FROM Keyword k WHERE LOWER(k.title)  = LOWER(:title) ")
+@NamedQuery(name = "Keyword.findKeywordListContainingStr", query = "SELECT k FROM Keyword k WHERE LOWER(k.title) LIKE LOWER(:str) ")
 
 public class Keyword implements Serializable {
 
