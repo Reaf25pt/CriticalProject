@@ -10,6 +10,7 @@ import java.io.Serializable;
 @NamedQuery(name = "ProjectMember.findListOfManagersByProjectId", query = "SELECT p.userInvited FROM ProjectMember p WHERE p.projectToParticipate.id = :id AND p.accepted = true AND p.removed = false AND p.manager=true")
 @NamedQuery(name = "ProjectMember.findProjectMemberByProjectIdAndUserId", query = "SELECT p FROM ProjectMember p WHERE p.projectToParticipate.id = :projId AND p.userInvited.userId = :userId")
 @NamedQuery(name = "ProjectMember.findListOfUsersByProjectId", query = "SELECT p.userInvited FROM ProjectMember p WHERE p.projectToParticipate.id = :id AND p.accepted = true AND p.removed = false")
+@NamedQuery(name = "ProjectMember.findListOfMembersByProjectId", query = "SELECT p FROM ProjectMember p WHERE p.projectToParticipate.id = :id AND p.accepted = true AND p.removed = false AND p.manager=true")
 
 public class ProjectMember implements Serializable {
 

@@ -19,6 +19,12 @@ public class Project {
 
     private List<Keyword> keywords;
 
+    private List<Skill> skills;
+
+    private boolean manager;
+
+    private boolean member;
+
     public Project(int id, String title, Office office, String details, String resources, StatusProject status, int membersNumber, Date creationDate) {
         this.id = id;
         this.title = title;
@@ -102,5 +108,29 @@ public class Project {
 
     public void setKeywords(List<Keyword> keywords) {
         this.keywords = keywords;
+    }
+
+    public List<Skill> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(List<Skill> skills) {
+        this.skills = skills;
+    }
+
+    public boolean isManager() {
+        return manager;
+    }
+
+    public void setManager(boolean manager) {
+        this.manager = manager;
+    }
+
+    public boolean isMember() {
+        return member;
+    }
+
+    public void setMember(boolean member) {
+        this.member = member;
     }
 }

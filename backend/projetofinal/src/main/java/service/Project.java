@@ -6,6 +6,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Path("/project")
@@ -23,6 +24,9 @@ public class Project {
     public Response getALl(@DefaultValue("ola") @QueryParam("statecode") String statecode) {
         System.out.println(statecode);
         Response r = null;
+
+        // TODO validar token na mesma? validar que queries estão preenchidos no caso de haver multiplos queries?
+
 
 return r;
     }
@@ -110,6 +114,65 @@ return r;
 
         return r;
     }
+
+    // GET PROJECT BY PROJECT ID
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllProjects(@HeaderParam("token") String token,  @PathParam("id") int id) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            dto.Project project = projBean.getProject(token, id);
+
+            if (project == null ) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+
+                r = Response.status(200).entity(project).build();
+            }
+        }
+
+        return r;
+    }
+
+// GET LISTA DE MEMBROS ACTIVOS DE UM PROJECTO PELO PROJECT ID
+    @GET
+    @Path("/{id}/members")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectMembers(@HeaderParam("token") String token,  @PathParam("id") int id) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            // TODO impedir que user n é membro do projecto ?!
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<dto.ProjectMember> projMembers = projBean.getProjectMembers(id);
+
+            if (projMembers == null || projMembers.size() == 0) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+
+                r = Response.status(200).entity(projMembers).build();
+            }
+        }
+
+        return r;
+    }
+
+
 
 }
 
