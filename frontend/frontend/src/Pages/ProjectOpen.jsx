@@ -1,6 +1,15 @@
 import InputComponent from "../Components/InputComponent";
 import ButtonComponent from "../Components/ButtonComponent";
+import Keyword from "../Components/Keyword";
+import { BsSearch } from "react-icons/bs";
+import TextAreaComponent from "../Components/TextAreaComponent";
+import SelectComponent from "../Components/SelectComponent";
+import FormTask from "../Components/FormTask";
+import TimeLine from "../Components/TimeLine";
 function ProjectOpen() {
+  const handleSubmit = "";
+  const handleChange = "";
+
   return (
     <div class="container-fluid">
       <ul class="nav nav-tabs" role="tablist">
@@ -88,44 +97,109 @@ function ProjectOpen() {
           aria-labelledby="tab1"
         >
           {" "}
-          <div className="container-fluid mt-5">
-            <div className="row d-flex justify-content-around">
-              <div className="col-lg-4">
-                <div className="row bg-secondary p-3 rounded-4 text-white mb-5">
-                  <div className="row mb-3 ">
-                    <h4 className="col-lg-6 ">Nome do Projeto</h4>
-                    <h4 className="col-lg-6">Local</h4>
-                  </div>
-                  <div className="row">
-                    <h4 className="col-lg-6">Estado</h4>
-                    <h4 className="col-lg-6">Membros do Projeto</h4>
-                  </div>
-                </div>{" "}
-                <div className="row bg-secondary p-3 rounded-4 text-white mb-5">
-                  <div className="bg-white text-center text-nowrap rounded-5 p-0 text-dark">
-                    {" "}
-                    <h3>Skills</h3>
-                  </div>
-                  <div>
-                    {" "}
-                    <div>Lista de Skill.....</div>
+          <div className="row mx-auto col-10 col-md-8 col-lg-6">
+            <form
+              className="mt-5 p-5 bg-secondary rounded-5  "
+              onSubmit={handleSubmit}
+            >
+              <div className="row mb-3">
+                <div className="col ">
+                  <div className="form-outline">
+                    <InputComponent
+                      placeholder={"Nome do projecto *"}
+                      id="projectName"
+                      required
+                      name="projectName"
+                      type="text"
+                      onChange={handleChange}
+                    />
                   </div>
                 </div>
-                <div className="row bg-secondary p-3 rounded-4 text-white">
-                  <div className="bg-white text-center text-nowrap rounded-5 p-0 text-dark">
-                    {" "}
-                    <h3>Palavras-Chave</h3>
+
+                <Keyword />
+
+                <div className="row mt-3 ">
+                  <div className="col-lg-6 d-flex ">
+                    <InputComponent
+                      placeholder={"Palavra-chave *"}
+                      id="keyword"
+                      required
+                      name="keyword"
+                      type="search"
+                      onChange={handleChange}
+                    />
+                    <div className="col-lg-2 input-group-text border-0 ">
+                      <BsSearch />
+                    </div>
                   </div>
-                  <div>
-                    {" "}
-                    <div>Lista de palavras-chave.....</div>
+
+                  <div className="col-lg-3">
+                    <ButtonComponent name={"+"} />
+                  </div>
+                </div>
+                <div className="form-outline mt-3">
+                  <div className="bg-white d-flex ">
+                    <p>Keywords</p>
+                    <p>Keywords</p>
                   </div>
                 </div>
               </div>
-              <div className="col-lg-6 bg-secondary rounded-4 p-3 ">
-                <div className="bg-white rounded- h-100 w-100 ">Biografia</div>
+
+              <div class="form-outline mb-4">
+                <TextAreaComponent
+                  placeholder={"Descrição do projecto *"}
+                  id="details"
+                  name="details"
+                  type="text"
+                  onChange={handleChange}
+                />
               </div>
-            </div>
+
+              <div class="form-group mt-3">
+                <div class="input-group rounded">
+                  <SelectComponent
+                    name="office"
+                    id="officeInput"
+                    required={true}
+                    /*  onChange={onChange} */
+                    placeholder={"Local de trabalho *"}
+                    local={"Local de trabalho *"}
+                  />
+                  {/*  <span class="input-group-text border-0" id="search-addon">
+                    <BsArrowDown />
+                  </span> */}
+                </div>
+                {/* 
+                  <SelectComponent placeholder={"Local"} />
+                  <span class="input-group-text border-0" id="search-addon">
+                    <BsArrowDown />
+                  </span> */}
+              </div>
+
+              <div className="form-outline mb-4">
+                <InputComponent
+                  placeholder={"Número máximo de participantes"}
+                  id="maxMembers"
+                  name="maxMembers"
+                  type="number"
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div class="form-outline mb-4">
+                <TextAreaComponent
+                  placeholder={"Recursos (separar por vírgula)"}
+                  id="resources"
+                  name="resources"
+                  type="text"
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="row">
+                <ButtonComponent name={"Editar"} type="submit" />
+              </div>
+            </form>{" "}
           </div>
         </div>
         <div
@@ -166,8 +240,7 @@ function ProjectOpen() {
           role="tabpanel"
           aria-labelledby="tab3"
         >
-          <h3>Tab 3 Content</h3>
-          <p>This is the content for Tab 3.</p>
+          <FormTask />
         </div>
         <div
           class="tab-pane fade"
@@ -184,8 +257,7 @@ function ProjectOpen() {
           role="tabpanel"
           aria-labelledby="tab5"
         >
-          <h3>Tab 5 Content</h3>
-          <p>This is the content for Tab 5.</p>
+          <TimeLine />
         </div>
       </div>
     </div>
