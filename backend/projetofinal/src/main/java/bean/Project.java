@@ -2,8 +2,10 @@ package bean;
 
 import ENUM.Office;
 import ENUM.StatusProject;
+import ENUM.StatusTask;
 import dto.Keyword;
 import dto.Skill;
+import dto.Task;
 import entity.ProjectMember;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
@@ -35,6 +37,8 @@ public class Project implements Serializable {
     dao.ProjectMember projMemberDao;
     @Inject
     Communication communicationBean;
+    @EJB
+    dao.Task taskDao;
 
 
     public Project(){
@@ -447,5 +451,66 @@ return project;
                 listDto = convertListKeywordsDTO(listEnt);
         }
         return listDto;
+    }
+
+    public boolean addTaskToProject(int projId, Task task, String token) {
+        // adiciona nova task ao projecto cujo Id == projId
+boolean res = false;
+        entity.Task newTask = new entity.Task();
+
+        newTask.setTitle(task.getTitle());
+        newTask.setStartDate(task.getStartDate());
+        newTask.setFinishDate(task.getFinishDate());
+        newTask.setDetails(task.getDetails());
+
+        newTask.setAdditionalExecutors(task.getAdditionalExecutors());
+
+        newTask.setTaskOwner(userDao.findUserById(task.getTaskOwnerId()));
+
+        newTask.setStatus(StatusTask.PLANNED);
+
+        newTask.setProject(projDao.findProjectById(projId));
+
+
+        taskDao.persist(newTask);
+
+        // persistir 1º tarefa para então associar tarefas precedentes se houver
+        System.out.println(task.getPreRequiredTasks().size());
+        System.out.println(task.getPreRequiredTasks());
+        if (task.getPreRequiredTasks()!= null ){
+
+            associatePreRequiredTasksWithCurrentTask(task.getPreRequiredTasks(), newTask);
+        }
+
+        res=true;
+
+
+return res;
+    }
+
+    private void associatePreRequiredTasksWithCurrentTask(List<Task> preRequiredTasks, entity.Task currentTask) {
+        // associa cada preRequired task a current task
+
+        for (Task t: preRequiredTasks){
+            // adicionar cada tarefa q seja pre requisito à lista da current task
+            currentTask.getListPreRequiredTasks().add(taskDao.find(t.getId()));
+        }
+
+        taskDao.merge(currentTask);
+   //TODO será necessário fazer merge de cada task t ? em teoria apenas a task tem lista de tarefas required
+    }
+
+    public boolean checkTaskInfo(Task task) {
+        // verifica se campos obrigatórios da task estão preenchidos
+
+        boolean res=false;
+
+        if (userBean.checkStringInfo(task.getTitle()) || task.getStartDate()==null || task.getFinishDate() == null || userBean.checkStringInfo(task.getDetails())){
+            // TODO falta verificar se id de responsavel está definido ou por oposiçao definir nome
+        res=true;
+        }
+
+
+        return res;
     }
 }

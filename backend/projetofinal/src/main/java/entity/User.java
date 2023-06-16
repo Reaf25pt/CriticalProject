@@ -90,6 +90,10 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "author")
     private List<ProjectHistory> listRecords = new ArrayList<>();
 
+    // lista de tarefas cujo user é responsável
+    @OneToMany(mappedBy = "taskOwner")
+    private List<Task> listTasks = new ArrayList<>();
+
     public User() {
 
     }
@@ -293,6 +297,14 @@ public class User implements Serializable {
 
     public void setListRecords(List<ProjectHistory> listRecords) {
         this.listRecords = listRecords;
+    }
+
+    public List<Task> getListTasks() {
+        return listTasks;
+    }
+
+    public void setListTasks(List<Task> listTasks) {
+        this.listTasks = listTasks;
     }
 
     // mascara a password introduzida

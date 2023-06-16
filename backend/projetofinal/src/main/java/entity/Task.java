@@ -32,8 +32,10 @@ public class Task implements Serializable {
     private String details;
 
     // person responsible for the task
-    @Column(name = "owner", nullable = false, unique = false, updatable = true)
-    private int taskOwnerId;
+    @ManyToOne
+    private User taskOwner;
+   // @Column(name = "owner", nullable = false, unique = false, updatable = true)
+    //private int taskOwnerId;
 
     @Column(name = "additionalExecutors", nullable = true, unique = false, updatable = true)
     private String additionalExecutors;
@@ -52,8 +54,8 @@ public class Task implements Serializable {
     @ManyToMany
     @JoinTable(
             name = "PrerequiredTasks",
-            joinColumns = @JoinColumn(name = "requiredTaskId"),
-            inverseJoinColumns = @JoinColumn(name = "currentTaskId"))
+            joinColumns = @JoinColumn(name = "currentTaskId"),  // owning side, quem persiste dados na DB
+            inverseJoinColumns = @JoinColumn(name = "requiredTaskId"))
     private List<Task> listPreRequiredTasks = new ArrayList<>();
 
     public Task(int id, String title, Date startDate, Date finishDate, String details, int taskOwnerId, String additionalExecutors, StatusTask status, Project project, List<Task> listPreRequiredTasks) {
@@ -62,11 +64,14 @@ public class Task implements Serializable {
         this.startDate = startDate;
         this.finishDate = finishDate;
         this.details = details;
-        this.taskOwnerId = taskOwnerId;
+       // this.taskOwnerId = taskOwnerId;
         this.additionalExecutors = additionalExecutors;
         this.status = status;
         this.project = project;
         this.listPreRequiredTasks = listPreRequiredTasks;
+    }
+
+    public Task() {
     }
 
     public int getId() {
@@ -109,12 +114,12 @@ public class Task implements Serializable {
         this.details = details;
     }
 
-    public int getTaskOwnerId() {
-        return taskOwnerId;
+    public User getTaskOwner() {
+        return taskOwner;
     }
 
-    public void setTaskOwnerId(int taskOwnerId) {
-        this.taskOwnerId = taskOwnerId;
+    public void setTaskOwner(User taskOwner) {
+        this.taskOwner = taskOwner;
     }
 
     public String getAdditionalExecutors() {

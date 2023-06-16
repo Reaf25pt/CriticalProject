@@ -3,6 +3,7 @@ package dto;
 import ENUM.StatusTask;
 
 import java.util.Date;
+import java.util.List;
 
 public class Task {
 
@@ -21,20 +22,12 @@ public class Task {
 
     private String additionalExecutors;
 
-    public Task(int id, String title, Date startDate, Date finishDate, String details, StatusTask status, int taskOwnerId, String taskOwnerFirstName, String taskOwnerLastName, String taskOwnerPhoto, String additionalExecutors) {
-        this.id = id;
-        this.title = title;
-        this.startDate = startDate;
-        this.finishDate = finishDate;
-        this.details = details;
-        this.status = status;
-        this.taskOwnerId = taskOwnerId;
-        this.taskOwnerFirstName = taskOwnerFirstName;
-        this.taskOwnerLastName = taskOwnerLastName;
-        this.taskOwnerPhoto = taskOwnerPhoto;
-        this.additionalExecutors = additionalExecutors;
-    }
+    private List<Task> preRequiredTasks;
 
+
+
+    public Task() {
+    }
 
     public int getId() {
         return id;
@@ -122,5 +115,13 @@ public class Task {
 
     public void setAdditionalExecutors(String additionalExecutors) {
         this.additionalExecutors = additionalExecutors;
+    }
+
+    public List<Task> getPreRequiredTasks() {
+        return preRequiredTasks;
+    }
+
+    public void setPreRequiredTasks(List<Task> preRequiredTasks) {
+        this.preRequiredTasks = preRequiredTasks;
     }
 }

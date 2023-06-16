@@ -3,6 +3,7 @@ package service;
 import bean.User;
 import dto.Hobby;
 import dto.Keyword;
+import dto.Task;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -201,6 +202,38 @@ return r;
 
         return r;
     }
+
+
+    // ADICIONAR TAREFA A PROJECTO
+    @POST
+    @Path("/{projId}/task")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addTask(@PathParam("projId") int projId, Task task, @HeaderParam("token") String token) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) || projBean.checkTaskInfo(task)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        }  else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            boolean res = projBean.addTaskToProject(projId, task, token);
+
+            if (!res) {
+                r = Response.status(404).entity("Something went wrong!").build();
+            } else {
+
+                r = Response.status(200).entity("Success!").build();
+            }
+        }
+        return r;}
+
+
+
+
 
 }
 
