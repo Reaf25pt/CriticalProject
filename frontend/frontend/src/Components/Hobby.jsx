@@ -4,6 +4,7 @@ import { userStore } from "../stores/UserStore";
 import { useEffect, useState } from "react";
 import SkillCss from "../Components/SkillCss.css";
 import ModalDeleteHobby from "../Components/ModalDeleteHobby";
+import ButtonComponent from "./ButtonComponent";
 
 function Hobby() {
   const [credentials, setCredentials] = useState({});
@@ -114,63 +115,51 @@ function Hobby() {
   return (
     <div className="container-fluid">
       <div class=" bg-secondary rounded-3 p-4 h-100 ">
-        <h3 className="bg-white text-center rounded-5 p-0 w-5  ">
-          Os meus Interesses:
-        </h3>{" "}
-        <div className="row ">
-          <div class="input-group rounded mb-3  ">
-            <div class="input-group rounded mb-3 mt-2  ">
-              <div className="d-flex align-items-stretch">
-                <div className="search-select-container">
-                  <input
-                    type="search"
-                    class="form-control rounded "
-                    placeholder="Adicionar interesse"
-                    required={true}
-                    aria-label="Search"
-                    aria-describedby="search-addon"
-                    id="hobbyInput"
-                    name="hobbyInput"
-                    defaultValue={""}
-                    onChange={handleChange}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter") {
-                        handleClick(event);
-                      } else {
-                        handleSearch(search);
-                      }
-                    }}
-                  />
-                </div>
-                <div className="dropdownz">
-                  {suggestions &&
-                    suggestions
-                      .filter((item) => {
-                        return (
-                          item &&
-                          item.title
-                            .toLowerCase()
-                            .includes(search) /* !== search */
-                        );
-                      })
-                      .slice(0, 10)
-                      .map((item) => (
-                        <div
-                          key={item.id}
-                          onClick={() => handleSelection(item)}
-                          className="dropdownz-row"
-                        >
-                          {item.title}
-                        </div>
-                      ))}
-                </div>
-              </div>
-              <div>
-                {/*  <span class="input-group-text border-0">
-                  <BsSearch />
-                </span> */}
-              </div>
+        <div className="row">
+          <h3 className="bg-white text-center rounded-5 p-0">
+            Os meus Interesses:
+          </h3>{" "}
+        </div>
+        <div class="row mb-3 mt-3 d-flex justify-content-between d-flex align-items-center">
+          <div className="col-lg-8">
+            <input
+              type="search"
+              class="form-control rounded "
+              placeholder="Adicionar interesse"
+              required={true}
+              aria-label="Search"
+              aria-describedby="search-addon"
+              id="hobbyInput"
+              name="hobbyInput"
+              defaultValue={""}
+              onChange={handleChange}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  handleClick(event);
+                } else {
+                  handleSearch(search);
+                }
+              }}
+            />
+            <div className="dropdown bg-white">
+              {suggestions &&
+                suggestions
+                  .filter((item) => {
+                    return (
+                      item &&
+                      item.title.toLowerCase().includes(search) /* !== search */
+                    );
+                  })
+                  .slice(0, 10)
+                  .map((item) => (
+                    <option key={item.id} onClick={() => handleSelection(item)}>
+                      <div>{item.title}</div>
+                    </option>
+                  ))}
             </div>
+          </div>
+          <div className="col-lg-2">
+            <ButtonComponent name={"+"} />
           </div>
         </div>
         <div className="row d-flex  ">
@@ -179,7 +168,7 @@ function Hobby() {
               {showHobbies.map((hobby) => (
                 <div
                   key={hobby.id}
-                  className="bg-dark d-flex justify-content-between  w-50  m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
+                  className="bg-dark mx-auto w-75  m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
                 >
                   <div className="col-lg-10">{hobby.title} </div>
                   <div className="col-lg-2">

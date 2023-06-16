@@ -39,13 +39,6 @@ function SelectComponent(props) {
             {value}
           </option>
         ))}
-
-        {/*   <option value="0">Lisboa</option>
-        <option value="1">Coimbra</option>
-        <option value="2">Porto</option>
-        <option value="3">Tomar</option>
-        <option value="4">Viseu</option>
-        <option value="5">Vila Real</option> */}
       </select>
     </div>
   );

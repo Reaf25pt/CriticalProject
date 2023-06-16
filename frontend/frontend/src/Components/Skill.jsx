@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import SelectSkillType from "../Components/SelectSkillType";
 import ModalDeleteUserSkill from "../Components/ModalDeleteUserSkill";
 import SkillCss from "../Components/SkillCss.css";
+import ButtonComponent from "./ButtonComponent";
 
 function Skill() {
   const [credentials, setCredentials] = useState({});
@@ -125,59 +126,55 @@ function Skill() {
   };
 
   return (
-    <div class="bg-secondary rounded-3 p-4 h-100">
-      <h3 className="bg-white text-center text-nowrap rounded-5 p-0  ">
-        As Minhas Skills:
-      </h3>
-      <div class="input-group rounded mb-3 mt-3">
-        <div>
-          <div className="search-select-container">
-            <input
-              type="search"
-              class="form-control rounded "
-              placeholder="Adicionar skill"
-              required={true}
-              aria-label="Search"
-              aria-describedby="search-addon"
-              id="skillInput"
-              name="skillInput"
-              defaultValue={""}
-              onChange={handleChange}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  handleClick(event);
-                } else {
-                  handleSearch(search);
-                }
-              }}
-            />
-          </div>
-          <div>
-            {" "}
-            <div className="dropdownz">
-              {suggestions &&
-                suggestions
-                  .filter((item) => {
-                    return (
-                      item &&
-                      item.title.toLowerCase().includes(search) /* !== search */
-                    );
-                  })
-                  .slice(0, 10)
-                  .map((item) => (
-                    <div
-                      key={item.id}
-                      onClick={() => handleSelection(item)}
-                      className="dropdownz-row"
-                    >
-                      {item.title}
-                    </div>
-                  ))}
-            </div>
+    <div className=" bg-secondary rounded-3 p-4 h-100">
+      <div className="row">
+        <h3 className="bg-white text-center text-nowrap rounded-5 p-0  ">
+          As Minhas Skills:
+        </h3>
+      </div>
+      <div class="row mb-3 mt-3  d-flex justify-content-between d-flex align-items-center">
+        <div className="col-lg-5 ">
+          <input
+            type="search"
+            class="rounded  "
+            placeholder="Adicionar skill"
+            required={true}
+            aria-label="Search"
+            aria-describedby="search-addon"
+            id="skillInput"
+            name="skillInput"
+            defaultValue={""}
+            onChange={handleChange}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                handleClick(event);
+              } else {
+                handleSearch(search);
+              }
+            }}
+          />{" "}
+          <div className="dropdownz">
+            {suggestions &&
+              suggestions
+                .filter((item) => {
+                  return (
+                    item &&
+                    item.title.toLowerCase().includes(search) /* !== search */
+                  );
+                })
+                .slice(0, 10)
+                .map((item) => (
+                  <div
+                    key={item.id}
+                    onClick={() => handleSelection(item)}
+                    className="dropdownz-row "
+                  >
+                    {item.title}
+                  </div>
+                ))}
           </div>
         </div>
-
-        <div class="form-group">
+        <div class="form-group col-lg-4">
           <div class="input-group rounded">
             <SelectSkillType
               name="skillType"
@@ -191,12 +188,16 @@ function Skill() {
             </span> */}
           </div>
         </div>
-        {/*  <span class="input-group-text border-0">
-          <BsSearch />
-        </span> */}
+        <div className="col-lg-2">
+          <ButtonComponent name={"+"} />
+        </div>
       </div>
 
-      <div className="row  d-flex justify-content-around ">
+      {/*  <span class="input-group-text border-0">
+          <BsSearch />
+        </span> */}
+
+      <div className="row  d-flex justify-content-around  ">
         {showSkills && showSkills.length !== 0 ? (
           <div className="row d-flex   ">
             {showSkills.map(
@@ -204,7 +205,7 @@ function Skill() {
                 skill.skillType === 0 ? (
                   <div
                     key={skill.id}
-                    className="d-flex justify-content-between  w-50  bg-danger m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
+                    className="d-flex mx-auto  w-75  bg-danger m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
                   >
                     <div className="col-lg-10 ">
                       <h4>{skill.title} </h4>{" "}
@@ -217,7 +218,7 @@ function Skill() {
                 ) : skill.skillType === 1 ? (
                   <div
                     key={skill.id}
-                    className="d-flex justify-content-between  w-50  bg-success m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
+                    className="d-flex mx-auto w-75  bg-success m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
                   >
                     <div className="col-lg-10  ">
                       {" "}
@@ -231,7 +232,7 @@ function Skill() {
                 ) : skill.skillType === 2 ? (
                   <div
                     key={skill.id}
-                    className="bg-primary d-flex justify-content-between  w-50   m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
+                    className="bg-primary d-flex mx-auto w-75   m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
                   >
                     <div className="col-lg-10">
                       {" "}
@@ -246,7 +247,7 @@ function Skill() {
                 ) : (
                   <div
                     key={skill.id}
-                    className="bg-warning d-flex justify-content-between  w-50  m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1 "
+                    className="bg-warning d-flex mx-auto  w-75  m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1 "
                   >
                     <div className="col-lg-10">
                       {" "}

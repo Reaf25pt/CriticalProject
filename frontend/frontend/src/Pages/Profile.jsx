@@ -176,7 +176,7 @@ function Profile() {
               )}
             </div>
             <div class="row mt-5">
-              <div class="col-lg-4 ">
+              <div class="col-lg-5 ">
                 <div class="p-4 bg-secondary rounded-3">
                   <div>
                     <h3 className="bg-white text-center text-nowrap rounded-5 p-0  ">
@@ -199,7 +199,7 @@ function Profile() {
               <div class="col-lg-4 ">
                 <Skill />
               </div>
-              <div class="col-lg-4 ">
+              <div class="col-lg-3 ">
                 <Hobby />
               </div>
             </div>
