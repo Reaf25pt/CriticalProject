@@ -1,11 +1,6 @@
-import { BsArrowDown, BsSearch } from "react-icons/bs";
 import ButtonComponent from "../Components/ButtonComponent";
-import LinkButton from "../Components/LinkButton";
-import TextAreaComponent from "../Components/TextAreaComponent";
-import SelectComponent from "../Components/SelectComponent";
 
 import { userStore } from "../stores/UserStore";
-import { useState } from "react";
 
 function ProfileSee({ onEdit }) {
   const user = userStore((state) => state.user);
@@ -43,13 +38,6 @@ function ProfileSee({ onEdit }) {
               ) : (
                 <p class="text-white mb-4">Privado</p>
               )}
-              {/*                     <p class="text-white mb-4">Privado</p>
-               */}{" "}
-              {/*  <div class="d-flex justify-content-around">
-              <ButtonComponent type="button" name="Editar" onClick={onEdit} />
-
-              {/*   <LinkButton name="Alterar password" /> */}
-              {/*   </div> */}
             </div>
             <div class="d-flex justify-content-around pb-5">
               <ButtonComponent
