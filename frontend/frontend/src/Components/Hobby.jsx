@@ -114,34 +114,34 @@ function Hobby() {
   return (
     <div className="container-fluid">
       <div class=" bg-secondary rounded-3 p-4 h-100 ">
-        <h3 className="bg-white text-center rounded-5 p-0 w-5  ">
-          Os meus Interesses:
-        </h3>{" "}
-        <div className="row ">
+        <div className="row">
+          <h3 className="bg-white text-center rounded-5 p-0">
+            Os meus Interesses:
+          </h3>{" "}
+        </div>
+        <div className="row">
           <div class="input-group rounded mb-3  ">
             <div class="input-group rounded mb-3 mt-2  ">
               <div className="d-flex align-items-stretch">
-                <div className="search-select-container">
-                  <input
-                    type="search"
-                    class="form-control rounded "
-                    placeholder="Adicionar interesse"
-                    required={true}
-                    aria-label="Search"
-                    aria-describedby="search-addon"
-                    id="hobbyInput"
-                    name="hobbyInput"
-                    defaultValue={""}
-                    onChange={handleChange}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter") {
-                        handleClick(event);
-                      } else {
-                        handleSearch(search);
-                      }
-                    }}
-                  />
-                </div>
+                <input
+                  type="search"
+                  class="form-control rounded "
+                  placeholder="Adicionar interesse"
+                  required={true}
+                  aria-label="Search"
+                  aria-describedby="search-addon"
+                  id="hobbyInput"
+                  name="hobbyInput"
+                  defaultValue={""}
+                  onChange={handleChange}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      handleClick(event);
+                    } else {
+                      handleSearch(search);
+                    }
+                  }}
+                />
                 <div className="dropdownz">
                   {suggestions &&
                     suggestions
