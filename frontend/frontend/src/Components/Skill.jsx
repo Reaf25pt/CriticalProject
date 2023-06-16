@@ -132,8 +132,8 @@ function Skill() {
           As Minhas Skills:
         </h3>
       </div>
-      <div class="row mb-3 mt-3 d-flex justify-content-between d-flex align-items-center">
-        <div className="col-lg-5">
+      <div class="row mb-3 mt-3  d-flex justify-content-between d-flex align-items-center">
+        <div className="col-lg-5 ">
           <input
             type="search"
             class="rounded  "
