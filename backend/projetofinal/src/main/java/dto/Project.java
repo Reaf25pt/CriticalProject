@@ -13,7 +13,7 @@ public class Project {
     private int office;
     private String details;
     private String resources;
-    private int status;
+    private StatusProject status;
     private int membersNumber;
     private Date creationDate;
 
@@ -62,7 +62,11 @@ public class Project {
         this.office = office;
     }
 
-    public void setStatus(int status) {
+    public StatusProject getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusProject status) {
         this.status = status;
     }
 

@@ -232,6 +232,34 @@ return r;
         return r;}
 
 
+    @GET
+    @Path("/tasks/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTasksofProject(@HeaderParam("token") String token, @PathParam("id") int id) {
+
+        Response r = null;
+
+        // TODO verificar permissão. se user tem acesso a tarefas?!
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<Task> tasks = projBean.getTasksList(id);
+
+            if (tasks == null || tasks.size() == 0) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+
+                r = Response.status(200).entity(tasks).build();
+            }
+        }
+
+        return r;
+    }
 
 
 

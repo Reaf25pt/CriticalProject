@@ -50,13 +50,15 @@ public class Project implements Serializable {
 
         projDto.setId(p.getId());
         projDto.setTitle(p.getTitle());
+
         if(p.getOffice()!=null){
 
         projDto.setOffice(p.getOffice().ordinal());
         }
         projDto.setDetails(p.getDetails());
         projDto.setResources(p.getResources());
-        projDto.setStatus(p.getStatus().ordinal());
+        projDto.setStatus(p.getStatus());
+     //   projDto.setStatus(p.getStatus().ordinal());
         projDto.setMembersNumber(p.getMembersNumber());
         projDto.setCreationDate(p.getCreationDate());
 
@@ -490,7 +492,7 @@ return res;
 
     private void associatePreRequiredTasksWithCurrentTask(List<Task> preRequiredTasks, entity.Task currentTask) {
         // associa cada preRequired task a current task
-
+// TODO verificar se é necessário garantir que n adiciona a pp tarefa como pre required
         for (Task t: preRequiredTasks){
             // adicionar cada tarefa q seja pre requisito à lista da current task
             currentTask.getListPreRequiredTasks().add(taskDao.find(t.getId()));
@@ -512,5 +514,44 @@ return res;
 
 
         return res;
+    }
+
+    public List<Task> getTasksList(int id) {
+        // obter lista de tarefas associadas ao projecto ID
+
+        List<Task> taskList = new ArrayList<>();
+
+        entity.Project proj = projDao.findProjectById(id);
+
+        if(proj!=null){
+List<entity.Task> listEnt = taskDao.findTasksFromProjectByProjId(id);
+
+if (listEnt!=null){
+    for (entity.Task t : listEnt){
+        taskList.add(convertTaskEntToDto(t));
+    }
+}
+        }
+
+
+        return taskList;
+    }
+
+    private Task convertTaskEntToDto(entity.Task t) {
+        Task task = new Task();
+
+        task.setTitle(t.getTitle());
+        task.setStartDate(t.getStartDate());
+        task.setFinishDate(t.getFinishDate());
+        task.setDetails(t.getDetails());
+        task.setStatus(t.getStatus());
+        task.setTaskOwnerId(t.getTaskOwner().getUserId());
+        task.setTaskOwnerFirstName(t.getTaskOwner().getFirstName());
+        task.setTaskOwnerLastName(t.getTaskOwner().getLastName());
+        task.setTaskOwnerPhoto(t.getTaskOwner().getPhoto());
+        task.setAdditionalExecutors(t.getAdditionalExecutors());
+        // TODO acrescentar lista de tarefas precedentes
+
+        return task;
     }
 }

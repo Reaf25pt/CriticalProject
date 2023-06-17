@@ -10,6 +10,8 @@ import java.util.List;
 
 @Entity
 @Table(name="Task")
+@NamedQuery(name = "Task.findTasksFromProjectByProjId", query = "SELECT t FROM Task t WHERE t.project.id = :id")
+
 public class Task implements Serializable {
 
     private static final long serialVersionUID = 1L;
