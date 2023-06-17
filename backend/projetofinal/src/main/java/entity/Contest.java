@@ -41,8 +41,12 @@ public class Contest implements Serializable {
     @Column(name = "status", nullable = false, unique = false, updatable = true)
     private StatusContest status;
 
+    /*
     @Column(name = "winner", nullable = true, unique = false, updatable = true)
-    private int winnerProjectId;
+    private int winnerProjectId;*/
+
+    @OneToOne
+    private Project winner;
 
     @OneToMany(mappedBy = "contest")
     private List<Project> listProjects = new ArrayList<>();
@@ -114,12 +118,12 @@ public class Contest implements Serializable {
         this.status = status;
     }
 
-    public int getWinnerProjectId() {
-        return winnerProjectId;
+    public Project getWinner() {
+        return winner;
     }
 
-    public void setWinnerProjectId(int winnerProjectId) {
-        this.winnerProjectId = winnerProjectId;
+    public void setWinner(Project winner) {
+        this.winner = winner;
     }
 
     public List<Project> getListProjects() {

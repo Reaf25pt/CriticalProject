@@ -3,6 +3,7 @@ package service;
 import bean.User;
 import dto.Hobby;
 import dto.Keyword;
+import dto.ProjectMember;
 import dto.Task;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;

@@ -61,6 +61,7 @@ public class Project implements Serializable {
     @ManyToOne
     private Contest contest;
 
+
     public Project() {
     }
 
