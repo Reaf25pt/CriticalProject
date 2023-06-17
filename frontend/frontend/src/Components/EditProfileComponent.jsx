@@ -7,7 +7,6 @@ import ProfileVisibilitySelect from "./ProfileVisibilitySelect";
 import InputComponent from "../Components/InputComponent";
 
 import { userStore } from "../stores/UserStore";
-import { useState } from "react";
 
 function ProfileEdit({ onChange, onSubmit, onClick }) {
   const user = userStore((state) => state.user);
@@ -63,9 +62,6 @@ function ProfileEdit({ onChange, onSubmit, onClick }) {
                     placeholder={"Local de trabalho *"}
                     local={user.office}
                   />
-                  {/*  <span class="input-group-text border-0" id="search-addon">
-                    <BsArrowDown />
-                  </span> */}
                 </div>
                 <div className="row mt-3">
                   <div class="input-group rounded">
@@ -75,18 +71,6 @@ function ProfileEdit({ onChange, onSubmit, onClick }) {
                       placeholder={"Visibilidade do perfil"}
                       onChange={onChange}
                     />
-
-                    {/*     <select
-                      name="openProfile"
-                      id="openProfileInput"
-                      /*  defaultValue={user.openProfile || ""} */
-                    /*    onChange={onChange}
-                      placeholder={"Visibilidade do perfil"}
-                    >
-                      <option value="0">Visibilidade do perfil</option>
-                      <option value="1">Público</option>
-                      <option value="2">Privado</option>
-                    </select> */}
                   </div>
                 </div>
                 <div className="row mt-3">

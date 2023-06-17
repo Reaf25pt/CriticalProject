@@ -3,7 +3,7 @@ import { userStore } from "../stores/UserStore";
 import { useParams } from "react-router-dom";
 import ButtonComponent from "./ButtonComponent";
 
-function ProjectComponent({ onEdit }) {
+function ProjectComponent({ props }) {
   const user = userStore((state) => state.user);
   const [showProjects, setShowProjects] = useState([]);
   const [projects, setProjects] = useState([]);
@@ -86,11 +86,7 @@ function ProjectComponent({ onEdit }) {
       </div>
       <div className="row mx-auto justify-content-around mt-5">
         <div className="col-lg-3">
-          <ButtonComponent
-            type="button"
-            name="Editar Perfil"
-            onClick={onEdit}
-          />
+          <ButtonComponent type="button" name="Editar Perfil" />
         </div>
       </div>
     </div>

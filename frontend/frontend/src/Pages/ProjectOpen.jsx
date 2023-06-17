@@ -8,17 +8,15 @@ import FormTask from "../Components/FormTask";
 import TimeLine from "../Components/TimeLine";
 import ProjectComponent from "../Components/ProjectComponent";
 import { useState } from "react";
+import EditProject from "../Components/EditProject";
 
 function ProjectOpen() {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
 
-  const handleEdit = (event) => {
-    setIsEditing(true);
+  const handleClick = () => {
+    setIsClicked(!isClicked);
   };
 
-  const handleClick = (event) => {
-    setIsEditing(false);
-  };
   return (
     <div class="container-fluid">
       <ul class="nav nav-tabs" role="tablist">
@@ -107,7 +105,9 @@ function ProjectOpen() {
         >
           {" "}
         </div>
-        <ProjectComponent />
+        {isClicked ? <ProjectComponent /> : <EditProject />}
+        <button onClick={handleClick}>Editar</button>
+
         <div
           class="tab-pane fade"
           id="content2"

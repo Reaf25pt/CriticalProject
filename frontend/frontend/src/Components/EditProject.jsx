@@ -1,10 +1,13 @@
+import ButtonComponent from "./ButtonComponent";
+import InputComponent from "./InputComponent";
+import Keyword from "./Keyword";
+import SelectComponent from "./SelectComponent";
+import TextAreaComponent from "./TextAreaComponent";
+
 function EditProject() {
   return (
     <div className="row mx-auto col-10 col-md-8 col-lg-6">
-      <form
-        className="mt-5 p-5 bg-secondary rounded-5  "
-        onSubmit={handleSubmit}
-      >
+      <form className="mt-5 p-5 bg-secondary rounded-5  ">
         <div className="row mb-3">
           <div className="col ">
             <div className="form-outline">
@@ -14,7 +17,6 @@ function EditProject() {
                 required
                 name="projectName"
                 type="text"
-                onChange={handleChange}
               />
             </div>
           </div>
@@ -29,11 +31,8 @@ function EditProject() {
                 required
                 name="keyword"
                 type="search"
-                onChange={handleChange}
               />
-              <div className="col-lg-2 input-group-text border-0 ">
-                <BsSearch />
-              </div>
+              <div className="col-lg-2 input-group-text border-0 "></div>
             </div>
 
             <div className="col-lg-3">
@@ -54,7 +53,6 @@ function EditProject() {
             id="details"
             name="details"
             type="text"
-            onChange={handleChange}
           />
         </div>
 
@@ -64,19 +62,10 @@ function EditProject() {
               name="office"
               id="officeInput"
               required={true}
-              /*  onChange={onChange} */
               placeholder={"Local de trabalho *"}
               local={"Local de trabalho *"}
             />
-            {/*  <span class="input-group-text border-0" id="search-addon">
-                <BsArrowDown />
-              </span> */}
           </div>
-          {/* 
-              <SelectComponent placeholder={"Local"} />
-              <span class="input-group-text border-0" id="search-addon">
-                <BsArrowDown />
-              </span> */}
         </div>
 
         <div className="form-outline mb-4">
@@ -85,7 +74,6 @@ function EditProject() {
             id="maxMembers"
             name="maxMembers"
             type="number"
-            onChange={handleChange}
           />
         </div>
 
@@ -95,12 +83,14 @@ function EditProject() {
             id="resources"
             name="resources"
             type="text"
-            onChange={handleChange}
           />
         </div>
 
         <div className="row">
           <ButtonComponent name={"Editar"} type="submit" />
+        </div>
+        <div class="d-flex justify-content-around">
+          <ButtonComponent type="click" name="Cancelar" />
         </div>
       </form>{" "}
     </div>
