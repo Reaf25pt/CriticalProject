@@ -7,7 +7,18 @@ import SelectComponent from "../Components/SelectComponent";
 import FormTask from "../Components/FormTask";
 import TimeLine from "../Components/TimeLine";
 import ProjectComponent from "../Components/ProjectComponent";
+import { useState } from "react";
+
 function ProjectOpen() {
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleEdit = (event) => {
+    setIsEditing(true);
+  };
+
+  const handleClick = (event) => {
+    setIsEditing(false);
+  };
   return (
     <div class="container-fluid">
       <ul class="nav nav-tabs" role="tablist">
