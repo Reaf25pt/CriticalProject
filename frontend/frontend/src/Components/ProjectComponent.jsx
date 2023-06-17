@@ -3,7 +3,7 @@ import { userStore } from "../stores/UserStore";
 import { useParams } from "react-router-dom";
 import ButtonComponent from "./ButtonComponent";
 
-function ProjectComponent({ props }) {
+function ProjectComponent({ toggleComponent }) {
   const user = userStore((state) => state.user);
   const [showProjects, setShowProjects] = useState([]);
   const [projects, setProjects] = useState([]);
@@ -39,7 +39,7 @@ function ProjectComponent({ props }) {
   return (
     <div className="container-fluid">
       <div className="row mt-5 justify-content-around">
-        <div className="col-lg-4">
+        <div className="col-lg-3">
           <div className="row bg-secondary rounded-5 p-4 mb-3">
             <div className="row p-3 mx-auto">
               <div className="col-lg-12 bg-white rounded-3 p-2">
@@ -60,33 +60,34 @@ function ProjectComponent({ props }) {
                 Select com membros do projeto
               </select>
             </div>
-          </div>
-          <div className="row bg-secondary rounded-5 p-4 mb-4">
-            <div className="col-lg-12 bg-white rounded-5">
-              <h4 className="text-center">Palavras Chave</h4>
+            <div className="row mx-auto justify-content-around mt-5">
+              <div className="col-lg-6">
+                <ButtonComponent
+                  type="button"
+                  name="Editar Projeto"
+                  onClick={toggleComponent}
+                />
+              </div>
             </div>
-            <div className="row mt-3 mx-auto">
-              <>Falta criar um map para o array das palavras chaves</>
-            </div>
-          </div>
-          <div className="row bg-secondary rounded-5 p-4">
-            <div className="col-lg-12 bg-white rounded-5">
-              <h4 className="text-center">Skill</h4>
-            </div>
-            <div>Falta criar um map para o array das palavras chaves</div>
           </div>
         </div>
-        <div className="col-5 ">
+        <div className="col-lg-4 ">
           <div className="bg-secondary p-3 rounded-5 h-100">
             <div className="bg-white rounded-5 h-100 p-3">
+              <h4>Descrição</h4>
+              <hr />
               <h5>{showProjects.details}</h5>
             </div>
           </div>
         </div>
-      </div>
-      <div className="row mx-auto justify-content-around mt-5">
-        <div className="col-lg-3">
-          <ButtonComponent type="button" name="Editar Perfil" />
+        <div className="col-lg-4 ">
+          <div className="bg-secondary p-3 rounded-5 h-100">
+            <div className="bg-white rounded-5 h-100 p-3">
+              <h4>Recursos</h4>
+              <hr />
+              <h5>{showProjects.resources}</h5>
+            </div>
+          </div>
         </div>
       </div>
     </div>

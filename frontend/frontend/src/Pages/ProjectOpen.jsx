@@ -11,10 +11,9 @@ import { useState } from "react";
 import EditProject from "../Components/EditProject";
 
 function ProjectOpen() {
-  const [isClicked, setIsClicked] = useState(false);
-
-  const handleClick = () => {
-    setIsClicked(!isClicked);
+  const [showComponentA, setShowComponentA] = useState(true);
+  const toggleComponent = () => {
+    setShowComponentA(!showComponentA);
   };
 
   return (
@@ -105,9 +104,33 @@ function ProjectOpen() {
         >
           {" "}
         </div>
-        {isClicked ? <ProjectComponent /> : <EditProject />}
-        <button onClick={handleClick}>Editar</button>
-
+        <div>
+          {showComponentA ? (
+            <ProjectComponent toggleComponent={toggleComponent} />
+          ) : (
+            <EditProject toggleComponent={toggleComponent} />
+          )}
+        </div>
+        <div className="row mx-auto justify-content-around mt-5">
+          <div className="col-lg-4">
+            <div className="row bg-secondary rounded-5 p-4 mb-4">
+              <div className="col-lg-12 bg-white rounded-5">
+                <h4 className="text-center">Palavras Chave</h4>
+              </div>
+              <div className="row mt-3 mx-auto">
+                <>Falta criar um map para o array das palavras chaves</>
+              </div>
+            </div>
+          </div>
+          <div className="col-lg-4">
+            <div className="row bg-secondary rounded-5 p-4">
+              <div className="col-lg-12 bg-white rounded-5">
+                <h4 className="text-center">Skill</h4>
+              </div>
+              <div>Falta criar um map para o array das palavras chaves</div>
+            </div>
+          </div>
+        </div>
         <div
           class="tab-pane fade"
           id="content2"

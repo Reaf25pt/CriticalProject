@@ -2,10 +2,8 @@ import styles from "./footer.module.css";
 import { BsXLg, BsSearch } from "react-icons/bs";
 import { userStore } from "../stores/UserStore";
 import { useEffect, useState } from "react";
-import SkillCss from "../Components/SkillCss.css";
 
 import InputComponent from "../Components/InputComponent";
-import SelectComponent from "../Components/SelectComponent";
 import ButtonComponent from "../Components/ButtonComponent";
 
 function Keyword({ keywords, setKeywords, addKeywords }) {
@@ -147,16 +145,21 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
           <ButtonComponent onClick={handleClick} name={"+"} />
         </div>
       </div>
-      <div className="form-outline mt-3">
-        <div className="bg-white d-flex ">
-          {keywords &&
-            keywords.map((item) => (
-              <>
-                <div className="keyword-create-project">{item.title}</div>
-              </>
-            ))}
-          {/* <p>Keywords</p>
-          <p>Keywords</p> */}
+      <div className="row bg-white  p-2 mx-auto rounded-2 mt-3 mb-3 ">
+        <div className="form-outline  ">
+          <div className="d-flex ">
+            {keywords &&
+              keywords.map((item) => (
+                <>
+                  <div className="bg-secondary text-white rounded-3 p-2 m-1 d-flex justify-content-between">
+                    {item.title}{" "}
+                    <div className="">
+                      <BsXLg />
+                    </div>
+                  </div>
+                </>
+              ))}
+          </div>
         </div>
       </div>
     </>
