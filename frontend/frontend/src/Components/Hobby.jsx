@@ -178,7 +178,7 @@ function Hobby() {
               ))}
             </div>
           ) : (
-            <div>Adicione os seus interesses</div>
+            <div></div>
           )}
         </div>
       </div>
