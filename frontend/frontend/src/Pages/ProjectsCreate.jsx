@@ -29,11 +29,19 @@ function ProjectsCreate() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    console.log(typeof keywords);
-    console.log(keywords);
-
     if (keywords.length === 0) {
       alert("Tem de inserir 1 palavra-chave");
+    } else if (
+      credentials.projectName === null ||
+      credentials.projectName === "undefined" ||
+      credentials.projectName === undefined ||
+      credentials.projectName === "" ||
+      credentials.details === null ||
+      credentials.details === "undefined" ||
+      credentials.details === undefined ||
+      credentials.details === ""
+    ) {
+      alert("Insira, pelo menos, o nome e descrição do projecto");
     } else {
       if (
         credentials.office === null ||
@@ -107,10 +115,7 @@ function ProjectsCreate() {
           aria-labelledby="home-tab"
         >
           <div className="row mx-auto col-10 col-md-8 col-lg-6">
-            <form
-              className="mt-5 p-5 bg-secondary rounded-5  "
-              onSubmit={handleSubmit}
-            >
+            <div className="mt-5 p-5 bg-secondary rounded-5  ">
               <div className="row mb-3">
                 <div className="col ">
                   <div className="form-outline">
@@ -177,9 +182,13 @@ function ProjectsCreate() {
               </div>
 
               <div className="row">
-                <ButtonComponent name={"Criar"} type="submit" />
+                <ButtonComponent
+                  name={"Criar"}
+                  type="submit"
+                  onClick={handleSubmit}
+                />
               </div>
-            </form>{" "}
+            </div>{" "}
           </div>
         </div>
       </div>

@@ -11,20 +11,29 @@ function ProfileSee({ onEdit }) {
         <div class="col-12 col-sm-12 col-md-12 col-lg-4 mt-3 ">
           <div class="p-5 mb-4 bg-secondary h-100 rounded-5 ">
             <div class="text-center">
-              {user.photo != null ? (
-                <img
-                  src={user.photo}
-                  class="rounded-circle img-responsive"
-                  width={"200px"}
-                  height={"200px"}
-                />
-              ) : (
+              {user.photo === null ? (
                 <img
                   src="https://t3.ftcdn.net/jpg/00/36/94/26/360_F_36942622_9SUXpSuE5JlfxLFKB1jHu5Z07eVIWQ2W.jpg"
                   alt="avatar"
                   class="rounded-circle img-responsive"
                   width={"200px"}
                   height={"200px"}
+                />
+              ) : user.photo === "" ? (
+                <img
+                  src="https://t3.ftcdn.net/jpg/00/36/94/26/360_F_36942622_9SUXpSuE5JlfxLFKB1jHu5Z07eVIWQ2W.jpg"
+                  alt="avatar"
+                  class="rounded-circle img-responsive"
+                  width={"200px"}
+                  height={"200px"}
+                />
+              ) : (
+                <img
+                  src={user.photo}
+                  class="rounded-circle img-responsive"
+                  width={"200px"}
+                  height={"200px"}
+                  alt=""
                 />
               )}
               <h5 class="my-3 text-white">{user.email}</h5>
