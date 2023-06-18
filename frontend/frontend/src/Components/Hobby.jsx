@@ -35,6 +35,7 @@ function Hobby() {
 
     if (name === "hobbyInput") {
       setSearch(event.target.value);
+      handleSearch(search);
     }
 
     setCredentials((values) => {
@@ -133,13 +134,13 @@ function Hobby() {
               name="hobbyInput"
               defaultValue={""}
               onChange={handleChange}
-              onKeyDown={(event) => {
+              /*    onKeyDown={(event) => {
                 if (event.key === "Enter") {
                   handleClick(event);
                 } else {
                   handleSearch(search);
                 }
-              }}
+              }} */
             />
             <div className="dropdown bg-white">
               {suggestions &&
@@ -159,7 +160,7 @@ function Hobby() {
             </div>
           </div>
           <div className="col-lg-2">
-            <ButtonComponent name={"+"} />
+            <ButtonComponent onClick={handleClick} name={"+"} />
           </div>
         </div>
         <div className="row d-flex  ">
