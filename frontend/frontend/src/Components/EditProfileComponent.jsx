@@ -57,10 +57,9 @@ function ProfileEdit({ onChange, onSubmit, onClick }) {
                     name="office"
                     id="officeInput"
                     required={true}
-                    defaultValue={user.office || ""}
+                    defaultValue={user.office}
                     onChange={onChange}
-                    placeholder={"Local de trabalho *"}
-                    local={user.office}
+                    local={"Local de trabalho *"}
                   />
                 </div>
                 <div className="row mt-3">

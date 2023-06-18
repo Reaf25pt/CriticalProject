@@ -1,10 +1,13 @@
+import { useState } from "react";
 import ButtonComponent from "./ButtonComponent";
 import InputComponent from "./InputComponent";
-import Keyword from "./Keyword";
-import SelectComponent from "./SelectComponent";
-import TextAreaComponent from "./TextAreaComponent";
 
-function EditProject({ toggleComponent }) {
+function EditProject({ toggleComponent, project, local, status }) {
+  const [selectedOption, setSelectedOption] = useState("");
+
+  const handleSelectChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
   return (
     <div className="container-fluid">
       <form className="row mt-5 justify-content-around">
@@ -13,14 +16,12 @@ function EditProject({ toggleComponent }) {
             <InputComponent
               placeholder={"Nome do projecto *"}
               id="projectName"
-              required
               name="projectName"
               type="text"
+              defaultValue={project.title || ""}
             />
             <div className="row d-flex justify-content-around mb-3 mt-3">
-              <div className="col-lg-5 bg-white rounded-3 p-2">
-                <select></select>
-              </div>
+              <div className="col-lg-5 bg-white rounded-3 p-2"></div>
               <div className="col-lg-5 bg-white rounded-3 p-2">
                 <select></select>
               </div>
@@ -29,9 +30,9 @@ function EditProject({ toggleComponent }) {
             <InputComponent
               placeholder={"Nº de Membros *"}
               id="members"
-              required
               name="projectName"
               type="text"
+              defaultValue={project.membersNumber || ""}
             />
 
             <div className="row mt-3 mb-3">
@@ -51,7 +52,10 @@ function EditProject({ toggleComponent }) {
             <div className="bg-white rounded-5 h-100 p-3">
               <h4>Descrição</h4>
               <hr />
-              <textarea className="h-75 w-100"></textarea>
+              <textarea
+                defaultValue={project.details || ""}
+                className="h-75 w-100"
+              ></textarea>
             </div>
           </div>
         </div>
@@ -60,7 +64,10 @@ function EditProject({ toggleComponent }) {
             <div className="bg-white rounded-5 h-100 p-3">
               <h4>Recursos</h4>
               <hr />
-              <textarea className="h-75 w-100"></textarea>
+              <textarea
+                defaultValue={project.resources || ""}
+                className="h-75 w-100"
+              ></textarea>
             </div>
           </div>
         </div>

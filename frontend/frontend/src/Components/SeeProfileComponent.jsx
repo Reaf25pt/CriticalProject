@@ -14,7 +14,6 @@ function ProfileSee({ onEdit }) {
               {user.photo != null ? (
                 <img
                   src={user.photo}
-                  alt="avatar"
                   class="rounded-circle img-responsive"
                   width={"200px"}
                   height={"200px"}

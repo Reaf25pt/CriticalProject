@@ -7,14 +7,65 @@ import SelectComponent from "../Components/SelectComponent";
 import FormTask from "../Components/FormTask";
 import TimeLine from "../Components/TimeLine";
 import ProjectComponent from "../Components/ProjectComponent";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditProject from "../Components/EditProject";
+import { useParams } from "react-router-dom";
+import { userStore } from "../stores/UserStore";
 
 function ProjectOpen() {
   const [showComponentA, setShowComponentA] = useState(true);
+  const user = userStore((state) => state.user);
+  const [showProjects, setShowProjects] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [showMembers, setShowMembers] = useState([]);
+  const [members, setMembers] = useState([]);
+
+  const local = [
+    { id: 0, office: "Lisboa" },
+    { id: 1, office: "Coimbra" },
+    { id: 2, office: "Porto" },
+    { id: 3, office: "Tomar" },
+    { id: 4, office: "Viseu" },
+    { id: 5, office: "Vila Real" },
+  ];
+
   const toggleComponent = () => {
     setShowComponentA(!showComponentA);
   };
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    fetch(`http://localhost:8080/projetofinal/rest/project/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        token: user.token,
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log(data);
+        setShowProjects(data);
+        console.log(showProjects);
+      })
+      .catch((err) => console.log(err));
+  }, [projects]);
+
+  useEffect(() => {
+    fetch(`http://localhost:8080/projetofinal/rest/project/${id}/members`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        token: user.token,
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        setShowMembers(data);
+      })
+      .catch((err) => console.log(err));
+  }, [members]);
 
   return (
     <div class="container-fluid">
@@ -103,34 +154,44 @@ function ProjectOpen() {
           aria-labelledby="tab1"
         >
           {" "}
-        </div>
-        <div>
-          {showComponentA ? (
-            <ProjectComponent toggleComponent={toggleComponent} />
-          ) : (
-            <EditProject toggleComponent={toggleComponent} />
-          )}
-        </div>
-        <div className="row mx-auto justify-content-around mt-5">
-          <div className="col-lg-4">
-            <div className="row bg-secondary rounded-5 p-4 mb-4">
-              <div className="col-lg-12 bg-white rounded-5">
-                <h4 className="text-center">Palavras Chave</h4>
+          <div>
+            {showComponentA ? (
+              <ProjectComponent
+                toggleComponent={toggleComponent}
+                project={showProjects}
+                local={local}
+                members={showMembers}
+              />
+            ) : (
+              <EditProject
+                project={showProjects}
+                toggleComponent={toggleComponent}
+                local={local}
+              />
+            )}
+          </div>
+          <div className="row mx-auto justify-content-around mt-5">
+            <div className="col-lg-4">
+              <div className="row bg-secondary rounded-5 p-4 mb-4">
+                <div className="col-lg-12 bg-white rounded-5">
+                  <h4 className="text-center">Palavras Chave</h4>
+                </div>
+                <div className="row mt-3 mx-auto">
+                  <>Falta criar um map para o array das palavras chaves</>
+                </div>
               </div>
-              <div className="row mt-3 mx-auto">
-                <>Falta criar um map para o array das palavras chaves</>
+            </div>
+            <div className="col-lg-4">
+              <div className="row bg-secondary rounded-5 p-4">
+                <div className="col-lg-12 bg-white rounded-5">
+                  <h4 className="text-center">Skill</h4>
+                </div>
+                <div>Falta criar um map para o array das palavras chaves</div>
               </div>
             </div>
           </div>
-          <div className="col-lg-4">
-            <div className="row bg-secondary rounded-5 p-4">
-              <div className="col-lg-12 bg-white rounded-5">
-                <h4 className="text-center">Skill</h4>
-              </div>
-              <div>Falta criar um map para o array das palavras chaves</div>
-            </div>
-          </div>
         </div>
+
         <div
           class="tab-pane fade"
           id="content2"
@@ -156,8 +217,37 @@ function ProjectOpen() {
                 <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">
                   Membros do Projetos
                 </h3>
-                <div className="bg-black text-white p-1 m-1 rounded-3 w-75 p-3 mx-auto">
-                  <p>Rodrigo Ferreira</p>
+                <div className="bg-white text-black  m-1 rounded-3 w-50  mx-auto  ">
+                  {showMembers.map((member, index) => (
+                    <div
+                      key={index}
+                      className="row d-flex justify-content-center"
+                    >
+                      <div className="col-lg-4 ">
+                        {member.userInvitedPhoto === null ? (
+                          <img
+                            src={
+                              "https://t3.ftcdn.net/jpg/00/36/94/26/360_F_36942622_9SUXpSuE5JlfxLFKB1jHu5Z07eVIWQ2W.jpg"
+                            }
+                            class="rounded-circle img-responsive"
+                            width={"40px"}
+                            height={"40px"}
+                          />
+                        ) : (
+                          <img
+                            src={member.userInvitedPhoto}
+                            class="rounded-circle img-responsive"
+                            width={"40px"}
+                            height={"40px"}
+                          />
+                        )}
+                      </div>
+                      <div className="col-lg-8 d-flex align-items-center">
+                        {member.userInvitedFirstName}{" "}
+                        {member.userInvitedLastName}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
