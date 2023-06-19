@@ -3,12 +3,22 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { userStore } from "../stores/UserStore";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { BsEyeFill } from "react-icons/bs";
 
 function Projects() {
   const user = userStore((state) => state.user);
 
   const [showAllProjects, setAllShowProjects] = useState([]);
   const [projects, setProjects] = useState([]);
+
+  const renderLink = (rowData) => {
+    return (
+      <Link to={`/home/projects/${rowData.id}`}>
+        <BsEyeFill />
+      </Link>
+    );
+  };
 
   useEffect(() => {
     fetch(`http://localhost:8080/projetofinal/rest/project/allprojects`, {
@@ -90,8 +100,9 @@ function Projects() {
                   field="membersNumber"
                   header="Vagas"
                   sortable
-                  style={{ width: "25%" }}
+                  style={{ width: "15%" }}
                 ></Column>
+                <Column body={renderLink} header="#" />
               </DataTable>
             </div>
           </div>

@@ -137,10 +137,10 @@ function SkillsProject({ skills, setSkills, addSkills }) {
   };
 
   return (
-    <>
-      <div className="row mt-3 ">
-        <div className="col-lg-6 d-flex ">
-          <div className="search-select-container">
+    <div className="cointaner-fluid">
+      <div className="row mt-3">
+        <div className="col-lg-5">
+          <div className="search-select-container ">
             <InputComponent
               placeholder={"Adicionar skill "}
               id="skillProjInput"
@@ -183,7 +183,7 @@ function SkillsProject({ skills, setSkills, addSkills }) {
                 ))}
           </div>
         </div>
-        <div class="form-group col-lg-4">
+        <div class="form-group col-lg-3">
           <div class="input-group rounded">
             <SelectSkillType
               name="skillType"
@@ -197,7 +197,7 @@ function SkillsProject({ skills, setSkills, addSkills }) {
             </span> */}
           </div>
         </div>
-        <div className="col-lg-3">
+        <div className="col-lg-2">
           <ButtonComponent onClick={handleClick} name={"+"} />
         </div>
       </div>
@@ -258,7 +258,7 @@ function SkillsProject({ skills, setSkills, addSkills }) {
           </div>
         </div>
       ) : null}
-    </>
+    </div>
   );
 }
 
