@@ -208,8 +208,9 @@ function ProjectOpen() {
                     </div>
                   </div>
                 </div>
-
-                <ButtonComponent name={"Convidar"} />
+                <div className="col-lg-6 mx-auto">
+                  <ButtonComponent name={"Convidar"} />
+                </div>
               </form>
             </div>
             <div className="col-8 col-sm-10 col-md-7 col-lg-5 mx-auto bg-secondary mt-5 rounded-5 ">

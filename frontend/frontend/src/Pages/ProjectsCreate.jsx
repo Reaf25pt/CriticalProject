@@ -143,7 +143,7 @@ function ProjectsCreate() {
                 addKeywords={addKeywords}
               />
 
-              <div class="form-outline mb-4">
+              <div class="form-outline mb-4 mt-3">
                 <TextAreaComponent
                   placeholder={"Descrição do projecto *"}
                   id="details"
@@ -160,7 +160,7 @@ function ProjectsCreate() {
                 addSkills={addSkills}
               />
 
-              <div class="form-group mt-3">
+              <div class="form-group mt-3 mb-3">
                 <div class="input-group rounded">
                   <SelectComponent
                     name="office"
