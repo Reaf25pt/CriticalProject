@@ -37,6 +37,7 @@ function Skill() {
 
     if (name === "skillInput") {
       setSearch(event.target.value);
+      handleSearch(search);
     }
 
     setCredentials((values) => {
@@ -145,13 +146,13 @@ function Skill() {
             name="skillInput"
             defaultValue={""}
             onChange={handleChange}
-            onKeyDown={(event) => {
+            /*    onKeyDown={(event) => {
               if (event.key === "Enter") {
                 handleClick(event);
               } else {
                 handleSearch(search);
               }
-            }}
+            }} */
           />{" "}
           <div className="dropdownz">
             {suggestions &&
@@ -180,7 +181,7 @@ function Skill() {
               name="skillType"
               id="skillType"
               onChange={handleChange}
-              placeholder={"Categoria"}
+              placeholder={"Categoria *"}
               defaultValue={selectedValue}
             />
             {/* <span class="input-group-text border-0" id="search-addon">
@@ -189,7 +190,7 @@ function Skill() {
           </div>
         </div>
         <div className="col-lg-2">
-          <ButtonComponent name={"+"} />
+          <ButtonComponent onClick={handleClick} name={"+"} />
         </div>
       </div>
 

@@ -1,10 +1,7 @@
 package service;
 
 import bean.User;
-import dto.Hobby;
-import dto.Keyword;
-import dto.ProjectMember;
-import dto.Task;
+import dto.*;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -43,10 +40,10 @@ return r;
     @Produces(MediaType.APPLICATION_JSON)
     public Response addProject(dto.Project project, @HeaderParam("token") String token) {
         Response r = null;
-        System.out.println("num members input "+project.getMembersNumber());
+
         if (userBean.checkStringInfo(token) || project==null) {
             r = Response.status(401).entity("Unauthorized!").build();
-        }  else if (!userBean.checkUserPermission(token)) {
+        }  else if (!userBean.checkUserPermission(token) || projBean.verifyIfUserCanCreateNewProject(token)) {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
@@ -232,7 +229,7 @@ return r;
         }
         return r;}
 
-
+    // GET LIST OF TASKS OF GIVEN PROJECT
     @GET
     @Path("/tasks/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -262,6 +259,33 @@ return r;
         return r;
     }
 
+    // GET LIST OF SKILLS TO SUGGEST TO PROJECT
+    @GET
+    @Path("/skills")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSkills(@QueryParam("title") String title,   @HeaderParam("token") String token) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<Skill> skills = projBean.getSkillsList(title);
+
+            if (skills == null || skills.size() == 0) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+
+                r = Response.status(200).entity(skills).build();
+            }
+        }
+
+        return r;
+    }
 
 
 }

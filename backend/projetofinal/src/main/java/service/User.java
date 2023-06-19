@@ -567,7 +567,7 @@ public class User {
 
     }
 
-    // GET LIST OF SKILLS TO SUGGEST
+    // GET LIST OF SKILLS TO SUGGEST TO USER
     @GET
     @Path("/skills")
     @Produces(MediaType.APPLICATION_JSON)

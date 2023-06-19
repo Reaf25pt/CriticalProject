@@ -25,6 +25,7 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
       setSearch(event.target.value);
       console.log(event.target.value);
       console.log(search);
+      handleSearch(search);
     }
 
     setCredentials((values) => {
@@ -66,7 +67,7 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
       credentials.keywordInput === "undefined" ||
       credentials === {}
     ) {
-      alert("Insira nome ");
+      alert("Insira nome de palavra-chave");
     } else {
       var newKeyword;
       if (credentials.id) {
@@ -78,7 +79,7 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
       }
 
       addKeywords(newKeyword);
-      //console.log(keywords);
+      console.log(keywords);
       document.getElementById("keywordInput").value = "";
       setCredentials({});
     }
@@ -89,8 +90,30 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
     credentials.title = keyword.title;
 
     document.getElementById("keywordInput").value = keyword.title;
-
+    console.log(credentials.id);
     setSuggestions([]);
+  };
+
+  const removeKeywords = (position) => {
+    console.log(position);
+
+    setKeywords((prevKeywords) => {
+      const updateKeywords = [...prevKeywords];
+      updateKeywords.splice(position, 1);
+      console.log(updateKeywords);
+      return updateKeywords;
+    });
+    /*   setKeywords((prevKeywords) => {
+      const updateKeywords = [...prevKeywords];
+      updateKeywords.splice(position, 1);
+      return updateKeywords;
+
+
+
+        const removeKeywords = (position) => {
+   
+  };
+    }); */
   };
 
   return (
@@ -107,13 +130,13 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
               aria-describedby="search-addon"
               defaultValue={""}
               onChange={handleChange}
-              onKeyDown={(event) => {
+              /*    onKeyDown={(event) => {
                 if (event.key === "Enter") {
                   handleClick(event);
                 } else {
                   handleSearch(search);
                 }
-              }}
+              }} */
             />
             {/* <div className="col-lg-2 input-group-text border-0 ">
               <BsSearch />
@@ -145,23 +168,25 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
           <ButtonComponent onClick={handleClick} name={"+"} />
         </div>
       </div>
-      <div className="row bg-white  p-2 mx-auto rounded-2 mt-3 mb-3 ">
-        <div className="form-outline  ">
-          <div className="d-flex ">
-            {keywords &&
-              keywords.map((item) => (
-                <>
-                  <div className="bg-secondary text-white rounded-3 p-2 m-1 d-flex justify-content-between">
-                    {item.title}{" "}
-                    <div className="">
-                      <BsXLg />
+      {keywords.length > 0 ? (
+        <div className="row bg-white  p-2 mx-auto rounded-2 mt-3 mb-3 ">
+          <div className="form-outline  ">
+            <div className="d-flex ">
+              {keywords &&
+                keywords.map((item, position) => (
+                  <>
+                    <div className="bg-secondary text-white rounded-3 p-2 m-1 d-flex justify-content-between">
+                      {item.title}{" "}
+                      <div className="">
+                        <BsXLg onClick={() => removeKeywords(position)} />
+                      </div>
                     </div>
-                  </div>
-                </>
-              ))}
+                  </>
+                ))}
+            </div>
           </div>
         </div>
-      </div>
+      ) : null}
     </>
   );
 }

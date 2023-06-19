@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { userStore } from "../stores/UserStore";
 import Keyword from "../Components/Keyword";
+import SkillsProject from "../Components/SkillsProject";
 
 function ProjectsCreate() {
   const [credentials, setCredentials] = useState({});
@@ -15,6 +16,10 @@ function ProjectsCreate() {
   const [keywords, setKeywords] = useState([]); // lista para enviar para backend
   const addKeywords = (newKeyword) => {
     setKeywords((state) => [...state, newKeyword]);
+  };
+  const [skills, setSkills] = useState([]); // lista para enviar para backend
+  const addSkills = (newSkill) => {
+    setSkills((state) => [...state, newSkill]);
   };
 
   const handleChange = (event) => {
@@ -29,11 +34,19 @@ function ProjectsCreate() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    console.log(typeof keywords);
-    console.log(keywords);
-
     if (keywords.length === 0) {
       alert("Tem de inserir 1 palavra-chave");
+    } else if (
+      credentials.projectName === null ||
+      credentials.projectName === "undefined" ||
+      credentials.projectName === undefined ||
+      credentials.projectName === "" ||
+      credentials.details === null ||
+      credentials.details === "undefined" ||
+      credentials.details === undefined ||
+      credentials.details === ""
+    ) {
+      alert("Insira, pelo menos, o nome e descrição do projecto");
     } else {
       if (
         credentials.office === null ||
@@ -45,6 +58,7 @@ function ProjectsCreate() {
         var project = {
           title: credentials.projectName,
           keywords: keywords,
+          skills: skills,
           membersNumber: credentials.maxMembers,
           resources: credentials.resources,
           details: credentials.details,
@@ -54,6 +68,7 @@ function ProjectsCreate() {
         var project = {
           title: credentials.projectName,
           keywords: keywords,
+          skills: skills,
           membersNumber: credentials.maxMembers,
           resources: credentials.resources,
           details: credentials.details,
@@ -107,10 +122,7 @@ function ProjectsCreate() {
           aria-labelledby="home-tab"
         >
           <div className="row mx-auto col-10 col-md-8 col-lg-6">
-            <form
-              className="mt-5 p-5 bg-secondary rounded-5  "
-              onSubmit={handleSubmit}
-            >
+            <div className="mt-5 p-5 bg-secondary rounded-5  ">
               <div className="row mb-3">
                 <div className="col ">
                   <div className="form-outline">
@@ -141,6 +153,12 @@ function ProjectsCreate() {
                   onChange={handleChange}
                 />
               </div>
+
+              <SkillsProject
+                skills={skills}
+                setSkills={setSkills}
+                addSkills={addSkills}
+              />
 
               <div class="form-group mt-3">
                 <div class="input-group rounded">
@@ -177,9 +195,13 @@ function ProjectsCreate() {
               </div>
 
               <div className="row">
-                <ButtonComponent name={"Criar"} type="submit" />
+                <ButtonComponent
+                  name={"Criar"}
+                  type="submit"
+                  onClick={handleSubmit}
+                />
               </div>
-            </form>{" "}
+            </div>{" "}
           </div>
         </div>
       </div>
