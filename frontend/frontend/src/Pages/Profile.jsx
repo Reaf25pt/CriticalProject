@@ -19,8 +19,11 @@ function Profile() {
   const userUpdate = userStore((state) => state.setUser);
   const [projects, setProjects] = useState([]);
   const [showProjects, setShowProjects] = useState([]);
-  // const [selectedItems, setSelectedItems] = useState([]);
-  const [selectedRow, setSelectedRow] = useState(null); // State to keep track of the selected row
+
+  const convertTimestampToDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString(); // Adjust the format as per your requirement
+  };
 
   const handleEdit = (event) => {
     setIsEditing(true);
@@ -189,6 +192,9 @@ function Profile() {
                         field="creationDate"
                         header="Data de Registo"
                         sortable
+                        body={(rowData) =>
+                          convertTimestampToDate(rowData.creationDate)
+                        }
                       />
 
                       <Column body={renderLink} header="#" />
