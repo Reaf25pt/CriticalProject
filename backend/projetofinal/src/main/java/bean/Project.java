@@ -39,6 +39,8 @@ public class Project implements Serializable {
     Communication communicationBean;
     @EJB
     dao.Task taskDao;
+    @EJB
+    dao.Skill skillDao;
 
 
     public Project(){
@@ -147,8 +149,6 @@ if (userEnt != null) {
                     newProjEnt.setOffice(Office.VILAREAL);
                     break;
             }
-
-
         }
 
         if (project.getResources() != null) {
@@ -156,7 +156,6 @@ if (userEnt != null) {
         }
 
         if (project.getMembersNumber() != 0) {
-            // TODO penso que esta verificação já n é precisa pq input tem atributo min
             newProjEnt.setMembersNumber(project.getMembersNumber());
         } else {
             newProjEnt.setMembersNumber(4);
@@ -172,6 +171,10 @@ if (userEnt != null) {
 
         //TODO log project before associating keywords? what if something goes wrong in that process?
         associateKeywordsWithProject(project.getKeywords(), newProjEnt);
+
+        if(project.getSkills()!=null || project.getSkills().size()!=0 ){
+            associateSkillsWithProject(project.getSkills(), newProjEnt);
+        }
 
         res = true;
 
@@ -209,6 +212,7 @@ if (userEnt != null) {
         // se encontrar keyword entity pelo title, apenas associa ao proj.
 
         for (Keyword k: keywords) {
+
             entity.Keyword keyw = keywordDao.findKeywordByTitle(k.getTitle().trim());
 
             if (keyw!= null){
@@ -236,8 +240,44 @@ if (userEnt != null) {
                 LOGGER.info("Keyword " + newKeyW.getId() + " is persisted in database and associated with project, project ID: "+newProjEnt.getId()+". IP Address of request is " + userBean.getIPAddress());
             }
         }
+    }
 
 
+    private void associateSkillsWithProject(List<Skill> skills, entity.Project newProjEnt) {
+        // associar as skills ao projecto. Se já existir na DB basta adicionar a relação senão é preciso criar a skill e adicionar à DB
+        // se encontrar skill entity pelo title, apenas associa ao proj.
+
+        for (Skill s: skills) {
+
+            entity.Skill skill = skillDao.findSkillByTitle(s.getTitle().trim());
+
+            if (skill!= null){
+                // já existe na DB, basta associar ao proj ---- adicionar a cada uma das listas ?!
+                skill.getListProject_Skills().add(newProjEnt);
+                newProjEnt.getListSkills().add(skill);
+
+                projDao.merge(newProjEnt);
+                skillDao.merge(skill);
+
+                LOGGER.info("Skill " + skill.getSkillId() + " is associated with project, project ID: "+newProjEnt.getId()+". IP Address of request is " + userBean.getIPAddress());
+
+
+            } else {
+                // não existe skill para o title usado. É necessário criar e adicionar à DB
+
+                entity.Skill newSkill = new entity.Skill();
+                newSkill.setTitle(s.getTitle().trim());
+                userBean.attributeSkillType(s.getSkillType(), newSkill);
+                newSkill.getListProject_Skills().add(newProjEnt);
+
+                skillDao.persist(newSkill);
+                newProjEnt.getListSkills().add(newSkill);
+                projDao.merge(newProjEnt);
+
+                LOGGER.info("Skill " + newSkill.getSkillId() + " is persisted in database and associated with project, project ID: "+newProjEnt.getId()+". IP Address of request is " + userBean.getIPAddress());
+            }
+
+        }
     }
 
     private boolean projInfoIsFilledIn(dto.Project project) {
@@ -554,4 +594,31 @@ if (listEnt!=null){
 
         return task;
     }
+
+    public boolean verifyIfUserCanCreateNewProject(String token) {
+        // verifica se user tem algum projecto 'activo'. Se tiver não poderá criar novo projecto
+        boolean res=false;
+
+//TODO finish to implement
+
+        return res;
+    }
+
+
+    public List<Skill> getSkillsList(String str) {
+        // retrieve list of skills that contain title
+        List<Skill> listSkillDto= new ArrayList<>();
+
+
+            List<entity.Skill> list = skillDao.findSkillListContainingStr(str.toLowerCase());
+
+            if(list!=null){
+                for (entity.Skill s : list) {
+
+                        listSkillDto.add(userBean.convertToSkillDto(s));
+                    }}return listSkillDto;
+    }
+
+
+
 }

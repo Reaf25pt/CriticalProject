@@ -181,7 +181,7 @@ function Skill() {
               name="skillType"
               id="skillType"
               onChange={handleChange}
-              placeholder={"Categoria"}
+              placeholder={"Categoria *"}
               defaultValue={selectedValue}
             />
             {/* <span class="input-group-text border-0" id="search-addon">

@@ -847,7 +847,7 @@ for (int i = 0; i< list.length; i++){
         return skillDto;
     }
 
-    private Skill convertToSkillDto(entity.Skill skill) {
+    public Skill convertToSkillDto(entity.Skill skill) {
 Skill skillDto = new Skill();
 
 
@@ -858,7 +858,7 @@ Skill skillDto = new Skill();
         return skillDto;
     }
 
-    private void attributeSkillType(int skillType, entity.Skill newSkill) {
+    public void attributeSkillType(int skillType, entity.Skill newSkill) {
 
         switch (skillType) {
             case 0:

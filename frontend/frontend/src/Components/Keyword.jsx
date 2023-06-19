@@ -67,7 +67,7 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
       credentials.keywordInput === "undefined" ||
       credentials === {}
     ) {
-      alert("Insira nome ");
+      alert("Insira nome de palavra-chave");
     } else {
       var newKeyword;
       if (credentials.id) {

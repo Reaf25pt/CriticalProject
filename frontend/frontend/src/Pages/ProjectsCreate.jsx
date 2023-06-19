@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { userStore } from "../stores/UserStore";
 import Keyword from "../Components/Keyword";
+import SkillsProject from "../Components/SkillsProject";
 
 function ProjectsCreate() {
   const [credentials, setCredentials] = useState({});
@@ -15,6 +16,10 @@ function ProjectsCreate() {
   const [keywords, setKeywords] = useState([]); // lista para enviar para backend
   const addKeywords = (newKeyword) => {
     setKeywords((state) => [...state, newKeyword]);
+  };
+  const [skills, setSkills] = useState([]); // lista para enviar para backend
+  const addSkills = (newSkill) => {
+    setSkills((state) => [...state, newSkill]);
   };
 
   const handleChange = (event) => {
@@ -53,6 +58,7 @@ function ProjectsCreate() {
         var project = {
           title: credentials.projectName,
           keywords: keywords,
+          skills: skills,
           membersNumber: credentials.maxMembers,
           resources: credentials.resources,
           details: credentials.details,
@@ -62,6 +68,7 @@ function ProjectsCreate() {
         var project = {
           title: credentials.projectName,
           keywords: keywords,
+          skills: skills,
           membersNumber: credentials.maxMembers,
           resources: credentials.resources,
           details: credentials.details,
@@ -146,6 +153,12 @@ function ProjectsCreate() {
                   onChange={handleChange}
                 />
               </div>
+
+              <SkillsProject
+                skills={skills}
+                setSkills={setSkills}
+                addSkills={addSkills}
+              />
 
               <div class="form-group mt-3">
                 <div class="input-group rounded">

@@ -35,7 +35,7 @@ function SelectSkillType(props) {
         defaultValue={props.defaultValue}
         style={{ backgroundColor: "white" }}
       >
-        <option value="20">{"Categoria *"}</option>
+        <option value="20">{props.placeholder}</option>
         {Object.entries(skillType).map(([key, value]) => (
           <option
             key={key}
