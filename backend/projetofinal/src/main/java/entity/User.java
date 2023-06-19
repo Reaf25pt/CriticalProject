@@ -55,7 +55,7 @@ public class User implements Serializable {
 
     // coluna que permite redireccionar no frontend no 1º login para 1 página específica para preencher os restantes dados pessoais
     @Column(name = "fillInfo", nullable = false, unique = false, updatable = true)
-    private boolean fillInfo = false;  // TODO não esquecer
+    private boolean fillInfo = false;
 
     @Column(name = "validated", nullable = false, unique = false, updatable = true)
     private boolean validated = false;

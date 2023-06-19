@@ -9,6 +9,8 @@ function TextAreaComponent(props) {
         required={props.required}
         disabled={props.disabled}
         id={props.id}
+        defaultValue={props.defaultValue}
+        type={props.type}
       ></textarea>
     </div>
   );

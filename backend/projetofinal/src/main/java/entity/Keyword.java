@@ -5,11 +5,14 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name="Keyword")
 @NamedQuery(name = "Keyword.findKeywordByTitle", query = "SELECT k FROM Keyword k WHERE LOWER(k.title)  = LOWER(:title) ")
 @NamedQuery(name = "Keyword.findKeywordListContainingStr", query = "SELECT k FROM Keyword k WHERE LOWER(k.title) LIKE LOWER(:str) ")
+@NamedQuery(name = "Keyword.findRelationBetweenProjAndKeyword", query = "SELECT COUNT(k) FROM Keyword k JOIN k.listProject_Keywords p WHERE k.id = :keywordId AND p.id = :projId")
+@NamedQuery(name = "Keyword.findListOfKeywordsByProjId", query = "SELECT k FROM Keyword k  JOIN k.listProject_Keywords p WHERE p.id = :id")
 
 public class Keyword implements Serializable {
 
@@ -55,5 +58,18 @@ public class Keyword implements Serializable {
 
     public void setListProject_Keywords(List<Project> listProject_Keywords) {
         this.listProject_Keywords = listProject_Keywords;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Keyword keyword = (Keyword) o;
+        return id == keyword.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

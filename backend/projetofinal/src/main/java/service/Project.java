@@ -288,6 +288,43 @@ return r;
     }
 
 
+
+    // EDIT PROJECT INFO
+    @PATCH
+    @Path("/project")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editProject(@HeaderParam("token") String token, dto.Project editProj) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) || editProj==null) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, editProj.getId())) {
+            r = Response.status(403).entity("Forbidden!").build();
+
+        } else {
+
+            userBean.updateSessionTime(token);
+
+            boolean res = projBean.editProjectInfo(token, editProj);
+
+            if (!res) {
+                r = Response.status(404).entity("Not found!").build();
+
+            } else {
+                r = Response.status(200).entity("Success").build();
+            }
+        }
+        return r;
+
+    }
+
+
+
+
+
 }
 
 

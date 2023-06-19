@@ -64,12 +64,13 @@ public class ProjectMember extends Abstract<entity.ProjectMember>{
     }
 
     public List<entity.ProjectMember> findListOfMembersByProjectId(int projId) {
+
         List<entity.ProjectMember> membersList = new ArrayList<>();
         try {
             membersList = (List<entity.ProjectMember>) em.createNamedQuery("ProjectMember.findListOfMembersByProjectId").setParameter("id", projId)
                     .getResultList();
         } catch (Exception e) {
-            // e.printStackTrace();
+            e.printStackTrace();
             return null;
         }
         return membersList;

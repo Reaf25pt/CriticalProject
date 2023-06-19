@@ -39,6 +39,29 @@ public class Keyword extends Abstract<entity.Keyword>{
         return keywordsList;
     }
 
+    public Long findRelationBetweenProjAndKeyword(int keywordId, int projId) {
+        Long count;
+        try {
+            count = (Long) em.createNamedQuery("Keyword.findRelationBetweenProjAndKeyword").setParameter("keywordId", keywordId).setParameter("projId", projId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            // e.printStackTrace();
+            return null;
+        }
+        return count;
+    }
+
+    public List<entity.Keyword> findListOfKeywordsByProjId(int id) {
+        List<entity.Keyword> keywordsList = new ArrayList<>();
+        try {
+            keywordsList = (List<entity.Keyword>) em.createNamedQuery("Keyword.findListOfKeywordsByProjId").setParameter("id", id).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return keywordsList;
+    }
+
 
 
 }

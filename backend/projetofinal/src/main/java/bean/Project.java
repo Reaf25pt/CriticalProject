@@ -54,12 +54,14 @@ public class Project implements Serializable {
         projDto.setTitle(p.getTitle());
 
         if(p.getOffice()!=null){
-
+        projDto.setOfficeInfo(p.getOffice().getCity());
         projDto.setOffice(p.getOffice().ordinal());
+        } else {projDto.setOffice(20);
         }
         projDto.setDetails(p.getDetails());
         projDto.setResources(p.getResources());
-        projDto.setStatus(p.getStatus());
+        projDto.setStatus(p.getStatus().getStatus());
+
      //   projDto.setStatus(p.getStatus().ordinal());
         projDto.setMembersNumber(p.getMembersNumber());
         projDto.setCreationDate(p.getCreationDate());
@@ -210,25 +212,34 @@ if (userEnt != null) {
     private void associateKeywordsWithProject(List<Keyword> keywords, entity.Project newProjEnt) {
         // associar as keywords ao projecto. Se já existir na DB basta adicionar a relação senão é preciso criar a keyword e adicionar à DB
         // se encontrar keyword entity pelo title, apenas associa ao proj.
+        System.out.println("associar keys   " + keywords.size());
+       deleteKeywordsAssociatedWithProject(newProjEnt);
 
         for (Keyword k: keywords) {
-
+            System.out.println(k.getTitle());
             entity.Keyword keyw = keywordDao.findKeywordByTitle(k.getTitle().trim());
 
             if (keyw!= null){
-                // já existe na DB, basta associar ao proj ---- adicionar a cada uma das listas ?!
-                keyw.getListProject_Keywords().add(newProjEnt);
-                newProjEnt.getListKeywords().add(keyw);
+                // já existe na DB, verificar se já tem relação com proj. Se nao basta associar ao proj ---- adicionar a cada uma das listas ?!
 
-                projDao.merge(newProjEnt);
-                keywordDao.merge(keyw);
+Long count = keywordDao.findRelationBetweenProjAndKeyword(keyw.getId(), newProjEnt.getId());
+if(count==0){
+    // significa que n há relação entre keyword e proj
+    keyw.getListProject_Keywords().add(newProjEnt);
+    newProjEnt.getListKeywords().add(keyw);
 
-                LOGGER.info("Keyword " + keyw.getId() + " is associated with project, project ID: "+newProjEnt.getId()+". IP Address of request is " + userBean.getIPAddress());
+    projDao.merge(newProjEnt);
+    keywordDao.merge(keyw);
+
+    LOGGER.info("Keyword " + keyw.getId() + " is associated with project, project ID: "+newProjEnt.getId()+". IP Address of request is " + userBean.getIPAddress());
+
+}
+
 
 
             } else {
                 // não existe keyword para o title usado. É necessário criar e adicionar à DB
-
+                System.out.println(k.getTitle());
                 entity.Keyword newKeyW = new entity.Keyword();
                 newKeyW.setTitle(k.getTitle().trim());
                 newKeyW.getListProject_Keywords().add(newProjEnt);
@@ -242,10 +253,32 @@ if (userEnt != null) {
         }
     }
 
+    private void deleteKeywordsAssociatedWithProject(entity.Project newProjEnt) {
+        // antes de adicionar keywords associadas a projecto, apaga todas as keywords associadas ao projecto
+        // permite lidar com keywords removidas ao editar o projecto
+        System.out.println("delete keys");
+        List<entity.Keyword> list = keywordDao.findListOfKeywordsByProjId(newProjEnt.getId());
+        System.out.println(newProjEnt.getId());
+
+        if(list!=null){
+            System.out.println("lista keys not null " + list.size());
+            //remove cada relação entre keyword e project
+            for (entity.Keyword k : list){
+                System.out.println("title " + k.getTitle());
+                k.getListProject_Keywords().remove(newProjEnt);
+                newProjEnt.getListKeywords().remove(k);
+                keywordDao.merge(k);
+                projDao.merge(newProjEnt);
+            }
+        }
+    }
+
 
     private void associateSkillsWithProject(List<Skill> skills, entity.Project newProjEnt) {
         // associar as skills ao projecto. Se já existir na DB basta adicionar a relação senão é preciso criar a skill e adicionar à DB
         // se encontrar skill entity pelo title, apenas associa ao proj.
+        System.out.println("associa skills");
+        deleteSkillsAssociatedWithProject(newProjEnt);
 
         for (Skill s: skills) {
 
@@ -253,13 +286,20 @@ if (userEnt != null) {
 
             if (skill!= null){
                 // já existe na DB, basta associar ao proj ---- adicionar a cada uma das listas ?!
-                skill.getListProject_Skills().add(newProjEnt);
-                newProjEnt.getListSkills().add(skill);
 
-                projDao.merge(newProjEnt);
-                skillDao.merge(skill);
+                Long count = skillDao.findRelationBetweenProjAndSkill(skill.getSkillId(), newProjEnt.getId());
 
-                LOGGER.info("Skill " + skill.getSkillId() + " is associated with project, project ID: "+newProjEnt.getId()+". IP Address of request is " + userBean.getIPAddress());
+if(count== 0){
+    skill.getListProject_Skills().add(newProjEnt);
+    newProjEnt.getListSkills().add(skill);
+
+    projDao.merge(newProjEnt);
+    skillDao.merge(skill);
+
+    LOGGER.info("Skill " + skill.getSkillId() + " is associated with project, project ID: "+newProjEnt.getId()+". IP Address of request is " + userBean.getIPAddress());
+
+}
+
 
 
             } else {
@@ -277,6 +317,24 @@ if (userEnt != null) {
                 LOGGER.info("Skill " + newSkill.getSkillId() + " is persisted in database and associated with project, project ID: "+newProjEnt.getId()+". IP Address of request is " + userBean.getIPAddress());
             }
 
+        }
+    }
+
+    private void deleteSkillsAssociatedWithProject(entity.Project newProjEnt) {
+        // antes de adicionar skills associadas a projecto, apaga todas as skills associadas ao projecto
+        // permite lidar com skills removidas ao editar o projecto
+        System.out.println("delete skills");
+        List<entity.Skill> list = skillDao.findListOfSkillsByProjId(newProjEnt.getId());
+
+        if(list!=null){
+            //remove cada relação entre keyword e project
+            for (entity.Skill s : list){
+               s.getListProject_Skills().remove(newProjEnt);
+               newProjEnt.getListSkills().remove(s);
+
+                skillDao.merge(s);
+                projDao.merge(newProjEnt);
+            }
         }
     }
 
@@ -462,6 +520,7 @@ return project;
         List<ProjectMember> membersList= projMemberDao.findListOfMembersByProjectId(id);
 
         if(membersList!=null) {
+
             for (ProjectMember p : membersList) {
                 dto.ProjectMember pm = new dto.ProjectMember();
                 pm.setId(p.getId());
@@ -580,6 +639,7 @@ if (listEnt!=null){
     private Task convertTaskEntToDto(entity.Task t) {
         Task task = new Task();
 
+        task.setId(t.getId());
         task.setTitle(t.getTitle());
         task.setStartDate(t.getStartDate());
         task.setFinishDate(t.getFinishDate());
@@ -620,5 +680,89 @@ if (listEnt!=null){
     }
 
 
+    public boolean editProjectInfo(String token, dto.Project editProj) {
+        // editar info do projecto
 
+        boolean res = false;
+
+        entity.Project projEnt = projDao.findProjectById(editProj.getId());
+
+        if (projEnt!=null){
+            projEnt.setTitle(editProj.getTitle());
+            if (editProj.getOffice() != 20) {
+
+                switch (editProj.getOffice()) {
+                    case 0:
+                        projEnt.setOffice(Office.LISBOA);
+                        break;
+                    case 1:
+                        projEnt.setOffice(Office.COIMBRA);
+                        break;
+                    case 2:
+                        projEnt.setOffice(Office.PORTO);
+                        break;
+                    case 3:
+                        projEnt.setOffice(Office.TOMAR);
+                        break;
+                    case 4:
+                        projEnt.setOffice(Office.VISEU);
+                        break;
+                    case 5:
+                        projEnt.setOffice(Office.VILAREAL);
+                        break;
+                }
+            }
+            projEnt.setDetails(editProj.getDetails());
+            projEnt.setResources(editProj.getResources());
+            projEnt.setStatus(setProjectStatus(editProj.getStatusInt()));
+            projEnt.setMembersNumber(editProj.getMembersNumber());
+projEnt.setCreationDate(editProj.getCreationDate());
+
+            projDao.merge(projEnt); // TODO será aqui ou depois de associar skills e keywords?
+
+            associateKeywordsWithProject(editProj.getKeywords(), projEnt);
+
+            if(editProj.getSkills()!=null || editProj.getSkills().size()!=0 ){
+                System.out.println("associar skills");
+                associateSkillsWithProject(editProj.getSkills(), projEnt);
+            }
+projDao.merge(projEnt); // TODO será aqui ou antes de associar skills e keywords?
+            res=true;
+        }
+
+
+        return res;
+    }
+
+    private StatusProject setProjectStatus(int statusInt) {
+        // define o status do projecto de acordo com info que vem do frontend
+
+        StatusProject st = null;
+
+        switch (statusInt) {
+            case 0:
+                st = StatusProject.PLANNING;
+                break;
+            case 1:
+                st = StatusProject.READY;
+                break;
+            case 2:
+                st = StatusProject.PROPOSED;
+                break;
+            case 3:
+                st = StatusProject.APPROVED;
+                break;
+            case 4:
+                st = StatusProject.PROGRESS;
+                break;
+            case 5:
+                st = StatusProject.CANCELLED;
+                break;
+            case 6:
+                st = StatusProject.FINISHED;
+                break;
+
+        }
+    return st;
+    }
 }

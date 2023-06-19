@@ -11,9 +11,12 @@ public class Project {
     private int id;
     private String title;
     private int office;
+    private String officeInfo;
     private String details;
     private String resources;
-    private StatusProject status;
+    private String status;
+
+    private int statusInt;
     private int membersNumber;
     private Date creationDate;
 
@@ -62,11 +65,11 @@ public class Project {
         this.office = office;
     }
 
-    public StatusProject getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(StatusProject status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -134,5 +137,21 @@ public class Project {
 
     public void setMember(boolean member) {
         this.member = member;
+    }
+
+    public String getOfficeInfo() {
+        return officeInfo;
+    }
+
+    public void setOfficeInfo(String officeInfo) {
+        this.officeInfo = officeInfo;
+    }
+
+    public int getStatusInt() {
+        return statusInt;
+    }
+
+    public void setStatusInt(int statusInt) {
+        this.statusInt = statusInt;
     }
 }

@@ -15,19 +15,19 @@ import { userStore } from "../stores/UserStore";
 function ProjectOpen() {
   const [showComponentA, setShowComponentA] = useState(true);
   const user = userStore((state) => state.user);
-  const [showProjects, setShowProjects] = useState([]);
+  const [showProjects, setShowProjects] = useState(null);
   const [projects, setProjects] = useState([]);
   const [showMembers, setShowMembers] = useState([]);
   const [members, setMembers] = useState([]);
 
-  const local = [
+  /*   const local = [
     { id: 0, office: "Lisboa" },
     { id: 1, office: "Coimbra" },
     { id: 2, office: "Porto" },
     { id: 3, office: "Tomar" },
     { id: 4, office: "Viseu" },
     { id: 5, office: "Vila Real" },
-  ];
+  ]; */
 
   const toggleComponent = () => {
     setShowComponentA(!showComponentA);
@@ -35,7 +35,12 @@ function ProjectOpen() {
 
   const { id } = useParams();
 
+  console.log(id);
+  console.log(typeof id);
+
   useEffect(() => {
+    console.log("use effect projecto");
+
     fetch(`http://localhost:8080/projetofinal/rest/project/${id}`, {
       method: "GET",
       headers: {
@@ -66,6 +71,10 @@ function ProjectOpen() {
       })
       .catch((err) => console.log(err));
   }, [members]);
+
+  if (!showProjects) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div class="container-fluid">
@@ -159,22 +168,23 @@ function ProjectOpen() {
               <ProjectComponent
                 toggleComponent={toggleComponent}
                 project={showProjects}
-                local={local}
+                /*   local={local} */
                 members={showMembers}
               />
             ) : (
               <EditProject
                 project={showProjects}
                 toggleComponent={toggleComponent}
-                local={local}
+                set={setProjects}
+                /*   local={local} */
               />
             )}
           </div>
-          <div className="row mx-auto justify-content-around mt-5">
+          {/*   <div className="row mx-auto justify-content-around mt-5">
             <div className="col-lg-4">
               <div className="row bg-secondary rounded-5 p-4 mb-4">
                 <div className="col-lg-12 bg-white rounded-5">
-                  <h4 className="text-center">Palavras Chave</h4>
+                  <h4 className="text-center">Palavras-Chave</h4>
                 </div>
                 <div className="row mt-3 mx-auto">
                   <>Falta criar um map para o array das palavras chaves</>
@@ -184,12 +194,12 @@ function ProjectOpen() {
             <div className="col-lg-4">
               <div className="row bg-secondary rounded-5 p-4">
                 <div className="col-lg-12 bg-white rounded-5">
-                  <h4 className="text-center">Skill</h4>
+                  <h4 className="text-center">Skills</h4>
                 </div>
                 <div>Falta criar um map para o array das palavras chaves</div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div
@@ -233,6 +243,7 @@ function ProjectOpen() {
                             class="rounded-circle img-responsive"
                             width={"40px"}
                             height={"40px"}
+                            alt="avatar"
                           />
                         ) : (
                           <img
@@ -240,6 +251,7 @@ function ProjectOpen() {
                             class="rounded-circle img-responsive"
                             width={"40px"}
                             height={"40px"}
+                            alt=""
                           />
                         )}
                       </div>

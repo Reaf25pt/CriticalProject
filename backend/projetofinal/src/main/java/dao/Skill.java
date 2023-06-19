@@ -76,7 +76,29 @@ public class Skill extends Abstract<entity.Skill>{
         return skillsList;
     }
 
+    public Long findRelationBetweenProjAndSkill(int skillId, int projId) {
+        Long count;
+        try {
+            count = (Long) em.createNamedQuery("Skill.findRelationBetweenProjAndSkill").setParameter("skillId", skillId).setParameter("projId", projId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            // e.printStackTrace();
+            return null;
+        }
+        return count;
+    }
 
+
+    public List<entity.Skill> findListOfSkillsByProjId(int id) {
+        List<entity.Skill> skillsList = new ArrayList<>();
+        try {
+            skillsList = (List<entity.Skill>) em.createNamedQuery("Skill.findListOfSkillsByProjId").setParameter("id", id).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return skillsList;
+    }
 
 
 }
