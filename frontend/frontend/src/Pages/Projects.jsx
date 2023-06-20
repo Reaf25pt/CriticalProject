@@ -62,13 +62,15 @@ function Projects() {
           aria-labelledby="home-tab"
         >
           <div className="row mt-5 d-flex justify-content-around">
-            <div className="col-lg-2 ">
-              //{" "}
-              <LinkButton
-                name={"Adicionar Projeto"}
-                to={"/home/projectscreate"}
-              />
-            </div>
+            {user.noActiveProject ? (
+              <div className="col-lg-2 ">
+                //{" "}
+                <LinkButton
+                  name={"Adicionar Projeto"}
+                  to={"/home/projectscreate"}
+                />
+              </div>
+            ) : null}
 
             <div className="col-lg-9 bg-secondary p-3 rounded-4">
               <DataTable

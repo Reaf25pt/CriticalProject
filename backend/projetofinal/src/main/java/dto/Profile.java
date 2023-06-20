@@ -1,9 +1,7 @@
 package dto;
 
-import ENUM.Office;
-
-public class EditProfile {
-    private int id;
+public class Profile {
+    private int userId;
 
     private String token;
     private String email;
@@ -16,17 +14,27 @@ public class EditProfile {
     private String photo;
     private String bio;
     private boolean openProfile;
-
+    private boolean contestManager;
     private boolean fillInfo;
 
-    public EditProfile(){}
+    private boolean noActiveProject;
 
-    public int getId() {
-        return id;
+    public Profile(){}
+
+    public int getUserId() {
+        return userId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public boolean isContestManager() {
+        return contestManager;
+    }
+
+    public void setContestManager(boolean contestManager) {
+        this.contestManager = contestManager;
     }
 
     public String getToken() {
@@ -119,4 +127,11 @@ public class EditProfile {
         this.fillInfo = fillInfo;
     }
 
+    public boolean isNoActiveProject() {
+        return noActiveProject;
+    }
+
+    public void setNoActiveProject(boolean noActiveProject) {
+        this.noActiveProject = noActiveProject;
+    }
 }

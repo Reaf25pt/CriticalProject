@@ -1,3 +1,4 @@
+/*
 package dto;
 
 import ENUM.Office;
@@ -117,3 +118,4 @@ public class Login {
         this.fillInfo = fillInfo;
     }
 }
+*/

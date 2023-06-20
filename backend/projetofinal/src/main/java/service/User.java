@@ -1,6 +1,5 @@
 package service;
 
-import ENUM.Office;
 import dto.*;
 import dto.Project;
 import jakarta.inject.Inject;
@@ -30,7 +29,7 @@ public class User {
         Response r = null;
 
         if (userBean.validateLoginInfo(email, password)) {
-            Login userLogged = userBean.validateLogin(email, password);
+            Profile userLogged = userBean.validateLogin(email, password);
             if (userLogged == null) {
                 r = Response.status(404).entity("Not found").build();
             } else {
@@ -192,7 +191,7 @@ public class User {
     @Path("/ownprofile")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addMandatoryInfo(@HeaderParam("token") String token, EditProfile newInfo) {
+    public Response addMandatoryInfo(@HeaderParam("token") String token, Profile newInfo) {
 
         Response r = null;
 
@@ -210,7 +209,7 @@ public class User {
 
             // neste ponto o user tem autorização para fazer update da sua info e não é necessário validar se info vem preenchida ou existe na DB pq único campo que tem de ser único não é updated (email)
 
-            EditProfile userUpdated = userBean.addMandatoryInfo(token, newInfo);
+            Profile userUpdated = userBean.addMandatoryInfo(token, newInfo);
             if (userUpdated == null) {
                 r = Response.status(404).entity("Not found!").build();
                 //TODO erro 404 not found  ou  400 bad request?
@@ -233,7 +232,7 @@ public class User {
     @Path("/ownprofile")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response editUser(@HeaderParam("token") String token, EditProfile newInfo) {
+    public Response editUser(@HeaderParam("token") String token, Profile newInfo) {
 
         Response r = null;
 
@@ -249,7 +248,7 @@ public class User {
 
             // neste ponto o user tem autorização para fazer update da sua info e não é necessário validar se info vem preenchida ou existe na DB pq único campo que tem de ser único não é updated (email)
 
-            EditProfile userUpdated = userBean.updateProfile(token, newInfo);
+            Profile userUpdated = userBean.updateProfile(token, newInfo);
             if (userUpdated == null) {
                 r = Response.status(404).entity("Not found!").build();
                 //TODO erro 404 not found  ou  400 bad request?

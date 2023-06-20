@@ -4,11 +4,9 @@ import ENUM.Office;
 import ENUM.SkillType;
 import dto.*;
 import dto.Project;
-import entity.ProjectMember;
 import entity.Token;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import mail.AskRecoverPassword;
@@ -16,8 +14,6 @@ import mail.ValidateNewAccount;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.glassfish.jaxb.core.v2.TODO;
-import org.jetbrains.annotations.NotNull;
 
 
 import java.io.Serializable;
@@ -66,10 +62,10 @@ public class User implements Serializable {
         return res;
     }
 
-    public Login validateLogin(String email, String password) {
+    public Profile validateLogin(String email, String password) {
         // creates session for respective email if data matches some regist in User table
 
-        Login user = null;
+        Profile user = null;
 
         entity.User userEnt = userDao.findUserByEmail(email);
 
@@ -86,7 +82,7 @@ public class User implements Serializable {
 
                     userDao.merge(userEnt);
                     tokenDao.merge(tokenEnt);
-                    user = convertLoginDto(userEnt, tokenEnt);
+                    user = convertToProfileDto(userEnt, tokenEnt.getToken());
 
                     LOGGER.info("User whose user ID is " + userEnt.getUserId() + " has logged in its account. IP Address of request is " + request.getRemoteAddr());
 
@@ -106,7 +102,8 @@ public class User implements Serializable {
         return ipAddress;
     }
 
-    private Login convertLoginDto(entity.User user, Token token) {
+
+  /*  private Profile convertLoginDto(entity.User user, Token token) {
         Login loginDto = new Login();
 
         loginDto.setUserId(user.getUserId());
@@ -116,10 +113,10 @@ public class User implements Serializable {
         loginDto.setFirstName(user.getFirstName());
         loginDto.setLastName(user.getLastName());
 
-       /* if(user.getFirstName()!=null){  }
+       *//* if(user.getFirstName()!=null){  }
       if(user.getLastName()!=null){
 
-      }*/
+      }*//*
 
         if(user.getOffice()!=null){ loginDto.setOffice(user.getOffice().getCity());}
 
@@ -141,7 +138,7 @@ public class User implements Serializable {
         loginDto.setFillInfo(user.isFillInfo());
 
         return loginDto;
-    }
+    }*/
 
     // mascara a password introduzida
     private String passMask(String password) {
@@ -486,9 +483,9 @@ public class User implements Serializable {
         }
     }
 
-    public EditProfile addMandatoryInfo(String token, EditProfile newInfo){
+    public Profile addMandatoryInfo(String token, Profile newInfo){
         // adicionar dados obrigatórios sem a qual n pode avançar na app
-        EditProfile updatedUser = null;
+        Profile updatedUser = null;
 
         if (newInfo!=null){
             entity.User user = tokenDao.findUserEntByToken(token);
@@ -539,7 +536,7 @@ public class User implements Serializable {
 
             LOGGER.info("User ID " + user.getUserId() + " updates its profile. IP Address of request is " + getIPAddress());
 
-            updatedUser = convertToEditProfile(user, token);
+            updatedUser = convertToProfileDto(user, token);
         }
 
         return updatedUser;
@@ -547,10 +544,10 @@ public class User implements Serializable {
 
 
 
-    public EditProfile updateProfile(String token, EditProfile newInfo) {
+    public Profile updateProfile(String token, Profile newInfo) {
         // update profile of logged user
 
-        EditProfile updatedUser = null;
+        Profile updatedUser = null;
 
         if (newInfo != null) {   // TODO ainda que esta verificação tenha sido feita anteriormente, no endpoint, é preciso repetir?
            /* Token tokenEnt = tokenDao.findTokenEntByToken(token);
@@ -616,16 +613,16 @@ public class User implements Serializable {
 
             LOGGER.info("User ID " + userEnt.getUserId() + " updates its profile. IP Address of request is " + getIPAddress());
 
-            updatedUser = convertToEditProfile(userEnt, token);
+            updatedUser = convertToProfileDto(userEnt, token);
         }
 
         return updatedUser;
     }
 
-    public EditProfile convertToEditProfile(entity.User user, String token) {
-        EditProfile userDto = new EditProfile();
+    public Profile convertToProfileDto(entity.User user, String token) {
+        Profile userDto = new Profile();
 
-        userDto.setId(user.getUserId());
+        userDto.setUserId(user.getUserId());
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
 
@@ -636,13 +633,15 @@ public class User implements Serializable {
            userDto.setOffice( user.getOffice().getCity());
           userDto.setOfficeInfo(user.getOffice().ordinal());
         }
-
       //  userDto.setOffice(user.getOffice());
         userDto.setNickname(user.getNickname());
         userDto.setPhoto(user.getPhoto());
         userDto.setBio(user.getBio());
         userDto.setOpenProfile(user.isOpenProfile());
         userDto.setFillInfo(user.isFillInfo());
+        userDto.setContestManager(user.isContestManager());
+        userDto.setNoActiveProject(projBean.verifyIfUserHasActiveProject(token));
+
 
         return userDto;
     }
