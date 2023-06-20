@@ -99,10 +99,13 @@ function Projects() {
                   style={{ width: "25%" }}
                 ></Column>
                 <Column
-                  field="membersNumber"
+                  field={"membersNumber"}
                   header="Vagas"
                   sortable
                   style={{ width: "15%" }}
+                  body={(showAllProjects) =>
+                    `${showAllProjects.availableSpots} / ${showAllProjects.membersNumber}`
+                  }
                 ></Column>
                 <Column body={renderLink} header="#" />
               </DataTable>

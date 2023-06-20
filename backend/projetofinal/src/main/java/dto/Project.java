@@ -18,6 +18,8 @@ public class Project {
 
     private int statusInt;
     private int membersNumber;
+
+    private int availableSpots;
     private Date creationDate;
 
     private List<Keyword> keywords;
@@ -153,5 +155,13 @@ public class Project {
 
     public void setStatusInt(int statusInt) {
         this.statusInt = statusInt;
+    }
+
+    public int getAvailableSpots() {
+        return availableSpots;
+    }
+
+    public void setAvailableSpots(int availableSpots) {
+        this.availableSpots = availableSpots;
     }
 }

@@ -63,6 +63,7 @@ public class Project implements Serializable {
         projDto.setDetails(p.getDetails());
         projDto.setResources(p.getResources());
         projDto.setStatus(p.getStatus().getStatus());
+projDto.setAvailableSpots(getNumberOfAvailableSpots(p));
 
      //   projDto.setStatus(p.getStatus().ordinal());
         projDto.setMembersNumber(p.getMembersNumber());
@@ -82,6 +83,8 @@ public class Project implements Serializable {
 
 return projDto;
     }
+
+
 
     private List<Keyword> convertListKeywordsDTO(List<entity.Keyword> listKeywords) {
         // convert keyword ENTITY  to keyword DTO list
@@ -1039,6 +1042,21 @@ boolean res=false;
 
         }
       return res;
+    }
+
+    private int getNumberOfAvailableSpots(entity.Project p) {
+        //retorna número de vagas disponíveis
+
+        int count= 0;
+
+        List<ProjectMember> activeMembers = projMemberDao.findListOfMembersByProjectId(p.getId());
+        if(activeMembers!=null){
+            count=p.getMembersNumber()-activeMembers.size();
+        } else {
+            count=p.getMembersNumber();
+        }
+
+     return count;
     }
 
     public boolean changeMemberRole(int userId, int projId, String token, int role) {
