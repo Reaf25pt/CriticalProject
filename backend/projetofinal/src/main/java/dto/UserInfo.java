@@ -1,6 +1,6 @@
 package dto;
 
-public class UserFriendChat {
+public class UserInfo {
 
     private int id;
     private String firstName;
@@ -9,7 +9,7 @@ public class UserFriendChat {
     private String photo;
 
 
-    public UserFriendChat(int id, String firstName, String lastName, String nickname, String photo) {
+    public UserInfo(int id, String firstName, String lastName, String nickname, String photo) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -17,6 +17,8 @@ public class UserFriendChat {
         this.photo = photo;
     }
 
+    public UserInfo() {
+    }
 
     public int getId() {
         return id;

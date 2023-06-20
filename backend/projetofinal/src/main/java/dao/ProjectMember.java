@@ -1,5 +1,6 @@
 package dao;
 
+import ENUM.StatusProject;
 import entity.Project;
 import entity.User;
 import jakarta.ejb.Stateless;
@@ -76,6 +77,18 @@ public class ProjectMember extends Abstract<entity.ProjectMember>{
         return membersList;
     }
 
+    public List<entity.User> findListOfUsersWithActiveProject() {
+
+        List<entity.User> usersList = new ArrayList<>();
+        try {
+            usersList = (List<entity.User>) em.createNamedQuery("ProjectMember.findListOfUsersWithActiveProject").setParameter("cancelled", StatusProject.CANCELLED).setParameter("finished", StatusProject.FINISHED)
+                    .getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return usersList;
+    }
 
 
 

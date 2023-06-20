@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
 import EditProject from "../Components/EditProject";
 import { useParams } from "react-router-dom";
 import { userStore } from "../stores/UserStore";
+import ModalDeleteProjMember from "../Components/ModalDeleteProjMember";
+import InviteMember from "../Components/InviteMember";
 
 function ProjectOpen() {
   const [showComponentA, setShowComponentA] = useState(true);
@@ -106,7 +108,7 @@ function ProjectOpen() {
             aria-selected="false"
             style={{ background: "#C01722", color: "white" }}
           >
-            Convidar membros{" "}
+            Membros{" "}
           </button>
         </li>
         <li class="nav-item" role="presentation">
@@ -124,7 +126,41 @@ function ProjectOpen() {
             Plano do Projeto{" "}
           </button>
         </li>
-        <li class="nav-item" role="presentation">
+        {showProjects.member ? (
+          <>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                id="tab4"
+                data-bs-toggle="tab"
+                data-bs-target="#content4"
+                type="button"
+                role="tab"
+                aria-controls="content4"
+                aria-selected="false"
+                style={{ background: "#C01722", color: "white" }}
+              >
+                Chat{" "}
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                id="tab5"
+                data-bs-toggle="tab"
+                data-bs-target="#content5"
+                type="button"
+                role="tab"
+                aria-controls="content4"
+                aria-selected="false"
+                style={{ background: "#C01722", color: "white" }}
+              >
+                Histórico{" "}
+              </button>
+            </li>
+          </>
+        ) : null}
+        {/* <li class="nav-item" role="presentation">
           <button
             class="nav-link"
             id="tab4"
@@ -153,7 +189,7 @@ function ProjectOpen() {
           >
             Histórico{" "}
           </button>
-        </li>
+        </li> */}
       </ul>
       <div class="tab-content mt-2">
         <div
@@ -209,20 +245,24 @@ function ProjectOpen() {
           aria-labelledby="tab2"
         >
           <div className="row">
-            <div className="mx-auto col-10 col-md-8 col-lg-6">
-              <form className="mt-5 p-5 bg-secondary rounded-5 ">
-                <div className="row mb-3 ">
-                  <div className="col ">
-                    <div className="form-outline">
-                      <InputComponent type="text" placeholder="Email" />
+            {showProjects.manager ? (
+              <InviteMember projId={showProjects.id} />
+            ) : /*  <div className="mx-auto col-10 col-md-8 col-lg-6">
+                <form className="mt-5 p-5 bg-secondary rounded-5 ">
+                  <div className="row mb-3 ">
+                    <div className="col ">
+                      <div className="form-outline">
+                        <InputComponent type="text" placeholder="Nome" />
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="col-lg-6 mx-auto">
-                  <ButtonComponent name={"Convidar"} />
-                </div>
-              </form>
-            </div>
+                  <div className="col-lg-6 mx-auto">
+                    <ButtonComponent name={"Convidar"} />
+                  </div>
+                </form>
+              </div> */
+            null}
+
             <div className="col-8 col-sm-10 col-md-7 col-lg-5 mx-auto bg-secondary mt-5 rounded-5 ">
               <div>
                 <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">
@@ -259,6 +299,23 @@ function ProjectOpen() {
                         {member.userInvitedFirstName}{" "}
                         {member.userInvitedLastName}
                       </div>
+                      {member.manager ? (
+                        <div className="col-lg-8 d-flex align-items-center">
+                          Gestor
+                        </div>
+                      ) : (
+                        <div className="col-lg-8 d-flex align-items-center">
+                          Membro
+                        </div>
+                      )}
+                      {showProjects.manager ? (
+                        <div className="col-lg-2">
+                          <ModalDeleteProjMember
+                            member={member}
+                            set={setMembers}
+                          />
+                        </div>
+                      ) : null}
                     </div>
                   ))}
                 </div>

@@ -321,7 +321,33 @@ return r;
 
     }
 
+    // GET LIST OF USERS TO SUGGEST TO PROJECT
+    @GET
+    @Path("/possiblemembers")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPossibleMembers(@QueryParam("name") String name,   @HeaderParam("token") String token,   @HeaderParam("projId") int projId) {
 
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<UserInfo> list = projBean.getPossibleMembers(name);
+
+            if (list == null || list.size() == 0) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+
+                r = Response.status(200).entity(list).build();
+            }
+        }
+
+        return r;
+    }
 
 
 

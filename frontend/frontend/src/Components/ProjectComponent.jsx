@@ -3,7 +3,7 @@ import { userStore } from "../stores/UserStore";
 import { useParams } from "react-router-dom";
 import ButtonComponent from "./ButtonComponent";
 
-function ProjectComponent({ toggleComponent, project, members }) {
+function ProjectComponent({ toggleComponent, project /* , members */ }) {
   return (
     <>
       <div className="container-fluid">
@@ -21,12 +21,15 @@ function ProjectComponent({ toggleComponent, project, members }) {
                   {project.officeInfo}
                 </div>
                 <div class=" text-center text-white mb-1">{project.status}</div>
+                <div class=" text-center text-white mb-1">
+                  {project.membersNumber} TODO alterar para vagas
+                </div>
                 {/* <div className="col-lg-5 bg-white rounded-3 p-2">{"item"}</div>
     <div className="col-lg-5 bg-white rounded-3 p-2">
       {project.status}
     </div> */}
               </div>
-              <div className="row mt-3">
+              {/*  <div className="row mt-3">
                 <select className="col-lg-6 mx-auto">
                   <option>Membros</option>
                   {members.map((member) => (
@@ -35,7 +38,7 @@ function ProjectComponent({ toggleComponent, project, members }) {
                     </option>
                   ))}{" "}
                 </select>
-              </div>
+              </div> */}
               {project.manager ? (
                 <div className="row mx-auto justify-content-around mt-5">
                   <div className="col-lg-12">

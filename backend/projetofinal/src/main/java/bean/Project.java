@@ -6,6 +6,7 @@ import ENUM.StatusTask;
 import dto.Keyword;
 import dto.Skill;
 import dto.Task;
+import dto.UserInfo;
 import entity.ProjectMember;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
@@ -17,6 +18,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequestScoped
 public class Project implements Serializable {
@@ -212,7 +214,7 @@ if (userEnt != null) {
     private void associateKeywordsWithProject(List<Keyword> keywords, entity.Project newProjEnt) {
         // associar as keywords ao projecto. Se já existir na DB basta adicionar a relação senão é preciso criar a keyword e adicionar à DB
         // se encontrar keyword entity pelo title, apenas associa ao proj.
-        System.out.println("associar keys   " + keywords.size());
+
        deleteKeywordsAssociatedWithProject(newProjEnt);
 
         for (Keyword k: keywords) {
@@ -256,15 +258,15 @@ if(count==0){
     private void deleteKeywordsAssociatedWithProject(entity.Project newProjEnt) {
         // antes de adicionar keywords associadas a projecto, apaga todas as keywords associadas ao projecto
         // permite lidar com keywords removidas ao editar o projecto
-        System.out.println("delete keys");
+
         List<entity.Keyword> list = keywordDao.findListOfKeywordsByProjId(newProjEnt.getId());
         System.out.println(newProjEnt.getId());
 
         if(list!=null){
-            System.out.println("lista keys not null " + list.size());
+
             //remove cada relação entre keyword e project
             for (entity.Keyword k : list){
-                System.out.println("title " + k.getTitle());
+
                 k.getListProject_Keywords().remove(newProjEnt);
                 newProjEnt.getListKeywords().remove(k);
                 keywordDao.merge(k);
@@ -277,7 +279,7 @@ if(count==0){
     private void associateSkillsWithProject(List<Skill> skills, entity.Project newProjEnt) {
         // associar as skills ao projecto. Se já existir na DB basta adicionar a relação senão é preciso criar a skill e adicionar à DB
         // se encontrar skill entity pelo title, apenas associa ao proj.
-        System.out.println("associa skills");
+
         deleteSkillsAssociatedWithProject(newProjEnt);
 
         for (Skill s: skills) {
@@ -765,4 +767,35 @@ projDao.merge(projEnt); // TODO será aqui ou antes de associar skills e keyword
         }
     return st;
     }
+
+    public List<UserInfo> getPossibleMembers(String name) {
+        // retorna lista de users que não têm projecto activo, podendo ser sugeridos
+
+        List<UserInfo> listToSuggest = new ArrayList<>();
+        List<entity.User> tempList = new ArrayList<>();
+
+// implica ir buscar todos os utilizadores que n tenham projecto activo (passa pela tabela projMember e projecto, para obter o status)
+List<entity.User> allUsers = userDao.findAll();
+
+if(allUsers!=null){
+    List<entity.User> usersWithActiveProject = projMemberDao.findListOfUsersWithActiveProject();
+
+    if(usersWithActiveProject!=null){
+        // retirar estes users da lista all users: adicionando apenas o que n coincidem a uma lista auxiliar
+        tempList= allUsers.stream().filter(user -> !usersWithActiveProject.contains(user)).collect(Collectors.toList());
+        System.out.println(tempList.size());
+
+        // TODO falta considerar a string para pesquisar 
+    }
+
+
+
+}
+
+
+
+        return listToSuggest;
+    }
+
+
 }
