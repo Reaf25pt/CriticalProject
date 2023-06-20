@@ -56,16 +56,29 @@ function ProjectComponent({ toggleComponent, project, members }) {
               </div>
 
               {project.manager ? (
-                <div className="row mx-auto justify-content-around mt-5">
-                  <div className="col-lg-12">
-                    <ButtonComponent
-                      type="button"
-                      name="Editar Projeto"
-                      onClick={toggleComponent}
-                    />
+                <>
+                  <div className="row mx-auto justify-content-around mt-5">
+                    <div className="col-lg-12">
+                      <ButtonComponent
+                        type="button"
+                        name="Editar Projeto"
+                        onClick={toggleComponent}
+                      />
+                    </div>
                   </div>
-                </div>
-              ) : !project.member && members.length < project.membersNumber ? (
+                  <div className="row mx-auto justify-content-around mt-5">
+                    <div className="col-lg-12">
+                      <ButtonComponent
+                        type="button"
+                        name="Alterar status"
+                        /*  onClick={toggleComponent}  */
+                      />
+                    </div>
+                  </div>
+                </>
+              ) : !project.member &&
+                project.availableSpots !==
+                  0 /* members.length < project.membersNumber */ ? (
                 <div className="row mx-auto justify-content-around mt-5">
                   <div className="col-lg-12">
                     <ButtonComponent

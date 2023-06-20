@@ -216,7 +216,7 @@ public class User {
 
             } else {
                 r = Response.status(200).entity(userUpdated).build();
-                //TODO update info na userStore ou enviar LoginDto em x do EditProfile
+
             }
         }
         return r;
@@ -255,7 +255,7 @@ public class User {
 
             } else {
                 r = Response.status(200).entity(userUpdated).build();
-                //TODO update info na userStore ou enviar LoginDto em x do EditProfile
+
             }
         }
         return r;

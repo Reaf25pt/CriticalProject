@@ -238,7 +238,7 @@ return r;
 
         Response r = null;
 
-        // TODO verificar permissão. se user tem acesso a tarefas?!
+        // TODO verificar permissão. se user tem acesso a tarefas?! só acede a tab no frontend se for membro do projecto
 
         if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
@@ -406,6 +406,38 @@ return r;
         return r;
     }
 
+    // EDIT PROJECT STATUS
+    @PUT
+    @Path("/project")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editProjectStatus(@HeaderParam("token") String token, @HeaderParam("status") int status, @HeaderParam("projId") int projId) {
+// TODO pode ser necessário alterar info que vem do frontend
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) ) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId)) {
+            r = Response.status(403).entity("Forbidden!").build();
+
+        } else {
+
+            userBean.updateSessionTime(token);
+
+            // TODO terminar de implementar
+            boolean res = projBean.editProjectStatus(token, projId, status);
+
+            if (!res) {
+                r = Response.status(404).entity("Not found!").build();
+
+            } else {
+                r = Response.status(200).entity("Success").build();
+            }
+        }
+        return r;
+
+    }
 
 
 }

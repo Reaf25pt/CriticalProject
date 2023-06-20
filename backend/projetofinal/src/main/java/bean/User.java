@@ -494,11 +494,14 @@ public class User implements Serializable {
                 user.setFirstName(newInfo.getFirstName());
                 user.setLastName(newInfo.getLastName());
 
+                if(newInfo.getNickname()!=null){
+                    user.setNickname(newInfo.getNickname());
+                }
 
                 if (newInfo.getPhoto() != null) {
                     user.setPhoto(newInfo.getPhoto());
                 }
-                // TODO add bio, nickname ?!
+                // TODO add bio
                 // TODO verify if link is image
 
 
@@ -577,7 +580,7 @@ public class User implements Serializable {
 
                 if (newInfo.getBio() != null) {
                     userEnt.setBio(newInfo.getBio());
-                    //TODO se editar noutro lado, colocar noutro lado / mudar DTO
+
                 }
 
 
@@ -709,7 +712,7 @@ return projectsList;
             projectsList.add(projBean.convertProjEntityToDto(p));
 
         }}
-//TODO confirmar que está certo, e proteger de nulos !!!
+
         return projectsList;
     }
 
@@ -719,11 +722,12 @@ List<Hobby> hobbiesList = new ArrayList<>();
 
         List<entity.Hobby> list = hobbyDao.findListOfHobbiesByUserId(user.getUserId());
 
+        if(list!=null){
         for (entity.Hobby h : list) {
             hobbiesList.add(convertToHobbyDto(h));
 
-        }
-//TODO confirmar que está certo, e proteger de nulos !!!
+        }}
+
         return hobbiesList;
     }
 
@@ -816,7 +820,7 @@ for (int i = 0; i< list.length; i++){
                 Long res=skillDao.findRelationBetweenUserAndSkill(skillInDB.getSkillId(), user.getUserId());
 
                 // TODO verificar situação do enum que vem do frontend ou assumir q será o q ja está na DB ?
-                System.out.println(skillInDB.getSkillId() +"   " + user.getUserId());
+
                 if(res==0) {
 
                     user.getListSkills().add(skillInDB);
@@ -909,7 +913,7 @@ if(list!=null){
             skillsList.add(convertToSkillDto(s));
         }
         }
-//TODO confirmar que está certo, e proteger de nulos !!!
+
         return skillsList;
     }
 
