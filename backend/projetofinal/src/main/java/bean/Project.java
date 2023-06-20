@@ -1022,4 +1022,51 @@ res=verifyIfUserHasActiveProject(token);
 
         return res;
     }
+
+    public boolean verifyIfProjectHasAvailableSpots(int projId) {
+        //verifica se projecto tem vagas disponíveis para adicionar membro
+       // Compara o numero de membros activos com número máx de participantes que projecto pode ter
+boolean res=false;
+        entity.Project project = projDao.findProjectById(projId);
+        if(project!=null){
+            List<ProjectMember> activeMembers = projMemberDao.findListOfMembersByProjectId(projId);
+
+            if(activeMembers!=null){
+                if(activeMembers.size()< project.getMembersNumber()){
+                    res=true;
+                }
+            }
+
+        }
+      return res;
+    }
+
+    public boolean changeMemberRole(int userId, int projId, String token, int role) {
+        // altera o papel do userId. 1 - gestor   /   0 - participante normal
+        // TODO pode ter de ser alterado conforme o frontend
+        boolean res = false;
+
+        // encontrar relação entre user e projecto, para garantir que está válida
+        ProjectMember pm = projMemberDao.findProjectMemberByProjectIdAndUserId(projId,userId);
+        if(pm!=null){
+
+if(pm.isAccepted() && !pm.isRemoved()){
+
+    if( role== 0 ){
+      // tem de 1º verificar se numero de gestores é >=2 ou, sendo 1 que não é o do pp
+        if(hasEnoughManagers(projId, userId)){
+            pm.setManager(false);
+            projMemberDao.merge(pm);
+            res=true;
+        }
+    } else if (role==1) {
+
+        pm.setManager(true);
+        projMemberDao.merge(pm);
+        res=true;
+    }
+}
+        }
+        return res;
+    }
 }

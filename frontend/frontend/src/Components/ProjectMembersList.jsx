@@ -92,15 +92,17 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
           ))}
         </div>
 
-        <div className="row mx-auto justify-content-around mt-5">
-          <div className="col-lg-12">
-            <ButtonComponent
-              type="button"
-              name="Sair do projecto"
-              onClick={handleRemove}
-            />
+        {showProjects.member && !showProjects.manager ? (
+          <div className="row mx-auto justify-content-around mt-5">
+            <div className="col-lg-12">
+              <ButtonComponent
+                type="button"
+                name="Sair do projecto"
+                onClick={handleRemove}
+              />
+            </div>
           </div>
-        </div>
+        ) : null}
       </div>
     </div>
   );

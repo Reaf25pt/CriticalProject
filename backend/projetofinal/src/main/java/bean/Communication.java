@@ -193,7 +193,7 @@ public class Communication implements Serializable {
                 }
             }
         }
-
+//TODO sempre q 1 convite é aceite, verificar se numero de vagas foi atingido. Se for é preciso apagar as notificações por responder que digam respeito a convite para o mesmo projecto
 
         return notifDto;
     }

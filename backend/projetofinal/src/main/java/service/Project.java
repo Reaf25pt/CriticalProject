@@ -71,7 +71,7 @@ return r;
 
         if (userBean.checkStringInfo(token) ) {
             r = Response.status(401).entity("Unauthorized!").build();
-        }  else if (!userBean.checkUserPermission(token) || !projBean.verifyPermissionToAddMember(token, projId, userId)) {
+        }  else if (!userBean.checkUserPermission(token) || !projBean.verifyIfProjectHasAvailableSpots(projId) || !projBean.verifyPermissionToAddMember(token, projId, userId)) {
             //TODO falta testar verify permission
             r = Response.status(403).entity("Forbidden!").build();
         } else {
@@ -366,6 +366,34 @@ return r;
             userBean.updateSessionTime(token);
 
             boolean res = projBean.deleteProjMember(userId, projId, token);
+
+            if (!res) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+
+                r = Response.status(200).entity("Success").build();
+            }
+        }
+
+        return r;
+    }
+
+     // ALTERA PAPEL DE MEMBRO DE UM PROJECTO: GESTOR OU PARTICIPANTE
+    @PUT
+    @Path("/member")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response changeMemberRole(@HeaderParam("token") String token, @HeaderParam("userId") int userId,@HeaderParam("projId") int projId, @HeaderParam("role") int role ) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            boolean res = projBean.changeMemberRole(userId, projId, token, role);
 
             if (!res) {
                 r = Response.status(404).entity("Not found").build();
