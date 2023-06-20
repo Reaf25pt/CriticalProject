@@ -416,7 +416,48 @@ if(count== 0){
                     }
                 }
 
-            } } else {
+            } else {
+                // está removido mas pode querer participar novamente
+                pm.setManager(false);
+                pm.setRemoved(false);
+                pm.setAccepted(false);
+                pm.setAnswered(false);
+
+                if (userEnt.getUserId() == userId) {
+                    // self-invitation to participate in project
+
+                    pm.setSelfInvitation(true);
+
+                    projMemberDao.merge(pm);
+                    pm.getProjectToParticipate().getListPotentialMembers().add(pm);
+                    pm.getUserInvited().getListProjects().add(pm);
+
+                    projDao.merge(pm.getProjectToParticipate());
+                    userDao.merge(pm.getUserInvited());
+
+                    communicationBean.notifyNewPossibleProjectMember(pm, pm.getProjectToParticipate(), pm.getUserInvited(), false);
+                    res = true;
+                } else {
+                    // not self-invitation
+                    pm.setSelfInvitation(false);
+                    projMemberDao.merge(pm);
+                    pm.getProjectToParticipate().getListPotentialMembers().add(pm);
+                    pm.getUserInvited().getListProjects().add(pm);
+
+                    projDao.merge(pm.getProjectToParticipate());
+                    userDao.merge(pm.getUserInvited());
+
+                    communicationBean.notifyNewPossibleProjectMember(pm, pm.getProjectToParticipate(), pm.getUserInvited(), true);
+                    res = true;
+                }
+
+
+            }
+
+
+
+
+        } else {
             System.out.println("entra no else de n pm relation");
             // não há relação prévia. é preciso criar nova associação entre user e projecto
                 if (userEnt.getUserId() == userId) {
