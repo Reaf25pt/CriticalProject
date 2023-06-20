@@ -43,7 +43,7 @@ return r;
 
         if (userBean.checkStringInfo(token) || project==null) {
             r = Response.status(401).entity("Unauthorized!").build();
-        }  else if (!userBean.checkUserPermission(token) || projBean.verifyIfUserCanCreateNewProject(token)) {
+        }  else if (!userBean.checkUserPermission(token) || !projBean.verifyIfUserHasActiveProject(token)) {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
@@ -71,7 +71,8 @@ return r;
 
         if (userBean.checkStringInfo(token) ) {
             r = Response.status(401).entity("Unauthorized!").build();
-        }  else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId)) {
+        }  else if (!userBean.checkUserPermission(token) || !projBean.verifyPermissionToAddMember(token, projId, userId)) {
+            //TODO falta testar verify permission
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
@@ -155,7 +156,7 @@ return r;
         if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
         } else if (!userBean.checkUserPermission(token)) {
-            // TODO impedir que user n é membro do projecto ?!
+
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
@@ -343,6 +344,34 @@ return r;
             } else {
 
                 r = Response.status(200).entity(list).build();
+            }
+        }
+
+        return r;
+    }
+
+    // DELETE MEMBER FROM PROJECT - na verdade não remove da DB, apenas actualiza info do atributo removed do projMember
+    @PATCH
+    @Path("/member")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteMember(@HeaderParam("token") String token, @HeaderParam("userId") int userId,@HeaderParam("projId") int projId ) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token) || !projBean.verifyPermissionToDeleteUser(token, projId, userId)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            boolean res = projBean.deleteProjMember(userId, projId, token);
+
+            if (!res) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+
+                r = Response.status(200).entity("Success").build();
             }
         }
 

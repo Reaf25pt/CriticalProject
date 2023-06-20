@@ -3,6 +3,7 @@ package entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "ProjectMembers")
@@ -12,7 +13,6 @@ import java.io.Serializable;
 @NamedQuery(name = "ProjectMember.findListOfUsersByProjectId", query = "SELECT p.userInvited FROM ProjectMember p WHERE p.projectToParticipate.id = :id AND p.accepted = true AND p.removed = false")
 @NamedQuery(name = "ProjectMember.findListOfMembersByProjectId", query = "SELECT p FROM ProjectMember p WHERE p.projectToParticipate.id = :id AND p.accepted = true AND p.removed = false")
 @NamedQuery(name = "ProjectMember.findListOfUsersWithActiveProject", query = "SELECT p.userInvited FROM ProjectMember p WHERE p.projectToParticipate.status NOT IN (:cancelled, :finished) AND p.accepted = true AND p.removed = false ")
-
 
 public class ProjectMember implements Serializable {
 
@@ -48,8 +48,9 @@ public class ProjectMember implements Serializable {
     @Column(name = "selfInvite", nullable = false, unique = false, updatable = true)
     private boolean selfInvitation;
 
-    @OneToOne(mappedBy = "projectMember")
-    private Notification notification;
+    @OneToMany(mappedBy = "projectMember")
+    private List<Notification> notificationList;
+    //private Notification notification;
 
 public ProjectMember(){}
 
@@ -109,13 +110,14 @@ public ProjectMember(){}
         this.removed = removed;
     }
 
-    public Notification getNotification() {
-        return notification;
+    public List<Notification> getNotificationList() {
+        return notificationList;
     }
 
-    public void setNotification(Notification notification) {
-        this.notification = notification;
+    public void setNotificationList(List<Notification> notificationList) {
+        this.notificationList = notificationList;
     }
+
 
     public boolean isSelfInvitation() {
         return selfInvitation;

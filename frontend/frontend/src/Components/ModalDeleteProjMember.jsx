@@ -9,7 +9,7 @@ import { BsArrowDown, BsSearch, BsXLg } from "react-icons/bs";
 import { userStore } from "../stores/UserStore";
 import Modal from "react-bootstrap/Modal";
 
-function ModalDeleteProjMember({ member, set }) {
+function ModalDeleteProjMember({ member, set, projId }) {
   const [show, setShow] = useState(false);
   const user = userStore((state) => state.user);
   const handleClose = () => setShow(false);
@@ -20,14 +20,15 @@ function ModalDeleteProjMember({ member, set }) {
 
     /*   const id = hobby.id; */
 
-    fetch("http://localhost:8080/projetofinal/rest/project/projmember", {
+    fetch("http://localhost:8080/projetofinal/rest/project/member", {
       method: "PATCH",
       headers: {
         Accept: "*/*",
         "Content-Type": "application/json",
         token: user.token,
+        userId: member.userInvitedId,
+        projId: projId,
       },
-      body: member,
     }).then((response) => {
       if (response.status === 200) {
         set([]); // reset a lista da pagina de members para actualizar
@@ -39,6 +40,7 @@ function ModalDeleteProjMember({ member, set }) {
       } else {
         alert("Algo correu mal");
       }
+      handleClose();
     });
   };
 

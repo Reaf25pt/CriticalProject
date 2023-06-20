@@ -43,9 +43,13 @@ function EditProject({ toggleComponent, project, set }) {
       credentials.office === "undefined" ||
       credentials.office === 20 ||
       credentials.office === "20" ||
-      credentials.office === undefined
+      credentials.office === undefined ||
+      credentials.details === null ||
+      credentials.details === "undefined" ||
+      credentials.details === undefined ||
+      credentials.details === ""
     ) {
-      alert("Insira o nome e/ou local de trabalho do projecto");
+      alert("Insira o nome, local de trabalho e/ou descrição do projecto");
     } else {
       var project = {
         id: credentials.id,

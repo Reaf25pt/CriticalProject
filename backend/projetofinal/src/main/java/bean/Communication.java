@@ -28,15 +28,17 @@ public class Communication implements Serializable {
     dao.Token tokenDao;
 
     public void notifyNewPossibleProjectMember(ProjectMember projMember, Project project, User user, boolean isInvited) {
-        // gera notificação para avisar que membro foi convidado: isInvited = true/se auto-convidou isInvited = false
+        // gera notificação para avisar que membro foi convidado: isInvited = true/    se auto-convidou isInvited = false
 
-        Notification notif = new Notification();
-        notif.setCreationTime(Date.from(Instant.now()));
-        notif.setSeen(false);
-        notif.setNeedsInput(true);
-        notif.setProjectMember(projMember);
+
         if (isInvited) {
+
             // pessoa foi convidada por gestor. Preciso notificar apenas a pessoa convidada
+            Notification notif = new Notification();
+            notif.setCreationTime(Date.from(Instant.now()));
+            notif.setSeen(false);
+            notif.setNeedsInput(true);
+            notif.setProjectMember(projMember);
             notif.setMessage("Está convidado (a) a participar no projecto: " + project.getTitle() + " .");
             notif.setMessageEng("You have been invited to participate in the project: " + project.getTitle() + " .");
             notif.setNotificationOwner(user);
@@ -44,12 +46,18 @@ public class Communication implements Serializable {
             notifyRealTime(notif, user);
         } else {
             // pessoa "auto-convidou". Preciso notificar todos os gestores do projecto
-            notif.setMessage(user.getFirstName() + " " + user.getLastName() + " tem interesse em participar no projecto: " + project.getTitle() + " .");
-            notif.setMessageEng(user.getFirstName() + " " + user.getLastName() + " is interested in participating in project: " + project.getTitle() + " .");
 
             List<User> managersList = projMemberDao.findListOfManagersByProjectId(project.getId());
 // n precisa de validar null pq um projecto tem sempre um gestor
             for (User u : managersList) {
+                Notification notif = new Notification();
+                notif.setCreationTime(Date.from(Instant.now()));
+                notif.setSeen(false);
+                notif.setNeedsInput(true);
+                notif.setProjectMember(projMember);
+                notif.setMessage(user.getFirstName() + " " + user.getLastName() + " tem interesse em participar no projecto: " + project.getTitle() + " .");
+                notif.setMessageEng(user.getFirstName() + " " + user.getLastName() + " is interested in participating in project: " + project.getTitle() + " .");
+
                 notif.setNotificationOwner(u);
                 notifDao.persist(notif);
                 notifyRealTime(notif, u);

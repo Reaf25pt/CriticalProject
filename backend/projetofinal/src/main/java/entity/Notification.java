@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
  @Table(name="Notification")
@@ -37,7 +38,7 @@ public class Notification implements Serializable {
     //private int relationId;
 
     //To identify invitation to participate in project, that needs answer. relationId is the id from ProjectMember class
-    @OneToOne
+    @ManyToOne
 private ProjectMember projectMember;
     // user que recebe a notificação do sistema / convite
     @ManyToOne
@@ -117,4 +118,5 @@ private ProjectMember projectMember;
     public void setMessageEng(String messageEng) {
         this.messageEng = messageEng;
     }
+
 }

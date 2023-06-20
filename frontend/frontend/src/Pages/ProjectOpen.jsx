@@ -13,6 +13,7 @@ import { useParams } from "react-router-dom";
 import { userStore } from "../stores/UserStore";
 import ModalDeleteProjMember from "../Components/ModalDeleteProjMember";
 import InviteMember from "../Components/InviteMember";
+import ProjectMembersList from "../Components/ProjectMembersList";
 
 function ProjectOpen() {
   const [showComponentA, setShowComponentA] = useState(true);
@@ -111,23 +112,24 @@ function ProjectOpen() {
             Membros{" "}
           </button>
         </li>
-        <li class="nav-item" role="presentation">
-          <button
-            class="nav-link"
-            id="tab3"
-            data-bs-toggle="tab"
-            data-bs-target="#content3"
-            type="button"
-            role="tab"
-            aria-controls="content3"
-            aria-selected="false"
-            style={{ background: "#C01722", color: "white" }}
-          >
-            Plano do Projeto{" "}
-          </button>
-        </li>
         {showProjects.member ? (
           <>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                id="tab3"
+                data-bs-toggle="tab"
+                data-bs-target="#content3"
+                type="button"
+                role="tab"
+                aria-controls="content3"
+                aria-selected="false"
+                style={{ background: "#C01722", color: "white" }}
+              >
+                Plano do Projeto{" "}
+              </button>
+            </li>
+
             <li class="nav-item" role="presentation">
               <button
                 class="nav-link"
@@ -263,7 +265,13 @@ function ProjectOpen() {
               </div> */
             null}
 
-            <div className="col-8 col-sm-10 col-md-7 col-lg-5 mx-auto bg-secondary mt-5 rounded-5 ">
+            <ProjectMembersList
+              showMembers={showMembers}
+              showProjects={showProjects}
+              setMembers={setMembers}
+            />
+
+            {/* <div className="col-8 col-sm-10 col-md-7 col-lg-5 mx-auto bg-secondary mt-5 rounded-5 ">
               <div>
                 <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">
                   Membros do Projetos
@@ -320,7 +328,7 @@ function ProjectOpen() {
                   ))}
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>{" "}
         </div>
         <div

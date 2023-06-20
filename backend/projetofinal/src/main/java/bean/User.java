@@ -504,7 +504,10 @@ public class User implements Serializable {
                 // TODO add bio, nickname ?!
                 // TODO verify if link is image
 
-                int office = newInfo.getOfficeInfo();
+
+                user.setOffice(projBean.setOffice(newInfo.getOfficeInfo()));
+
+            /*    int office = newInfo.getOfficeInfo();
                 //TODO is it correct?
 
                 switch (office) {
@@ -526,7 +529,7 @@ public class User implements Serializable {
                     case 5:
                         user.setOffice(Office.VILAREAL);
                         break;
-                }
+                }*/
 
                 user.setFillInfo(true);
             }
@@ -579,11 +582,12 @@ public class User implements Serializable {
                     userEnt.setBio(newInfo.getBio());
                     //TODO se editar noutro lado, colocar noutro lado / mudar DTO
                 }
-                System.out.println(newInfo.isOpenProfile());
+
 
                 userEnt.setOpenProfile(newInfo.isOpenProfile());
+                userEnt.setOffice(projBean.setOffice(newInfo.getOfficeInfo()));
 
-                int office = newInfo.getOfficeInfo();
+             /*   int office = newInfo.getOfficeInfo();
                 //TODO is it correct?
 
                 switch (office) {
@@ -605,7 +609,7 @@ public class User implements Serializable {
                     case 5:
                         userEnt.setOffice(Office.VILAREAL);
                         break;
-                }
+                }*/
             }
             userDao.merge(userEnt);
             //TODO faz sentido ir buscar novamente à DB o user ou converter directamente o userEnt?
@@ -630,6 +634,7 @@ public class User implements Serializable {
 
         if(user.getOffice()!=null){
            userDto.setOffice( user.getOffice().getCity());
+          userDto.setOfficeInfo(user.getOffice().ordinal());
         }
 
       //  userDto.setOffice(user.getOffice());

@@ -118,4 +118,5 @@ public class EditProfile {
     public void setFillInfo(boolean fillInfo) {
         this.fillInfo = fillInfo;
     }
+
 }

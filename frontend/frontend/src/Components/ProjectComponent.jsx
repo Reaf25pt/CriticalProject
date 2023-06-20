@@ -3,7 +3,29 @@ import { userStore } from "../stores/UserStore";
 import { useParams } from "react-router-dom";
 import ButtonComponent from "./ButtonComponent";
 
-function ProjectComponent({ toggleComponent, project /* , members */ }) {
+function ProjectComponent({ toggleComponent, project, members }) {
+  const user = userStore((state) => state.user);
+  const handleParticipation = (event) => {
+    event.preventDefault();
+
+    fetch("http://localhost:8080/projetofinal/rest/project/newmember", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        token: user.token,
+        userId: user.userId,
+        projId: project.id,
+      },
+    }).then((response) => {
+      if (response.status === 200) {
+        alert("Pedido efectuado");
+        //navigate("/home", { replace: true });
+      } else {
+        alert("Algo correu mal. Tente novamente");
+      }
+    });
+  };
+
   return (
     <>
       <div className="container-fluid">
@@ -14,14 +36,22 @@ function ProjectComponent({ toggleComponent, project /* , members */ }) {
                 <h2 className="text-center text-white">{project.title}</h2>
               </div>
               <div class="row mt-3 mb-3  rounded-4 p-2 ext-white ">
-                <h4 className="text-center text-white">{project.officeInfo}</h4>
+                {project.officeInfo ? (
+                  <h4 className="text-center text-white">
+                    {project.officeInfo}
+                  </h4>
+                ) : (
+                  <h4 className="text-center text-white">
+                    Laboratório por definir
+                  </h4>
+                )}
               </div>
               <div className="row mt-3 mb-3 rounded-4 p-2 bg-danger  text-white  ">
                 <h5 className="text-center">{project.status}</h5>
               </div>
               <div class=" text-center text-white mb-1">
                 <h2>
-                  {project.membersNumber}/{project.membersNumber}
+                  {members.length}/{project.membersNumber}
                 </h2>
               </div>
 
@@ -32,6 +62,16 @@ function ProjectComponent({ toggleComponent, project /* , members */ }) {
                       type="button"
                       name="Editar Projeto"
                       onClick={toggleComponent}
+                    />
+                  </div>
+                </div>
+              ) : !project.member && members.length < project.membersNumber ? (
+                <div className="row mx-auto justify-content-around mt-5">
+                  <div className="col-lg-12">
+                    <ButtonComponent
+                      type="button"
+                      name="Quero participar"
+                      onClick={handleParticipation}
                     />
                   </div>
                 </div>
@@ -53,7 +93,11 @@ function ProjectComponent({ toggleComponent, project /* , members */ }) {
                 <div className="bg-white rounded-5 h-100 p-3">
                   <h4>Recursos</h4>
                   <hr />
-                  <h5>{project.resources}</h5>
+                  {project.resources ? (
+                    <h5>{project.resources}</h5>
+                  ) : (
+                    <h5>Recursos por definir</h5>
+                  )}
                 </div>
               </div>
             </div>

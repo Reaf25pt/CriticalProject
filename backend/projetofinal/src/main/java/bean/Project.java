@@ -132,8 +132,9 @@ if (userEnt != null) {
         newProjEnt.setDetails(project.getDetails());
 
         if (project.getOffice() != 20) {
+newProjEnt.setOffice(setOffice(project.getOffice()));
 
-            switch (project.getOffice()) {
+        /*    switch (project.getOffice()) {
                 case 0:
                     newProjEnt.setOffice(Office.LISBOA);
                     break;
@@ -152,7 +153,7 @@ if (userEnt != null) {
                 case 5:
                     newProjEnt.setOffice(Office.VILAREAL);
                     break;
-            }
+            }*/
         }
 
         if (project.getResources() != null) {
@@ -362,32 +363,76 @@ if(count== 0){
         // if token ID NOT == userID to invite, send notification to user invited
         // TODO verify if userID is in active project or not even show in the frontend those users?! papel de gestor ou participante é definido posteriorment, de acordo com enunciado
 
-
-
         boolean res = false;
 
         entity.User user = userDao.findUserById(userId); // a quem convite diz respeito
         entity.User userEnt = tokenDao.findUserEntByToken(token);
-        entity.Project project= projDao.findProjectById(projId);
+        entity.Project project = projDao.findProjectById(projId);
 
-        if(user!=null && userEnt!= null && project!=null) {
+        if (user != null && userEnt != null && project != null) {
 
+        // encontrar se ja existe relação prévia entre user a ser convidado e projecto. Se encontrar, altera-se os campos para novo convite senão faz-se nova antrada na tabela
+        ProjectMember pm = projMemberDao.findProjectMemberByProjectIdAndUserId(projId, userId);
+        // pm pode ou não estar answered / accepted / removed
+        if(pm!= null){
+            System.out.println("existe relacao pm ");
+            if (!pm.isRemoved()) {
+                System.out.println("n esta removed ");
+                if (pm.isAnswered()) {
+                    System.out.println("está respondido ");
+                    // se convite estiver pendente não faz nada. Senão altera info de pm entity
 
+                    pm.setManager(false);
+                    pm.setRemoved(false);
+                    pm.setAccepted(false);
+                    pm.setAnswered(false);
 
-            if (userEnt.getUserId()== userId){
-                // self-invitation to participate in project
-                //TODO colocar aqui o log de ter convite para participar no projecto ?!!?!
-                ProjectMember projMember= associateUserToProject(user, project, false);
-                communicationBean.notifyNewPossibleProjectMember(projMember, project, user, false);
-                res=true;
-            } else {
-                // not self-invitation
-                ProjectMember projMember= associateUserToProject(user, project, true);
-                communicationBean.notifyNewPossibleProjectMember(projMember, project, user, true);
-                res=true;
+                    if (userEnt.getUserId() == userId) {
+                        // self-invitation to participate in project
+
+                        pm.setSelfInvitation(true);
+
+                        projMemberDao.merge(pm);
+                        pm.getProjectToParticipate().getListPotentialMembers().add(pm);
+                        pm.getUserInvited().getListProjects().add(pm);
+
+                        projDao.merge(pm.getProjectToParticipate());
+                        userDao.merge(pm.getUserInvited());
+
+                        communicationBean.notifyNewPossibleProjectMember(pm, pm.getProjectToParticipate(), pm.getUserInvited(), false);
+                        res = true;
+                    } else {
+                        // not self-invitation
+                        pm.setSelfInvitation(false);
+                        projMemberDao.merge(pm);
+                        pm.getProjectToParticipate().getListPotentialMembers().add(pm);
+                        pm.getUserInvited().getListProjects().add(pm);
+
+                        projDao.merge(pm.getProjectToParticipate());
+                        userDao.merge(pm.getUserInvited());
+
+                        communicationBean.notifyNewPossibleProjectMember(pm, pm.getProjectToParticipate(), pm.getUserInvited(), true);
+                        res = true;
+                    }
+                }
+
+            } } else {
+            System.out.println("entra no else de n pm relation");
+            // não há relação prévia. é preciso criar nova associação entre user e projecto
+                if (userEnt.getUserId() == userId) {
+                    // self-invitation to participate in project
+                    //TODO colocar aqui o log de ter convite para participar no projecto ?!!?!
+                    ProjectMember projMember = associateUserToProject(user, project, false);
+                    communicationBean.notifyNewPossibleProjectMember(projMember, project, user, false);
+                    res = true;
+                } else {
+                    // not self-invitation
+                    ProjectMember projMember = associateUserToProject(user, project, true);
+                    communicationBean.notifyNewPossibleProjectMember(projMember, project, user, true);
+                    res = true;
+                }
             }
         }
-
 
         return res;
     }
@@ -452,12 +497,13 @@ return projMember;
         ProjectMember projMember = projMemberDao.findProjectMemberByProjectIdAndUserId(projId, user.getUserId());
 
         if(projMember!= null){
-            if(projMember.isManager()){
-                res=true;
-                // token que faz request é manager do projecto, tendo permissão para fazer o request
-            }
+            if(!projMember.isRemoved()) {
+                if (projMember.isManager()) {
+                    res = true;
+                    // token que faz request é manager do projecto, tendo permissão para fazer o request
+                }
 
-        }}
+            } }}
 
         return res;
     }
@@ -657,11 +703,30 @@ if (listEnt!=null){
         return task;
     }
 
-    public boolean verifyIfUserCanCreateNewProject(String token) {
-        // verifica se user tem algum projecto 'activo'. Se tiver não poderá criar novo projecto
+    public boolean verifyIfUserHasActiveProject(String token) {
+        // verifica se user tem algum projecto 'activo'. Se tiver não poderá criar novo projecto nem participar noutro
         boolean res=false;
 
-//TODO finish to implement
+
+        entity.User user = tokenDao.findUserEntByToken(token);
+        if (user!=null){
+            List<entity.Project> projectsList = projMemberDao.findListOfProjectsByUserId(user.getUserId());
+            if(projectsList!=null){
+                int count = 0;
+                for (entity.Project p : projectsList){
+                    if(p.getStatus()!=StatusProject.CANCELLED || p.getStatus()!=StatusProject.FINISHED){
+                        count++;
+                    }
+
+                }
+                System.out.println("count de projectos activos" + count);
+                if(count==0){
+                    res=true;
+                    // pode criar ou participar num proj
+                }
+            }
+
+        }
 
         return res;
     }
@@ -692,8 +757,8 @@ if (listEnt!=null){
         if (projEnt!=null){
             projEnt.setTitle(editProj.getTitle());
             if (editProj.getOffice() != 20) {
-
-                switch (editProj.getOffice()) {
+                projEnt.setOffice(setOffice(editProj.getOffice()));
+          /*      switch (editProj.getOffice()) {
                     case 0:
                         projEnt.setOffice(Office.LISBOA);
                         break;
@@ -712,7 +777,7 @@ if (listEnt!=null){
                     case 5:
                         projEnt.setOffice(Office.VILAREAL);
                         break;
-                }
+                }*/
             }
             projEnt.setDetails(editProj.getDetails());
             projEnt.setResources(editProj.getResources());
@@ -768,8 +833,40 @@ projDao.merge(projEnt); // TODO será aqui ou antes de associar skills e keyword
     return st;
     }
 
+    public Office setOffice(int office) {
+        // define o office de acordo com info que vem do frontend
+
+        Office value = null;
+
+        switch (office) {
+            case 0:
+                value = Office.LISBOA;
+                break;
+            case 1:
+                value = Office.COIMBRA;
+                break;
+            case 2:
+                value = Office.PORTO;
+                break;
+            case 3:
+                value = Office.TOMAR;
+                break;
+            case 4:
+                value = Office.VISEU;
+                break;
+            case 5:
+                value = Office.VILAREAL;
+                break;
+
+
+        }
+        return value;
+    }
+
     public List<UserInfo> getPossibleMembers(String name) {
         // retorna lista de users que não têm projecto activo, podendo ser sugeridos
+
+        // TODO prevenir sugerir users com convite pendente no projecto em questão?
 
         List<UserInfo> listToSuggest = new ArrayList<>();
         List<entity.User> tempList = new ArrayList<>();
@@ -805,4 +902,83 @@ for (entity.User u : tempList){
     }
 
 
+    public boolean deleteProjMember(int userId, int projId, String token) {
+        // remove projMember relationship with project (não apaga na BD mas apenas setRemove = true
+        // só pode remover se ficar pelo menos 1 gestor no projecto após remoção.
+        // Incluir possibilidade de se auto-remover
+        boolean delete = false;
+
+        ProjectMember pm = projMemberDao.findProjectMemberByProjectIdAndUserId(projId, userId);
+
+        if(pm!=null){
+            boolean res = hasEnoughManagers(projId, userId);
+
+            if(res){
+                // pode remover user
+                pm.setRemoved(true);
+                projMemberDao.merge(pm);
+                delete=true;
+            }
+        }
+
+        return delete;
+    }
+
+    private boolean hasEnoughManagers(int projId, int userId) {
+        // verifica numero de gestores do projecto. se for 2 ou maior é ok. Se for 1 tem de verificar se userId a remover é igual a userID de gestor
+   boolean res = false;
+
+   List<entity.User> managersList=projMemberDao.findListOfManagersByProjectId(projId);
+   if(managersList!=null && managersList.size()!=0){
+       if(managersList.size()>=2){
+           // pode remover à vontade
+           res=true;
+       } else {
+           // só tem 1 gestor. É preciso garantir que id do gestor não é o mesmo do user a remover
+           for (entity.User u:managersList){
+               if(u.getUserId() != userId){
+                   // gestor é outro user. pode remover à vontade
+                   res=true;
+               }
+           }
+       }
+   }
+   return res;
+    }
+
+    public boolean verifyPermissionToAddMember(String token, int projId, int userId) {
+        // verifica se token é gestor se for diferente do user id ou   se userid == token (auto-convite)
+
+        boolean res=false;  // nao pode
+
+        entity.User loggedUser = tokenDao.findUserEntByToken(token);
+
+        if(loggedUser.getUserId() != userId){
+            // não é auto-convite para participar num projecto. tem de verificar se logged user é gestor
+            res = isProjManager(token, projId);
+        } else {
+            // auto-convite para participar num projecto. Tem de verificar se tem algum projecto activo
+res=verifyIfUserHasActiveProject(token);
+        }
+        return res;
+    }
+
+    public boolean verifyPermissionToDeleteUser(String token, int projId, int userId) {
+        // verifica se token é gestor. se for diferente do user id ou se userID == token (auto-remove do projecto)
+        boolean res = false; // n pode
+
+        entity.User loggedUser = tokenDao.findUserEntByToken(token);
+
+        if(loggedUser.getUserId() != userId){
+            // não é o pp a tentar sair do projecto. tem de se verificar se é gestor do projecto
+            res = isProjManager(token, projId);
+        } else {
+            // auto-remoção do projecto. A pessoa não tem de ter nenhuma outra verificação
+            res=true;
+
+        }
+
+
+        return res;
+    }
 }
