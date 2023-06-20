@@ -11,6 +11,7 @@ function InviteMember({ projId }) {
      const [showHobbies, setShowHobbies] = useState([]); */
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+  const emptyStr = " ";
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -62,16 +63,17 @@ function InviteMember({ projId }) {
     ) {
       alert("Insira nome ");
     } else {
-      const userToInvite = {
+      /*  const userToInvite = {
         id: credentials.id,
-      };
+      }; */
       fetch("http://localhost:8080/projetofinal/rest/project/newmember", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           token: user.token,
+          userId: credentials.id,
+          projId: projId,
         },
-        body: userToInvite,
       }).then((response) => {
         if (response.status === 200) {
           alert("Convite efectuado");
@@ -87,7 +89,7 @@ function InviteMember({ projId }) {
   };
 
   const handleSelection = (user) => {
-    const name = user.firstName + user.lastName;
+    const name = user.firstName + emptyStr + user.lastName;
     credentials.nameInput = name;
     credentials.id = user.id;
 
@@ -117,21 +119,22 @@ function InviteMember({ projId }) {
               <div className="dropdown bg-white">
                 {suggestions &&
                   suggestions
-                    .filter((item) => {
+                    /*  .filter((item) => {
                       return (
-                        item &&
-                        item.title
-                          .toLowerCase()
-                          .includes(search) /* !== search */
+                        item && item.firstName.toLowerCase().includes(search)
                       );
                     })
-                    .slice(0, 10)
+                    .slice(0, 10) */
                     .map((item) => (
                       <option
                         key={item.id}
                         onClick={() => handleSelection(item)}
                       >
-                        <div>{item.title}</div>
+                        <div>
+                          {item.firstName}
+                          {emptyStr}
+                          {item.lastName}
+                        </div>
                       </option>
                     ))}
               </div>

@@ -356,17 +356,17 @@ if(count== 0){
 
 
     public boolean addMemberToProject (int projId, int userId, String token){
-        // TODO validar aqui se ja existe relação??  SIM
+        // TODO validar aqui se ja existe relação??  Pela lista sugerida já n será necessário ?!?!
         // 1º valida se já há relação entre user convidado e projecto na tabela projectMember. Se houver, apenas actualiza as infos
         // add member to given project. If userId of token == userId to add (self-invitation) sends notification to managers of project
         // if token ID NOT == userID to invite, send notification to user invited
         // TODO verify if userID is in active project or not even show in the frontend those users?! papel de gestor ou participante é definido posteriorment, de acordo com enunciado
 
-        //TODO preparar para receber do frontend email, alcunha ou nome
+
 
         boolean res = false;
 
-        entity.User user = userDao.findUserById(userId);
+        entity.User user = userDao.findUserById(userId); // a quem convite diz respeito
         entity.User userEnt = tokenDao.findUserEntByToken(token);
         entity.Project project= projDao.findProjectById(projId);
 
@@ -393,7 +393,7 @@ if(count== 0){
     }
 
     private ProjectMember associateUserToProject(entity.User user, entity.Project project, boolean selfInvite/*, boolean manager*/) {
-        // associa o membro ao projecto, inserindo a info na 3ª tabela e definindo a relação (gestor / participante)
+        // associa o membro ao projecto, inserindo a info na 3ª tabela e definindo a relação
         // se boolean selfInvite == true, auto-convite .
 
         ProjectMember projMember = new ProjectMember();
@@ -425,7 +425,7 @@ if(count== 0){
 
         projDao.merge(project);
         userDao.merge(user);
-int relationId = projMember.getId();
+//int relationId = projMember.getId();
         LOGGER.info("User whose ID is " + user.getUserId()+" is invited to participate in project, project ID: "+project.getId()+". IP Address of request is " + userBean.getIPAddress());
 //TODO change log accordingly self-invitation or not ?!  colocar este log no método de addMember ?
 
@@ -775,25 +775,32 @@ projDao.merge(projEnt); // TODO será aqui ou antes de associar skills e keyword
         List<entity.User> tempList = new ArrayList<>();
 
 // implica ir buscar todos os utilizadores que n tenham projecto activo (passa pela tabela projMember e projecto, para obter o status)
-List<entity.User> allUsers = userDao.findAll();
+List<entity.User> matchingUsers = userDao.findUserContainingStr(name);
 
-if(allUsers!=null){
+if(matchingUsers!=null){
     List<entity.User> usersWithActiveProject = projMemberDao.findListOfUsersWithActiveProject();
 
     if(usersWithActiveProject!=null){
         // retirar estes users da lista all users: adicionando apenas o que n coincidem a uma lista auxiliar
-        tempList= allUsers.stream().filter(user -> !usersWithActiveProject.contains(user)).collect(Collectors.toList());
+        tempList= matchingUsers.stream().filter(user -> !usersWithActiveProject.contains(user)).collect(Collectors.toList());
         System.out.println(tempList.size());
 
-        // TODO falta considerar a string para pesquisar 
+
     }
+if (!tempList.isEmpty()){
+    // significa que tem users para apresentar. Converter para dto
+for (entity.User u : tempList){
+    UserInfo userDto = new UserInfo();
+    userDto.setId(u.getUserId());
+    userDto.setFirstName(u.getFirstName());
+    userDto.setLastName(u.getLastName());
+    userDto.setNickname(u.getNickname());
+    userDto.setPhoto(u.getPhoto());
 
-
-
+    listToSuggest.add(userDto);
 }
-
-
-
+}
+}
         return listToSuggest;
     }
 

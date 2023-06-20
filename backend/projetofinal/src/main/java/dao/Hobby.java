@@ -41,7 +41,7 @@ public class Hobby extends Abstract<entity.Hobby>{
     }
 
     public List<entity.Hobby> findListOfHobbiesByUserId(int id) {
-        List<entity.Hobby> hobbiesList = new ArrayList<entity.Hobby>();
+        List<entity.Hobby> hobbiesList = new ArrayList<>();
         try {
             hobbiesList = (List<entity.Hobby>) em.createNamedQuery("Hobby.findListOfHobbiesByUserId").setParameter("userId", id).getResultList();
         } catch (Exception e) {

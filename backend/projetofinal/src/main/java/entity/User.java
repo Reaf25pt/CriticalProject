@@ -12,6 +12,7 @@ import java.util.*;
 @NamedQuery(name = "User.findUserByEmail", query = "SELECT u FROM User u WHERE u.email = :email")
 @NamedQuery(name = "User.findUserByTokenForActivationOrRecoverPass", query = "SELECT u FROM User u WHERE u.token = :token")
 @NamedQuery(name = "User.findUserById", query = "SELECT u FROM User u WHERE u.userId = :userId")
+@NamedQuery(name = "User.findUserContainingStr", query = "SELECT u FROM User u WHERE LOWER(u.firstName) LIKE LOWER(:str) OR LOWER(u.lastName) LIKE LOWER(:str)")
 
 
 public class User implements Serializable {

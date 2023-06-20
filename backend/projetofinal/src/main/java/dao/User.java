@@ -1,8 +1,12 @@
 package dao;
 
+import entity.Hobby;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.NoResultException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Stateless
 public class User extends Abstract<entity.User> {
@@ -49,5 +53,19 @@ public class User extends Abstract<entity.User> {
         }
         return ent;
     }
+
+    public List<entity.User> findUserContainingStr(String str) {
+        List<entity.User> usersList = new ArrayList<>();
+        try {
+            usersList = (List<entity.User>) em.createNamedQuery("User.findUserContainingStr").setParameter("str", "%"+ str.toLowerCase()+"%").getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return usersList;
+    }
+
+
+
 
 }
