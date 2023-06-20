@@ -329,7 +329,7 @@ function ProjectOpen() {
           role="tabpanel"
           aria-labelledby="tab3"
         >
-          <FormTask />
+          <FormTask listMembers={showMembers} />
         </div>
         <div
           class="tab-pane fade"

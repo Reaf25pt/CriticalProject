@@ -43,6 +43,17 @@ function FormTask() {
       .catch((err) => console.log(err));
   }, [task]);
 
+  function convertWord(word) {
+    // Convert the word to lowercase first
+    var lowercaseWord = word.toLowerCase();
+
+    // Capitalize the first letter and concatenate with the lowercase remainder of the word
+    var convertedWord =
+      lowercaseWord.charAt(0).toUpperCase() + lowercaseWord.slice(1);
+
+    return convertedWord;
+  }
+
   return (
     <div className="container-fluid mt-5 vh-75">
       <div>
@@ -106,43 +117,58 @@ function FormTask() {
                 Lista de Tarefas
               </h3>
               <div>
-                <div className="accordion">
+                <div className="accordion ">
                   {showTasks.map((task) => (
-                    <div className="accordion-item" key={task.id}>
-                      <h2 className="accordion-header ">
-                        <div className="row d-flex justify-content-">
+                    <div className="accordion-item " key={task.id}>
+                      <div className="accordion-header  ">
+                        <div className="row d-flex justify-content-between  ">
                           <button
-                            className={`accordion-button ${
+                            style={{ background: "#C01722" }}
+                            className={`accordion-button text-white d-flex justify-content-between  ${
                               activeId === task.id ? "active" : ""
                             }`}
                             type="button"
                             onClick={() => toggleAccordion(task.id)}
                           >
-                            <div> {task.title}</div>
+                            <div className="col-lg-9"> {task.title}</div>
+                            <div className="bg-dark p-1">
+                              {convertWord(task.status)}
+                            </div>
                           </button>
                         </div>
-                      </h2>
+                      </div>
                       <div
-                        className={`accordion-collapse collapse ${
+                        className={`accordion-collapse collapse  ${
                           activeId === task.id ? "show" : ""
                         }`}
                       >
-                        <div className="accordion-body">
+                        <div className="accordion-body ">
                           {" "}
-                          <div className="row d-flex">
-                            <div>
+                          <div className="row d-flex ">
+                            <h4 className="row mb-3">
                               {" "}
                               Data de Inicio: {formatDate(task.startDate)}
-                            </div>
-                            <div>
+                            </h4>
+                            <h4 className="row mb-3">
                               {" "}
                               Data de Fim: {formatDate(task.finishDate)}
-                            </div>
-                            <div> Descrição: {task.details}</div>
-                            <div>
+                              <hr />
+                            </h4>
+                            <div className="row">
                               {" "}
-                              Executores Adicionais: {task.additionalExecutors}
+                              <h4 className="p-0">Descrição:</h4>
+                              {task.details}
+                              <hr />
                             </div>
+                            <div className="row">
+                              <h4 className="p-0">Executores Adicionais:</h4>{" "}
+                              {task.additionalExecutors}
+                              <hr />
+                            </div>
+                            <h4 className="row d-flex justify-content-end">
+                              Responsavel: {task.taskOwnerFirstName}{" "}
+                              {task.taskOwnerLastName}
+                            </h4>
                           </div>
                         </div>
                       </div>

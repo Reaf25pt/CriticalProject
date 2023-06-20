@@ -158,7 +158,7 @@ function EditProject({ toggleComponent, project, set }) {
                 <hr />
                 <TextAreaComponent
                   placeholder={"Descrição do projecto *"}
-                  className="h-75 w-100"
+                  className="h-100 w-100"
                   id="details"
                   name="details"
                   required

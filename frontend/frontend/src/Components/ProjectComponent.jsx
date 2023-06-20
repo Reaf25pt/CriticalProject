@@ -9,36 +9,22 @@ function ProjectComponent({ toggleComponent, project /* , members */ }) {
       <div className="container-fluid">
         <div className="row mt-5 justify-content-around">
           <div className="col-lg-3">
-            <div className="row bg-secondary rounded-5 p-4 mb-3">
-              <div className="row p-3 mx-auto">
-                <div class="text-center text-white mb-1">{project.title}</div>
-
-                {/*  <div className="col-lg-12 bg-white rounded-3 p-2">
-      {project.title}
-    </div> */}
-
-                <div class="text-center text-white mb-1">
-                  {project.officeInfo}
-                </div>
-                <div class=" text-center text-white mb-1">{project.status}</div>
-                <div class=" text-center text-white mb-1">
-                  {project.membersNumber} TODO alterar para vagas
-                </div>
-                {/* <div className="col-lg-5 bg-white rounded-3 p-2">{"item"}</div>
-    <div className="col-lg-5 bg-white rounded-3 p-2">
-      {project.status}
-    </div> */}
+            <div className="row bg-secondary rounded-5 p-4 mb-3 d-flex">
+              <div className="row mb-3">
+                <h2 className="text-center text-white">{project.title}</h2>
               </div>
-              {/*  <div className="row mt-3">
-                <select className="col-lg-6 mx-auto">
-                  <option>Membros</option>
-                  {members.map((member) => (
-                    <option>
-                      {member.userInvitedFirstName} {member.userInvitedLastName}
-                    </option>
-                  ))}{" "}
-                </select>
-              </div> */}
+              <div class="row mt-3 mb-3  rounded-4 p-2 ext-white ">
+                <h4 className="text-center text-white">{project.officeInfo}</h4>
+              </div>
+              <div className="row mt-3 mb-3 rounded-4 p-2 bg-danger  text-white  ">
+                <h5 className="text-center">{project.status}</h5>
+              </div>
+              <div class=" text-center text-white mb-1">
+                <h2>
+                  {project.membersNumber}/{project.membersNumber}
+                </h2>
+              </div>
+
               {project.manager ? (
                 <div className="row mx-auto justify-content-around mt-5">
                   <div className="col-lg-12">
