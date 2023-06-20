@@ -145,15 +145,23 @@ function FormTask() {
                         <div className="accordion-body ">
                           {" "}
                           <div className="row d-flex ">
-                            <h4 className="row mb-3">
-                              {" "}
-                              Data de Inicio: {formatDate(task.startDate)}
-                            </h4>
-                            <h4 className="row mb-3">
-                              {" "}
-                              Data de Fim: {formatDate(task.finishDate)}
-                              <hr />
-                            </h4>
+                            <div className="row">
+                              <button>Eliminar</button>
+                              <button>Editar</button>
+                              <select name="" id=""></select>
+                            </div>
+                            <div className="row">
+                              <h5 className="row mb-3">
+                                {" "}
+                                Data de Inicio: {formatDate(task.startDate)}
+                              </h5>
+                              <h5 className="row mb-3">
+                                {" "}
+                                Data de Fim: {formatDate(task.finishDate)}
+                                <hr />
+                              </h5>
+                            </div>
+
                             <div className="row">
                               {" "}
                               <h4 className="p-0">Descrição:</h4>
