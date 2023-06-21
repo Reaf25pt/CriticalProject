@@ -9,6 +9,10 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
   const user = userStore((state) => state.user);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    console.log(showMembers);
+  }, []);
+
   const handleRemove = (event) => {
     event.preventDefault();
 
@@ -33,6 +37,40 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
       } else {
         alert("Algo correu mal");
       }
+    });
+  };
+
+  const handleRole = (event, id) => {
+    //event.preventDefault();
+
+    console.log(event + " " + id); //true - 1 - membro para gestor , false - 0 - gestor para membro
+    var role;
+    if (event) {
+      role = 1;
+    } else {
+      role = 0;
+    }
+
+    fetch("http://localhost:8080/projetofinal/rest/project/member", {
+      method: "PUT",
+      headers: {
+        Accept: "*/*",
+        "Content-Type": "application/json",
+        token: user.token,
+        userId: id,
+        projId: showProjects.id,
+        role: role,
+      },
+    }).then((response) => {
+      if (response.status === 200) {
+      } else if (response.status === 403) {
+        alert("Não tem autorização para efectuar este pedido");
+        /*  } else if (response.status === 404) {
+        alert("Actividade não encontrada"); */
+      } /*  else {
+        alert("Algo correu mal");
+      } */
+      setMembers([]);
     });
   };
 
@@ -81,15 +119,81 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
                   />
                 </div>
                 <div className="col-lg-1">
-                  <div class="form-check form-switch">
-                    <input
-                      class="form-check-input bg-dark"
-                      type="checkbox"
-                      role="switch"
-                      id="flexSwitchCheckChecked"
-                      checked
-                    />
-                  </div>
+                  {member.manager ? (
+                    <>
+                      <div class="form-check form-switch">
+                        <input
+                          class="form-check-input bg-secondary"
+                          type="checkbox"
+                          //role="switch"
+                          id="flexSwitchCheckChecked"
+                          //checked
+                          defaultChecked
+                          onClick={(event) =>
+                            handleRole(
+                              event.target.checked,
+                              member.userInvitedId
+                            )
+                          }
+                        />
+                        <label
+                          class="form-check-label"
+                          for="flexSwitchCheckChecked"
+                        >
+                          Gestor
+                        </label>
+                      </div>
+                      {/*    <div class="form-check form-switch">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="flexSwitchCheckDefault"
+                        />
+                        <label
+                          class="form-check-label"
+                          for="flexSwitchCheckDefault"
+                        >
+                          Default switch
+                        </label>
+                      </div> */}
+                    </>
+                  ) : (
+                    <>
+                      {/*   <div class="form-check form-switch">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="flexSwitchCheckDefault"
+                        />
+                        <label
+                          class="form-check-label"
+                          for="flexSwitchCheckDefault"
+                        >
+                          Default switch
+                        </label>
+                      </div> */}
+                      <div class="form-check form-switch">
+                        <input
+                          class="form-check-input "
+                          type="checkbox"
+                          //  role="switch"
+                          id="flexSwitchCheckDefault"
+                          onClick={(event) =>
+                            handleRole(
+                              event.target.checked,
+                              member.userInvitedId
+                            )
+                          }
+                        />
+                        <label
+                          class="form-check-label"
+                          for="flexSwitchCheckDefault"
+                        >
+                          Membro
+                        </label>
+                      </div>
+                    </>
+                  )}
                 </div>
               </>
             ) : null}

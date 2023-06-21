@@ -70,7 +70,10 @@ function ProjectOpen() {
     })
       .then((resp) => resp.json())
       .then((data) => {
+        //console.log(data);
         setShowMembers(data);
+        // console.log(showMembers);
+        //console.log(members);
       })
       .catch((err) => console.log(err));
   }, [members]);
