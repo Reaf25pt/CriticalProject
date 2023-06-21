@@ -213,7 +213,11 @@ function Skill() {
                     </div>
                     <div className="col-lg-2  ">
                       {" "}
-                      <ModalDeleteUserSkill skill={skill} set={setSkills} />
+                      <ModalDeleteUserSkill
+                        skill={skill}
+                        set={setSkills}
+                        setS={setShowSkills}
+                      />
                     </div>
                   </div>
                 ) : skill.skillType === 1 ? (
@@ -227,7 +231,11 @@ function Skill() {
                     </div>
                     <div className="col-lg-2 ">
                       {" "}
-                      <ModalDeleteUserSkill skill={skill} set={setSkills} />
+                      <ModalDeleteUserSkill
+                        skill={skill}
+                        set={setSkills}
+                        setS={setShowSkills}
+                      />
                     </div>
                   </div>
                 ) : skill.skillType === 2 ? (
@@ -241,7 +249,11 @@ function Skill() {
                     </div>
                     <div className="col-lg-2">
                       {" "}
-                      <ModalDeleteUserSkill skill={skill} set={setSkills} />
+                      <ModalDeleteUserSkill
+                        skill={skill}
+                        set={setSkills}
+                        setS={setShowSkills}
+                      />
                       {/*  <BsXLg onclick={handleDelete} /> */}
                     </div>
                   </div>
@@ -256,7 +268,11 @@ function Skill() {
                     </div>
                     <div className="col-lg-2">
                       {" "}
-                      <ModalDeleteUserSkill skill={skill} set={setSkills} />
+                      <ModalDeleteUserSkill
+                        skill={skill}
+                        set={setSkills}
+                        setS={setShowSkills}
+                      />
                       {/*  <BsXLg onclick={handleDelete} /> */}
                     </div>
                   </div>

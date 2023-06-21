@@ -9,7 +9,7 @@ import { BsArrowDown, BsSearch, BsXLg } from "react-icons/bs";
 import { userStore } from "../stores/UserStore";
 import Modal from "react-bootstrap/Modal";
 
-function ModalDeleteHobby({ hobby, set }) {
+function ModalDeleteHobby({ hobby, set, setS }) {
   const [show, setShow] = useState(false);
   const user = userStore((state) => state.user);
   const handleClose = () => setShow(false);
@@ -31,6 +31,7 @@ function ModalDeleteHobby({ hobby, set }) {
     }).then((response) => {
       if (response.status === 200) {
         set([]); // reset a lista da pagina de users para actualizar
+        setS([]);
         handleClose();
       } else if (response.status === 403) {
         alert("Não tem autorização para efectuar este pedido");

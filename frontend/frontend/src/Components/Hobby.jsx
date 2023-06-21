@@ -173,7 +173,11 @@ function Hobby() {
                 >
                   <div className="col-lg-10">{hobby.title} </div>
                   <div className="col-lg-2">
-                    <ModalDeleteHobby hobby={hobby} set={setHobbies} />
+                    <ModalDeleteHobby
+                      hobby={hobby}
+                      set={setHobbies}
+                      setS={setShowHobbies}
+                    />
                   </div>
                 </div>
               ))}
