@@ -42,67 +42,78 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
         <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">
           Membros do Projetos
         </h3>
-        <div className="bg-white text-black  m-1 rounded-3 w-50  mx-auto  ">
-          {showMembers.map((member, index) => (
-            <div key={index} className="row d-flex justify-content-center">
-              <div className="col-lg-4 ">
-                {member.userInvitedPhoto === null ? (
-                  <img
-                    src={
-                      "https://t3.ftcdn.net/jpg/00/36/94/26/360_F_36942622_9SUXpSuE5JlfxLFKB1jHu5Z07eVIWQ2W.jpg"
-                    }
-                    class="rounded-circle img-responsive"
-                    width={"40px"}
-                    height={"40px"}
-                    alt="avatar"
-                  />
-                ) : (
-                  <img
-                    src={member.userInvitedPhoto}
-                    class="rounded-circle img-responsive"
-                    width={"40px"}
-                    height={"40px"}
-                    alt=""
-                  />
-                )}
-              </div>
-              <div className="col-lg-8 d-flex align-items-center">
-                {member.userInvitedFirstName} {member.userInvitedLastName}
-              </div>
-              {member.manager ? (
-                <div className="col-lg-8 d-flex align-items-center">Gestor</div>
+        {showMembers.map((member, index) => (
+          <div
+            key={index}
+            className="row bg-white text-black mb-3 rounded-3 w-50 mx-auto align-items-center"
+          >
+            <div className="col-lg-2 ">
+              {member.userInvitedPhoto === null ? (
+                <img
+                  src={
+                    "https://t3.ftcdn.net/jpg/00/36/94/26/360_F_36942622_9SUXpSuE5JlfxLFKB1jHu5Z07eVIWQ2W.jpg"
+                  }
+                  class="rounded-circle img-responsive"
+                  width={"40px"}
+                  height={"40px"}
+                  alt="avatar"
+                />
               ) : (
-                <div className="col-lg-8 d-flex align-items-center">Membro</div>
+                <img
+                  src={member.userInvitedPhoto}
+                  class="rounded-circle img-responsive"
+                  width={"40px"}
+                  height={"40px"}
+                  alt=""
+                />
               )}
-              {showProjects.manager ? (
-                <>
-                  <div className="col-lg-2">
-                    <span class="material-icons-outlined">toggle_on</span>
-                  </div>
-                  <div className="col-lg-2">
-                    <ModalDeleteProjMember
-                      member={member}
-                      set={setMembers}
-                      projId={showProjects.id}
+            </div>
+            <div className="col-lg-6 ">
+              {member.userInvitedFirstName} {member.userInvitedLastName}
+            </div>
+            {showProjects.manager ? (
+              <>
+                <div className="col-lg-1">
+                  <ModalDeleteProjMember
+                    member={member}
+                    set={setMembers}
+                    projId={showProjects.id}
+                  />
+                </div>
+                <div className="col-lg-1">
+                  <div class="form-check form-switch">
+                    <input
+                      class="form-check-input bg-dark"
+                      type="checkbox"
+                      role="switch"
+                      id="flexSwitchCheckChecked"
+                      checked
                     />
                   </div>
-                </>
-              ) : null}
-            </div>
-          ))}
-        </div>
-
-        {showProjects.member && !showProjects.manager ? (
-          <div className="row mx-auto justify-content-around mt-5">
-            <div className="col-lg-12">
-              <ButtonComponent
-                type="button"
-                name="Sair do projecto"
-                onClick={handleRemove}
-              />
-            </div>
+                </div>
+              </>
+            ) : null}
+            {/* {member.manager ? (
+              <div className="col-lg-8 d-flex align-items-center">Gestor</div>
+            ) : (
+              <div className="col-lg-8 d-flex align-items-center">Membro</div>
+            )} */}
+            {/* {showProjects.manager ? (
+              <>
+                <div className="col-lg-1">
+                  <span class="material-icons-outlined"></span>
+                </div>
+                <div className="col-lg-2">
+                  <ModalDeleteProjMember
+                    member={member}
+                    set={setMembers}
+                    projId={showProjects.id}
+                  />
+                </div>
+              </>
+            ) : null} */}
           </div>
-        ) : null}
+        ))}
       </div>
     </div>
   );
