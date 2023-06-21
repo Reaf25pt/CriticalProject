@@ -18,6 +18,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @RequestScoped
@@ -941,7 +942,7 @@ public class Project implements Serializable {
         return listToSuggest;
     }
 
-    private UserInfo convertUserToUserInfoDto(entity.User u){
+    private UserInfo convertUserToUserInfoDto(entity.User u) {
         UserInfo userDto = new UserInfo();
         userDto.setId(u.getUserId());
         userDto.setFirstName(u.getFirstName());
@@ -965,16 +966,30 @@ public class Project implements Serializable {
 
             if (res) {
                 // pode remover user
-                pm.setRemoved(true);
-                projMemberDao.merge(pm);
-                delete = true;
+                if (pm.getProjectToParticipate().getStatus() == StatusProject.CANCELLED || pm.getProjectToParticipate().getStatus() == StatusProject.FINISHED) {
+                    pm.setRemoved(true);
+                    projMemberDao.merge(pm);
+                    delete = true;
+                } else {
+                    System.out.println("Proj not concluded / finished ");
+                    // TODO antes de retirar, confirmar que membro n é responsavel por nenhuma tarefa. se for tem de alterar isso se projecto n estiver finished ou cancelled .
+                    boolean canLeave = dealWithTasksBeforeLeavingProject(userId, pm.getProjectToParticipate());
+
+                    if (canLeave) {
+                        System.out.println("pode sair");
+                        pm.setRemoved(true);
+                        projMemberDao.merge(pm);
+                        delete = true;
+                    }
+                }
+
             }
         }
 
         return delete;
     }
 
-    private boolean hasEnoughManagers(int projId, int userId) {
+    public boolean hasEnoughManagers(int projId, int userId) {
         // verifica numero de gestores do projecto. se for 2 ou maior é ok. Se for 1 tem de verificar se userId a remover é igual a userID de gestor
         boolean res = false;
 
@@ -1067,7 +1082,7 @@ public class Project implements Serializable {
 
     public boolean changeMemberRole(int userId, int projId, String token, int role) {
         // altera o papel do userId. 1 - gestor   /   0 - participante normal
-        // TODO pode ter de ser alterado conforme o frontend
+
         boolean res = false;
 
         // encontrar relação entre user e projecto, para garantir que está válida
@@ -1103,32 +1118,84 @@ public class Project implements Serializable {
 
         entity.Project project = projDao.findProjectById(projId);
         if (project != null) {
-            switch (status ) {
-                case 0 :
+            switch (status) {
+                case 0:
                     // definir como planning
                     //res = true;
                     break;
-                case 1 :
+                case 1:
                     //definir como ready
                     //res = true;
                     break;
-                case 4 :
+                case 4:
                     // definir como in progress
                     //res = true;
 
                     break;
                 case 5:
-                // cancelar projecto pode ser feito em qq altura
-                project.setStatus(StatusProject.CANCELLED);
-                projDao.merge(project);
-                res = true;
-                break;
-                case 6 :
+                    // cancelar projecto pode ser feito em qq altura
+                    project.setStatus(StatusProject.CANCELLED);
+                    projDao.merge(project);
+                    res = true;
+                    break;
+                case 6:
                     //definir como finished
                     //res = true;
                     break;
             }
         }
         return res;
+    }
+
+    public boolean dealWithTasksBeforeLeavingProject(int userId, entity.Project project) {
+        // método que verifica se user tem tarefas à sua responsabilidade que não estejam finished antes de poder sair / ser retirado do projecto.
+        // se tiver, terá de ser escolhido outro membro para ser responsável ou, n havendo mais nenhum membro, n pode sair
+        boolean res = false;
+        List<entity.Task> taskList = taskDao.findListOfTasksFromProjectByProjIdWhoseTaskOwnerIsGivenUserId(project.getId(), userId);
+// se lista for nula não precisa de fazer nada
+        System.out.println("metodo deal with tasks before leave project ");
+        if (taskList != null) {
+            // precisa de ser atribuido um membro activo do projecto a cada uma das tarefas. Gestor, porque poderá alterar e não ficar à espera de outros para alterar essa nova info, se quiser
+
+            List<entity.User> managersList = projMemberDao.findListOfManagersByProjectId(project.getId());
+            if (managersList != null) {
+                // retirar o user que será removido, caso seja manager
+                List<entity.User> tempList = managersList.stream().filter(user -> user.getUserId() != userId).collect(Collectors.toList());
+                int count = 0;
+                for (entity.Task t : taskList) {
+                    entity.User randomManager = selectRandomUserFromList(tempList);
+                    if (randomManager != null) {
+                        t.setTaskOwner(randomManager);
+                        // TODO Será preciso remover da lista do user que será removido?
+                        randomManager.getListTasks().add(t);
+                        userDao.merge(randomManager);
+                        taskDao.merge(t);
+                        count++;
+
+                    }
+                }
+                if (count == taskList.size()) {
+                    System.out.println("all tasks dealt with");
+                    // significa que todas as tarefas foram dealed with
+                    res = true;
+                }
+
+            }
+
+
+        } else {
+            System.out.println("lista de tarefas nula");
+            // lista nula, n tem de fazer nada
+            res=true;
+        }
+
+        return res;
+    }
+
+    private entity.User selectRandomUserFromList(List<entity.User> tempList) {
+// permite atribuir um user random da lista
+        Random value = new Random();
+        int index = value.nextInt(tempList.size());
+        return tempList.get(index);
     }
 }

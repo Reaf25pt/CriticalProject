@@ -622,4 +622,38 @@ public class User {
         return r;
     }
 
+
+    // ALTERA PAPEL DE USER: GESTOR DE CONCURSO OU USER NORMAL
+    // Apenas para usar no postman - método administrativo
+    @PATCH
+    @Path("/profile")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response changeUserProfile(@HeaderParam("role") int role, @HeaderParam("userId") int userId) {
+
+        Response r = null;
+
+     /*   if (userBean.checkStringInfo(token) ) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+
+        } else {
+
+            userBean.updateSessionTime(token);*/
+
+            boolean res = userBean.modifyProfileType(role, userId);
+            if (!res) {
+                r = Response.status(404).entity("Not found!").build();
+            } else {
+                r = Response.status(200).entity("Success").build();
+
+            }
+
+        return r;
+
+    }
+
+
 }

@@ -11,6 +11,8 @@ import java.util.List;
 @Entity
 @Table(name="Task")
 @NamedQuery(name = "Task.findTasksFromProjectByProjId", query = "SELECT t FROM Task t WHERE t.project.id = :id")
+@NamedQuery(name = "Task.findListOfTasksFromProjectByProjIdWhoseTaskOwnerIsGivenUserId", query = "SELECT t FROM Task t WHERE t.project.id = :id AND t.taskOwner.userId = :userId AND t.status NOT IN :finished")
+
 
 public class Task implements Serializable {
 

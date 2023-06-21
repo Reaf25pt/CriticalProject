@@ -2,6 +2,7 @@ package bean;
 
 import ENUM.Office;
 import ENUM.SkillType;
+import ENUM.StatusProject;
 import dto.*;
 import dto.Project;
 import entity.Token;
@@ -156,8 +157,8 @@ public class User implements Serializable {
         // check if a string info is null or blank
         boolean res = false;
 
-        if(str == null || str.isBlank() || str.isEmpty()){
-            res=true;
+        if (str == null || str.isBlank() || str.isEmpty()) {
+            res = true;
             // info is not filled in as it should
         }
 
@@ -203,9 +204,6 @@ public class User implements Serializable {
     }
 
 
-
-
-
     public int checkEmailInDatabase(String email) {
         // check if email used to create new account is already in Database - Email must be unique
         // if it is in Database, check if account is validated (could be that user forgot previous regist and never validated account
@@ -231,7 +229,7 @@ public class User implements Serializable {
         return res;
     }
 
-    public boolean createNewAccount(String email, String password){
+    public boolean createNewAccount(String email, String password) {
         //Create new account and send email to ask for account validation
         boolean res = false;
         entity.User newUser = new entity.User();
@@ -483,18 +481,18 @@ public class User implements Serializable {
         }
     }
 
-    public Profile addMandatoryInfo(String token, Profile newInfo){
+    public Profile addMandatoryInfo(String token, Profile newInfo) {
         // adicionar dados obrigatórios sem a qual n pode avançar na app
         Profile updatedUser = null;
 
-        if (newInfo!=null){
+        if (newInfo != null) {
             entity.User user = tokenDao.findUserEntByToken(token);
 
-            if (user!= null){
+            if (user != null) {
                 user.setFirstName(newInfo.getFirstName());
                 user.setLastName(newInfo.getLastName());
 
-                if(newInfo.getNickname()!=null){
+                if (newInfo.getNickname() != null) {
                     user.setNickname(newInfo.getNickname());
                 }
 
@@ -546,7 +544,6 @@ public class User implements Serializable {
     }
 
 
-
     public Profile updateProfile(String token, Profile newInfo) {
         // update profile of logged user
 
@@ -583,7 +580,7 @@ public class User implements Serializable {
 
                 }
 
-                if(userEnt.isContestManager()){
+                if (userEnt.isContestManager()) {
                     // nunca pode colocar a sua página como pública
                     userEnt.setOpenProfile(false);
                 } else {
@@ -638,11 +635,11 @@ public class User implements Serializable {
         userDto.setToken(token);
         userDto.setEmail(user.getEmail());
 
-        if(user.getOffice()!=null){
-           userDto.setOffice( user.getOffice().getCity());
-          userDto.setOfficeInfo(user.getOffice().ordinal());
+        if (user.getOffice() != null) {
+            userDto.setOffice(user.getOffice().getCity());
+            userDto.setOfficeInfo(user.getOffice().ordinal());
         }
-      //  userDto.setOffice(user.getOffice());
+        //  userDto.setOffice(user.getOffice());
         userDto.setNickname(user.getNickname());
         userDto.setPhoto(user.getPhoto());
         userDto.setBio(user.getBio());
@@ -713,26 +710,28 @@ return projectsList;
 
         List<entity.Project> list = projMemberDao.findListOfProjectsByUserId(user.getUserId());
 
-        if(list!=null){
-        for (entity.Project p : list) {
-            projectsList.add(projBean.convertProjEntityToDto(p));
+        if (list != null) {
+            for (entity.Project p : list) {
+                projectsList.add(projBean.convertProjEntityToDto(p));
 
-        }}
+            }
+        }
 
         return projectsList;
     }
 
     public List<Hobby> getOwnHobbiesList(String token) {
-List<Hobby> hobbiesList = new ArrayList<>();
+        List<Hobby> hobbiesList = new ArrayList<>();
         entity.User user = tokenDao.findUserEntByToken(token);
 
         List<entity.Hobby> list = hobbyDao.findListOfHobbiesByUserId(user.getUserId());
 
-        if(list!=null){
-        for (entity.Hobby h : list) {
-            hobbiesList.add(convertToHobbyDto(h));
+        if (list != null) {
+            for (entity.Hobby h : list) {
+                hobbiesList.add(convertToHobbyDto(h));
 
-        }}
+            }
+        }
 
         return hobbiesList;
     }
@@ -748,9 +747,9 @@ List<Hobby> hobbiesList = new ArrayList<>();
             if (hobby != null) {
                 // significa que hobby já está na DB, 1º verificar se já existe relação hobby-user para, n havendo, adicionar a lista de user
 
-                Long res=hobbyDao.findRelationBetweenUserAndHobby(hobby.getHobbyId(), user.getUserId());
+                Long res = hobbyDao.findRelationBetweenUserAndHobby(hobby.getHobbyId(), user.getUserId());
                 System.out.println(res);
-                if(res==0) {
+                if (res == 0) {
                     user.getListHobbies().add(hobby);
                     hobby.getListUsers_Hobbies().add(user);
 
@@ -761,7 +760,7 @@ List<Hobby> hobbiesList = new ArrayList<>();
                     LOGGER.info("Hobby " + hobby.getHobbyId() + " is associated with user, user ID: " + user.getUserId() + ". IP Address of request is " + getIPAddress());
                 } else {
                     // TODO n faz nada, mas deveria avisar ou passa assim ?!
-hobbyDto=null;
+                    hobbyDto = null;
                 }
             } else {
                 // hobby n está na DB, precisa de ser persisted
@@ -794,11 +793,11 @@ hobbyDto=null;
 
     public HashMap<Integer, String> getOfficeList() {
         HashMap<Integer, String> officeList = new HashMap<>();
-Office[] list = Office.values();
+        Office[] list = Office.values();
 
-for (int i = 0; i< list.length; i++){
-    officeList.put(i, list[i].getCity());
-}
+        for (int i = 0; i < list.length; i++) {
+            officeList.put(i, list[i].getCity());
+        }
         return officeList;
     }
 
@@ -806,7 +805,7 @@ for (int i = 0; i< list.length; i++){
         HashMap<Integer, String> skillTypesList = new HashMap<>();
         SkillType[] list = SkillType.values();
 
-        for (int i = 0; i< list.length; i++){
+        for (int i = 0; i < list.length; i++) {
             skillTypesList.put(i, list[i].getType());
         }
         return skillTypesList;
@@ -823,11 +822,11 @@ for (int i = 0; i< list.length; i++){
             if (skillInDB != null) {
                 // significa que skill já está na DB, 1º verificar se já existe relação skill-user para, n havendo, adicionar a lista de user
 
-                Long res=skillDao.findRelationBetweenUserAndSkill(skillInDB.getSkillId(), user.getUserId());
+                Long res = skillDao.findRelationBetweenUserAndSkill(skillInDB.getSkillId(), user.getUserId());
 
                 // TODO verificar situação do enum que vem do frontend ou assumir q será o q ja está na DB ?
 
-                if(res==0) {
+                if (res == 0) {
 
                     user.getListSkills().add(skillInDB);
                     skillInDB.getListUsers_Skills().add(user);
@@ -839,7 +838,7 @@ for (int i = 0; i< list.length; i++){
                     LOGGER.info("Skill " + skillInDB.getTitle() + " is associated with user, user ID: " + user.getUserId() + ". IP Address of request is " + getIPAddress());
                 } else {
                     // TODO n faz nada, mas deveria avisar ou passa assim ?!
-                    skillDto=null;
+                    skillDto = null;
                 }
             } else {
                 // skill n está na DB, precisa de ser persisted
@@ -862,7 +861,7 @@ for (int i = 0; i< list.length; i++){
     }
 
     public Skill convertToSkillDto(entity.Skill skill) {
-Skill skillDto = new Skill();
+        Skill skillDto = new Skill();
 
 
         skillDto.setId(skill.getSkillId());
@@ -888,23 +887,24 @@ Skill skillDto = new Skill();
                 newSkill.setType(SkillType.TOOL);
                 break;
 
-    }}
+        }
+    }
 
     public boolean checkSkillInfo(Skill skill) {
         // verifica se info obrigatória vem do frontend
         boolean res = false;
 
-        if (skill==null){
-            res=true;
+        if (skill == null) {
+            res = true;
         } else {
-            if(checkStringInfo(skill.getTitle())){
+            if (checkStringInfo(skill.getTitle())) {
                 // TODO falta validar info do skillType ENUM que tem de vir preenchido
                 // falta info obrigatória
-                res=true;
+                res = true;
             }
         }
 
-     return res;
+        return res;
     }
 
 
@@ -914,48 +914,48 @@ Skill skillDto = new Skill();
         entity.User user = tokenDao.findUserEntByToken(token);
 
         List<entity.Skill> list = skillDao.findListOfSkillsByUserId(user.getUserId());
-if(list!=null){
-        for (entity.Skill s : list) {
-            skillsList.add(convertToSkillDto(s));
-        }
+        if (list != null) {
+            for (entity.Skill s : list) {
+                skillsList.add(convertToSkillDto(s));
+            }
         }
 
         return skillsList;
     }
 
 
-    public boolean deleteHobby (String token, int id){
+    public boolean deleteHobby(String token, int id) {
         // apaga hobby da lista de hobbies do user se existir na sua lista
-        boolean res=false;
+        boolean res = false;
 
         entity.User user = tokenDao.findUserEntByToken(token);
         if (user != null) {
             entity.Hobby hobby = hobbyDao.findHobbyOfUserById(user.getUserId(), id);
 
-            if(hobby!=null){
+            if (hobby != null) {
                 // apagar apenas da lista do user
 
-            hobby.getListUsers_Hobbies().remove(user);
-             user.getListHobbies().remove(hobby);
+                hobby.getListUsers_Hobbies().remove(user);
+                user.getListHobbies().remove(hobby);
 
                 userDao.merge(user);
                 hobbyDao.merge(hobby);
 
-                res=true;
+                res = true;
             }
         }
         return res;
     }
 
-    public boolean deleteSkill (String token, int id){
+    public boolean deleteSkill(String token, int id) {
         // apaga skill da lista de skills do user se existir na sua lista
-        boolean res=false;
+        boolean res = false;
 
         entity.User user = tokenDao.findUserEntByToken(token);
         if (user != null) {
             entity.Skill skill = skillDao.findSkillOfUserById(user.getUserId(), id);
 
-            if(skill!=null){
+            if (skill != null) {
                 // apagar apenas da lista do user
 
                 skill.getListUsers_Skills().remove(user);
@@ -964,7 +964,7 @@ if(list!=null){
                 userDao.merge(user);
                 skillDao.merge(skill);
 
-                res=true;
+                res = true;
             }
         }
         return res;
@@ -973,19 +973,23 @@ if(list!=null){
 
     public List<Skill> getSkillsList(String str, String token) {
         // retrieve list of skills that contain title
-        List<Skill> listSkillDto= new ArrayList<>();
+        List<Skill> listSkillDto = new ArrayList<>();
 
-        entity.User user=tokenDao.findUserEntByToken(token);
-        if(user!=null){
-        List<entity.Skill> list = skillDao.findSkillListContainingStr(str.toLowerCase());
+        entity.User user = tokenDao.findUserEntByToken(token);
+        if (user != null) {
+            List<entity.Skill> list = skillDao.findSkillListContainingStr(str.toLowerCase());
 
-        if(list!=null){
-            for (entity.Skill s : list) {
-                Long count = skillDao.findRelationBetweenUserAndSkill(s.getSkillId(), user.getUserId());
+            if (list != null) {
+                for (entity.Skill s : list) {
+                    Long count = skillDao.findRelationBetweenUserAndSkill(s.getSkillId(), user.getUserId());
 
-                if(count==0) {
-                    listSkillDto.add(convertToSkillDto(s));
-                }}}}return listSkillDto;
+                    if (count == 0) {
+                        listSkillDto.add(convertToSkillDto(s));
+                    }
+                }
+            }
+        }
+        return listSkillDto;
     }
 
     public List<Hobby> getHobbiesList(String str, String token) {
@@ -993,19 +997,82 @@ if(list!=null){
 
         List<Hobby> listHobbiesDto = new ArrayList<>();
 
-        entity.User user=tokenDao.findUserEntByToken(token);
-        if(user!=null){
-        List<entity.Hobby> list = hobbyDao.findHobbyListContainingStr(str.toLowerCase());
+        entity.User user = tokenDao.findUserEntByToken(token);
+        if (user != null) {
+            List<entity.Hobby> list = hobbyDao.findHobbyListContainingStr(str.toLowerCase());
 
-        if(list!=null){
-            for(entity.Hobby h:list){
-                Long count = hobbyDao.findRelationBetweenUserAndHobby(h.getHobbyId(), user.getUserId());
-                if (count== 0){
-                    // significa que não tem relação com hobby h podendo ser sugerido no frontend
-                listHobbiesDto.add(convertToHobbyDto(h));
-            }}
-        }}
-return listHobbiesDto;
+            if (list != null) {
+                for (entity.Hobby h : list) {
+                    Long count = hobbyDao.findRelationBetweenUserAndHobby(h.getHobbyId(), user.getUserId());
+                    if (count == 0) {
+                        // significa que não tem relação com hobby h podendo ser sugerido no frontend
+                        listHobbiesDto.add(convertToHobbyDto(h));
+                    }
+                }
+            }
+        }
+        return listHobbiesDto;
+    }
+
+    public boolean modifyProfileType(int role, int userId) {
+        // método para postman. Altera perfil do user: 1 - gestor de concurso (perfil A) / 0 - user normal (perfil B)
+
+        boolean res = false;
+
+        entity.User user = userDao.findUserById(userId);
+        if (user != null) {
+            if (user.isValidated()) {
+                // só altera se a conta estiver validada
+
+                if (role == 0) {
+                    //altera para perfil B - user normal. Não precisa de validar nada, apenas mudar o atributo contestManager
+
+                    // TODO retirar notificações que digam respeito a concursos, ou pelo menos retirar a necessidade de input
+
+                    user.setContestManager(false);
+                    userDao.merge(user);
+                    res = true;
+
+                } else if (role == 1) {
+                    // altera para perfil A - gestor de concursos.Precisa de várias verificações:
+                    // sair de projecto activo, se o tiver. Se n for o único gestor
+                    // sair de tarefas onde seja responsável e atribuir outro membro como responsável da tarefa. Se não houver outro membro nunca poderá ter perfil alterado
+                    //TODO  retirar notificações que digam respeito a coisas do projecto e que precisem de input ou retirar a necessidade de input
+                    // colocar perfil a privado
+
+                    entity.ProjectMember pm = projMemberDao.findActiveProjectByUserId(userId);
+                    if (pm != null) {
+                        System.out.println("ID proj member " + pm.getId());
+                        if (projBean.hasEnoughManagers(pm.getProjectToParticipate().getId(), userId)) {
+                            // projecto fica com gestor depois de pessoa sair. Senao não pode ser alterado
+
+                // se projecto estiver no estado finished ou cancelled pode sair sem problema, senão tem de verificar tarefas
+                            if (pm.getProjectToParticipate().getStatus() == StatusProject.CANCELLED || pm.getProjectToParticipate().getStatus() == StatusProject.FINISHED) {
+                                    user.setContestManager(true);
+                                    userDao.merge(user);
+                                    res = true;
+                            } else {
+                                // preciso verificar se user tem tarefas à sua responsabilidade cujo estado n seja finished antes de sair. Se tiver é preciso mudar essa info
+                               boolean canLeave= projBean.dealWithTasksBeforeLeavingProject(userId, pm.getProjectToParticipate());
+
+                               if(canLeave){
+                                   user.setContestManager(true);
+                                   userDao.merge(user);
+                                   res = true;
+                               }
+                            }
+                        }
+                    } else {
+                        // não tem projecto activo, pode simplesmente mudar o atributo contestManager
+                        user.setContestManager(true);
+                        userDao.merge(user);
+                        res = true;
+                    }
+                }
+            }
+        }
+
+        return res;
     }
 }
 

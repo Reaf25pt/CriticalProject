@@ -90,6 +90,18 @@ public class ProjectMember extends Abstract<entity.ProjectMember>{
         return usersList;
     }
 
+    public entity.ProjectMember findActiveProjectByUserId( int userId) {
+        entity.ProjectMember ent = null;
+        try {
+            ent = (entity.ProjectMember) em.createNamedQuery("ProjectMember.findActiveProjectByUserId").setParameter("userId", userId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            // e.printStackTrace();
+            return null;
+        }
+        return ent;
+    }
+
 
 
 
