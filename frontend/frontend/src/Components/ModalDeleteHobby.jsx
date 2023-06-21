@@ -58,7 +58,13 @@ function ModalDeleteHobby({ hobby, set, setS }) {
         }
       >
         {/*  <FontAwesomeIcon onClick={handleShow} icon={faTrash} /> */}
-        <BsXLg onClick={handleShow} />
+        <div
+          //class="btn btn-secondary"
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
+        >
+          <BsXLg onClick={handleShow} />
+        </div>
         {/*  <FontAwesomeIcon onClick={handleShow} icon={faToggleOn} /> */}
       </OverlayTrigger>
 

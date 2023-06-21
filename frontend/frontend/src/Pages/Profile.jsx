@@ -15,7 +15,7 @@ function Profile() {
   const user = userStore((state) => state.user);
   const fullName = user.firstName + " " + user.lastName;
   const [isEditing, setIsEditing] = useState(false);
-  const [credentials, setCredentials] = useState({});
+  const [credentials, setCredentials] = useState(user);
   const userUpdate = userStore((state) => state.setUser);
   const [projects, setProjects] = useState([]);
   const [showProjects, setShowProjects] = useState([]);
@@ -44,63 +44,101 @@ function Profile() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(credentials.openProfile);
-    if (
-      credentials.office === null ||
-      credentials.office === "undefined" ||
-      credentials.office === 20 ||
-      credentials.office === "20" ||
-      credentials.office === undefined ||
-      credentials.openProfile === "0"
+    console.log(credentials);
+
+    var editedUser;
+
+    if (user.contestManager || credentials.openProfile === "2") {
+      editedUser = {
+        firstName: credentials.firstName,
+        lastName: credentials.lastName,
+        officeInfo: credentials.officeInfo,
+
+        nickname: credentials.nickname,
+        bio: credentials.bio,
+        photo: credentials.photo,
+        openProfile: "false",
+      };
+    } else if (credentials.openProfile === "1") {
+      editedUser = {
+        firstName: credentials.firstName,
+        lastName: credentials.lastName,
+        officeInfo: credentials.officeInfo,
+
+        nickname: credentials.nickname,
+        bio: credentials.bio,
+        photo: credentials.photo,
+        openProfile: "true",
+      };
+    } else {
+      editedUser = credentials;
+    }
+    console.log(editedUser);
+    /*  if (
+      !user.contestManager &&
+      (credentials.office === null ||
+        credentials.office === "undefined" ||
+        credentials.office === 20 ||
+        credentials.office === "20" ||
+        credentials.office === undefined ||
+        credentials.openProfile === "0")
     ) {
       alert("Seleccione o local de trabalho e/ou visibilidade do perfil");
-    } else {
-      var editedUser;
-      if (credentials.openProfile === "1") {
-        // profile to be public
-        editedUser = {
-          firstName: credentials.firstName,
-          lastName: credentials.lastName,
-          officeInfo: credentials.office,
-          nickname: credentials.nickname,
-          bio: credentials.bio,
-          photo: credentials.photo,
-          openProfile: "true",
-        };
-      } else if (credentials.openProfile === "2") {
-        editedUser = {
-          firstName: credentials.firstName,
-          lastName: credentials.lastName,
-          officeInfo: credentials.office,
-          nickname: credentials.nickname,
-          bio: credentials.bio,
-          photo: credentials.photo,
-          openProfile: "false",
-        };
-      }
+    } else if (
+      user.contestManager &&
+      (credentials.office === null ||
+        credentials.office === "undefined" ||
+        credentials.office === 20 ||
+        credentials.office === "20" ||
+        credentials.office === undefined)
+    ) {
+      alert("Seleccione o local de trabalho");
+    } else { */
 
-      fetch("http://localhost:8080/projetofinal/rest/user/ownprofile", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          token: user.token,
-        },
-        body: JSON.stringify(editedUser),
+    /*  if (credentials.openProfile === "1") {
+      // profile to be public
+      editedUser = {
+        firstName: credentials.firstName,
+        lastName: credentials.lastName,
+        officeInfo: credentials.office,
+        nickname: credentials.nickname,
+        bio: credentials.bio,
+        photo: credentials.photo,
+        openProfile: "true",
+      };
+    } else if (credentials.openProfile === "2") {
+      editedUser = {
+        firstName: credentials.firstName,
+        lastName: credentials.lastName,
+        officeInfo: credentials.office,
+        nickname: credentials.nickname,
+        bio: credentials.bio,
+        photo: credentials.photo,
+        openProfile: "false",
+      };
+    } */
+
+    fetch("http://localhost:8080/projetofinal/rest/user/ownprofile", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        token: user.token,
+      },
+      body: JSON.stringify(editedUser),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+          //navigate("/home", { replace: true });
+        } else {
+          alert("Algo correu mal. Tente novamente");
+        }
       })
-        .then((response) => {
-          if (response.status === 200) {
-            return response.json();
-            //navigate("/home", { replace: true });
-          } else {
-            alert("Algo correu mal. Tente novamente");
-          }
-        })
-        .then((loggedUser) => {
-          userUpdate(loggedUser);
-          // navigate("/home", { replace: true });
-          setIsEditing(false);
-        });
-    }
+      .then((loggedUser) => {
+        userUpdate(loggedUser);
+        // navigate("/home", { replace: true });
+        setIsEditing(false);
+      });
   };
   useEffect(() => {
     fetch("http://localhost:8080/projetofinal/rest/user/ownprojects", {
@@ -119,8 +157,8 @@ function Profile() {
   }, [projects]);
 
   const renderLink = (rowData) => {
-    console.log(rowData.id);
-    console.log(typeof rowData.id);
+    /*   console.log(rowData.id);
+    console.log(typeof rowData.id); */
     return (
       <Link to={`/home/projects/${rowData.id}`}>
         <BsEyeFill />

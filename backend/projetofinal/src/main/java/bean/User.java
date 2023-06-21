@@ -583,8 +583,14 @@ public class User implements Serializable {
 
                 }
 
+                if(userEnt.isContestManager()){
+                    // nunca pode colocar a sua página como pública
+                    userEnt.setOpenProfile(false);
+                } else {
+                    userEnt.setOpenProfile(newInfo.isOpenProfile());
+                }
 
-                userEnt.setOpenProfile(newInfo.isOpenProfile());
+
                 userEnt.setOffice(projBean.setOffice(newInfo.getOfficeInfo()));
 
              /*   int office = newInfo.getOfficeInfo();

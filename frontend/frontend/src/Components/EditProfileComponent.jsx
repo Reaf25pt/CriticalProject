@@ -54,15 +54,39 @@ function ProfileEdit({ onChange, onSubmit, onClick }) {
               <div class="form-group ">
                 <div class="input-group rounded">
                   <SelectComponent
-                    name="office"
+                    name="officeInfo"
                     id="officeInput"
                     required={true}
-                    defaultValue={user.office}
+                    defaultValue={user.officeInfo}
                     onChange={onChange}
                     local={"Local de trabalho *"}
                   />
                 </div>
-                <div className="row mt-3">
+                {user.contestManager ? (
+                  <div className="row mt-3">
+                    <div class="input-group rounded">
+                      <ProfileVisibilitySelect
+                        name="openProfile"
+                        id="openProfileInput"
+                        placeholder={"Visibilidade do perfil"}
+                        /*  onChange={onChange} */
+                        disabled
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="row mt-3">
+                    <div class="input-group rounded">
+                      <ProfileVisibilitySelect
+                        name="openProfile"
+                        id="openProfileInput"
+                        placeholder={"Visibilidade do perfil"}
+                        onChange={onChange}
+                      />
+                    </div>
+                  </div>
+                )}
+                {/*       <div className="row mt-3">
                   <div class="input-group rounded">
                     <ProfileVisibilitySelect
                       name="openProfile"
@@ -71,7 +95,7 @@ function ProfileEdit({ onChange, onSubmit, onClick }) {
                       onChange={onChange}
                     />
                   </div>
-                </div>
+                </div> */}
                 <div className="row mt-3">
                   <div className="form-outline">
                     <InputComponent

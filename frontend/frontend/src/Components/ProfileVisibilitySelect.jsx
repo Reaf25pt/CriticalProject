@@ -12,6 +12,7 @@ function ProfileVisibilitySelect(props) {
         required={props.required}
         placeholder={props.placeholder}
         className="form-control"
+        disabled={props.disabled}
       >
         <option value="0">Visibilidade do perfil </option>
         <option value="1">Público</option>
