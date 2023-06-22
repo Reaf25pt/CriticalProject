@@ -646,6 +646,9 @@ public class Project implements Serializable {
         boolean res = false;
         entity.Task newTask = new entity.Task();
 
+        if(task!= null){
+
+
         newTask.setTitle(task.getTitle());
         newTask.setStartDate(task.getStartDate());
         newTask.setFinishDate(task.getFinishDate());
@@ -653,6 +656,7 @@ public class Project implements Serializable {
 
         newTask.setAdditionalExecutors(task.getAdditionalExecutors());
 
+        //TODO proteger de nulo - pesquisar user à parte e n directamente?
         newTask.setTaskOwner(userDao.findUserById(task.getTaskOwnerId()));
 
         newTask.setStatus(StatusTask.PLANNED);
@@ -671,7 +675,7 @@ public class Project implements Serializable {
         }
 
         res = true;
-
+        }
 
         return res;
     }
@@ -694,7 +698,7 @@ public class Project implements Serializable {
         boolean res = false;
 
         if (userBean.checkStringInfo(task.getTitle()) || task.getStartDate() == null || task.getFinishDate() == null || userBean.checkStringInfo(task.getDetails())) {
-            // TODO falta verificar se id de responsavel está definido ou por oposiçao definir nome
+            // TODO falta verificar se id de responsavel está definido ou por oposiçao definir user
             res = true;
         }
 
@@ -731,7 +735,9 @@ public class Project implements Serializable {
         task.setStartDate(t.getStartDate());
         task.setFinishDate(t.getFinishDate());
         task.setDetails(t.getDetails());
-        task.setStatus(t.getStatus());
+        task.setStatusInfo(t.getStatus().ordinal());
+
+        task.setStatus(t.getStatus().getStatus());
         task.setTaskOwnerId(t.getTaskOwner().getUserId());
         task.setTaskOwnerFirstName(t.getTaskOwner().getFirstName());
         task.setTaskOwnerLastName(t.getTaskOwner().getLastName());
@@ -1167,6 +1173,7 @@ public class Project implements Serializable {
                     if (randomManager != null) {
                         t.setTaskOwner(randomManager);
                         // TODO Será preciso remover da lista do user que será removido?
+                        // TODO adicionar registo no historico do projecto e notificação para novo owner. talvez mais avisos ?!
                         randomManager.getListTasks().add(t);
                         userDao.merge(randomManager);
                         taskDao.merge(t);
@@ -1197,5 +1204,19 @@ public class Project implements Serializable {
         Random value = new Random();
         int index = value.nextInt(tempList.size());
         return tempList.get(index);
+    }
+
+    public boolean verifyProjectStatusToChangeTask(int projId) {
+        // impedir caso projecto tenha status finished, cancelled, proposed, approved pq nestes casos o plano de execução não pode ser alterado
+boolean res = false;
+        entity.Project project = projDao.findProjectById(projId);
+        if(project!=null){
+            if (project.getStatus()==StatusProject.PROPOSED || project.getStatus()==StatusProject.APPROVED|| project.getStatus()==StatusProject.CANCELLED|| project.getStatus()==StatusProject.FINISHED){
+                res = true;
+                // tarefas do plano de execução não poderão ser alteradas
+            }
+
+        }
+        return res;
     }
 }

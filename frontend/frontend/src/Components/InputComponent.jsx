@@ -14,6 +14,7 @@ function InputComponent(props) {
         id={props.id}
         accept={props.accept}
         defaultValue={props.defaultValue}
+        value={props.value}
         title={props.title}
         min={props.min}
       />

@@ -2,13 +2,17 @@ package ENUM;
 
 public enum StatusTask {
 
-    PLANNED("Planned"),
-    PROGRESS("In Progress"),
-    FINISHED("Finished");
+    PLANNED("Planned"), //0
+    PROGRESS("In Progress"), //1
+    FINISHED("Finished"); //2
 
     private final String status;
 
     private StatusTask(String status) {
         this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }

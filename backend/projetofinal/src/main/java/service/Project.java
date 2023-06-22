@@ -212,9 +212,9 @@ return r;
 
         Response r = null;
 
-        if (userBean.checkStringInfo(token) || projBean.checkTaskInfo(task)) {
+        if (userBean.checkStringInfo(token) || task== null || projBean.checkTaskInfo(task)) {
             r = Response.status(401).entity("Unauthorized!").build();
-        }  else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId)) {
+        }  else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId) || projBean.verifyProjectStatusToChangeTask(projId)) {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
@@ -232,9 +232,9 @@ return r;
 
     // GET LIST OF TASKS OF GIVEN PROJECT
     @GET
-    @Path("/tasks/{id}")
+    @Path("/tasks/{projId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTasksofProject(@HeaderParam("token") String token, @PathParam("id") int id) {
+    public Response getTasksofProject(@HeaderParam("token") String token, @PathParam("projId") int projId) {
 
         Response r = null;
 
@@ -247,7 +247,7 @@ return r;
         } else {
             userBean.updateSessionTime(token);
 
-            List<Task> tasks = projBean.getTasksList(id);
+            List<Task> tasks = projBean.getTasksList(projId);
 
             if (tasks == null || tasks.size() == 0) {
                 r = Response.status(404).entity("Not found").build();

@@ -293,7 +293,7 @@ function Skill() {
             )}
           </div>
         ) : (
-          <p></p>
+          <p>Adicione as suas skills</p>
         )}
       </div>
     </div>

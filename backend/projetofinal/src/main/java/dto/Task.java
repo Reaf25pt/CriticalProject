@@ -13,7 +13,10 @@ public class Task {
     private Date finishDate;
 
     private String details;
-    private StatusTask status;
+     // private StatusTask status;
+
+    private int statusInfo;
+    private String status;
     private int taskOwnerId;
 
     private String taskOwnerFirstName;
@@ -69,11 +72,19 @@ public class Task {
         this.details = details;
     }
 
-    public StatusTask getStatus() {
+    public int getStatusInfo() {
+        return statusInfo;
+    }
+
+    public void setStatusInfo(int statusInfo) {
+        this.statusInfo = statusInfo;
+    }
+
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(StatusTask status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
