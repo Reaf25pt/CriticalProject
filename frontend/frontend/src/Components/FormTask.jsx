@@ -5,9 +5,16 @@ import SelectComponent from "./SelectComponent";
 import TextAreaComponent from "./TextAreaComponent";
 import { userStore } from "../stores/UserStore";
 import { useParams } from "react-router-dom";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-import { Accordion, AccordionTab } from "primereact/accordion";
+import {
+  Gantt,
+  Task,
+  EventOption,
+  StylingOption,
+  ViewMode,
+  DisplayOption,
+  TaskListTable,
+} from "gantt-task-react";
+import "gantt-task-react/dist/index.css";
 import ProjectMembersSelect from "./ProjectMembersSelect";
 import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
 
@@ -47,6 +54,22 @@ function FormTask(listMembers) {
       })
       .catch((err) => console.log(err));
   }, [task]);
+
+  function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const formattedDate = `${year}-${month}-${day}`;
+    return formattedDate;
+  }
+
+  const mappedTasks = showTasks.map((task) => ({
+    id: task.id,
+    name: task.title,
+    start: new Date(formatTimestamp(task.startDate)),
+    end: new Date(formatTimestamp(task.finishDate)),
+  }));
 
   function convertWord(word) {
     // Convert the word to lowercase first
@@ -120,7 +143,7 @@ function FormTask(listMembers) {
   };
 
   return (
-    <div className="container-fluid mt-5 vh-75">
+    <div className="container mt-5">
       <div>
         <div
           className="row d-flex justify-content-around bg-secondary 
@@ -203,7 +226,7 @@ function FormTask(listMembers) {
               </div>
             </div>
           </div>
-          <div class="col-12 col-sm-12 col-md-12 col-lg-6 d-flex align-items-center ">
+          <div class="col-lg-6 d-flex align-items-center ">
             <TextAreaComponent
               placeholder={"Descrição da tarefa *"}
               class="text-dark bg-white rounded-2 w-100 h-75 "
@@ -225,7 +248,7 @@ function FormTask(listMembers) {
           </div>
         </div>
         <div className="row mt-4">
-          <div className="col-lg-5 bg-secondary rounded-5 p-3">
+          <div className="col-lg-2 bg-secondary rounded-5 p-3">
             <div className="">
               <h3 className="bg-white rounded-5 text-center">
                 Lista de Tarefas
@@ -303,6 +326,20 @@ function FormTask(listMembers) {
                 )}
               </div>
             </div>
+          </div>
+          <div className="col-lg-9 bg-white mx-auto  ">
+            {" "}
+            {showTasks && showTasks.length > 0 && (
+              <>
+                <Gantt
+                  tasks={mappedTasks}
+                  startDate="2023-01-01"
+                  endDate="2023-12-30"
+                  viewMode="Day"
+                  barBackgroundColor="red"
+                />
+              </>
+            )}
           </div>
         </div>
       </div>
