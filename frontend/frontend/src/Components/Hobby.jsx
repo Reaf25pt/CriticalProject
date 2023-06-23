@@ -34,8 +34,8 @@ function Hobby() {
     const value = event.target.value;
 
     if (name === "hobbyInput") {
-      setSearch(event.target.value);
-      handleSearch(search);
+      // setSearch(event.target.value);
+      handleSearch(event.target.value);
     }
 
     setCredentials((values) => {
@@ -47,26 +47,23 @@ function Hobby() {
     console.log(searchStr);
     //setValue(searchStr);
 
-    fetch(
-      `http://localhost:8080/projetofinal/rest/user/hobby?title=${searchStr}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          token: user.token,
-        },
-      }
-    )
-      .then((response) => {
-        if (response.status === 200) {
-          return response.json();
-          //navigate("/home", { replace: true });
+    const handleFetchData = async () => {
+      const response = await fetch(
+        `http://localhost:8080/projetofinal/rest/user/hobby?title=${searchStr}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            token: user.token,
+          },
         }
-      })
-      .then((response) => {
-        setSuggestions(response);
-        console.log(suggestions);
-      });
+      );
+
+      const data = await response.json();
+      setSuggestions(data);
+    };
+
+    handleFetchData();
   };
 
   const handleClick = (event) => {
@@ -145,12 +142,12 @@ function Hobby() {
             <div className="dropdown bg-white">
               {suggestions &&
                 suggestions
-                  .filter((item) => {
+                  /*      .filter((item) => {
                     return (
                       item &&
-                      item.title.toLowerCase().includes(search) /* !== search */
+                      item.title.toLowerCase().includes(search) 
                     );
-                  })
+                  }) */
                   .slice(0, 10)
                   .map((item) => (
                     <option key={item.id} onClick={() => handleSelection(item)}>

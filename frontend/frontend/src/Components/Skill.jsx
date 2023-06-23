@@ -36,8 +36,8 @@ function Skill() {
     const value = event.target.value;
 
     if (name === "skillInput") {
-      setSearch(event.target.value);
-      handleSearch(search);
+      // setSearch(event.target.value);
+      handleSearch(event.target.value);
     }
 
     setCredentials((values) => {

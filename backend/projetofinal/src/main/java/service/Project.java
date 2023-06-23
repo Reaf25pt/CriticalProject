@@ -192,7 +192,7 @@ return r;
             List<Keyword> keywords = projBean.getKeywordsList(title);
 
             if (keywords == null || keywords.size() == 0) {
-                r = Response.status(404).entity("Not found").build();
+                r = Response.status(404).entity(keywords).build();
             } else {
 
                 r = Response.status(200).entity(keywords).build();
@@ -278,7 +278,7 @@ return r;
             List<Skill> skills = projBean.getSkillsList(title);
 
             if (skills == null || skills.size() == 0) {
-                r = Response.status(404).entity("Not found").build();
+                r = Response.status(404).entity(skills).build();
             } else {
 
                 r = Response.status(200).entity(skills).build();
@@ -340,7 +340,7 @@ return r;
             List<UserInfo> list = projBean.getPossibleMembers(name);
 
             if (list == null || list.size() == 0) {
-                r = Response.status(404).entity("Not found").build();
+                r = Response.status(404).entity(list).build();
             } else {
 
                 r = Response.status(200).entity(list).build();

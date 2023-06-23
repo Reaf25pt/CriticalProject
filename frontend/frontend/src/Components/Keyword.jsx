@@ -22,10 +22,8 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
     const value = event.target.value;
 
     if (name === "keywordInput") {
-      setSearch(event.target.value);
-      console.log(event.target.value);
-      console.log(search);
-      handleSearch(search);
+      // setSearch(event.target.value);
+      handleSearch(event.target.value);
     }
 
     setCredentials((values) => {

@@ -23,10 +23,8 @@ function SkillsProject({ skills, setSkills, addSkills }) {
     const value = event.target.value;
 
     if (name === "skillProjInput") {
-      setSearch(event.target.value);
-      console.log(event.target.value);
-      console.log(search);
-      handleSearch(search);
+      // setSearch(event.target.value);
+      handleSearch(event.target.value);
     }
 
     if (name === "skillType") {

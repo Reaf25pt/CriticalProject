@@ -584,7 +584,7 @@ public class User {
             List<Skill> skills = userBean.getSkillsList(title, token);
 
             if (skills == null || skills.size() == 0) {
-                r = Response.status(404).entity("Not found").build();
+                r = Response.status(404).entity(skills).build();
             } else {
 
                 r = Response.status(200).entity(skills).build();
@@ -612,7 +612,7 @@ public class User {
             List<Hobby> hobbies = userBean.getHobbiesList(title, token);
 
             if (hobbies == null || hobbies.size() == 0) {
-                r = Response.status(404).entity("Not found").build();
+                r = Response.status(404).entity(hobbies).build();
             } else {
 
                 r = Response.status(200).entity(hobbies).build();

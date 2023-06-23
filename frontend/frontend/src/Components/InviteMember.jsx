@@ -18,8 +18,8 @@ function InviteMember({ projId }) {
     const value = event.target.value;
 
     if (name === "nameInput") {
-      setSearch(event.target.value);
-      handleSearch(search);
+      // setSearch(event.target.value);
+      handleSearch(event.target.value);
     }
 
     setCredentials((values) => {
