@@ -651,7 +651,9 @@ public class Project implements Serializable {
 
         newTask.setTitle(task.getTitle());
         newTask.setStartDate(task.getStartDate());
+            System.out.println(task.getStartDate());
         newTask.setFinishDate(task.getFinishDate());
+            System.out.println(task.getFinishDate());
         newTask.setDetails(task.getDetails());
 
         newTask.setAdditionalExecutors(task.getAdditionalExecutors());
@@ -682,11 +684,13 @@ public class Project implements Serializable {
 
     private void associatePreRequiredTasksWithCurrentTask(List<Task> preRequiredTasks, entity.Task currentTask) {
         // associa cada preRequired task a current task
-// TODO verificar se é necessário garantir que n adiciona a pp tarefa como pre required  Não será necessário pq n frontend nunca se dará esta tarefa para associar
         for (Task t : preRequiredTasks) {
-            // adicionar cada tarefa q seja pre requisito à lista da current task
+            entity.Task taskEnt= taskDao.find(t.getId());
+            if (taskEnt.getFinishDate().before(currentTask.getStartDate())){
+                
+            // adicionar cada tarefa q seja pre requisito à lista da current task, desde que as datas não se sobreponham!!!
             currentTask.getListPreRequiredTasks().add(taskDao.find(t.getId()));
-        }
+        }}
 
         taskDao.merge(currentTask);
         //TODO será necessário fazer merge de cada task t ? em teoria apenas a task tem lista de tarefas required

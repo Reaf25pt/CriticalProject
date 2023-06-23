@@ -26,6 +26,11 @@ function FormTask(listMembers) {
   const [showTasks, setShowTasks] = useState([]);
   const [task, setTask] = useState([]);
   const { id } = useParams();
+  const [preReqTasks, setPreReqTasks] = useState([]); // lista para enviar para backend
+  const addPreReqTask = (task) => {
+    setPreReqTasks((state) => [...state, task]);
+  };
+  // const [input, setInput] = useState("-1");
 
   const toggleAccordion = (id) => {
     setActiveId(id === activeId ? null : id);
@@ -84,11 +89,14 @@ function FormTask(listMembers) {
 
   const clearInputFields = () => {
     //document.getElementById("titleInput").value = "";
-    document.getElementById("title").value = " ";
+    document.getElementById("title").value = "";
     document.getElementById("startDate").value = " ";
     document.getElementById("finishDate").value = " ";
-    document.getElementById("details").value = " ";
+    document.getElementById("details").value = "";
     document.getElementById("taskOwnerId").value = "-1";
+    document.getElementById("additionalExecutors").value = "";
+
+    // setInput("-1");
   };
 
   const handleChange = (event) => {
@@ -113,12 +121,13 @@ function FormTask(listMembers) {
       !credentials.taskOwnerId ||
       credentials.taskOwnerId === "-1"
     ) {
+      console.log(credentials);
       alert("Insira os dados assinalados como obrigatórios");
     } else if (credentials.startDate >= credentials.finishDate) {
       alert("Insira uma data de fim posterior à data de início indicada");
     } else {
       var newTask = credentials;
-      newTask.preRequiredTasks = [];
+      newTask.preRequiredTasks = preReqTasks;
 
       fetch(`http://localhost:8080/projetofinal/rest/project/${id}/task`, {
         method: "POST",
@@ -131,7 +140,11 @@ function FormTask(listMembers) {
         .then((response) => {
           if (response.status === 200) {
             setTask([]);
+            setPreReqTasks([]);
             setCredentials([]);
+            alert(
+              "Atenção, a(s) tarefa(s) precedentes só serão admitidas se a data final for anterior à data de início da tarefa adicionada"
+            );
             return response.json();
             //navigate("/home", { replace: true });
           } else {
@@ -139,6 +152,9 @@ function FormTask(listMembers) {
           }
         })
         .catch((err) => console.log(err));
+      clearInputFields();
+      setPreReqTasks([]);
+      setCredentials([]);
     }
   };
 
@@ -208,16 +224,22 @@ function FormTask(listMembers) {
                     name="additionalExecutors"
                     type="text"
                     onChange={handleChange}
+                    defaultValue={""}
                   />
                 </div>
                 <div className="col-lg-6">
                   <ProjectAllTasksSelect
-                    name="preRequiredTasks"
+                    id="tst"
+                    preReqTasks={preReqTasks}
+                    setPreReqTasks={setPreReqTasks}
+                    addPreReqTask={addPreReqTask}
+                    //  resetInput={input}
+                    /* name="preRequiredTasks"
                     id="preRequiredTasks"
                     onChange={handleChange}
                     placeholder={"Tarefas precedentes "}
                     local={"Tarefas precedentes "}
-                    taskList={task}
+                    taskList={task} */
                   />
                 </div>
               </div>
@@ -232,6 +254,7 @@ function FormTask(listMembers) {
             required
             type="text"
             onChange={handleChange}
+            defaultValue={""}
           />
           {/*    <textarea
               class="text-dark bg-white rounded-2 w-100 h-75 "
