@@ -57,6 +57,42 @@ function ContestCreate() {
               <div className="row mb-3">
                 <div className="col-lg-6">
                   <div className="form-outline">
+                    <label className="text-white mb-2">
+                      {" "}
+                      Data de Inicio de candidatura:
+                    </label>
+
+                    <InputComponent
+                      placeholder={"Titulo*"}
+                      id="startDate"
+                      required
+                      name="startDate"
+                      type="date"
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+                <div className="col-lg-6">
+                  <div className="form-outline">
+                    <label className="text-white mb-2">
+                      {" "}
+                      Data de Fim de candidatura:
+                    </label>
+                    <InputComponent
+                      placeholder={"Titulo*"}
+                      id="endDate"
+                      required
+                      name="endDate"
+                      type="date"
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="row mb-3">
+                <div className="col-lg-6">
+                  <div className="form-outline">
                     <label className="text-white mb-2">Data Inicio:</label>
 
                     <InputComponent
@@ -83,7 +119,6 @@ function ContestCreate() {
                   </div>
                 </div>
               </div>
-
               <div className="form-outline mb-4">
                 <InputComponent
                   placeholder={"Número máximo de projetos"}

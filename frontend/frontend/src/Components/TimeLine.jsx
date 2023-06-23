@@ -4,6 +4,7 @@ import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
 import { useParams } from "react-router-dom";
 import { userStore } from "../stores/UserStore";
 import TextAreaComponent from "./TextAreaComponent";
+import { Timeline } from "primereact/timeline";
 
 function TimeLine() {
   const user = userStore((state) => state.user);
@@ -33,12 +34,12 @@ function TimeLine() {
 
   return (
     <div
-      class="container-fluid
+      class="container-fluid 
   
   "
     >
       <div className="row mt-5">
-        <form className="bg-secondary col-lg-3 p-5 rounded-5 ">
+        <form className="bg-secondary w-25 p-5 rounded-5 ">
           <div className="row mb-4">
             <ProjectAllTasksSelect
               name="preRequiredTasks"
@@ -56,6 +57,7 @@ function TimeLine() {
           </div>
         </form>
       </div>
+      <div className="row"></div>
     </div>
   );
 }
