@@ -4,6 +4,7 @@ import ModalDeleteProjMember from "../Components/ModalDeleteProjMember";
 import ButtonComponent from "./ButtonComponent";
 import InputComponent from "../Components/InputComponent";
 import { useNavigate } from "react-router-dom";
+import { BsStarFill } from "react-icons/bs";
 
 function ProjectMembersList({ showMembers, showProjects, setMembers }) {
   const user = userStore((state) => state.user);
@@ -140,7 +141,7 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
                           class="form-check-label"
                           for="flexSwitchCheckChecked"
                         >
-                          Gestor
+                          <BsStarFill />
                         </label>
                       </div>
                       {/*    <div class="form-check form-switch">
@@ -188,9 +189,7 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
                         <label
                           class="form-check-label"
                           for="flexSwitchCheckDefault"
-                        >
-                          Membro
-                        </label>
+                        ></label>
                       </div>
                     </>
                   )}

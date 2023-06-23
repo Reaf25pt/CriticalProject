@@ -158,11 +158,8 @@ function EditProject({ toggleComponent, project, set }) {
           <div className="col-lg-4 ">
             <div className="bg-secondary p-3 rounded-5 h-100">
               <div className="bg-white rounded-5 h-100 p-3">
-                <h4>Descrição</h4>
-                <hr />
                 <TextAreaComponent
                   placeholder={"Descrição do projecto *"}
-                  className="h-100 w-100"
                   id="details"
                   name="details"
                   required
@@ -180,11 +177,8 @@ function EditProject({ toggleComponent, project, set }) {
           <div className="col-lg-4 ">
             <div className="bg-secondary p-3 rounded-5 h-100">
               <div className="bg-white rounded-5 h-100 p-3">
-                <h4>Recursos</h4>
-                <hr />
                 <TextAreaComponent
                   placeholder={"Recursos"}
-                  className="h-75 w-100"
                   id="resources"
                   name="resources"
                   type="text"

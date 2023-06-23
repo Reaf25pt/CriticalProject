@@ -20,6 +20,11 @@ function Projects() {
     );
   };
 
+  const convertTimestampToDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString(); // Adjust the format as per your requirement
+  };
+
   useEffect(() => {
     fetch(`http://localhost:8080/projetofinal/rest/project/allprojects`, {
       method: "GET",
@@ -85,6 +90,9 @@ function Projects() {
                   header="Data de Registo"
                   sortable
                   style={{ width: "25%" }}
+                  body={(rowData) =>
+                    convertTimestampToDate(rowData.creationDate)
+                  }
                 ></Column>
                 <Column
                   field="title"

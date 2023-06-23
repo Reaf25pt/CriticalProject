@@ -143,205 +143,199 @@ function FormTask(listMembers) {
   };
 
   return (
-    <div className="container mt-5">
-      <div>
-        <div
-          className="row d-flex justify-content-around bg-secondary 
-          rounded-5 pt-3
-        "
-        >
-          <div className="col-lg-4">
-            <div className="row ">
-              <div className="col-lg-12 ">
-                <div className="row mb-3">
-                  <div className="col-lg-6">
-                    <InputComponent
-                      placeholder={"Título *"}
-                      id="title"
-                      required
-                      name="title"
-                      type="text"
-                      onChange={handleChange}
-                      defaultValue={""}
-                    />
-                  </div>
-                  <div className="col-lg-6">
-                    <ProjectMembersSelect
-                      name="taskOwnerId"
-                      id="taskOwnerId"
-                      onChange={handleChange}
-                      placeholder={"Membro responsável *"}
-                      local={"Membro responsável *"}
-                      listMembers={listMembers}
-                      projId={id}
-                    />
-                  </div>
+    <div className="container-fluid mt-5">
+      <div
+        className="row d-flex justify-content-around bg-secondary 
+          rounded-5 p-4"
+      >
+        <div className="col-lg-4">
+          <div className="row ">
+            <div className="col-lg-12 ">
+              <div className="row mb-3">
+                <div className="col-lg-6">
+                  <InputComponent
+                    placeholder={"Título *"}
+                    id="title"
+                    required
+                    name="title"
+                    type="text"
+                    onChange={handleChange}
+                    defaultValue={""}
+                  />
                 </div>
-                <div className="row mb-3">
-                  <div className="col-lg-6">
-                    <label className="text-white">Data de início *</label>
-                    <InputComponent
-                      placeholder={" *"}
-                      id="startDate"
-                      required
-                      name="startDate"
-                      type="date"
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="col-lg-6">
-                    <label className="text-white">Data de fim *</label>
+                <div className="col-lg-6">
+                  <ProjectMembersSelect
+                    name="taskOwnerId"
+                    id="taskOwnerId"
+                    onChange={handleChange}
+                    placeholder={"Membro responsável *"}
+                    local={"Membro responsável *"}
+                    listMembers={listMembers}
+                    projId={id}
+                  />
+                </div>
+              </div>
+              <div className="row mb-3">
+                <div className="col-lg-6">
+                  <label className="text-white">Data de início *</label>
+                  <InputComponent
+                    placeholder={" *"}
+                    id="startDate"
+                    required
+                    name="startDate"
+                    type="date"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="col-lg-6">
+                  <label className="text-white">Data de fim *</label>
 
-                    <InputComponent
-                      placeholder={" *"}
-                      id="finishDate"
-                      required
-                      name="finishDate"
-                      type="date"
-                      onChange={handleChange}
-                    />
-                  </div>
+                  <InputComponent
+                    placeholder={" *"}
+                    id="finishDate"
+                    required
+                    name="finishDate"
+                    type="date"
+                    onChange={handleChange}
+                  />
                 </div>
-                <div className="row mb-3">
-                  <div className="col-lg-6">
-                    <InputComponent
-                      placeholder={"Executores adicionais "}
-                      id="additionalExecutors"
-                      name="additionalExecutors"
-                      type="text"
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="col-lg-6">
-                    <ProjectAllTasksSelect
-                      name="preRequiredTasks"
-                      id="preRequiredTasks"
-                      onChange={handleChange}
-                      placeholder={"Tarefas precedentes "}
-                      local={"Tarefas precedentes "}
-                      taskList={task}
-                    />
-                  </div>
+              </div>
+              <div className="row mb-3">
+                <div className="col-lg-6">
+                  <InputComponent
+                    placeholder={"Executores adicionais "}
+                    id="additionalExecutors"
+                    name="additionalExecutors"
+                    type="text"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="col-lg-6">
+                  <ProjectAllTasksSelect
+                    name="preRequiredTasks"
+                    id="preRequiredTasks"
+                    onChange={handleChange}
+                    placeholder={"Tarefas precedentes "}
+                    local={"Tarefas precedentes "}
+                    taskList={task}
+                  />
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-lg-6 d-flex align-items-center ">
-            <TextAreaComponent
-              placeholder={"Descrição da tarefa *"}
-              class="text-dark bg-white rounded-2 w-100 h-75 "
-              id="details"
-              name="details"
-              required
-              type="text"
-              onChange={handleChange}
-            />
-            {/*    <textarea
+        </div>
+        <div class="col-lg-6 d-flex align-items-center ">
+          <TextAreaComponent
+            placeholder={"Descrição da tarefa *"}
+            id="details"
+            name="details"
+            required
+            type="text"
+            onChange={handleChange}
+          />
+          {/*    <textarea
               class="text-dark bg-white rounded-2 w-100 h-75 "
               placeholder="Descrição da Tarefa"
               name="bio"
               type="text"
             ></textarea> */}
-          </div>{" "}
-          <div className="col-lg-1 d-flex align-items-center">
-            <ButtonComponent name={"Adicionar tarefa"} onClick={handleSubmit} />
-          </div>
+        </div>{" "}
+        <div className="col-lg-1 d-flex align-items-center">
+          <ButtonComponent name={"Adicionar tarefa"} onClick={handleSubmit} />
         </div>
-        <div className="row mt-4">
-          <div className="col-lg-2 bg-secondary rounded-5 p-3">
-            <div className="">
-              <h3 className="bg-white rounded-5 text-center">
-                Lista de Tarefas
-              </h3>
-              <div>
-                {showTasks && showTasks.length !== 0 ? (
-                  <div className="accordion ">
-                    {showTasks.map((task) => (
-                      <div className="accordion-item " key={task.id}>
-                        <div className="accordion-header  ">
-                          <div className="row d-flex justify-content-between  ">
-                            <button
-                              style={{ background: "#C01722" }}
-                              className={`accordion-button text-white d-flex justify-content-between  ${
-                                activeId === task.id ? "active" : ""
-                              }`}
-                              type="button"
-                              onClick={() => toggleAccordion(task.id)}
-                            >
-                              <div className="col-lg-9"> {task.title}</div>
-                              <div className="bg-dark p-1">
-                                {convertWord(task.status)}
-                              </div>
-                            </button>
-                          </div>
-                        </div>
-                        <div
-                          className={`accordion-collapse collapse  ${
-                            activeId === task.id ? "show" : ""
-                          }`}
-                        >
-                          <div className="accordion-body ">
-                            {" "}
-                            <div className="row d-flex ">
-                              <div className="row">
-                                <button>Eliminar</button>
-                                <button>Editar</button>
-                                <select name="" id=""></select>
-                              </div>
-                              <div className="row">
-                                <h5 className="row mb-3">
-                                  {" "}
-                                  Data de Inicio: {formatDate(task.startDate)}
-                                </h5>
-                                <h5 className="row mb-3">
-                                  {" "}
-                                  Data de Fim: {formatDate(task.finishDate)}
-                                  <hr />
-                                </h5>
-                              </div>
-
-                              <div className="row">
-                                {" "}
-                                <h4 className="p-0">Descrição:</h4>
-                                {task.details}
-                                <hr />
-                              </div>
-                              <div className="row">
-                                <h4 className="p-0">Executores Adicionais:</h4>{" "}
-                                {task.additionalExecutors}
-                                <hr />
-                              </div>
-                              <h4 className="row d-flex justify-content-end">
-                                Responsavel: {task.taskOwnerFirstName}{" "}
-                                {task.taskOwnerLastName}
-                              </h4>
+      </div>
+      <div className="row mt-4">
+        <div className="col-lg-2 bg-secondary rounded-5 p-3">
+          <div className="">
+            <h3 className="bg-white rounded-5 text-center">Lista de Tarefas</h3>
+            <div>
+              {showTasks && showTasks.length !== 0 ? (
+                <div className="accordion ">
+                  {showTasks.map((task) => (
+                    <div className="accordion-item " key={task.id}>
+                      <div className="accordion-header  ">
+                        <div className="row d-flex justify-content-between  ">
+                          <button
+                            style={{ background: "#C01722" }}
+                            className={`accordion-button text-white d-flex justify-content-between  ${
+                              activeId === task.id ? "active" : ""
+                            }`}
+                            type="button"
+                            onClick={() => toggleAccordion(task.id)}
+                          >
+                            <div className="col-lg-9"> {task.title}</div>
+                            <div className="bg-dark p-1">
+                              {convertWord(task.status)}
                             </div>
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        className={`accordion-collapse collapse  ${
+                          activeId === task.id ? "show" : ""
+                        }`}
+                      >
+                        <div className="accordion-body ">
+                          {" "}
+                          <div className="row d-flex ">
+                            <div className="row">
+                              <button>Eliminar</button>
+                              <button>Editar</button>
+                              <select name="" id=""></select>
+                            </div>
+                            <div className="row">
+                              <h5 className="row mb-3">
+                                {" "}
+                                Data de Inicio: {formatDate(task.startDate)}
+                              </h5>
+                              <h5 className="row mb-3">
+                                {" "}
+                                Data de Fim: {formatDate(task.finishDate)}
+                                <hr />
+                              </h5>
+                            </div>
+
+                            <div className="row">
+                              {" "}
+                              <h4 className="p-0">Descrição:</h4>
+                              {task.details}
+                              <hr />
+                            </div>
+                            <div className="row">
+                              <h4 className="p-0">Executores Adicionais:</h4>{" "}
+                              {task.additionalExecutors}
+                              <hr />
+                            </div>
+                            <h4 className="row d-flex justify-content-end">
+                              Responsavel: {task.taskOwnerFirstName}{" "}
+                              {task.taskOwnerLastName}
+                            </h4>
                           </div>
                         </div>
                       </div>
-                    ))}{" "}
-                  </div>
-                ) : (
-                  <p>Não há tarefas definidas</p>
-                )}
-              </div>
+                    </div>
+                  ))}{" "}
+                </div>
+              ) : (
+                <p>Não há tarefas definidas</p>
+              )}
             </div>
           </div>
-          <div className="col-lg-9 bg-white mx-auto  ">
-            {" "}
-            {showTasks && showTasks.length > 0 && (
-              <>
-                <Gantt
-                  tasks={mappedTasks}
-                  startDate="2023-01-01"
-                  endDate="2023-12-30"
-                  viewMode="Day"
-                  barBackgroundColor="red"
-                />
-              </>
-            )}
-          </div>
         </div>
+        {/* <div className="col-lg-12 bg-white mx-auto w-50 ">
+          {" "}
+          {showTasks && showTasks.length > 0 && (
+            <>
+              <Gantt
+                tasks={mappedTasks}
+                startDate="2023-01-01"
+                endDate="2023-12-30"
+                viewMode="Day"
+                barBackgroundColor="red"
+              />
+            </>
+          )}
+        </div> */}
       </div>
     </div>
   );
