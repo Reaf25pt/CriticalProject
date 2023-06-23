@@ -130,7 +130,7 @@ function InviteMember({ projId }) {
                         key={item.id}
                         onClick={() => handleSelection(item)}
                       >
-                        <div>
+                        <div className="">
                           {item.firstName}
                           {emptyStr}
                           {item.lastName}

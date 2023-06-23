@@ -16,6 +16,7 @@ public class Contest {
 
     public boolean createNewContest(dto.Contest contest){
         boolean res = false;
+        
 
         //TODO verificar se é gestor de concursos no endpoint
 

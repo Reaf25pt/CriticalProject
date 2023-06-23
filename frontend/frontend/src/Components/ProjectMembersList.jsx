@@ -141,7 +141,7 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
                           class="form-check-label"
                           for="flexSwitchCheckChecked"
                         >
-                          <BsStarFill />
+                          <BsStarFill color="#C01722" />
                         </label>
                       </div>
                       {/*    <div class="form-check form-switch">

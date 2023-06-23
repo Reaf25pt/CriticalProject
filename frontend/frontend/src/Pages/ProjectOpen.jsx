@@ -23,15 +23,6 @@ function ProjectOpen() {
   const [showMembers, setShowMembers] = useState([]);
   const [members, setMembers] = useState([]);
 
-  /*   const local = [
-    { id: 0, office: "Lisboa" },
-    { id: 1, office: "Coimbra" },
-    { id: 2, office: "Porto" },
-    { id: 3, office: "Tomar" },
-    { id: 4, office: "Viseu" },
-    { id: 5, office: "Vila Real" },
-  ]; */
-
   const toggleComponent = () => {
     setShowComponentA(!showComponentA);
   };
@@ -357,7 +348,7 @@ function ProjectOpen() {
           role="tabpanel"
           aria-labelledby="tab5"
         >
-          <TimeLine />
+          <TimeLine tasks={""} />
         </div>
       </div>
     </div>

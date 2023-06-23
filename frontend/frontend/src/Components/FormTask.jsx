@@ -245,7 +245,7 @@ function FormTask(listMembers) {
         </div>
       </div>
       <div className="row mt-4">
-        <div className="col-lg-2 bg-secondary rounded-5 p-3">
+        <div className="col-lg-6 bg-secondary rounded-5 p-3">
           <div className="">
             <h3 className="bg-white rounded-5 text-center">Lista de Tarefas</h3>
             <div>

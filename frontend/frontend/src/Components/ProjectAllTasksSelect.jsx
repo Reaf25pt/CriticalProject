@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
 import { userStore } from "../stores/UserStore";
+import { useParams } from "react-router-dom";
 
 function ProjectAllTasksSelect(props) {
   const user = userStore((state) => state.user);
   const [projTasks, setProjTasks] = useState([]);
 
+  const { id } = useParams();
+
   useEffect(() => {
     console.log(props.listMembers);
     console.log(props.projId);
 
-    /*  fetch(`http://localhost:8080/projetofinal/rest/project/tasks/${id}`, {
+    fetch(`http://localhost:8080/projetofinal/rest/project/tasks/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -22,7 +25,7 @@ function ProjectAllTasksSelect(props) {
         console.log(data);
         setProjTasks(data);
       })
-      .catch((err) => console.log(err)); */
+      .catch((err) => console.log(err));
   }, []);
 
   return (
