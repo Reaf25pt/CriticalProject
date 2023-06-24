@@ -3,13 +3,43 @@ import { userStore } from "../stores/UserStore";
 import { useParams } from "react-router-dom";
 import ButtonComponent from "./ButtonComponent";
 
-function ProjectComponent({ toggleComponent, project, members }) {
+function ProjectComponent({ toggleComponent, project, members, setProjects }) {
   const user = userStore((state) => state.user);
 
   const handleProjectStatus = (event) => {
-    if ((event.target.name = "Mudar status: ready")) {
-      console.log("ready");
+    var status;
+    console.log(event);
+
+    if (event === 0) {
+      status = 0;
+    } else if (event === 1) {
+      status = 1;
+    } else if (event === 5) {
+      status = 5;
+    } else if (event === 6) {
+      status = 6;
     }
+
+    console.log(status);
+
+    fetch("http://localhost:8080/projetofinal/rest/project/status", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        token: user.token,
+        status: status,
+        projId: project.id,
+      },
+    }).then((response) => {
+      if (response.status === 200) {
+        setProjects([]);
+        alert("Status alterado");
+
+        //navigate("/home", { replace: true });
+      } else {
+        alert("Algo correu mal. Tente novamente");
+      }
+    });
   };
 
   const handleParticipation = (event) => {
@@ -25,7 +55,8 @@ function ProjectComponent({ toggleComponent, project, members }) {
       },
     }).then((response) => {
       if (response.status === 200) {
-        alert("Pedido efectuado");
+        alert("status alterado");
+        setProjects([]);
         //navigate("/home", { replace: true });
       } else {
         alert("Algo correu mal. Tente novamente");
@@ -64,15 +95,17 @@ function ProjectComponent({ toggleComponent, project, members }) {
 
               {project.manager ? (
                 <>
-                  <div className="row mx-auto justify-content-around mt-5">
-                    <div className="col-lg-12">
-                      <ButtonComponent
-                        type="button"
-                        name="Editar Projeto"
-                        onClick={toggleComponent}
-                      />
+                  {project.statusInt === 0 ? (
+                    <div className="row mx-auto justify-content-around mt-5">
+                      <div className="col-lg-12">
+                        <ButtonComponent
+                          type="button"
+                          name="Editar Projeto"
+                          onClick={toggleComponent}
+                        />
+                      </div>
                     </div>
-                  </div>
+                  ) : null}
 
                   {project.statusInt === 0 ? (
                     <div className="row mx-auto justify-content-around mt-5">
@@ -80,7 +113,7 @@ function ProjectComponent({ toggleComponent, project, members }) {
                         <ButtonComponent
                           type="button"
                           name="Mudar status: ready"
-                          onClick={handleProjectStatus}
+                          onClick={() => handleProjectStatus(1)}
                         />
                       </div>
                     </div>
@@ -90,7 +123,7 @@ function ProjectComponent({ toggleComponent, project, members }) {
                         <ButtonComponent
                           type="button"
                           name="Mudar status: planning"
-                          onClick={handleProjectStatus}
+                          onClick={() => handleProjectStatus(0)}
                         />
                       </div>
                     </div>
@@ -100,21 +133,23 @@ function ProjectComponent({ toggleComponent, project, members }) {
                         <ButtonComponent
                           type="button"
                           name="Mudar status: finished"
-                          onClick={handleProjectStatus}
+                          onClick={() => handleProjectStatus(6)}
                         />
                       </div>
                     </div>
                   ) : null}
 
-                  <div className="row mx-auto justify-content-around mt-5">
-                    <div className="col-lg-12">
-                      <ButtonComponent
-                        type="button"
-                        name="Cancelar"
-                        onClick={handleProjectStatus}
-                      />
+                  {project.statusInt !== 5 ? (
+                    <div className="row mx-auto justify-content-around mt-5">
+                      <div className="col-lg-12">
+                        <ButtonComponent
+                          type="button"
+                          name="Cancelar"
+                          onClick={() => handleProjectStatus(5)}
+                        />
+                      </div>
                     </div>
-                  </div>
+                  ) : null}
                 </>
               ) : !project.member &&
                 user.noActiveProject &&

@@ -202,6 +202,7 @@ function ProjectOpen() {
                 project={showProjects}
                 /*   local={local} */
                 members={showMembers}
+                setProjects={setProjects}
               />
             ) : (
               <EditProject

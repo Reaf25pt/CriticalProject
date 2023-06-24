@@ -66,9 +66,10 @@ public class Project implements Serializable {
         projDto.setDetails(p.getDetails());
         projDto.setResources(p.getResources());
         projDto.setStatus(p.getStatus().getStatus());
+        projDto.setStatusInt(p.getStatus().ordinal());
         projDto.setAvailableSpots(getNumberOfAvailableSpots(p));
 
-        //   projDto.setStatus(p.getStatus().ordinal());
+
         projDto.setMembersNumber(p.getMembersNumber());
         projDto.setCreationDate(p.getCreationDate());
 
@@ -1144,7 +1145,9 @@ return list;
     public boolean editProjectStatus(String token, int projId, int status) {
         // altera estado do projecto, por intervenção de gestor do projecto
         // apenas considera os estados planning, ready, in progress, cancelled, finished. os outros 2 serão automáticos
+
         boolean res = false;
+        System.out.println("tentar alterar " + status);
 
         // TODO acabar de implementar
 
@@ -1152,26 +1155,35 @@ return list;
         if (project != null) {
             switch (status) {
                 case 0:
-                    // definir como planning
-                    //res = true;
+                    // definir como planning: proj está em ready e é preciso alterar status para permitir editar info do projecto
+                    System.out.println("0 ");
+                    project.setStatus(StatusProject.PLANNING);
+                    projDao.merge(project);
+                    res = true;
                     break;
                 case 1:
-                    //definir como ready
-                    //res = true;
+                    //definir como ready: projecto está em planning. Proj ready é um projecto que está pronto para ser apresentado a um concurso
+                    // não permite edição de info e tem de se assegurar que tarefa final existe
+                    System.out.println("1 ");
+                    project.setStatus(StatusProject.READY);
+                    projDao.merge(project);
+                    res = true;
                     break;
                 case 4:
-                    // definir como in progress
+                    // definir como in progress: se n for automático - proj está approved
                     //res = true;
 
                     break;
                 case 5:
                     // cancelar projecto pode ser feito em qq altura
+                     // TODO inactivar chat
+
                     project.setStatus(StatusProject.CANCELLED);
                     projDao.merge(project);
                     res = true;
                     break;
                 case 6:
-                    //definir como finished
+                    //definir como finished: proj tem de estar in progress e verificar se precisa de ter tarefas todas concluidas ou outras verificações
                     //res = true;
                     break;
             }
@@ -1232,12 +1244,26 @@ return list;
         return tempList.get(index);
     }
 
-    public boolean verifyProjectStatusToChangeTask(int projId) {
+/*    public boolean verifyProjectStatusToChangeTask(int projId) {
         // impedir caso projecto tenha status finished, cancelled, proposed, approved pq nestes casos o plano de execução não pode ser alterado
 boolean res = false;
         entity.Project project = projDao.findProjectById(projId);
         if(project!=null){
             if (project.getStatus()==StatusProject.PROPOSED || project.getStatus()==StatusProject.APPROVED|| project.getStatus()==StatusProject.CANCELLED|| project.getStatus()==StatusProject.FINISHED){
+                res = true;
+                // tarefas do plano de execução não poderão ser alteradas
+            }
+
+        }
+        return res;
+    }*/
+
+    public boolean verifyProjectStatusToEditTask(int projId) {
+        // impedir caso projecto tenha status finished, cancelled, proposed, approved, ready pq nestes casos o plano de execução não pode ser alterado
+        boolean res = false;
+        entity.Project project = projDao.findProjectById(projId);
+        if(project!=null){
+            if (project.getStatus()==StatusProject.READY ||project.getStatus()==StatusProject.PROPOSED || project.getStatus()==StatusProject.APPROVED|| project.getStatus()==StatusProject.CANCELLED|| project.getStatus()==StatusProject.FINISHED ){
                 res = true;
                 // tarefas do plano de execução não poderão ser alteradas
             }
@@ -1333,19 +1359,7 @@ boolean res=false;
         return list;
     }
 
-    public boolean verifyProjectStatusToEditTask(int projId) {
-        // impedir caso projecto tenha status finished, cancelled, proposed, approved pq nestes casos o plano de execução não pode ser alterado
-        boolean res = false;
-        entity.Project project = projDao.findProjectById(projId);
-        if(project!=null){
-            if (project.getStatus()==StatusProject.PROPOSED || project.getStatus()==StatusProject.APPROVED|| project.getStatus()==StatusProject.CANCELLED|| project.getStatus()==StatusProject.FINISHED ){
-                res = true;
-                // tarefas do plano de execução não poderão ser alteradas
-            }
 
-        }
-        return res;
-    }
 
     public boolean verifyProjectStatusToEditTaskStatus(int projId) {
 //status  de tarefa apenas pode ser alterado se projecto estiver em fase IN PROGRESS
@@ -1590,5 +1604,21 @@ boolean res=false;
 
 
 return res;
+    }
+
+    public boolean verifyPermisionToEditProjectInfo(int id) {
+        // verifica se status do projecto é planning, pois só assim os detalhes do projecto podem ser alterados
+        boolean res = false;
+
+        entity.Project project = projDao.findProjectById(id);
+
+        if(project!=null){
+            if(project.getStatus()!=StatusProject.PLANNING){
+                res=true;
+                // projecto n pode ser editado
+            }
+        }
+
+        return res;
     }
 }

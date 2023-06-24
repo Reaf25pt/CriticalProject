@@ -213,7 +213,7 @@ return r;
 
         if (userBean.checkStringInfo(token) || task== null || projBean.checkTaskInfo(task)) {
             r = Response.status(401).entity("Unauthorized!").build();
-        }  else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId) || projBean.verifyProjectStatusToChangeTask(projId)) {
+        }  else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId) || projBean.verifyProjectStatusToEditTask(projId)) {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
@@ -301,9 +301,9 @@ return r;
         if (userBean.checkStringInfo(token) || editProj==null) {
             r = Response.status(401).entity("Unauthorized!").build();
 
-        } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, editProj.getId())) {
+        } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, editProj.getId()) || projBean.verifyPermisionToEditProjectInfo(editProj.getId())) {
             r = Response.status(403).entity("Forbidden!").build();
-
+// TODO só pode editar info do projecto (n se refere a plano de execucao) no modo planning
         } else {
 
             userBean.updateSessionTime(token);
@@ -407,7 +407,7 @@ return r;
 
     // EDIT PROJECT STATUS
     @PUT
-    @Path("/project")
+    @Path("/status")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response editProjectStatus(@HeaderParam("token") String token, @HeaderParam("status") int status, @HeaderParam("projId") int projId) {
