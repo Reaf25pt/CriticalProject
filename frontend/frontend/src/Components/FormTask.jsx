@@ -269,17 +269,15 @@ function FormTask(listMembers) {
                 </div>
               </div>
               <div className="row mb-3">
-                <div className="col-lg-6">
-                  <InputComponent
-                    placeholder={"Executores adicionais "}
-                    id="additionalExecutors"
-                    name="additionalExecutors"
-                    type="text"
-                    onChange={handleChange}
-                    defaultValue={""}
-                  />
-                </div>
-                <div className="col-lg-6">
+                <InputComponent
+                  placeholder={"Executores adicionais "}
+                  id="additionalExecutors"
+                  name="additionalExecutors"
+                  type="text"
+                  onChange={handleChange}
+                  defaultValue={""}
+                />
+                <div className="row mt-3">
                   <ProjectAllTasksSelect
                     id="tst"
                     preReqTasks={preReqTasks}

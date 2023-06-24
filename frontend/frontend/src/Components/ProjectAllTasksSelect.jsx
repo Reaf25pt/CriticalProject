@@ -92,28 +92,31 @@ function ProjectAllTasksSelect({
   };
 
   return (
-    <>
-      <div>
-        <select
-          name="preRequiredTasks"
-          id="preRequiredTasks"
-          onChange={handleChange}
-          // onClick={handleChange}
-          placeholder={"Tarefas precedentes "}
-          local={"Tarefas precedentes "}
-          className="form-control"
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-lg-6">
+          <select
+            name="preRequiredTasks"
+            id="preRequiredTasks"
+            onChange={handleChange}
+            // onClick={handleChange}
+            placeholder={"Tarefas precedentes "}
+            local={"Tarefas precedentes "}
+            className="form-control"
 
-          /*  listMembers={props.listMembers}
+            /*  listMembers={props.listMembers}
         projId={props.projId} */
-        >
-          <option value={"-1"}>{"Tarefas precedentes "} </option>
-          {/*   {Object.entries(projTasks).map(([key, task]) => ( */}
-          {projTasks.map((task) => (
-            <option key={task.id} value={task.id}>
-              {task.title}
-            </option>
-          ))}
-        </select>
+          >
+            <option value={"-1"}>{"Tarefas precedentes "} </option>
+            {/*   {Object.entries(projTasks).map(([key, task]) => ( */}
+            {projTasks.map((task) => (
+              <option key={task.id} value={task.id}>
+                {task.title}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div className="col-lg-3">
           <ButtonComponent onClick={handleClick} name={"+"} />
         </div>
@@ -136,7 +139,7 @@ function ProjectAllTasksSelect({
           </div>
         </div>
       ) : null}
-    </>
+    </div>
   );
 }
 
