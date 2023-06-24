@@ -21,6 +21,7 @@ import "./index.css";
 import ContestCreate from "./Pages/ContestCreate";
 import Chat from "./Pages/Chat";
 import Notifications from "./Pages/Notifications";
+import ContestOpen from "./Pages/ContestOpen";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -40,9 +41,8 @@ root.render(
         <Route path="chat" element={<Chat />} />
         <Route path="notifications" element={<Notifications />} />
         <Route path="projects/:id" element={<ProjectOpen />} />
+        <Route path="contests/:id" element={<ContestOpen />} />
       </Route>
-
-      {/* <Route path="/projects/:id" element={<ProjectOpen />} /> */}
     </Routes>
   </BrowserRouter>
 );

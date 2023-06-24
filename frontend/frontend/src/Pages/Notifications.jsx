@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { userStore } from "../stores/UserStore";
+import { BsXLg, BsCheck2Circle } from "react-icons/bs";
 
 function Notifications() {
   const user = userStore((state) => state.user);
@@ -48,12 +49,25 @@ function Notifications() {
           role="tabpanel"
           aria-labelledby="home-tab"
         >
-          <div className="row mx-auto col-10 col-md-8 col-lg-6">
-            {/* {showAllNotifications.map((notification)=> (
-                          <div className="bg-secondary">{notification.}</div>
-
-
-            ))} */}
+          <div className="row mx-auto col-10 col-md-8 col-lg-6 mt-5">
+            <div class="card bg-light">
+              <div class="card-body">
+                <h5 class="card-title ">Card title</h5>
+                <hr />
+                <div className="row">
+                  <div className="col-lg-10">
+                    <p class="card-text">
+                      Some quick example text to build on the card title and
+                      make up the bulk of the card's content.
+                    </p>
+                  </div>
+                  <div className="col-lg-2 d-flex justify-content-around">
+                    <BsCheck2Circle color="green" size={40} />
+                    <BsXLg color="red" size={40} />
+                  </div>
+                </div>
+              </div>
+            </div>{" "}
           </div>
         </div>
       </div>
