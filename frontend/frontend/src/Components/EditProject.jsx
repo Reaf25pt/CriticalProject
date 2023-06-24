@@ -167,10 +167,6 @@ function EditProject({ toggleComponent, project, set }) {
                   defaultValue={project.details || ""}
                   onChange={handleChange}
                 />
-                {/*   <textarea
-      defaultValue={project.details || ""}
-      className="h-75 w-100"
-    ></textarea> */}
               </div>
             </div>
           </div>
@@ -185,10 +181,6 @@ function EditProject({ toggleComponent, project, set }) {
                   defaultValue={project.resources || ""}
                   onChange={handleChange}
                 />
-                {/*  <textarea
-      defaultValue={project.resources || ""}
-      className="h-75 w-100"
-    ></textarea> */}
               </div>
             </div>
           </div>
