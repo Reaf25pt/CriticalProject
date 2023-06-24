@@ -5,6 +5,13 @@ import ButtonComponent from "./ButtonComponent";
 
 function ProjectComponent({ toggleComponent, project, members }) {
   const user = userStore((state) => state.user);
+
+  const handleProjectStatus = (event) => {
+    if ((event.target.name = "Mudar status: ready")) {
+      console.log("ready");
+    }
+  };
+
   const handleParticipation = (event) => {
     event.preventDefault();
 
@@ -66,17 +73,51 @@ function ProjectComponent({ toggleComponent, project, members }) {
                       />
                     </div>
                   </div>
+
+                  {project.statusInt === 0 ? (
+                    <div className="row mx-auto justify-content-around mt-5">
+                      <div className="col-lg-12">
+                        <ButtonComponent
+                          type="button"
+                          name="Mudar status: ready"
+                          onClick={handleProjectStatus}
+                        />
+                      </div>
+                    </div>
+                  ) : project.statusInt === 1 ? (
+                    <div className="row mx-auto justify-content-around mt-5">
+                      <div className="col-lg-12">
+                        <ButtonComponent
+                          type="button"
+                          name="Mudar status: planning"
+                          onClick={handleProjectStatus}
+                        />
+                      </div>
+                    </div>
+                  ) : project.statusInt === 4 ? (
+                    <div className="row mx-auto justify-content-around mt-5">
+                      <div className="col-lg-12">
+                        <ButtonComponent
+                          type="button"
+                          name="Mudar status: finished"
+                          onClick={handleProjectStatus}
+                        />
+                      </div>
+                    </div>
+                  ) : null}
+
                   <div className="row mx-auto justify-content-around mt-5">
                     <div className="col-lg-12">
                       <ButtonComponent
                         type="button"
-                        name="Alterar status"
-                        /*  onClick={toggleComponent}  */
+                        name="Cancelar"
+                        onClick={handleProjectStatus}
                       />
                     </div>
                   </div>
                 </>
               ) : !project.member &&
+                user.noActiveProject &&
                 project.availableSpots !==
                   0 /* members.length < project.membersNumber */ ? (
                 <div className="row mx-auto justify-content-around mt-5">

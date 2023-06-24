@@ -1341,6 +1341,7 @@ boolean res = false;
     public boolean editTask(String token, Task editTask) {
         // editar tarefa
 
+        // TODO alterar para caso em que tarefas sao modificadas com projecto em modo progress - verificar datas
         boolean res = false;
             entity.Task taskEnt = taskDao.find(editTask.getId());
 

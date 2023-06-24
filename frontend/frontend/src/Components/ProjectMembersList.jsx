@@ -218,6 +218,15 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
           </div>
         ))}
       </div>
+
+      {showProjects.member ? (
+        <div className="col-lg-6 mx-auto">
+          <ButtonComponent
+            onClick={handleRemove}
+            name={"Sair do projecto"}
+          ></ButtonComponent>
+        </div>
+      ) : null}
     </div>
   );
 }
