@@ -687,7 +687,7 @@ public class Project implements Serializable {
         for (Task t : preRequiredTasks) {
             entity.Task taskEnt= taskDao.find(t.getId());
             if (taskEnt.getFinishDate().before(currentTask.getStartDate())){
-                
+
             // adicionar cada tarefa q seja pre requisito à lista da current task, desde que as datas não se sobreponham!!!
             currentTask.getListPreRequiredTasks().add(taskDao.find(t.getId()));
         }}
@@ -747,9 +747,29 @@ public class Project implements Serializable {
         task.setTaskOwnerLastName(t.getTaskOwner().getLastName());
         task.setTaskOwnerPhoto(t.getTaskOwner().getPhoto());
         task.setAdditionalExecutors(t.getAdditionalExecutors());
-        // TODO acrescentar lista de tarefas precedentes
+        if (t.getListPreRequiredTasks()!=null){
+            task.setPreRequiredTasks(convertTaskEntToMinimalDto(t.getListPreRequiredTasks()));
+        }
+
 
         return task;
+    }
+
+    private List<Task> convertTaskEntToMinimalDto(List<entity.Task> listPreRequiredTasks) {
+        // método que converte task entity em dto, apresentando apenas a info mínima: ID, title e status
+
+        List<Task> list = new ArrayList<>();
+
+        for (entity.Task t : listPreRequiredTasks){
+            Task task = new Task();
+            task.setId(t.getId());
+            task.setTitle(t.getTitle());
+            task.setStatus(t.getStatus().getStatus());
+            task.setStatusInfo(t.getStatus().ordinal());
+
+            list.add(task);
+        }
+return list;
     }
 
     public boolean verifyIfUserHasActiveProject(String token) {
@@ -1222,5 +1242,237 @@ boolean res = false;
 
         }
         return res;
+    }
+
+    public boolean verifyProjectStatusToDeleteTask(int projId) {
+        // impedir caso projecto tenha status finished, cancelled, proposed, approved, in progress pq nestes casos o plano de execução não pode ser alterado
+        boolean res = false;
+        entity.Project project = projDao.findProjectById(projId);
+        if(project!=null){
+            if (project.getStatus()==StatusProject.PROPOSED || project.getStatus()==StatusProject.APPROVED|| project.getStatus()==StatusProject.CANCELLED|| project.getStatus()==StatusProject.FINISHED || project.getStatus()==StatusProject.PROGRESS){
+                res = true;
+                // tarefas do plano de execução não poderão ser alteradas
+            }
+
+        }
+        return res;
+    }
+
+    public boolean verifyIfTaskBelongsToProject(int taskId, int projId) {
+        // verifica se task realmente está associada ao projecto
+boolean res=false;
+        entity.Task task = taskDao.find(taskId);
+
+        if(task!=null){
+            if (task.getProject().getId()==projId){
+                res = true;
+            }
+        }
+
+      return res;
+    }
+
+    public boolean deleteTask(String token, int taskId) {
+        // TODO nao finalizado, encontrar todas as tasks que tenham a que sera apagada associada
+        // apaga tarefa da BD
+boolean res=false;
+        entity.Task taskEnt=taskDao.find(taskId);
+        if(taskEnt!=null) {
+
+
+
+            if(taskEnt.getListPreRequiredTasks()!=null){
+                /*for (entity.Task t : taskEnt.getListPreRequiredTasks()){
+                    taskEnt.getListPreRequiredTasks().remove(t);*/
+                taskEnt.getListPreRequiredTasks().clear();
+                    taskDao.merge(taskEnt);
+                }
+
+
+            entity.Project projEnt = taskEnt.getProject();
+
+            if(projEnt!=null){
+projEnt.getListTasks().remove(taskEnt);
+
+                entity.User user = taskEnt.getTaskOwner();
+
+                if(user!=null){
+                    user.getListTasks().remove(taskEnt);
+                }
+
+projDao.merge(projEnt);
+                userDao.merge(user);
+taskDao.remove(taskEnt);
+res=true;
+
+            }
+        }
+        return res;
+    }
+
+    public boolean verifyProjectStatusToEditTask(int projId) {
+        // impedir caso projecto tenha status finished, cancelled, proposed, approved pq nestes casos o plano de execução não pode ser alterado
+        boolean res = false;
+        entity.Project project = projDao.findProjectById(projId);
+        if(project!=null){
+            if (project.getStatus()==StatusProject.PROPOSED || project.getStatus()==StatusProject.APPROVED|| project.getStatus()==StatusProject.CANCELLED|| project.getStatus()==StatusProject.FINISHED ){
+                res = true;
+                // tarefas do plano de execução não poderão ser alteradas
+            }
+
+        }
+        return res;
+    }
+
+    public boolean verifyProjectStatusToEditTaskStatus(int projId) {
+//status  de tarefa apenas pode ser alterado se projecto estiver em fase IN PROGRESS
+boolean res = false;
+        entity.Project project = projDao.findProjectById(projId);
+        if(project!=null){
+            if (project.getStatus()!=StatusProject.PROGRESS  ){
+                res = true;
+                // status de tarefas do plano de execução não poderá ser alterado
+            }
+
+        }
+        return res;
+    }
+
+    public boolean editTask(String token, Task editTask) {
+        // editar tarefa
+
+        boolean res = false;
+            entity.Task taskEnt = taskDao.find(editTask.getId());
+
+            if(taskEnt!= null){
+                taskEnt.setTitle(editTask.getTitle());
+                //TODO verificar datas e impacto em tarefas precedentes
+                taskEnt.setStartDate(editTask.getStartDate());
+                taskEnt.setFinishDate(editTask.getFinishDate());
+                taskEnt.setDetails(editTask.getDetails());
+                //TODO alterar status à parte
+
+                if(taskEnt.getTaskOwner().getUserId()!=editTask.getTaskOwnerId()){
+                    //alteração de membro responsável. Verificar se é membro do projecto
+                    // TODO redundante pq no frontend so aparecem membros
+                    ProjectMember pm = projMemberDao.findProjectMemberByProjectIdAndUserId(taskEnt.getProject().getId(), editTask.getTaskOwnerId());
+
+                    if(pm !=null){
+                        if(pm.isAccepted() && !pm.isRemoved()){
+                            // relação com projecto está activa
+                            entity.User user = userDao.findUserById(editTask.getTaskOwnerId());
+                            if(user!=null){
+                                taskEnt.setTaskOwner(user);
+                            }
+                        }
+                    }
+                }
+
+                taskEnt.setAdditionalExecutors(editTask.getAdditionalExecutors());
+                if(editTask.getPreRequiredTasks()!=null || editTask.getPreRequiredTasks().size()!=0){
+                    //TODO falta implementar
+
+
+                }
+                taskDao.merge(taskEnt);
+                res=true;
+            }
+
+
+
+        return res;
+    }
+
+    public boolean verifyTaskStatusToEditTask(int id) {
+        // verifica se status da tarefa é planning ou in progress, para que possa ser alterada
+        boolean res=false;
+
+        entity.Task task = taskDao.find(id);
+        if(task!=null){
+            if(task.getStatus()==StatusTask.FINISHED){
+                res=true;
+                // tarefa n pode ser alterada
+            }
+        }
+
+
+        return res;
+    }
+
+    public boolean editTaskStatus(String token, Task editTask) {
+        // editar status da tarefa: tarefa pode passar de planned para in progress  ou de in progress para finished, nunca 'retroceder na escala'
+        // envia do frontend statusInfo = 1  para mudar para IN PROGRESS  / statusInfo = 2 para mudar para FINISHED
+
+        boolean res=false;
+
+        entity.Task taskEnt = taskDao.find(editTask.getId());
+
+        if(taskEnt!=null) {
+            if (taskEnt.getListPreRequiredTasks() != null) {
+                if (checkPreRequiredTasksAreFinished(taskEnt.getListPreRequiredTasks())) {
+
+                    if (editTask.getStatusInfo() == 1 && taskEnt.getStatus().ordinal() == 0) {
+                        taskEnt.setStatus(StatusTask.PROGRESS);
+                        taskDao.merge(taskEnt);
+                        res = true;
+                    } else if (editTask.getStatusInfo() == 2 && taskEnt.getStatus().ordinal() == 1) {
+                        taskEnt.setStatus(StatusTask.FINISHED);
+                        taskDao.merge(taskEnt);
+                        res = true;
+                    } else {
+                        res = false;
+                    }
+
+                }
+            }
+        }
+
+        return res;
+    }
+
+    private boolean checkPreRequiredTasksAreFinished(List<entity.Task> listPreRequiredTasks) {
+        // verifica se tarefas precedentes estão concluídas para que status de task possa ser alterado
+        // se count for diferente de 0, significa que alguma tarefa precedente n está concluída, n podendo mudar status da tarefa
+      boolean res=true;
+        int count = 0;
+        for (entity.Task t: listPreRequiredTasks){
+            if(t.getStatus()!=StatusTask.FINISHED){
+                count++;
+            }
+        }
+
+        if (count!=0){
+            res=false;
+        }
+
+     return res;
+    }
+
+    public boolean verifyPermissionToEditTaskStatus(String token, int taskId) {
+        // verifica se token é gestor do projecto ou owner da tarefa - únicas pessoas com autorização para editar status de tarefa
+boolean res=false;
+
+
+        entity.Task task = taskDao.find(taskId);
+        if(task!=null){
+
+            if(isProjManager(token, task.getProject().getId())){
+                // é gestor, pode mudar
+                res=true;
+            } else {
+                // verificar se token é owner da tarefa
+                entity.User loggedUser=tokenDao.findUserEntByToken(token);
+                if(loggedUser.getUserId()==task.getTaskOwner().getUserId()){
+                    // token é owner da tarefa, podendo alterar o seu status
+                    res=true;
+                }
+
+            }
+
+
+        }
+
+
+return res;
     }
 }

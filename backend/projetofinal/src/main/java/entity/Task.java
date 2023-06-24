@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name="Task")
@@ -156,5 +157,21 @@ public class Task implements Serializable {
 
     public void setListPreRequiredTasks(List<Task> listPreRequiredTasks) {
         this.listPreRequiredTasks = listPreRequiredTasks;
+
+
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return id == task.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

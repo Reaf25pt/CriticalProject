@@ -7,7 +7,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Path("/project")
@@ -427,6 +426,106 @@ return r;
 
             // TODO terminar de implementar
             boolean res = projBean.editProjectStatus(token, projId, status);
+
+            if (!res) {
+                r = Response.status(404).entity("Not found!").build();
+
+            } else {
+                r = Response.status(200).entity("Success").build();
+            }
+        }
+        return r;
+
+    }
+
+
+    //DELETE TASK FROM PROJECT
+    @DELETE
+    @Path("/task")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteTaskOfProject(@HeaderParam("token") String token, @HeaderParam("projId") int projId,@HeaderParam("taskId") int taskId ) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) ) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else if (!userBean.checkUserPermission(token) || !projBean.verifyIfTaskBelongsToProject(taskId, projId) || projBean.verifyProjectStatusToDeleteTask(projId)) {
+            r = Response.status(403).entity("Forbidden!").build();
+//TODO verificar que token é gestor para poder apagar
+        } else {
+
+            userBean.updateSessionTime(token);
+
+            boolean res = projBean.deleteTask(token, taskId);
+            if (!res) {
+                r = Response.status(404).entity("Not found!").build();
+            } else {
+                r = Response.status(200).entity("Success").build();
+
+            }
+        }
+        return r;
+
+    }
+
+
+    // EDIT TASK INFO
+    @PATCH
+    @Path("/{projId}/task")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editTask(@HeaderParam("token") String token, @PathParam("projId") int projId,dto.Task editTask) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) || editTask==null) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId)|| !projBean.verifyIfTaskBelongsToProject(editTask.getId(), projId) || projBean.verifyProjectStatusToEditTask(projId)|| projBean.verifyTaskStatusToEditTask(editTask.getId())) {
+            r = Response.status(403).entity("Forbidden!").build();
+
+        } else {
+
+            //TODO falta verificar datas e pre required tasks
+
+            userBean.updateSessionTime(token);
+
+            boolean res = projBean.editTask(token, editTask);
+
+            if (!res) {
+                r = Response.status(404).entity("Not found!").build();
+
+            } else {
+                r = Response.status(200).entity("Success").build();
+            }
+        }
+        return r;
+
+    }
+
+
+    // EDIT TASK STATUS
+    @PUT
+    @Path("/{projId}/task")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editTaskStatus(@HeaderParam("token") String token, @PathParam("projId") int projId, Task editTask) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) || editTask==null) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else if (!userBean.checkUserPermission(token) ||  !projBean.verifyIfTaskBelongsToProject(editTask.getId(), projId) || !projBean.verifyPermissionToEditTaskStatus(token, editTask.getId()) || projBean.verifyProjectStatusToEditTaskStatus(projId)) {
+            r = Response.status(403).entity("Forbidden!").build();
+
+        } else {
+
+           userBean.updateSessionTime(token);
+
+            boolean res = projBean.editTaskStatus(token, editTask);
 
             if (!res) {
                 r = Response.status(404).entity("Not found!").build();

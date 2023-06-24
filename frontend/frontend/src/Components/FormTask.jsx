@@ -22,7 +22,7 @@ function FormTask(listMembers) {
   const user = userStore((state) => state.user);
   const [activeId, setActiveId] = useState(null);
   const [credentials, setCredentials] = useState([]);
-
+  const [projInfo, setProjInfo] = useState([]);
   const [showTasks, setShowTasks] = useState([]);
   const [task, setTask] = useState([]);
   const { id } = useParams();
@@ -59,6 +59,22 @@ function FormTask(listMembers) {
       })
       .catch((err) => console.log(err));
   }, [task]);
+
+  useEffect(() => {
+    fetch(`http://localhost:8080/projetofinal/rest/project/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        token: user.token,
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        setProjInfo(data);
+        console.log(projInfo);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   function formatTimestamp(timestamp) {
     const date = new Date(timestamp);
@@ -156,6 +172,42 @@ function FormTask(listMembers) {
       setPreReqTasks([]);
       setCredentials([]);
     }
+  };
+
+  const handleClick = (event) => {
+    console.log(activeId);
+    if (event.target.name === "statusInProgress") {
+      var editTask = {
+        id: activeId,
+        statusInfo: 1,
+      };
+    } else if (event.target.name === "statusFinished") {
+      var editTask = {
+        id: activeId,
+        statusInfo: 2,
+      };
+    }
+    console.group(editTask);
+
+    fetch(`http://localhost:8080/projetofinal/rest/project/${id}/task`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        token: user.token,
+      },
+      body: JSON.stringify(editTask),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          setTask([]);
+          alert("Status alterado");
+          return response.json();
+          //navigate("/home", { replace: true });
+        } else {
+          alert("Algo correu mal. Tente novamente");
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -302,18 +354,39 @@ function FormTask(listMembers) {
                           {" "}
                           <div className="row d-flex ">
                             <div className="row">
-                              <button>Eliminar</button>
-                              <button>Editar</button>
-                              <select name="" id=""></select>
+                              {projInfo.statusInt === 0 ||
+                              projInfo.statusInt === 1 ||
+                              projInfo.statusInt === 4 ? (
+                                <button>Editar</button>
+                              ) : null}
+                              {projInfo.statusInt === 0 ||
+                              projInfo.statusInt === 1 ? (
+                                <button>Eliminar</button>
+                              ) : null}
+                              {task.statusInfo === 0 ? (
+                                <button
+                                  name={"statusInProgress"}
+                                  onClick={handleClick}
+                                >
+                                  Iniciar execução
+                                </button>
+                              ) : task.statusInfo === 1 ? (
+                                <button
+                                  name={"statusFinished"}
+                                  onClick={handleClick}
+                                >
+                                  Tarefa concluída
+                                </button>
+                              ) : null}
                             </div>
                             <div className="row">
                               <h5 className="row mb-3">
                                 {" "}
-                                Data de Inicio: {formatDate(task.startDate)}
+                                Início: {formatDate(task.startDate)}
                               </h5>
                               <h5 className="row mb-3">
                                 {" "}
-                                Data de Fim: {formatDate(task.finishDate)}
+                                Fim: {formatDate(task.finishDate)}
                                 <hr />
                               </h5>
                             </div>
@@ -324,13 +397,29 @@ function FormTask(listMembers) {
                               {task.details}
                               <hr />
                             </div>
-                            <div className="row">
-                              <h4 className="p-0">Executores Adicionais:</h4>{" "}
-                              {task.additionalExecutors}
-                              <hr />
-                            </div>
+
+                            {task.additionalExecutors ? (
+                              <div className="row">
+                                <h4 className="p-0">Executores adicionais:</h4>{" "}
+                                {task.additionalExecutors}
+                                <hr />
+                              </div>
+                            ) : null}
+
+                            {task.preRequiredTasks ? (
+                              <div className="row">
+                                {" "}
+                                Tarefas precedentes:
+                                {task.preRequiredTasks.map((item) => (
+                                  <div key={item.id} className="p-0">
+                                    {item.title} {item.status}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : null}
+
                             <h4 className="row d-flex justify-content-end">
-                              Responsavel: {task.taskOwnerFirstName}{" "}
+                              Responsável: {task.taskOwnerFirstName}{" "}
                               {task.taskOwnerLastName}
                             </h4>
                           </div>
