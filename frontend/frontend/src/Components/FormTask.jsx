@@ -18,6 +18,7 @@ import "gantt-task-react/dist/index.css";
 import ProjectMembersSelect from "./ProjectMembersSelect";
 import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
 import ModalEditTask from "./ModalEditTask";
+import ModalDeleteTask from "./ModalDeleteTask";
 
 function FormTask(listMembers) {
   const user = userStore((state) => state.user);
@@ -173,6 +174,7 @@ function FormTask(listMembers) {
       clearInputFields();
       setPreReqTasks([]);
       setCredentials([]);
+      setTriggerList("");
     }
   };
 
@@ -368,7 +370,11 @@ function FormTask(listMembers) {
                               ) : null}
                               {projInfo.statusInt === 0 ||
                               projInfo.statusInt === 1 ? (
-                                <button>Eliminar</button>
+                                <ModalDeleteTask
+                                  task={task}
+                                  set={setTask}
+                                  setTriggerList={setTriggerList}
+                                />
                               ) : null}
                               {task.statusInfo === 0 ? (
                                 <button

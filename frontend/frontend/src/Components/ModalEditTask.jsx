@@ -58,7 +58,7 @@ function ModalEditTask({ task, set, formatDate, setTriggerList }) {
     }).then((response) => {
       if (response.status === 200) {
         set([]); // reset a lista da pagina de tasks para actualizar
-        setTriggerList("");
+        setTriggerList(""); // para actualizar lista de tarefas a apresentar no adicionar tarefa
         handleClose();
       } else if (response.status === 403) {
         alert("Não tem autorização para efectuar este pedido");
