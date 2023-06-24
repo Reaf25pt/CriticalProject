@@ -7,7 +7,7 @@ public enum StatusProject {
     APPROVED("Approved to Contest"), //3
     PROGRESS("In Progress"),  //4
     CANCELLED("Cancelled"), //5
-    FINISHED("Finished"); //6 
+    FINISHED("Finished"); //6
 
 
     private final String status;

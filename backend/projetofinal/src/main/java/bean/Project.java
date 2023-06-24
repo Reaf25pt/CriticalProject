@@ -8,6 +8,7 @@ import dto.Skill;
 import dto.Task;
 import dto.UserInfo;
 import entity.ProjectMember;
+import entity.Token;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -1273,41 +1274,62 @@ boolean res=false;
     }
 
     public boolean deleteTask(String token, int taskId) {
-        // TODO nao finalizado, encontrar todas as tasks que tenham a que sera apagada associada
-        // apaga tarefa da BD
-boolean res=false;
-        entity.Task taskEnt=taskDao.find(taskId);
-        if(taskEnt!=null) {
+        // apaga tarefa da BD se não tiver associação com nenhuma outra tarefa, nos 2 sentidos
+        // TODO nao finalizado, encontrar todas as tasks que tenham a que sera apagada associada ???
 
+        boolean res = false;
+        entity.Task taskEnt = taskDao.find(taskId);
+        if (taskEnt != null) {
 
-
-            if(taskEnt.getListPreRequiredTasks()!=null){
+            List<entity.Task> listTasksWhichCurrentTaskIsPreRequired = findTasksWhoHaveCurrentTaskAsPrecedent(taskEnt);
+            // tarefa a ser apagar pode ser precedente de outras tarefas
+            //TODO Decidir o que fazer, permitir agora apaga apenas se n tiver relação com outras?!
+            if (listTasksWhichCurrentTaskIsPreRequired.isEmpty() && taskEnt.getListPreRequiredTasks().isEmpty()) {
+                      /*  if(taskEnt.getListPreRequiredTasks()!=null){
                 /*for (entity.Task t : taskEnt.getListPreRequiredTasks()){
                     taskEnt.getListPreRequiredTasks().remove(t);*/
-                taskEnt.getListPreRequiredTasks().clear();
+             /*   taskEnt.getListPreRequiredTasks().clear();
                     taskDao.merge(taskEnt);
+                }*/
+                entity.Project projEnt = taskEnt.getProject();
+
+                if (projEnt != null) {
+                    projEnt.getListTasks().remove(taskEnt);
+
+                    entity.User user = taskEnt.getTaskOwner();
+
+                    if (user != null) {
+                        user.getListTasks().remove(taskEnt);
+                        userDao.merge(user);
+                    }
+
+                    projDao.merge(projEnt);
+
                 }
-
-
-            entity.Project projEnt = taskEnt.getProject();
-
-            if(projEnt!=null){
-projEnt.getListTasks().remove(taskEnt);
-
-                entity.User user = taskEnt.getTaskOwner();
-
-                if(user!=null){
-                    user.getListTasks().remove(taskEnt);
-                }
-
-projDao.merge(projEnt);
-                userDao.merge(user);
-taskDao.remove(taskEnt);
-res=true;
+                taskDao.remove(taskEnt);
+                res = true;
 
             }
         }
         return res;
+    }
+
+    private List<entity.Task> findTasksWhoHaveCurrentTaskAsPrecedent(entity.Task taskEnt) {
+        // método que procura lista de tarefas que tenham taskEnt como pre required
+
+        List<entity.Task> list = new ArrayList<>();
+        List<entity.Task> allTasks = taskDao.findAll();
+
+        if(allTasks!=null){
+            for (entity.Task t : allTasks){
+                if (t.getListPreRequiredTasks().contains(taskEnt)){
+                    list.add(t);
+                }
+            }
+        }
+
+
+        return list;
     }
 
     public boolean verifyProjectStatusToEditTask(int projId) {
@@ -1339,49 +1361,142 @@ boolean res = false;
     }
 
     public boolean editTask(String token, Task editTask) {
-        // editar tarefa
+        // editar tarefa: preciso sempre garantir que datas não impactam outras tarefas associadas. Projecto in progress tb precisa de verificar data de concurso
 
         // TODO alterar para caso em que tarefas sao modificadas com projecto em modo progress - verificar datas
+
         boolean res = false;
+        boolean res1= false;
+        boolean res2= false;
             entity.Task taskEnt = taskDao.find(editTask.getId());
 
             if(taskEnt!= null){
-                taskEnt.setTitle(editTask.getTitle());
-                //TODO verificar datas e impacto em tarefas precedentes
-                taskEnt.setStartDate(editTask.getStartDate());
-                taskEnt.setFinishDate(editTask.getFinishDate());
-                taskEnt.setDetails(editTask.getDetails());
-                //TODO alterar status à parte
+// TODO falta implementar para projecto que esteja in progress
+                if(taskEnt.getProject().getStatus()!=StatusProject.PROGRESS){
+                    // editar tarefa num projecto que não está em andamento. Não é preciso confirmar datas de concurso
+                    if(editTask.getStartDate()!= taskEnt.getStartDate()){
+                        //significa que data inicio foi alterada e é preciso garantir que não interfere com datas de tarefas associadas, precendentes
 
-                if(taskEnt.getTaskOwner().getUserId()!=editTask.getTaskOwnerId()){
-                    //alteração de membro responsável. Verificar se é membro do projecto
-                    // TODO redundante pq no frontend so aparecem membros
-                    ProjectMember pm = projMemberDao.findProjectMemberByProjectIdAndUserId(taskEnt.getProject().getId(), editTask.getTaskOwnerId());
+                         res1 = checkNewDatesCompatibilityWithPreRequiredTasks(editTask);
 
-                    if(pm !=null){
-                        if(pm.isAccepted() && !pm.isRemoved()){
-                            // relação com projecto está activa
-                            entity.User user = userDao.findUserById(editTask.getTaskOwnerId());
-                            if(user!=null){
-                                taskEnt.setTaskOwner(user);
+
+                    }
+                    if (editTask.getFinishDate()!=taskEnt.getFinishDate()){
+                        //significa que data final foi alterada e é preciso garantir que não interfere com datas de tarefas associadas, que tenham esta tarefa como precedente
+                        res2=checkNewDatesCompatibilityWithAssociatedTasks(editTask, taskEnt);
+                    }
+
+                    if(!res1 && !res2 ){
+                        //ambos são false, significa que n há conflitos de datas. A tarefa pode ser editada
+
+                        taskEnt.setTitle(editTask.getTitle());
+                        taskEnt.setStartDate(editTask.getStartDate());
+                        taskEnt.setFinishDate(editTask.getFinishDate());
+                        taskEnt.setDetails(editTask.getDetails());
+                        taskEnt.setAdditionalExecutors(editTask.getAdditionalExecutors());
+
+                        if(taskEnt.getTaskOwner().getUserId()!=editTask.getTaskOwnerId()){
+                            //alteração de membro responsável. Verificar se é membro do projecto
+                            // TODO redundante pq no frontend so aparecem membros
+                            ProjectMember pm = projMemberDao.findProjectMemberByProjectIdAndUserId(taskEnt.getProject().getId(), editTask.getTaskOwnerId());
+
+                            if(pm !=null){
+                                if(pm.isAccepted() && !pm.isRemoved()){
+                                    // relação com projecto está activa
+                                    entity.User user = userDao.findUserById(editTask.getTaskOwnerId());
+                                    if(user!=null){
+                                        taskEnt.setTaskOwner(user);
+                                    }
+                                }
                             }
                         }
+
+                        if(editTask.getPreRequiredTasks()!=null || editTask.getPreRequiredTasks().size()!=0){
+
+                           // deletePreRequiredTasksWithCurrentTask(taskEnt);
+                            taskEnt.getListPreRequiredTasks().clear();
+
+                            taskDao.merge(taskEnt);
+
+                            associatePreRequiredTasksWithCurrentTask(editTask.getPreRequiredTasks(), taskEnt);
+                        }
+                        taskDao.merge(taskEnt);
+                        res=true;
                     }
                 }
 
-                taskEnt.setAdditionalExecutors(editTask.getAdditionalExecutors());
-                if(editTask.getPreRequiredTasks()!=null || editTask.getPreRequiredTasks().size()!=0){
-                    //TODO falta implementar
+            }
+        return res;
+    }
 
+/*
+    private void deletePreRequiredTasksWithCurrentTask( entity.Task currentTask) {
+        // apaga cada preRequired task a current task  //
+        System.out.println("metodo apagar pre required ");
+        List<entity.Task> tempList = currentTask.getListPreRequiredTasks();
 
+        for(entity.Task t : tempList){
+            currentTask.getListPreRequiredTasks().remove(t);
+            System.out.println("apaga task " + t.getId());
+        }
+        taskDao.merge(currentTask);
+    }
+*/
+
+    private boolean checkNewDatesCompatibilityWithPreRequiredTasks(Task editTask) {
+        //significa que data inicio foi alterada e é preciso garantir que não interfere com datas de tarefas associadas, precendentes
+        // comparar nova data inserida com data final de todas as tarefas que venham do frontend como sendo precedentes, pq lista actual na BD pode n igual
+        boolean res = false;
+        int count = 0;
+
+        if(editTask.getPreRequiredTasks()!=null){
+            for (Task t : editTask.getPreRequiredTasks()){
+                // para cada Dto que vem do frontend é preciso ir buscar ENT à DB para comparar data final com nova data de inicio
+                entity.Task taskE = taskDao.find(t.getId());
+
+                if (!taskE.getFinishDate().before(editTask.getStartDate())){
+                    System.out.println("finish " + taskE.getFinishDate());
+                    System.out.println("start " + editTask.getStartDate());
+                    //significa que data não é compatível
+                    count++;
                 }
-                taskDao.merge(taskEnt);
+
+            }
+            if (count!=0){
+                // significa que há conflito de datas com alguma tarefa
                 res=true;
             }
+        }
+return res;
+    }
+
+    private boolean checkNewDatesCompatibilityWithAssociatedTasks(Task editTask, entity.Task taskEnt) {
+        //significa que data final foi alterada e é preciso garantir que não interfere com datas de tarefas associadas, que tenham esta tarefa como precedente
+        // é preciso obter lista de tarefas que tenham a tarefa a editar como sendo prerequired e comparar a nova data final com data de inicio de cada uma dessas tarefas
+    boolean res= false;
+
+    int count =0;
+
+    List<entity.Task> tasksWhoHaveCurrentTaskAsPrecedent = findTasksWhoHaveCurrentTaskAsPrecedent(taskEnt);
+
+    if(tasksWhoHaveCurrentTaskAsPrecedent != null){
+        for (entity.Task t : tasksWhoHaveCurrentTaskAsPrecedent){
+            // para cada tarefa, comparar data de inicio da tarefa t com nova data final do DTO
+            if (!t.getStartDate().after(editTask.getFinishDate())){
+                //significa que data não é compatível
+                System.out.println("finish " + editTask.getFinishDate());
+                System.out.println("start " + t.getStartDate());
+                count++;
+            }
+        }
+        if (count!=0){
+            // significa que há conflito de datas com alguma tarefa
+            res=true;
+        }
+    }
 
 
-
-        return res;
+    return res;
     }
 
     public boolean verifyTaskStatusToEditTask(int id) {

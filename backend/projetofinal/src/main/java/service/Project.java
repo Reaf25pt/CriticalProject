@@ -439,7 +439,7 @@ return r;
     }
 
 
-    //DELETE TASK FROM PROJECT
+    //DELETE TASK FROM PROJECT only if task is not precedent of another task or has no prerequired tasks
     @DELETE
     @Path("/task")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -451,9 +451,9 @@ return r;
         if (userBean.checkStringInfo(token) ) {
             r = Response.status(401).entity("Unauthorized!").build();
 
-        } else if (!userBean.checkUserPermission(token) || !projBean.verifyIfTaskBelongsToProject(taskId, projId) || projBean.verifyProjectStatusToDeleteTask(projId)) {
+        } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId)|| !projBean.verifyIfTaskBelongsToProject(taskId, projId) || projBean.verifyProjectStatusToDeleteTask(projId)) {
             r = Response.status(403).entity("Forbidden!").build();
-//TODO verificar que token é gestor para poder apagar
+//TODO alterar metodo para casos em q pode apagar ou n tarefa. se tem precedentes ou n ??
         } else {
 
             userBean.updateSessionTime(token);
