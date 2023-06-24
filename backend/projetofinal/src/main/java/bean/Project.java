@@ -685,6 +685,7 @@ public class Project implements Serializable {
 
     private void associatePreRequiredTasksWithCurrentTask(List<Task> preRequiredTasks, entity.Task currentTask) {
         // associa cada preRequired task a current task
+        System.out.println(preRequiredTasks.size());
         for (Task t : preRequiredTasks) {
             entity.Task taskEnt= taskDao.find(t.getId());
             if (taskEnt.getFinishDate().before(currentTask.getStartDate())){
@@ -1410,17 +1411,16 @@ boolean res = false;
                                 }
                             }
                         }
-
+                        taskDao.merge(taskEnt); // merge antes de associar, pq lá já faz merge da taskEnt e resultava na duplicação das pre required tasks
                         if(editTask.getPreRequiredTasks()!=null || editTask.getPreRequiredTasks().size()!=0){
 
                            // deletePreRequiredTasksWithCurrentTask(taskEnt);
                             taskEnt.getListPreRequiredTasks().clear();
-
                             taskDao.merge(taskEnt);
 
                             associatePreRequiredTasksWithCurrentTask(editTask.getPreRequiredTasks(), taskEnt);
                         }
-                        taskDao.merge(taskEnt);
+
                         res=true;
                     }
                 }

@@ -8,6 +8,8 @@ function ProjectAllTasksSelect({
   preReqTasks,
   setPreReqTasks,
   addPreReqTask,
+  editTaskId,
+  triggerList,
   // resetInput,
 }) {
   const user = userStore((state) => state.user);
@@ -37,7 +39,7 @@ function ProjectAllTasksSelect({
         setProjTasks(data);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [triggerList]);
 
   const handleChange = (event) => {
     const selectedTask = event.target.options[event.target.selectedIndex];
@@ -109,11 +111,15 @@ function ProjectAllTasksSelect({
           >
             <option value={"-1"}>{"Tarefas precedentes "} </option>
             {/*   {Object.entries(projTasks).map(([key, task]) => ( */}
-            {projTasks.map((task) => (
-              <option key={task.id} value={task.id}>
-                {task.title}
-              </option>
-            ))}
+            {projTasks
+              .filter((task) => {
+                return task.id !== editTaskId;
+              })
+              .map((task) => (
+                <option key={task.id} value={task.id}>
+                  {task.title}
+                </option>
+              ))}
           </select>
         </div>
 

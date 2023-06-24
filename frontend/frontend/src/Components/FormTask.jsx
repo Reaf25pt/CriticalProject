@@ -17,6 +17,7 @@ import {
 import "gantt-task-react/dist/index.css";
 import ProjectMembersSelect from "./ProjectMembersSelect";
 import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
+import ModalEditTask from "./ModalEditTask";
 
 function FormTask(listMembers) {
   const user = userStore((state) => state.user);
@@ -31,6 +32,7 @@ function FormTask(listMembers) {
     setPreReqTasks((state) => [...state, task]);
   };
   // const [input, setInput] = useState("-1");
+  const [triggerList, setTriggerList] = useState("-1");
 
   const toggleAccordion = (id) => {
     setActiveId(id === activeId ? null : id);
@@ -283,6 +285,7 @@ function FormTask(listMembers) {
                     preReqTasks={preReqTasks}
                     setPreReqTasks={setPreReqTasks}
                     addPreReqTask={addPreReqTask}
+                    triggerList={triggerList}
                     //  resetInput={input}
                     /* name="preRequiredTasks"
                     id="preRequiredTasks"
@@ -355,7 +358,13 @@ function FormTask(listMembers) {
                               {projInfo.statusInt === 0 ||
                               projInfo.statusInt === 1 ||
                               projInfo.statusInt === 4 ? (
-                                <button>Editar</button>
+                                /*  <button>Editar</button> */
+                                <ModalEditTask
+                                  task={task}
+                                  set={setTask}
+                                  formatDate={formatDate}
+                                  setTriggerList={setTriggerList}
+                                />
                               ) : null}
                               {projInfo.statusInt === 0 ||
                               projInfo.statusInt === 1 ? (
@@ -404,7 +413,7 @@ function FormTask(listMembers) {
                               </div>
                             ) : null}
 
-                            {task.preRequiredTasks ? (
+                            {task.preRequiredTasks.length > 0 ? (
                               <div className="row">
                                 {" "}
                                 Tarefas precedentes:
