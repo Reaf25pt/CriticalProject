@@ -18,6 +18,10 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
       status = 5;
     } else if (event === 6) {
       status = 6;
+    } else if (event === 7) {
+      status = 7;
+    } else if (event === 4) {
+      status = 4;
     }
 
     console.log(status);
@@ -55,7 +59,7 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
       },
     }).then((response) => {
       if (response.status === 200) {
-        alert("status alterado");
+        alert("Pedido efectuado");
         setProjects([]);
         //navigate("/home", { replace: true });
       } else {
@@ -127,6 +131,16 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
                         />
                       </div>
                     </div>
+                  ) : project.statusInt === 3 ? (
+                    <div className="row mx-auto justify-content-around mt-5">
+                      <div className="col-lg-12">
+                        <ButtonComponent
+                          type="button"
+                          name="Mudar status: in progress"
+                          onClick={() => handleProjectStatus(4)}
+                        />
+                      </div>
+                    </div>
                   ) : project.statusInt === 4 ? (
                     <div className="row mx-auto justify-content-around mt-5">
                       <div className="col-lg-12">
@@ -149,7 +163,17 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
                         />
                       </div>
                     </div>
-                  ) : null}
+                  ) : (
+                    <div className="row mx-auto justify-content-around mt-5">
+                      <div className="col-lg-12">
+                        <ButtonComponent
+                          type="button"
+                          name="Re-activar projecto"
+                          onClick={() => handleProjectStatus(7)}
+                        />
+                      </div>
+                    </div>
+                  )}
                 </>
               ) : !project.member &&
                 user.noActiveProject &&

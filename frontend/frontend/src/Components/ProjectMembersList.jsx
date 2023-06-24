@@ -9,6 +9,7 @@ import { BsStarFill } from "react-icons/bs";
 function ProjectMembersList({ showMembers, showProjects, setMembers }) {
   const user = userStore((state) => state.user);
   const navigate = useNavigate();
+  const updateUser = userStore((state) => state.updateUser);
 
   useEffect(() => {
     console.log(showMembers);
@@ -30,6 +31,8 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
       },
     }).then((response) => {
       if (response.status === 200) {
+        updateUser("noActiveProject", true);
+
         navigate("/home", { replace: true });
       } else if (response.status === 403) {
         alert("Não tem autorização para efectuar este pedido");

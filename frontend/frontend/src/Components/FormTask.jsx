@@ -73,6 +73,7 @@ function FormTask(listMembers) {
     })
       .then((resp) => resp.json())
       .then((data) => {
+        console.log(data);
         setProjInfo(data);
         console.log(projInfo);
       })
@@ -358,25 +359,25 @@ function FormTask(listMembers) {
                           <div className="row d-flex ">
                             <div className="row">
                               {projInfo.statusInt === 0 ||
-                              projInfo.statusInt === 1 ||
                               projInfo.statusInt === 4 ? (
                                 /*  <button>Editar</button> */
-                                <ModalEditTask
-                                  task={task}
-                                  set={setTask}
-                                  formatDate={formatDate}
-                                  setTriggerList={setTriggerList}
-                                />
+                                <>
+                                  <ModalEditTask
+                                    task={task}
+                                    set={setTask}
+                                    formatDate={formatDate}
+                                    setTriggerList={setTriggerList}
+                                  />
+                                  <ModalDeleteTask
+                                    task={task}
+                                    set={setTask}
+                                    setTriggerList={setTriggerList}
+                                  />
+                                </>
                               ) : null}
-                              {projInfo.statusInt === 0 ||
-                              projInfo.statusInt === 1 ? (
-                                <ModalDeleteTask
-                                  task={task}
-                                  set={setTask}
-                                  setTriggerList={setTriggerList}
-                                />
-                              ) : null}
-                              {task.statusInfo === 0 ? (
+
+                              {projInfo.statusInt === 4 &&
+                              task.statusInfo === 0 ? (
                                 <button
                                   name={"statusInProgress"}
                                   onClick={handleClick}

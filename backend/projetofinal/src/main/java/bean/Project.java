@@ -1164,6 +1164,8 @@ return list;
                 case 1:
                     //definir como ready: projecto está em planning. Proj ready é um projecto que está pronto para ser apresentado a um concurso
                     // não permite edição de info e tem de se assegurar que tarefa final existe
+
+                    // TODO implementar parte da tarefa final
                     System.out.println("1 ");
                     project.setStatus(StatusProject.READY);
                     projDao.merge(project);
@@ -1171,7 +1173,7 @@ return list;
                     break;
                 case 4:
                     // definir como in progress: se n for automático - proj está approved
-                    //res = true;
+                    res = true;
 
                     break;
                 case 5:
@@ -1183,8 +1185,14 @@ return list;
                     res = true;
                     break;
                 case 6:
+                    // TODO acabar de implementar
                     //definir como finished: proj tem de estar in progress e verificar se precisa de ter tarefas todas concluidas ou outras verificações
-                    //res = true;
+                    res = true;
+                    break;
+                case 7:
+                    // TODO acabar de implementar
+                    //definir como ready um projecto cancelado se não está associado a nenhum concurso
+                    res = true;
                     break;
             }
         }
@@ -1258,8 +1266,9 @@ boolean res = false;
         return res;
     }*/
 
-    public boolean verifyProjectStatusToEditTask(int projId) {
+    public boolean verifyProjectStatusToModifyTask(int projId) {
         // impedir caso projecto tenha status finished, cancelled, proposed, approved, ready pq nestes casos o plano de execução não pode ser alterado
+        // vale para adicionar, editar, apagar tarefa
         boolean res = false;
         entity.Project project = projDao.findProjectById(projId);
         if(project!=null){
@@ -1272,19 +1281,7 @@ boolean res = false;
         return res;
     }
 
-    public boolean verifyProjectStatusToDeleteTask(int projId) {
-        // impedir caso projecto tenha status finished, cancelled, proposed, approved, in progress pq nestes casos o plano de execução não pode ser alterado
-        boolean res = false;
-        entity.Project project = projDao.findProjectById(projId);
-        if(project!=null){
-            if (project.getStatus()==StatusProject.PROPOSED || project.getStatus()==StatusProject.APPROVED|| project.getStatus()==StatusProject.CANCELLED|| project.getStatus()==StatusProject.FINISHED || project.getStatus()==StatusProject.PROGRESS){
-                res = true;
-                // tarefas do plano de execução não poderão ser alteradas
-            }
 
-        }
-        return res;
-    }
 
     public boolean verifyIfTaskBelongsToProject(int taskId, int projId) {
         // verifica se task realmente está associada ao projecto

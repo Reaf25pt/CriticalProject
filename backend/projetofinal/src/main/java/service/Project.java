@@ -213,7 +213,7 @@ return r;
 
         if (userBean.checkStringInfo(token) || task== null || projBean.checkTaskInfo(task)) {
             r = Response.status(401).entity("Unauthorized!").build();
-        }  else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId) || projBean.verifyProjectStatusToEditTask(projId)) {
+        }  else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId) || projBean.verifyProjectStatusToModifyTask(projId)) {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
@@ -451,7 +451,7 @@ return r;
         if (userBean.checkStringInfo(token) ) {
             r = Response.status(401).entity("Unauthorized!").build();
 
-        } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId)|| !projBean.verifyIfTaskBelongsToProject(taskId, projId) || projBean.verifyProjectStatusToDeleteTask(projId)) {
+        } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId)|| !projBean.verifyIfTaskBelongsToProject(taskId, projId) || projBean.verifyProjectStatusToModifyTask(projId)) {
             r = Response.status(403).entity("Forbidden!").build();
 //TODO alterar metodo para casos em q pode apagar ou n tarefa. se tem precedentes ou n ??
         } else {
@@ -483,7 +483,7 @@ return r;
         if (userBean.checkStringInfo(token) || editTask==null) {
             r = Response.status(401).entity("Unauthorized!").build();
 
-        } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId)|| !projBean.verifyIfTaskBelongsToProject(editTask.getId(), projId) || projBean.verifyProjectStatusToEditTask(projId)|| projBean.verifyTaskStatusToEditTask(editTask.getId())) {
+        } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId)|| !projBean.verifyIfTaskBelongsToProject(editTask.getId(), projId) || projBean.verifyProjectStatusToModifyTask(projId)|| projBean.verifyTaskStatusToEditTask(editTask.getId())) {
             r = Response.status(403).entity("Forbidden!").build();
 
         } else {
