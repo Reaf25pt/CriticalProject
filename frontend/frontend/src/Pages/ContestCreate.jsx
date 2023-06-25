@@ -4,10 +4,39 @@ import InputComponent from "../Components/InputComponent";
 import style from "./contestcreate.module.css";
 import TextAreaComponent from "../Components/TextAreaComponent";
 import ButtonComponent from "../Components/ButtonComponent";
+import { userStore } from "../stores/UserStore";
+import { useState } from "react";
 
 function ContestCreate() {
-  const handleSubmit = "";
-  const handleChange = "";
+  const [credentials, setCredentials] = useState({});
+  const user = userStore((state) => state.user);
+
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+
+    setCredentials((values) => {
+      return { ...values, [name]: value };
+    });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    console.log(credentials);
+
+    if (
+      credentials.startOpenCall >= credentials.finishOpenCall ||
+      credentials.finishOpenCall >= credentials.startDate ||
+      credentials.startDate >= credentials.finishDate
+    ) {
+      alert(
+        "Reveja as datas inseridas: a fase de candidaturas tem de ser anterior ao início da execução"
+      );
+    } else {
+      var newContest = credentials;
+    }
+  };
 
   return (
     <div>
@@ -44,7 +73,7 @@ function ContestCreate() {
                 <div className="col ">
                   <div className="form-outline">
                     <InputComponent
-                      placeholder={"Titulo*"}
+                      placeholder={"Título *"}
                       id="title"
                       required
                       name="title"
@@ -59,11 +88,46 @@ function ContestCreate() {
                   <div className="form-outline">
                     <label className="text-white mb-2">
                       {" "}
-                      Data de Inicio de candidatura:
+                      Data de início de candidatura *
                     </label>
 
                     <InputComponent
-                      placeholder={"Titulo*"}
+                      placeholder={"*"}
+                      id="startOpenCall"
+                      required
+                      name="startOpenCall"
+                      type="date"
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+                <div className="col-lg-6">
+                  <div className="form-outline">
+                    <label className="text-white mb-2">
+                      {" "}
+                      Data de fim de candidatura *
+                    </label>
+                    <InputComponent
+                      placeholder={" *"}
+                      id="finishOpenCall"
+                      required
+                      name="finishOpenCall"
+                      type="date"
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="row mb-3">
+                <div className="col-lg-6">
+                  <div className="form-outline">
+                    <label className="text-white mb-2">
+                      Data de início de execução *
+                    </label>
+
+                    <InputComponent
+                      placeholder={"*"}
                       id="startDate"
                       required
                       name="startDate"
@@ -75,44 +139,13 @@ function ContestCreate() {
                 <div className="col-lg-6">
                   <div className="form-outline">
                     <label className="text-white mb-2">
-                      {" "}
-                      Data de Fim de candidatura:
+                      Data de fim de execução *
                     </label>
                     <InputComponent
-                      placeholder={"Titulo*"}
-                      id="endDate"
+                      placeholder={"*"}
+                      id="finishDate"
                       required
-                      name="endDate"
-                      type="date"
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="row mb-3">
-                <div className="col-lg-6">
-                  <div className="form-outline">
-                    <label className="text-white mb-2">Data Inicio:</label>
-
-                    <InputComponent
-                      placeholder={"Titulo*"}
-                      id="startDate"
-                      required
-                      name="startDate"
-                      type="date"
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-                <div className="col-lg-6">
-                  <div className="form-outline">
-                    <label className="text-white mb-2">Data Fim:</label>
-                    <InputComponent
-                      placeholder={"Titulo*"}
-                      id="endDate"
-                      required
-                      name="endDate"
+                      name="finishDate"
                       type="date"
                       onChange={handleChange}
                     />
@@ -121,28 +154,31 @@ function ContestCreate() {
               </div>
               <div className="form-outline mb-4">
                 <InputComponent
-                  placeholder={"Número máximo de projetos"}
-                  id="maxProjects"
-                  name="maxProjects"
+                  placeholder={"Número máximo de projectos participantes *"}
+                  id="maxNumberProjects"
+                  name="maxNumberProjects"
+                  required
                   type="number"
+                  min="1"
                   onChange={handleChange}
                 />
               </div>
 
               <div class="form-outline mb-4">
                 <TextAreaComponent
-                  placeholder={"Descrição..."}
-                  id="resources"
-                  name="resources"
+                  placeholder={"Descrição do concurso *"}
+                  id="details"
+                  name="details"
                   type="text"
                   onChange={handleChange}
                 />
               </div>
               <div class="form-outline mb-4">
                 <TextAreaComponent
-                  placeholder={"Regras*"}
-                  id="details"
-                  name="details"
+                  placeholder={"Regras do concurso *"}
+                  id="rules"
+                  name="rules"
+                  required
                   type="text"
                   onChange={handleChange}
                 />

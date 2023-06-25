@@ -27,6 +27,11 @@ public class Contest implements Serializable {
 
     @Column(name = "finishDate", nullable = false, unique = false, updatable = true)
     private Date finishDate;
+    @Column(name = "startOpenCall", nullable = false, unique = false, updatable = true)
+    private Date startOpenCall;
+
+    @Column(name = "finishOpenCall", nullable = false, unique = false, updatable = true)
+    private Date finishOpenCall;
 
     @Column(name = "details", nullable = true, unique = false, updatable = true)
     private String details;
@@ -134,5 +139,19 @@ public class Contest implements Serializable {
         this.listProjects = listProjects;
     }
 
+    public Date getStartOpenCall() {
+        return startOpenCall;
+    }
 
+    public void setStartOpenCall(Date startOpenCall) {
+        this.startOpenCall = startOpenCall;
+    }
+
+    public Date getFinishOpenCall() {
+        return finishOpenCall;
+    }
+
+    public void setFinishOpenCall(Date finishOpenCall) {
+        this.finishOpenCall = finishOpenCall;
+    }
 }

@@ -217,112 +217,114 @@ function FormTask(listMembers) {
 
   return (
     <div className="container-fluid mt-5">
-      <div
-        className="row d-flex justify-content-around bg-secondary 
+      {!user.contestManager ? (
+        <div
+          className="row d-flex justify-content-around bg-secondary 
           rounded-5 p-4"
-      >
-        <div className="col-lg-4">
-          <div className="row ">
-            <div className="col-lg-12 ">
-              <div className="row mb-3">
-                <div className="col-lg-6">
+        >
+          <div className="col-lg-4">
+            <div className="row ">
+              <div className="col-lg-12 ">
+                <div className="row mb-3">
+                  <div className="col-lg-6">
+                    <InputComponent
+                      placeholder={"Título *"}
+                      id="title"
+                      required
+                      name="title"
+                      type="text"
+                      onChange={handleChange}
+                      defaultValue={""}
+                    />
+                  </div>
+                  <div className="col-lg-6">
+                    <ProjectMembersSelect
+                      name="taskOwnerId"
+                      id="taskOwnerId"
+                      onChange={handleChange}
+                      placeholder={"Membro responsável *"}
+                      local={"Membro responsável *"}
+                      listMembers={listMembers}
+                      projId={id}
+                    />
+                  </div>
+                </div>
+                <div className="row mb-3">
+                  <div className="col-lg-6">
+                    <label className="text-white">Data de início *</label>
+                    <InputComponent
+                      placeholder={" *"}
+                      id="startDate"
+                      required
+                      name="startDate"
+                      type="date"
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="col-lg-6">
+                    <label className="text-white">Data de fim *</label>
+
+                    <InputComponent
+                      placeholder={" *"}
+                      id="finishDate"
+                      required
+                      name="finishDate"
+                      type="date"
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+                <div className="row mb-3">
                   <InputComponent
-                    placeholder={"Título *"}
-                    id="title"
-                    required
-                    name="title"
+                    placeholder={"Executores adicionais "}
+                    id="additionalExecutors"
+                    name="additionalExecutors"
                     type="text"
                     onChange={handleChange}
                     defaultValue={""}
                   />
-                </div>
-                <div className="col-lg-6">
-                  <ProjectMembersSelect
-                    name="taskOwnerId"
-                    id="taskOwnerId"
-                    onChange={handleChange}
-                    placeholder={"Membro responsável *"}
-                    local={"Membro responsável *"}
-                    listMembers={listMembers}
-                    projId={id}
-                  />
-                </div>
-              </div>
-              <div className="row mb-3">
-                <div className="col-lg-6">
-                  <label className="text-white">Data de início *</label>
-                  <InputComponent
-                    placeholder={" *"}
-                    id="startDate"
-                    required
-                    name="startDate"
-                    type="date"
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="col-lg-6">
-                  <label className="text-white">Data de fim *</label>
-
-                  <InputComponent
-                    placeholder={" *"}
-                    id="finishDate"
-                    required
-                    name="finishDate"
-                    type="date"
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-              <div className="row mb-3">
-                <InputComponent
-                  placeholder={"Executores adicionais "}
-                  id="additionalExecutors"
-                  name="additionalExecutors"
-                  type="text"
-                  onChange={handleChange}
-                  defaultValue={""}
-                />
-                <div className="row mt-3">
-                  <ProjectAllTasksSelect
-                    id="tst"
-                    preReqTasks={preReqTasks}
-                    setPreReqTasks={setPreReqTasks}
-                    addPreReqTask={addPreReqTask}
-                    triggerList={triggerList}
-                    //  resetInput={input}
-                    /* name="preRequiredTasks"
+                  <div className="row mt-3">
+                    <ProjectAllTasksSelect
+                      id="tst"
+                      preReqTasks={preReqTasks}
+                      setPreReqTasks={setPreReqTasks}
+                      addPreReqTask={addPreReqTask}
+                      triggerList={triggerList}
+                      //  resetInput={input}
+                      /* name="preRequiredTasks"
                     id="preRequiredTasks"
                     onChange={handleChange}
                     placeholder={"Tarefas precedentes "}
                     local={"Tarefas precedentes "}
                     taskList={task} */
-                  />
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col-lg-6 d-flex align-items-center ">
-          <TextAreaComponent
-            placeholder={"Descrição da tarefa *"}
-            id="details"
-            name="details"
-            required
-            type="text"
-            onChange={handleChange}
-            defaultValue={""}
-          />
-          {/*    <textarea
+          <div class="col-lg-6 d-flex align-items-center ">
+            <TextAreaComponent
+              placeholder={"Descrição da tarefa *"}
+              id="details"
+              name="details"
+              required
+              type="text"
+              onChange={handleChange}
+              defaultValue={""}
+            />
+            {/*    <textarea
               class="text-dark bg-white rounded-2 w-100 h-75 "
               placeholder="Descrição da Tarefa"
               name="bio"
               type="text"
             ></textarea> */}
-        </div>{" "}
-        <div className="col-lg-1 d-flex align-items-center">
-          <ButtonComponent name={"Adicionar tarefa"} onClick={handleSubmit} />
+          </div>{" "}
+          <div className="col-lg-1 d-flex align-items-center">
+            <ButtonComponent name={"Adicionar tarefa"} onClick={handleSubmit} />
+          </div>
         </div>
-      </div>
+      ) : null}
       <div className="row mt-4">
         <div className="col-lg-6 bg-secondary rounded-5 p-3">
           <div className="">
@@ -358,7 +360,8 @@ function FormTask(listMembers) {
                           {" "}
                           <div className="row d-flex ">
                             <div className="row">
-                              {task.statusInfo !== 2 &&
+                              {!user.contestManager &&
+                              task.statusInfo !== 2 &&
                               (projInfo.statusInt === 0 ||
                                 projInfo.statusInt === 4) ? (
                                 /*  <button>Editar</button> */
@@ -370,7 +373,8 @@ function FormTask(listMembers) {
                                   setTriggerList={setTriggerList}
                                 />
                               ) : null}
-                              {task.statusInfo !== 2 &&
+                              {!user.contestManager &&
+                              task.statusInfo !== 2 &&
                               projInfo.statusInt === 0 ? (
                                 <ModalDeleteTask
                                   task={task}
@@ -379,7 +383,8 @@ function FormTask(listMembers) {
                                 />
                               ) : null}
 
-                              {projInfo.statusInt === 4 &&
+                              {!user.contestManager &&
+                              projInfo.statusInt === 4 &&
                               task.statusInfo === 0 ? (
                                 <button
                                   name={"statusInProgress"}

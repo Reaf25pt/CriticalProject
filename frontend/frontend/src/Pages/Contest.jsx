@@ -5,8 +5,11 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { BsEyeFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { userStore } from "../stores/UserStore";
 
 function Contest() {
+  const user = userStore((state) => state.user);
+
   const [data, setData] = useState([
     {
       title: "Task 1",
@@ -63,15 +66,18 @@ function Contest() {
           role="tabpanel"
           aria-labelledby="home-tab"
         >
-          <div className="row">
-            <div className="col mt-5">
-              //{" "}
-              <LinkButton
-                name={"Adicionar Concurso"}
-                to={"/home/contestcreate"}
-              />
+          {user.contestManager ? (
+            <div className="row">
+              <div className="col mt-5">
+                //{" "}
+                <LinkButton
+                  name={"Adicionar Concurso"}
+                  to={"/home/contestcreate"}
+                />
+              </div>
             </div>
-          </div>
+          ) : null}
+
           <div className="row mx-auto mt-5">
             <div>
               <DataTable value={data}>

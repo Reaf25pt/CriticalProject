@@ -176,7 +176,8 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
                     </div>
                   ) : null}
                 </>
-              ) : !project.member &&
+              ) : !user.contestManager &&
+                !project.member &&
                 user.noActiveProject &&
                 project.availableSpots !==
                   0 /* members.length < project.membersNumber */ ? (

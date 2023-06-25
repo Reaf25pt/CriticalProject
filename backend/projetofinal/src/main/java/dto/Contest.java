@@ -9,9 +9,14 @@ public class Contest {
     private String title;
     private Date startDate;
     private Date finishDate;
+
+    private Date startOpenCall;
+    private Date finishOpenCall;
     private String details;
     private String maxNumberProjects;
-    private StatusContest status;
+    private String status;
+
+    private int statusInt;
     private int winnerProjectId;
 
     public Contest(){
@@ -66,12 +71,36 @@ public class Contest {
         this.maxNumberProjects = maxNumberProjects;
     }
 
-    public StatusContest getStatus() {
+    public Date getStartOpenCall() {
+        return startOpenCall;
+    }
+
+    public void setStartOpenCall(Date startOpenCall) {
+        this.startOpenCall = startOpenCall;
+    }
+
+    public Date getFinishOpenCall() {
+        return finishOpenCall;
+    }
+
+    public void setFinishOpenCall(Date finishOpenCall) {
+        this.finishOpenCall = finishOpenCall;
+    }
+
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(StatusContest status) {
+    public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getStatusInt() {
+        return statusInt;
+    }
+
+    public void setStatusInt(int statusInt) {
+        this.statusInt = statusInt;
     }
 
     public int getWinnerProjectId() {

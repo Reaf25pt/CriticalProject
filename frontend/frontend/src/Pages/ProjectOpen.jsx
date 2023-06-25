@@ -155,6 +155,22 @@ function ProjectOpen() {
               </button>
             </li>
           </>
+        ) : user.contestManager ? (
+          <li class="nav-item" role="presentation">
+            <button
+              class="nav-link"
+              id="tab3"
+              data-bs-toggle="tab"
+              data-bs-target="#content3"
+              type="button"
+              role="tab"
+              aria-controls="content3"
+              aria-selected="false"
+              style={{ background: "#C01722", color: "white" }}
+            >
+              Plano do Projeto{" "}
+            </button>
+          </li>
         ) : null}
         {/* <li class="nav-item" role="presentation">
           <button
