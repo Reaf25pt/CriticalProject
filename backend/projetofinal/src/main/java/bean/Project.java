@@ -939,7 +939,7 @@ return list;
     }
 
     public List<UserInfo> getPossibleMembers(String name) {
-        // retorna lista de users que não têm projecto activo, podendo ser sugeridos
+        // retorna lista de users que não têm projecto activo nem são perfil A, podendo ser sugeridos
 
         // TODO prevenir sugerir users com convite pendente no projecto em questão?
 
@@ -954,7 +954,9 @@ return list;
 
             if (usersWithActiveProject != null) {
                 // retirar estes users da lista all users: adicionando apenas o que n coincidem a uma lista auxiliar
-                tempList = matchingUsers.stream().filter(user -> !usersWithActiveProject.contains(user)).collect(Collectors.toList());
+                tempList = matchingUsers.stream().filter(user -> !usersWithActiveProject.contains(user))
+                        .filter(user ->!user.isContestManager())
+                        .collect(Collectors.toList());
                 System.out.println(tempList.size());
 
 
@@ -1182,7 +1184,7 @@ return list;
                     res =changeProjStatusToFinished(project);
                     break;
                 case 7:
-                    // TODO acabar de implementar
+                    // TODO acabar de implementar : pode colocar ready se tiver tarefa final ou planning se não. ou apagar a tarefa final e colocar planning 
                     //definir como ready um projecto cancelado se não está associado a nenhum concurso
                     res =reactivatesCancelledProj(project);
                     break;
