@@ -36,6 +36,7 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
       },
     }).then((response) => {
       if (response.status === 200) {
+        console.log(response);
         setProjects([]);
         alert("Status alterado");
 
@@ -153,7 +154,7 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
                     </div>
                   ) : null}
 
-                  {project.statusInt !== 5 ? (
+                  {project.statusInt !== 6 && project.statusInt !== 5 ? (
                     <div className="row mx-auto justify-content-around mt-5">
                       <div className="col-lg-12">
                         <ButtonComponent
@@ -163,7 +164,7 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
                         />
                       </div>
                     </div>
-                  ) : (
+                  ) : project.statusInt !== 6 ? (
                     <div className="row mx-auto justify-content-around mt-5">
                       <div className="col-lg-12">
                         <ButtonComponent
@@ -173,7 +174,7 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
                         />
                       </div>
                     </div>
-                  )}
+                  ) : null}
                 </>
               ) : !project.member &&
                 user.noActiveProject &&

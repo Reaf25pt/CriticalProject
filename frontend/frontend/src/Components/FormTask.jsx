@@ -358,22 +358,25 @@ function FormTask(listMembers) {
                           {" "}
                           <div className="row d-flex ">
                             <div className="row">
-                              {projInfo.statusInt === 0 ||
-                              projInfo.statusInt === 4 ? (
+                              {task.statusInfo !== 2 &&
+                              (projInfo.statusInt === 0 ||
+                                projInfo.statusInt === 4) ? (
                                 /*  <button>Editar</button> */
-                                <>
-                                  <ModalEditTask
-                                    task={task}
-                                    set={setTask}
-                                    formatDate={formatDate}
-                                    setTriggerList={setTriggerList}
-                                  />
-                                  <ModalDeleteTask
-                                    task={task}
-                                    set={setTask}
-                                    setTriggerList={setTriggerList}
-                                  />
-                                </>
+
+                                <ModalEditTask
+                                  task={task}
+                                  set={setTask}
+                                  formatDate={formatDate}
+                                  setTriggerList={setTriggerList}
+                                />
+                              ) : null}
+                              {task.statusInfo !== 2 &&
+                              projInfo.statusInt === 0 ? (
+                                <ModalDeleteTask
+                                  task={task}
+                                  set={setTask}
+                                  setTriggerList={setTriggerList}
+                                />
                               ) : null}
 
                               {projInfo.statusInt === 4 &&

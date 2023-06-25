@@ -1147,7 +1147,7 @@ return list;
         // apenas considera os estados planning, ready, in progress, cancelled, finished. os outros 2 serão automáticos
 
         boolean res = false;
-        System.out.println("tentar alterar " + status);
+
 
         // TODO acabar de implementar
 
@@ -1155,48 +1155,116 @@ return list;
         if (project != null) {
             switch (status) {
                 case 0:
-                    // definir como planning: proj está em ready e é preciso alterar status para permitir editar info do projecto
-                    System.out.println("0 ");
-                    project.setStatus(StatusProject.PLANNING);
-                    projDao.merge(project);
-                    res = true;
+                    // mudar para planning: proj está em ready e é preciso alterar status para permitir editar info do projecto
+                    res = changeProjStatusToPlanning(project);
                     break;
                 case 1:
                     //definir como ready: projecto está em planning. Proj ready é um projecto que está pronto para ser apresentado a um concurso
                     // não permite edição de info e tem de se assegurar que tarefa final existe
 
-                    // TODO implementar parte da tarefa final
-                    System.out.println("1 ");
-                    project.setStatus(StatusProject.READY);
-                    projDao.merge(project);
-                    res = true;
+                    res = changeProjStatusToReady(project);
                     break;
                 case 4:
-                    // definir como in progress: se n for automático - proj está approved
-                    res = true;
+                    // definir como in progress, proj está approved
+                    res = changeProjStatusToProgress(project);
 
                     break;
                 case 5:
                     // cancelar projecto pode ser feito em qq altura
-                     // TODO inactivar chat
-
-                    project.setStatus(StatusProject.CANCELLED);
-                    projDao.merge(project);
-                    res = true;
+                     // TODO garantir que nada é editável, add members
+                    
+                    res =changeProjStatusToCancelled(project);
                     break;
                 case 6:
                     // TODO acabar de implementar
                     //definir como finished: proj tem de estar in progress e verificar se precisa de ter tarefas todas concluidas ou outras verificações
-                    res = true;
+                    res =changeProjStatusToFinished(project);
                     break;
                 case 7:
                     // TODO acabar de implementar
                     //definir como ready um projecto cancelado se não está associado a nenhum concurso
-                    res = true;
+                    res =reactivatesCancelledProj(project);
                     break;
             }
         }
         return res;
+    }
+
+    private boolean reactivatesCancelledProj(entity.Project project) {
+        // reactiva um projecto, definindo como ready se não está associado a um concurso, admitindo que ao ser recusado concurso fica null
+        boolean res=false;
+
+        if(project.getContest()==null){
+
+            // TODO verificar se faz sentido ready ou planning, porque pode n ter tarefa final
+            project.setStatus(StatusProject.READY);
+            projDao.merge(project);
+            res=true;
+
+        }
+        
+
+        return res;
+    }
+
+    private boolean changeProjStatusToFinished(entity.Project project) {
+        // define status de proj como finished, se todas as tarefas estiverem finished
+        boolean res=false;
+
+Long count = taskDao.countNotFinishedTasksFromProjectByProjId(project.getId());
+if (count==0){
+    project.setStatus(StatusProject.FINISHED);
+    projDao.merge(project);
+    res=true;
+}
+
+     return res;
+    }
+
+    private boolean changeProjStatusToCancelled(entity.Project project) {
+        // status de projecto pode ser mudado para cancelled em qq altura
+
+        boolean res = false;
+
+        project.setStatus(StatusProject.CANCELLED);
+        projDao.merge(project);
+            res=true;
+
+//TODO : procurar projmembers com convite pendente e apagar notificacoes que estejam associadas a esses projmembers 
+
+        return res;
+    }
+
+    private boolean changeProjStatusToProgress(entity.Project project) {
+        // status de projecto tem de estar approved
+        // TODO verificar neste ou no anterior se data da tarefa final está de acordo com data de concurso
+
+        boolean res = false;
+        if(project.getStatus()==StatusProject.APPROVED) {
+            project.setStatus(StatusProject.PROGRESS);
+            projDao.merge(project);
+            res=true;
+        }
+        return res;
+    }
+
+    private boolean changeProjStatusToReady(entity.Project project) {
+        // modifica apenas se proj status for ready
+        // tem de pedir q tarefa final seja definida
+        //TODO falta implementar
+        boolean res=false;
+        return res;
+    }
+
+    private boolean changeProjStatusToPlanning(entity.Project project) {
+        // modifica apenas se proj status é ready
+        boolean res = false;
+if(project.getStatus()==StatusProject.READY) {
+    project.setStatus(StatusProject.PLANNING);
+    projDao.merge(project);
+    res=true;
+}
+      return res;
     }
 
     public boolean dealWithTasksBeforeLeavingProject(int userId, entity.Project project) {

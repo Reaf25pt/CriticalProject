@@ -5,6 +5,7 @@ import ENUM.StatusTask;
 import entity.User;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.NoResultException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,17 @@ public class Task extends Abstract<entity.Task>{
     }
 
 
-
+    public Long countNotFinishedTasksFromProjectByProjId(int id) {
+        Long count;
+        try {
+            count = (Long) em.createNamedQuery("Task.countNotFinishedTasksFromProjectByProjId").setParameter("id", id).setParameter("finished", StatusTask.FINISHED)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            // e.printStackTrace();
+            return null;
+        }
+        return count;
+    }
 
 
 
