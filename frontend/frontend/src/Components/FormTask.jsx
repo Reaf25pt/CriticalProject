@@ -358,8 +358,18 @@ function FormTask(listMembers) {
                       >
                         <div className="accordion-body ">
                           {" "}
-                          <div className="row d-flex ">
-                            <div className="row">
+                          <div className="row d-flex justify-content-between ">
+                            <div className="col-lg-10">
+                              <h5 className="row mb-3">
+                                {" "}
+                                Início: {formatDate(task.startDate)}
+                              </h5>
+                              <h5 className="row mb-3">
+                                {" "}
+                                Fim: {formatDate(task.finishDate)}
+                              </h5>
+                            </div>
+                            <div className="col-lg-2 d-flex">
                               {!user.contestManager &&
                               task.statusInfo !== 2 &&
                               (projInfo.statusInt === 0 ||
@@ -400,17 +410,6 @@ function FormTask(listMembers) {
                                   Tarefa concluída
                                 </button>
                               ) : null}
-                            </div>
-                            <div className="row">
-                              <h5 className="row mb-3">
-                                {" "}
-                                Início: {formatDate(task.startDate)}
-                              </h5>
-                              <h5 className="row mb-3">
-                                {" "}
-                                Fim: {formatDate(task.finishDate)}
-                                <hr />
-                              </h5>
                             </div>
 
                             <div className="row">

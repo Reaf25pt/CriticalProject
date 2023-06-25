@@ -12,6 +12,7 @@ import SelectComponent from "./SelectComponent";
 import TextAreaComponent from "./TextAreaComponent";
 import ProjectMembersSelect from "./ProjectMembersSelect";
 import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
+import { BsFillPencilFill } from "react-icons/bs";
 
 import { userStore } from "../stores/UserStore";
 import Modal from "react-bootstrap/Modal";
@@ -85,14 +86,9 @@ function ModalEditTask({ task, set, formatDate, setTriggerList }) {
         }
       >
         {/*  <FontAwesomeIcon onClick={handleShow} icon={faTrash} /> */}
-        <div
-          //class="btn btn-secondary"
-          data-bs-toggle="tooltip"
-          data-bs-placement="top"
-        >
-          <button onClick={handleShow}>Editar</button>
-          {/*  <BsXLg onClick={handleShow} /> */}
-        </div>
+
+        <BsFillPencilFill onClick={handleShow} size={40} color="green" />
+        {/*  <BsXLg onClick={handleShow} /> */}
         {/*  <FontAwesomeIcon onClick={handleShow} icon={faToggleOn} /> */}
       </OverlayTrigger>
 

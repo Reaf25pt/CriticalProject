@@ -11,6 +11,7 @@ import InputComponent from "./InputComponent";
 import SelectComponent from "./SelectComponent";
 import TextAreaComponent from "./TextAreaComponent";
 import ProjectMembersSelect from "./ProjectMembersSelect";
+import { BsFillTrashFill } from "react-icons/bs";
 import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
 
 import { userStore } from "../stores/UserStore";
@@ -68,14 +69,9 @@ function ModalDeleteTask({ task, set, setTriggerList }) {
         }
       >
         {/*  <FontAwesomeIcon onClick={handleShow} icon={faTrash} /> */}
-        <div
-          //class="btn btn-secondary"
-          data-bs-toggle="tooltip"
-          data-bs-placement="top"
-        >
-          <button onClick={handleShow}>Apagar</button>
-          {/*  <BsXLg onClick={handleShow} /> */}
-        </div>
+
+        <BsFillTrashFill onClick={handleShow} size={40} color="red" />
+        {/*  <BsXLg onClick={handleShow} /> */}
         {/*  <FontAwesomeIcon onClick={handleShow} icon={faToggleOn} /> */}
       </OverlayTrigger>
 

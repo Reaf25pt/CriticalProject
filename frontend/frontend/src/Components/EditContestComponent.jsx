@@ -74,18 +74,14 @@ function EditContestComponent({ toggleComponent }) {
         <div className="col-lg-3 ">
           <div className="bg-secondary p-3 rounded-5 h-100">
             <div className="bg-white rounded-5 h-100 p-3">
-              <h4>Descrição</h4>
-              <hr />
-              <TextAreaComponent placeholder={"Descrição do projecto"} />
+              <TextAreaComponent placeholder={"Descrição"} />
             </div>
           </div>
         </div>
         <div className="col-lg-3 ">
           <div className="bg-secondary p-3 rounded-5 h-100">
             <div className="bg-white rounded-5 h-100 p-3">
-              <h4>Regras</h4>
-              <hr />
-              <TextAreaComponent>Regras</TextAreaComponent>
+              <TextAreaComponent placeholder={"Regras"} />
             </div>
           </div>
         </div>
