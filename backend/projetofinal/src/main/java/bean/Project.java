@@ -7,6 +7,7 @@ import dto.Keyword;
 import dto.Skill;
 import dto.Task;
 import dto.UserInfo;
+import entity.Contest;
 import entity.ProjectMember;
 import entity.Token;
 import jakarta.ejb.EJB;
@@ -1686,4 +1687,6 @@ return res;
 
         return res;
     }
+
+
 }

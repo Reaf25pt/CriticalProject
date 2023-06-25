@@ -137,5 +137,37 @@ public class Contest {
 
     }
 
+    // EDIT CONTEST STATUS
+    @PUT
+    @Path("/status")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editContestStatus(@HeaderParam("token") String token, @HeaderParam("status") int status, @HeaderParam("contestId") int contestId) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) ) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else if (!userBean.checkUserPermission(token) || !contestBean.verifyUserProfile(token) ) {
+            r = Response.status(403).entity("Forbidden!").build();
+
+        } else {
+
+            userBean.updateSessionTime(token);
+
+            dto.Contest contest = contestBean.editContestStatus(token, contestId, status);
+
+            if (contest==null) {
+                r = Response.status(404).entity("Not found!").build();
+
+            } else {
+                r = Response.status(200).entity(contest).build();
+            }
+        }
+        return r;
+
+    }
+
 
 }

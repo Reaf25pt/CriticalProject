@@ -6,10 +6,52 @@ import { userStore } from "../stores/UserStore";
 function ContestComponent({ toggleComponent }) {
   const contest = contestOpenStore((state) => state.contest);
   const user = userStore((state) => state.user);
+  const setContestOpen = contestOpenStore((state) => state.setContestOpen);
 
   const convertTimestampToDate = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString(); // Adjust the format as per your requirement
+  };
+
+  const handleStatus = (event) => {
+    var status;
+    console.log(event);
+
+    if (event === 1) {
+      status = 1;
+    } else if (event === 2) {
+      status = 2;
+    } else if (event === 3) {
+      status = 3;
+    }
+
+    console.log(status);
+
+    fetch("http://localhost:8080/projetofinal/rest/contest/status", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        token: user.token,
+        status: status,
+        contestId: contest.id,
+      },
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log(response);
+
+          alert("Status alterado");
+          return response.json();
+          //navigate("/home", { replace: true });
+        } else {
+          alert("Algo correu mal. Tente novamente");
+          throw new Error("Algo correu mal");
+        }
+      })
+      .then((data) => {
+        setContestOpen(data);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -103,11 +145,36 @@ function ContestComponent({ toggleComponent }) {
             </div>
             <div className="row mx-auto justify-content-around mt-5">
               {contest.statusInt === 0 && user.contestManager ? (
+                <>
+                  <div className="col-lg-12">
+                    <ButtonComponent
+                      type="button"
+                      name="Editar Concurso"
+                      onClick={toggleComponent}
+                    />
+                  </div>
+                  <div className="col-lg-12">
+                    <ButtonComponent
+                      type="button"
+                      name="Abrir candidaturas"
+                      onClick={() => handleStatus(1)}
+                    />
+                  </div>
+                </>
+              ) : contest.statusInt === 1 && user.contestManager ? (
                 <div className="col-lg-12">
                   <ButtonComponent
                     type="button"
-                    name="Editar Concurso"
-                    onClick={toggleComponent}
+                    name="Fechar candidaturas / iniciar fase de execução"
+                    onClick={() => handleStatus(2)}
+                  />
+                </div>
+              ) : contest.statusInt === 2 && user.contestManager ? (
+                <div className="col-lg-12">
+                  <ButtonComponent
+                    type="button"
+                    name="Terminar concurso"
+                    onClick={() => handleStatus(3)}
                   />
                 </div>
               ) : null}

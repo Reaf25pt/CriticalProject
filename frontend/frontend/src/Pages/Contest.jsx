@@ -12,6 +12,9 @@ function Contest() {
   const [contests, setContests] = useState([]);
   const [showList, setShowList] = useState([]);
 
+  const activeContestList = showList.filter((item) => item.statusInt !== 0);
+  console.log(activeContestList);
+
   useEffect(() => {
     console.log("use effect contest");
     fetch(`http://localhost:8080/projetofinal/rest/contest/allcontests`, {
@@ -92,18 +95,71 @@ function Contest() {
           aria-labelledby="home-tab"
         >
           {user.contestManager ? (
-            <div className="row">
-              <div className="col mt-5">
-                //{" "}
-                <LinkButton
-                  name={"Adicionar Concurso"}
-                  to={"/home/contestcreate"}
-                />
+            <>
+              <div className="row">
+                <div className="col mt-5">
+                  //{" "}
+                  <LinkButton
+                    name={"Adicionar Concurso"}
+                    to={"/home/contestcreate"}
+                  />
+                </div>
+              </div>
+              <div className="row mx-auto mt-5">
+                <div>
+                  <DataTable value={showList}>
+                    <Column field="title" header="Nome" sortable />
+                    <Column field="status" header="Estado" sortable />
+                    <Column
+                      field="startOpenCall"
+                      header="Data de Início"
+                      sortable
+                      body={(rowData) =>
+                        convertTimestampToDate(rowData.startOpenCall)
+                      }
+                    />
+                    <Column
+                      field="finishDate"
+                      header="Data de Fim"
+                      sortable
+                      body={(rowData) =>
+                        convertTimestampToDate(rowData.finishDate)
+                      }
+                    />
+                    <Column body={renderLink} header="#" />
+                  </DataTable>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="row mx-auto mt-5">
+              <div>
+                <DataTable value={activeContestList}>
+                  <Column field="title" header="Nome" sortable />
+                  <Column field="status" header="Estado" sortable />
+                  <Column
+                    field="startOpenCall"
+                    header="Data de Início"
+                    sortable
+                    body={(rowData) =>
+                      convertTimestampToDate(rowData.startOpenCall)
+                    }
+                  />
+                  <Column
+                    field="finishDate"
+                    header="Data de Fim"
+                    sortable
+                    body={(rowData) =>
+                      convertTimestampToDate(rowData.finishDate)
+                    }
+                  />
+                  <Column body={renderLink} header="#" />
+                </DataTable>
               </div>
             </div>
-          ) : null}
+          )}
 
-          <div className="row mx-auto mt-5">
+          {/*  <div className="row mx-auto mt-5">
             <div>
               <DataTable value={showList}>
                 <Column field="title" header="Nome" sortable />
@@ -125,7 +181,7 @@ function Contest() {
                 <Column body={renderLink} header="#" />
               </DataTable>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

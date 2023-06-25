@@ -5,7 +5,9 @@ import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import org.jboss.logging.Logger;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RequestScoped
@@ -147,5 +149,77 @@ public class Contest {
 
 
         return contestDto;
+    }
+
+    public dto.Contest editContestStatus(String token, int contestId, int status) {
+        // edita o status do concurso: n permite voltar a status Planning
+        boolean res=false;
+        dto.Contest contestDto =null;
+                entity.Contest contest = contestDao.find(contestId);
+
+        if(contest!=null) {
+
+            switch (status) {
+                case 1:
+                    // mudar para open: data de openCall tem de ser igual ou anterior a date.now()
+
+                    if (validateDate(contest.getStartOpenCall())) {
+                        contest.setStatus(StatusContest.OPEN);
+                        contestDao.merge(contest);
+                        contestDto = convertContestEntToDto(contest);
+                        res = true;
+                    }
+
+                    break;
+                case 2:
+                    // mudar para ongoing: data de startDate tem de ser igual ou anterior a date.now()
+                    if (validateDate(contest.getStartDate())) {
+                        contest.setStatus(StatusContest.ONGOING);
+                        contestDao.merge(contest);
+                        contestDto = convertContestEntToDto(contest);
+                        res = true;
+                    }
+                    break;
+                case 3:
+                    // mudar para concluded: data de finishDate tem de ser igual ou anterior a date.now()
+                    // TODO será triggered automaticamente com escolha de vencedor
+                    if (validateDate(contest.getFinishDate()) && checkWinner(contest)) {
+                        contest.setStatus(StatusContest.CONCLUDED);
+                        contestDao.merge(contest);
+                        contestDto = convertContestEntToDto(contest);
+                        res = true;
+                    }
+                    break;
+            }
+
+
+
+        }
+        return contestDto;
+    }
+
+    private boolean checkWinner(entity.Contest contest) {
+        // verifica se concurso tem projecto vencedor atribuido
+        boolean res = false;
+
+        if (contest.getWinner()!=null){
+            System.out.println(contest.getWinner());
+            res=true;
+        }
+
+        return res;
+    }
+
+    private boolean validateDate(Date date) {
+        // valida se data é igual ou anterior a today
+        boolean res=false;
+
+        Date today = Date.from(Instant.now());
+
+        if(date.equals(today) || date.before(today)){
+            res=true;
+            System.out.println("Data ok para mudar status");
+        }
+        return res;
     }
 }
