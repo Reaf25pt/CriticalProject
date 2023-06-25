@@ -130,7 +130,7 @@ function EditProject({ toggleComponent, project, set }) {
               </div>
 
               <InputComponent
-                placeholder={"Número máximo de participantes"}
+                placeholder={project.membersNumber}
                 id="membersNumber"
                 name="membersNumber"
                 type="number"

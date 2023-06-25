@@ -120,7 +120,7 @@ return r;
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllProjects(@HeaderParam("token") String token,  @PathParam("id") int id) {
+    public Response getProject(@HeaderParam("token") String token,  @PathParam("id") int id) {
 
         Response r = null;
 

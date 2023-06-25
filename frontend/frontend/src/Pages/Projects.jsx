@@ -67,7 +67,7 @@ function Projects() {
           aria-labelledby="home-tab"
         >
           <div className="row mt-5 d-flex justify-content-around">
-            {user.noActiveProject ? (
+            {!user.contestManager && user.noActiveProject ? (
               <div className="col-lg-2 ">
                 //{" "}
                 <LinkButton
@@ -108,7 +108,7 @@ function Projects() {
                 ></Column>
                 <Column
                   field={"membersNumber"}
-                  header="Vagas"
+                  header="Vagas disponíveis"
                   sortable
                   style={{ width: "15%" }}
                   body={(showAllProjects) =>

@@ -1,14 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ContestComponent from "../Components/ContestComponent";
 import TextAreaComponent from "../Components/TextAreaComponent";
 import EditContestComponent from "../Components/EditContestComponent";
+import { useParams } from "react-router-dom";
+import { userStore } from "../stores/UserStore";
+import { contestOpenStore } from "../stores/ContestOpenStore";
 
 function ContestOpen() {
   const [showComponentA, setShowComponentA] = useState(true);
+  const user = userStore((state) => state.user);
+  const setContestOpen = contestOpenStore((state) => state.setContestOpen);
+  const contest = contestOpenStore((state) => state.contest);
 
   const toggleComponent = () => {
     setShowComponentA(!showComponentA);
   };
+
+  const { id } = useParams();
+  console.log(id);
+
+  useEffect(() => {
+    fetch(`http://localhost:8080/projetofinal/rest/contest/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        token: user.token,
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        setContestOpen(data);
+        // console.log(data);
+        // setShowProjects(data);
+        // console.log(showProjects);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  if (!contest) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>

@@ -6,10 +6,12 @@ import TextAreaComponent from "../Components/TextAreaComponent";
 import ButtonComponent from "../Components/ButtonComponent";
 import { userStore } from "../stores/UserStore";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function ContestCreate() {
   const [credentials, setCredentials] = useState({});
   const user = userStore((state) => state.user);
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -35,6 +37,23 @@ function ContestCreate() {
       );
     } else {
       var newContest = credentials;
+
+      fetch("http://localhost:8080/projetofinal/rest/contest/newcontest", {
+        method: "POST",
+        headers: {
+          Accept: "*/*",
+          "Content-Type": "application/json",
+          token: user.token,
+        },
+        body: JSON.stringify(newContest),
+      }).then((response) => {
+        if (response.status === 200) {
+          alert("Consurso criado com sucesso");
+          navigate("/home", { replace: true });
+        } else {
+          alert("Algo correu mal");
+        }
+      });
     }
   };
 

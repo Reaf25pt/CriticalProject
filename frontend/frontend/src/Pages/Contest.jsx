@@ -1,6 +1,6 @@
 import { Col, Container, Row } from "react-bootstrap";
 import LinkButton from "../Components/LinkButton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { BsEyeFill } from "react-icons/bs";
@@ -9,7 +9,32 @@ import { userStore } from "../stores/UserStore";
 
 function Contest() {
   const user = userStore((state) => state.user);
+  const [contests, setContests] = useState([]);
+  const [showList, setShowList] = useState([]);
 
+  useEffect(() => {
+    console.log("use effect contest");
+    fetch(`http://localhost:8080/projetofinal/rest/contest/allcontests`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        token: user.token,
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log(data);
+        setShowList(data);
+      })
+      .catch((err) => console.log(err));
+  }, [contests]);
+
+  const convertTimestampToDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString(); // Adjust the format as per your requirement
+  };
+
+  /* 
   const [data, setData] = useState([
     {
       title: "Task 1",
@@ -30,11 +55,11 @@ function Contest() {
       endDate: "2023-06-24",
     },
     // Add more data as needed
-  ]);
+  ]); */
 
   const renderLink = (rowData) => {
     return (
-      <Link to={`/home/projects/${rowData.id}`}>
+      <Link to={`/home/contests/${rowData.id}`}>
         <BsEyeFill />
       </Link>
     );
@@ -80,11 +105,23 @@ function Contest() {
 
           <div className="row mx-auto mt-5">
             <div>
-              <DataTable value={data}>
-                <Column field="title" header="Nome do Projeto" sortable />
-                <Column field="status" header="Status" sortable />
-                <Column field="startDate" header="Data de Inicio" sortable />
-                <Column field="endDate" header="Data do Fim" sortable />
+              <DataTable value={showList}>
+                <Column field="title" header="Nome" sortable />
+                <Column field="status" header="Estado" sortable />
+                <Column
+                  field="startOpenCall"
+                  header="Data de Início"
+                  sortable
+                  body={(rowData) =>
+                    convertTimestampToDate(rowData.startOpenCall)
+                  }
+                />
+                <Column
+                  field="finishDate"
+                  header="Data de Fim"
+                  sortable
+                  body={(rowData) => convertTimestampToDate(rowData.finishDate)}
+                />
                 <Column body={renderLink} header="#" />
               </DataTable>
             </div>

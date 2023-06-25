@@ -13,6 +13,8 @@ public class Contest {
     private Date startOpenCall;
     private Date finishOpenCall;
     private String details;
+
+    private String rules;
     private String maxNumberProjects;
     private String status;
 
@@ -109,5 +111,13 @@ public class Contest {
 
     public void setWinnerProjectId(int winnerProjectId) {
         this.winnerProjectId = winnerProjectId;
+    }
+
+    public String getRules() {
+        return rules;
+    }
+
+    public void setRules(String rules) {
+        this.rules = rules;
     }
 }
