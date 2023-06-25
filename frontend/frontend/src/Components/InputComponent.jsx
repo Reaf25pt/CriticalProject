@@ -17,6 +17,7 @@ function InputComponent(props) {
         value={props.value}
         title={props.title}
         min={props.min}
+        disabled={props.disabled}
       />
     </div>
   );

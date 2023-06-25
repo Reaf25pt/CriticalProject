@@ -410,7 +410,7 @@ return r;
     @Path("/status")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response editProjectStatus(@HeaderParam("token") String token, @HeaderParam("status") int status, @HeaderParam("projId") int projId) {
+    public Response editProjectStatus(@HeaderParam("token") String token, @HeaderParam("status") int status, @HeaderParam("projId") int projId, Task finalTask) {
 // TODO pode ser necessário alterar info que vem do frontend
         Response r = null;
 
@@ -425,7 +425,7 @@ return r;
             userBean.updateSessionTime(token);
 
             // TODO terminar de implementar
-            boolean res = projBean.editProjectStatus(token, projId, status);
+            boolean res = projBean.editProjectStatus(token, projId, status, finalTask);
 
             if (!res) {
                 r = Response.status(404).entity("Not found!").build();

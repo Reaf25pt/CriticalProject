@@ -37,6 +37,9 @@ public class Task implements Serializable {
     @Column(name = "details", nullable = false, unique = false, updatable = true)
     private String details;
 
+    @Column(name = "finalTask", nullable = false, unique = false, updatable = true)
+    private boolean finalTask;
+
     // person responsible for the task
     @ManyToOne
     private User taskOwner;
@@ -162,6 +165,13 @@ public class Task implements Serializable {
 
     }
 
+    public boolean isFinalTask() {
+        return finalTask;
+    }
+
+    public void setFinalTask(boolean finalTask) {
+        this.finalTask = finalTask;
+    }
 
     @Override
     public boolean equals(Object o) {

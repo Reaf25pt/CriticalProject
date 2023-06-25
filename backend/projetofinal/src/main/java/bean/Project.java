@@ -667,7 +667,7 @@ public class Project implements Serializable {
         newTask.setStatus(StatusTask.PLANNED);
 
         newTask.setProject(projDao.findProjectById(projId));
-
+newTask.setFinalTask(false);
 
         taskDao.persist(newTask);
 
@@ -1145,10 +1145,10 @@ return list;
         return res;
     }
 
-    public boolean editProjectStatus(String token, int projId, int status) {
+    public boolean editProjectStatus(String token, int projId, int status, Task finalTask) {
         // altera estado do projecto, por intervenção de gestor do projecto
         // apenas considera os estados planning, ready, in progress, cancelled, finished. os outros 2 serão automáticos
-
+// finalTask é apenas para o caso de alterar para ready e nunca se verifica se está null a n ser nesse caso
         boolean res = false;
 
 
@@ -1165,7 +1165,7 @@ return list;
                     //definir como ready: projecto está em planning. Proj ready é um projecto que está pronto para ser apresentado a um concurso
                     // não permite edição de info e tem de se assegurar que tarefa final existe
 
-                    res = changeProjStatusToReady(project);
+                    res = changeProjStatusToReady(project, finalTask);
                     break;
                 case 4:
                     // definir como in progress, proj está approved
@@ -1184,7 +1184,7 @@ return list;
                     res =changeProjStatusToFinished(project);
                     break;
                 case 7:
-                    // TODO acabar de implementar : pode colocar ready se tiver tarefa final ou planning se não. ou apagar a tarefa final e colocar planning 
+                    // TODO acabar de implementar : pode colocar ready se tiver tarefa final ou planning se não. ou apagar a tarefa final e colocar planning
                     //definir como ready um projecto cancelado se não está associado a nenhum concurso
                     res =reactivatesCancelledProj(project);
                     break;
@@ -1251,11 +1251,40 @@ if (count==0){
         return res;
     }
 
-    private boolean changeProjStatusToReady(entity.Project project) {
-        // modifica apenas se proj status for ready
-        // tem de pedir q tarefa final seja definida
-        //TODO falta implementar
+    private boolean changeProjStatusToReady(entity.Project project, Task finalTask) {
+        // modifica apenas se proj status for ready. Tem de adicionar tarefa final ao projecto e só então mudar status
+
+        //TODO verificar se precisa de garantir / apagar q n tem tarefa final definida por ter antes passado por ready
         boolean res=false;
+
+        if(finalTask!=null){
+           boolean res1= addFinalTaskToProject(project, finalTask);
+
+           if(res1){
+               project.setStatus(StatusProject.READY);
+               projDao.merge(project);
+               res=true;
+           }
+        }
+
+
+        return res;
+    }
+
+    private boolean addFinalTaskToProject(entity.Project project, Task finalTask) {
+        // adiciona tarefa final ao projecto. Tem a particularidade de data inicial e data final ser igual e título é predefinido. Não tem tarefas precedentes, na prática são todas
+boolean res = false;
+        entity.Task taskEnt = new entity.Task();
+        taskEnt.setTitle("Apresentação final");
+        taskEnt.setStartDate(finalTask.getStartDate());
+        taskEnt.setFinishDate(finalTask.getStartDate());
+        taskEnt.setDetails(finalTask.getDetails());
+        taskEnt.setTaskOwner(userDao.findUserById(finalTask.getTaskOwnerId()));
+             taskEnt.setStatus(StatusTask.PLANNED);
+   taskEnt.setProject(project);
+taskEnt.setFinalTask(true);
+        taskDao.persist(taskEnt);
+        res=true;
         return res;
     }
 

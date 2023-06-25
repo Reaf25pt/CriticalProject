@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { userStore } from "../stores/UserStore";
 import { useParams } from "react-router-dom";
 import ButtonComponent from "./ButtonComponent";
+import ModalFinalTask from "./ModalFinalTask";
 
 function ProjectComponent({ toggleComponent, project, members, setProjects }) {
   const user = userStore((state) => state.user);
@@ -113,7 +114,8 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
                   ) : null}
 
                   {project.statusInt === 0 ? (
-                    <div className="row mx-auto justify-content-around mt-5">
+                    <ModalFinalTask setProjects={setProjects} />
+                  ) : /*  <div className="row mx-auto justify-content-around mt-5">
                       <div className="col-lg-12">
                         <ButtonComponent
                           type="button"
@@ -121,8 +123,8 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
                           onClick={() => handleProjectStatus(1)}
                         />
                       </div>
-                    </div>
-                  ) : project.statusInt === 1 ? (
+                    </div> */
+                  project.statusInt === 1 ? (
                     <div className="row mx-auto justify-content-around mt-5">
                       <div className="col-lg-12">
                         <ButtonComponent
@@ -133,15 +135,17 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
                       </div>
                     </div>
                   ) : project.statusInt === 3 ? (
-                    <div className="row mx-auto justify-content-around mt-5">
-                      <div className="col-lg-12">
-                        <ButtonComponent
-                          type="button"
-                          name="Mudar status: in progress"
-                          onClick={() => handleProjectStatus(4)}
-                        />
+                    <>
+                      <div className="row mx-auto justify-content-around mt-5">
+                        <div className="col-lg-12">
+                          <ButtonComponent
+                            type="button"
+                            name="Mudar status: in progress"
+                            onClick={() => handleProjectStatus(4)}
+                          />
+                        </div>
                       </div>
-                    </div>
+                    </>
                   ) : project.statusInt === 4 ? (
                     <div className="row mx-auto justify-content-around mt-5">
                       <div className="col-lg-12">
