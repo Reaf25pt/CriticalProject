@@ -106,4 +106,46 @@ public class Contest {
         }
         return contest;
     }
+
+    public boolean verifyPermissionToModifyContest(int id) {
+        // verifica se status do concurso é planning, pois só poderá ser editado / apagado neste caso
+        boolean res=false;
+
+        entity.Contest contest = contestDao.find(id);
+
+        if(contest!=null){
+            if(contest.getStatus() == StatusContest.PLANNING){
+                res=true;
+                // concurso pode ser editado/ apagado
+            }
+        }
+
+        return res;
+    }
+
+    public dto.Contest editContestInfo(String token, dto.Contest editContest) {
+        // edita as informações do concurso e retorna DTO para actualizar no frontend
+
+        dto.Contest contestDto = new dto.Contest();
+
+        entity.Contest contestEnt = contestDao.find(editContest.getId());
+
+        if(contestEnt!=null){
+            contestEnt.setTitle(editContest.getTitle());
+            contestEnt.setStartOpenCall(editContest.getStartOpenCall());
+            contestEnt.setFinishOpenCall(editContest.getFinishOpenCall());
+            contestEnt.setStartDate(editContest.getStartDate());
+            contestEnt.setFinishDate(editContest.getFinishDate());
+            contestEnt.setDetails(editContest.getDetails());
+            contestEnt.setRules(editContest.getRules());
+            contestEnt.setMaxNumberProjects(editContest.getMaxNumberProjects());
+            // TODO CONFIRMAR Q n actualiza status nem vencedor porque não será  por aqui
+
+            contestDao.merge(contestEnt);
+            contestDto = convertContestEntToDto(contestEnt);
+        }
+
+
+        return contestDto;
+    }
 }

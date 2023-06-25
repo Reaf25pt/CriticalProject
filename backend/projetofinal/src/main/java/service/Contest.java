@@ -106,4 +106,36 @@ public class Contest {
         return r;
     }
 
+    // EDIT CONTEST INFO
+    @PATCH
+    @Path("/")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response editContest(@HeaderParam("token") String token, dto.Contest editContest) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) || editContest==null) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else if (!userBean.checkUserPermission(token) || !contestBean.verifyUserProfile(token) || !contestBean.verifyPermissionToModifyContest(editContest.getId())) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+
+            userBean.updateSessionTime(token);
+
+            dto.Contest contest = contestBean.editContestInfo(token, editContest);
+
+            if (contest==null) {
+                r = Response.status(404).entity("Not found!").build();
+
+            } else {
+                r = Response.status(200).entity(contest).build();
+            }
+        }
+        return r;
+
+    }
+
+
 }

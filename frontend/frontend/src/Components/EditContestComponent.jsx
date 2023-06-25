@@ -7,8 +7,14 @@ import { useState } from "react";
 
 function EditContestComponent({ toggleComponent }) {
   const contest = contestOpenStore((state) => state.contest);
+  const setContestOpen = contestOpenStore((state) => state.setContestOpen);
   const user = userStore((state) => state.user);
   const [credentials, setCredentials] = useState(contest);
+
+  const convertTimestampToDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString(); // Adjust the format as per your requirement
+  };
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -21,7 +27,54 @@ function EditContestComponent({ toggleComponent }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    toggleComponent();
+
+    console.log(credentials);
+    if (
+      !credentials.title ||
+      !credentials.startOpenCall ||
+      !credentials.finishOpenCall ||
+      !credentials.startDate ||
+      !credentials.finishDate ||
+      !credentials.maxNumberProjects ||
+      !credentials.details ||
+      !credentials.rules
+    ) {
+      alert("Insira os dados assinalados como obrigatórios");
+    } else if (
+      credentials.startOpenCall >= credentials.finishOpenCall ||
+      credentials.finishOpenCall >= credentials.startDate ||
+      credentials.startDate >= credentials.finishDate
+    ) {
+      alert(
+        "Reveja as datas inseridas: a fase de candidaturas tem de ser anterior ao início da execução"
+      );
+    } else if (credentials.maxNumberProjects <= 0) {
+      alert("Insira um número de participantes válido");
+    } else {
+      var editedContest = credentials;
+
+      fetch("http://localhost:8080/projetofinal/rest/contest/", {
+        method: "PATCH",
+        headers: {
+          Accept: "*/*",
+          "Content-Type": "application/json",
+          token: user.token,
+        },
+        body: JSON.stringify(editedContest),
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json();
+          }
+        })
+        .then((data) => {
+          console.log(data);
+          setContestOpen(data);
+          toggleComponent();
+          alert("Concurso editado com sucesso");
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   return (
@@ -138,11 +191,12 @@ function EditContestComponent({ toggleComponent }) {
           <div className="bg-secondary p-3 rounded-5 h-100">
             <div className="bg-white rounded-5 h-100 p-3">
               <TextAreaComponent
-                placeholder={contest.details}
+                placeholder="Descrição"
                 id="details"
                 name="details"
                 type="text"
                 onChange={handleChange}
+                defaultValue={contest.details || ""}
               />
             </div>
           </div>
@@ -151,12 +205,13 @@ function EditContestComponent({ toggleComponent }) {
           <div className="bg-secondary p-3 rounded-5 h-100">
             <div className="bg-white rounded-5 h-100 p-3">
               <TextAreaComponent
-                placeholder={contest.rules}
+                placeholder="Regras do concurso"
                 id="rules"
                 name="rules"
                 required
                 type="text"
                 onChange={handleChange}
+                defaultValue={contest.rules || ""}
               />
             </div>
           </div>
