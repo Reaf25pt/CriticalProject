@@ -5,8 +5,13 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "ContestApplicants")
-public class ContestApplicants implements Serializable {
+@Table(name = "ContestApplication")
+@NamedQuery(name = "ContestApplication.findApplicationsForGivenContestId", query = "SELECT a FROM ContestApplication a WHERE a.contest.id = :contestId ")
+@NamedQuery(name = "ContestApplication.findApplicationForGivenContestIdAndProjectId", query = "SELECT a FROM ContestApplication a WHERE a.contest.id = :contestId AND a.project.id = :projectId ")
+@NamedQuery(name = "ContestApplication.findAcceptedApplicationsForGivenContestId", query = "SELECT a FROM ContestApplication a WHERE a.contest.id = :contestId AND a.accepted = true ")
+@NamedQuery(name = "ContestApplication.findApplicationsNotAnsweredForGivenContestId", query = "SELECT a FROM ContestApplication a WHERE a.contest.id = :contestId AND a.answered = false ")
+
+public class ContestApplication implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -30,7 +35,7 @@ public class ContestApplicants implements Serializable {
     @Column(name = "accepted", nullable = false, unique = false, updatable = true)
     private boolean accepted = false;
 
-    public ContestApplicants() {
+    public ContestApplication() {
     }
 
     public int getId() {

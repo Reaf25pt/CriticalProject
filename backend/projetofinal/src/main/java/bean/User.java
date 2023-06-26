@@ -1040,7 +1040,7 @@ return projectsList;
                     //TODO  retirar notificações que digam respeito a coisas do projecto e que precisem de input ou retirar a necessidade de input
                     // colocar perfil a privado
 
-                    entity.ProjectMember pm = projMemberDao.findActiveProjectByUserId(userId);
+                    entity.ProjectMember pm = projMemberDao.findActiveProjectMemberByUserId(userId);
                     if (pm != null) {
                         System.out.println("ID proj member " + pm.getId());
                         if (projBean.hasEnoughManagers(pm.getProjectToParticipate().getId(), userId)) {

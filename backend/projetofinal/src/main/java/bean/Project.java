@@ -9,7 +9,6 @@ import dto.Task;
 import dto.UserInfo;
 import entity.Contest;
 import entity.ProjectMember;
-import entity.Token;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -46,6 +45,8 @@ public class Project implements Serializable {
     dao.Task taskDao;
     @EJB
     dao.Skill skillDao;
+    @EJB
+    dao.Contest contestDao;
 
 
     public Project() {
@@ -1716,6 +1717,72 @@ return res;
             }
         }
 
+        return res;
+    }
+
+
+    public boolean verifyProjectCanApply(String token, int contestId) {
+        // verifica se token tem projecto activo, se o seu status é READY e tem tarefa final com data compatível com final do concurso para poder de facto concorrer ao concurso
+boolean res=false;
+
+            entity.User user = tokenDao.findUserEntByToken(token);
+
+            if(user!=null){
+                entity.Project project = projMemberDao.findActiveProjectByUserId(user.getUserId());
+
+
+                if(project!=null){
+
+                   if(verifyProjectStatusIsReady(project, contestId));{
+                        res=true;
+                    }
+
+                    }
+
+            System.out.println("result verify project can apply: " + res);
+            }return res;
+        }
+
+    private boolean verifyProjectStatusIsReady(entity.Project project, int contestId) {
+        // verifica se projecto status is READY e se finalTask é compatível com data final de concurso
+        boolean res= false;
+
+        if(project.getStatus()==StatusProject.READY) {
+            // verificar se projecto tem final task definida
+
+            entity.Task finalTask = taskDao.findFinalTaskByProjectId(project.getId());
+
+            if(finalTask!=null){
+                if(verifyFinalTaskDate(finalTask, contestId)){
+                    res=true;
+                    // proj pode concorrer
+                }
+            }
+
+
+        }
+
+        System.out.println("result verify project status is ready: " + res);
+
+        return res;
+    }
+
+    private boolean verifyFinalTaskDate(entity.Task finalTask, int contestId) {
+        // verifica se data da tarefa final está compreendida no período de execução do concurso
+boolean res=false;
+        Contest contest = contestDao.find(contestId);
+
+        if(contest!=null){
+            System.out.println(contest.getStartDate() + " " + contest.getFinishDate());
+            if (finalTask.getStartDate().after(contest.getStartDate()) && finalTask.getStartDate().before(contest.getFinishDate())){
+                System.out.println(finalTask.getStartDate() + " " + finalTask.getFinishDate());
+
+                res=true;
+                // data é OK
+            }
+        }
+
+        System.out.println("result final task date: " + res);
         return res;
     }
 

@@ -41,7 +41,7 @@ public class Contest implements Serializable {
     //TODO rules ser nullable ou não ?!
 
     @Column(name = "maxNumberProjects", nullable = false, unique = false, updatable = true)
-    private String maxNumberProjects;
+    private int maxNumberProjects;
 
     @Column(name = "status", nullable = false, unique = false, updatable = true)
     private StatusContest status;
@@ -59,7 +59,7 @@ public class Contest implements Serializable {
     private List<Project> listProjects = new ArrayList<>();
 */
     @OneToMany(mappedBy = "contest")
-    private List<ContestApplicants> listProjectApplicants = new ArrayList<>();
+    private List<ContestApplication> listProjectApplicants = new ArrayList<>();
 
     public Contest() {
     }
@@ -112,11 +112,11 @@ public class Contest implements Serializable {
         this.rules = rules;
     }
 
-    public String getMaxNumberProjects() {
+    public int getMaxNumberProjects() {
         return maxNumberProjects;
     }
 
-    public void setMaxNumberProjects(String maxNumberProjects) {
+    public void setMaxNumberProjects(int maxNumberProjects) {
         this.maxNumberProjects = maxNumberProjects;
     }
 
@@ -136,11 +136,11 @@ public class Contest implements Serializable {
         this.winner = winner;
     }
 
-    public List<ContestApplicants> getListProjectApplicants() {
+    public List<ContestApplication> getListProjectApplicants() {
         return listProjectApplicants;
     }
 
-    public void setListProjectApplicants(List<ContestApplicants> listProjectApplicants) {
+    public void setListProjectApplicants(List<ContestApplication> listProjectApplicants) {
         this.listProjectApplicants = listProjectApplicants;
     }
 

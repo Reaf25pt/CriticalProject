@@ -1,15 +1,10 @@
 package service;
 import dto.*;
-import dto.Project;
 import jakarta.inject.Inject;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -170,6 +165,117 @@ public class Contest {
     }
 
 
+    // PROJECTO CONCORRE A CONCURSO - projecto activo do utilizador logado
+    @POST
+    @Path("/application")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response applyToContest(@HeaderParam("contestId") int contestId, @HeaderParam("token") String token) {
+        Response r = null;
 
+        if (userBean.checkStringInfo(token) ) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        }  else if (!userBean.checkUserPermission(token) || !contestBean.verifyPermissionToApply( contestId)|| !projBean.verifyProjectCanApply(token, contestId)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            boolean res = contestBean.applyToContest(contestId, token);
+
+            if (!res) {
+                r = Response.status(404).entity("Something went wrong!").build();
+            } else {
+
+                r = Response.status(200).entity("Success!").build();
+            }
+        }
+        return r;}
+
+    // GET LIST OF ALL PROJECTS ASSOCIATED WITH GIVEN CONTEST
+    @GET
+    @Path("/projects")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllProjects(@HeaderParam("token") String token, @HeaderParam("contestId") int contestId) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<Application> list = contestBean.getAllApplications(token, contestId);
+
+            if (list == null || list.size() == 0) {
+                r = Response.status(404).entity(list).build();
+            } else {
+
+                r = Response.status(200).entity(list).build();
+            }
+        }
+
+        return r;
+    }
+
+
+    // RESPONSE TO PROJECT APPLICATION : accept - 1 ; refuse - 0
+    @PATCH
+    @Path("/application")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response replyToApplication(@HeaderParam("token") String token, @HeaderParam("status") int status, @HeaderParam("applicationId") int applicationId, @HeaderParam("contestId") int contestId) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) ) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else if (!userBean.checkUserPermission(token) || !contestBean.verifyUserProfile(token) || !contestBean.verifyPermissionToApply( contestId)|| contestBean.checkApplicationsLimit(contestId) ) {
+            r = Response.status(403).entity("Forbidden!").build();
+
+        } else {
+
+            userBean.updateSessionTime(token);
+            System.out.println("endpoint");
+            boolean res = contestBean.replyToApplication(token, applicationId, status);
+
+            if (!res) {
+                r = Response.status(404).entity("Not found!").build();
+
+            } else {
+                r = Response.status(200).entity("Success").build();
+            }
+        }
+        return r;
+
+    }
+
+    // SELECÇÃO DO PROJECTO VENCEDOR
+    @PUT
+    @Path("/application")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response chooseWinner(@HeaderParam("contestId") int contestId,@HeaderParam("projId") int projId, @HeaderParam("token") String token) {
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) ) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        }  else if (!userBean.checkUserPermission(token) || !contestBean.verifyPermissionToApply( contestId)|| !projBean.verifyProjectCanApply(token, contestId)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            boolean res = contestBean.applyToContest(contestId, token);
+
+            if (!res) {
+                r = Response.status(404).entity("Something went wrong!").build();
+            } else {
+
+                r = Response.status(200).entity("Success!").build();
+            }
+        }
+        return r;}
 
 }

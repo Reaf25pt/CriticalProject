@@ -15,7 +15,7 @@ public class Contest {
     private String details;
 
     private String rules;
-    private String maxNumberProjects;
+    private int maxNumberProjects;
     private String status;
 
     private int statusInt;
@@ -65,11 +65,11 @@ public class Contest {
         this.details = details;
     }
 
-    public String getMaxNumberProjects() {
+    public int getMaxNumberProjects() {
         return maxNumberProjects;
     }
 
-    public void setMaxNumberProjects(String maxNumberProjects) {
+    public void setMaxNumberProjects(int maxNumberProjects) {
         this.maxNumberProjects = maxNumberProjects;
     }
 

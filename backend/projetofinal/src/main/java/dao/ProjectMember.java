@@ -4,7 +4,6 @@ import ENUM.StatusProject;
 import entity.Project;
 import entity.User;
 import jakarta.ejb.Stateless;
-import jakarta.persistence.NamedQuery;
 import jakarta.persistence.NoResultException;
 
 import java.util.ArrayList;
@@ -90,10 +89,10 @@ public class ProjectMember extends Abstract<entity.ProjectMember>{
         return usersList;
     }
 
-    public entity.ProjectMember findActiveProjectByUserId( int userId) {
+    public entity.ProjectMember findActiveProjectMemberByUserId(int userId) {
         entity.ProjectMember ent = null;
         try {
-            ent = (entity.ProjectMember) em.createNamedQuery("ProjectMember.findActiveProjectByUserId").setParameter("userId", userId)
+            ent = (entity.ProjectMember) em.createNamedQuery("ProjectMember.findActiveProjectMemberByUserId").setParameter("userId", userId)
                     .getSingleResult();
         } catch (NoResultException e) {
             // e.printStackTrace();
@@ -102,7 +101,17 @@ public class ProjectMember extends Abstract<entity.ProjectMember>{
         return ent;
     }
 
-
+    public entity.Project findActiveProjectByUserId(int userId) {
+        entity.Project ent = null;
+        try {
+            ent = (entity.Project) em.createNamedQuery("ProjectMember.findActiveProjectByUserId").setParameter("userId", userId).setParameter("cancelled", StatusProject.CANCELLED).setParameter("finished", StatusProject.FINISHED)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            // e.printStackTrace();
+            return null;
+        }
+        return ent;
+    }
 
 
 

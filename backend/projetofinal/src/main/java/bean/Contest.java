@@ -1,6 +1,10 @@
 package bean;
 
 import ENUM.StatusContest;
+import ENUM.StatusProject;
+import dto.Application;
+import entity.ContestApplication;
+import entity.Project;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import org.jboss.logging.Logger;
@@ -23,6 +27,10 @@ public class Contest {
     dao.Project projDao;
     @EJB
     dao.Contest contestDao;
+    @EJB
+    dao.ProjectMember projMemberDao;
+    @EJB
+    dao.ContestApplication applicationDao;
 
     public Contest(){
     }
@@ -177,6 +185,9 @@ public class Contest {
                         contest.setStatus(StatusContest.ONGOING);
                         contestDao.merge(contest);
                         contestDto = convertContestEntToDto(contest);
+
+                        refuseUnansweredApplications(contest);
+
                         res = true;
                     }
                     break;
@@ -222,4 +233,186 @@ public class Contest {
         }
         return res;
     }
+
+    public boolean verifyPermissionToApply(int contestId) {
+        // verifica se status do concurso é OPEN pois só pode receber / responder a candidaturas neste caso
+
+        boolean res=false;
+
+        entity.Contest contest = contestDao.find(contestId);
+
+        if (contest!=null){
+            if(contest.getStatus()==StatusContest.OPEN){
+                res=true;
+                // pode receber candidaturas
+            }
+        }
+
+        System.out.println("result verify contest is open: " + res);
+        return res;
+    }
+
+    public boolean applyToContest(int contestId, String token) {
+        // projecto activo do token concorre a concurso
+        boolean res= false;
+
+
+        entity.Contest contest = contestDao.find(contestId);
+
+        if(contest!=null){
+        entity.User user = tokenDao.findUserEntByToken(token);
+
+        if(user!=null){
+            entity.Project project = projMemberDao.findActiveProjectByUserId(user.getUserId());
+
+            if(project!=null) {
+
+                // verifica se projecto tem relação com contest: se for aceite não faz nada, se em espera não faz nada, se recusado tem de permitir actualizar a relação
+                // projecto pode ter sido recusado, melhorar os dados e voltar a concorrer
+                ContestApplication applicationEnt = applicationDao.findApplicationForGivenContestIdAndProjectId(contest.getId(), project.getId());
+
+                if(applicationEnt!=null){
+                    if(applicationEnt.isAccepted() || !applicationEnt.isAnswered()){
+                        // candidatura está aceite ou à espera de resposta
+                        res=true; // não precisa de fazer nada
+                    } else {
+                        // candidatura foi previamente recusada
+
+                        applicationEnt.setAnswered(false);
+                        applicationEnt.setAccepted(false);
+                        applicationDao.merge(applicationEnt);
+                        // alterar status de projecto para proposed
+                        project.setStatus(StatusProject.PROPOSED);
+                        projDao.merge(project);
+                        res=true; // nova candidatura - precisa de actualizar os atributos que definem a relação concurso - projecto
+                    }
+                } else {
+                    // não há relação, é a 1ª candidatura
+
+                    ContestApplication application = new ContestApplication();
+                    application.setContest(contest);
+                    application.setProject(project);
+                    application.setAnswered(false);
+                    application.setAccepted(false);
+
+                    applicationDao.persist(application);
+                    res=true;
+
+// alterar status de projecto para proposed
+                    project.setStatus(StatusProject.PROPOSED);
+                    projDao.merge(project);
+                }
+            }}}
+
+        return res;
+    }
+
+
+
+    public List<Application> getAllApplications(String token, int contestId) {
+        // get all projects that applied for given contest: approved, refused and waiting for response
+
+        List<Application> list = new ArrayList<>();
+
+        List<ContestApplication> applications = applicationDao.findApplicationsForGivenContestId(contestId);
+
+        if(applications!=null){
+            for (ContestApplication a : applications){
+                list.add(convertApplicationToDto(a));
+            }
+        }
+
+        return list;
+    }
+
+    private Application convertApplicationToDto(ContestApplication a) {
+
+        Application application = new Application();
+
+        application.setId(a.getId());
+        application.setProjectId(a.getProject().getId());
+        application.setProjectStatus(a.getProject().getStatus().getStatus());
+application.setProjectTitle(a.getProject().getTitle());
+application.setProjectStatusInt(a.getProject().getStatus().ordinal());
+application.setAnswered(a.isAnswered());
+application.setAccepted(a.isAccepted());
+
+        return application;
+    }
+
+    public boolean replyToApplication(String token, int applicationId, int status) {
+        // Perfil A responde a candidatura de projecto aceitando (status = 1) ou rejeitando (status =0)
+        System.out.println("metodo " + applicationId);
+boolean res=false;
+        ContestApplication applicationEnt = applicationDao.find(applicationId);
+
+        if(applicationEnt!=null){
+            System.out.println("encontrou applicaion");
+            if (status==1){
+                applicationEnt.setAnswered(true);
+                applicationEnt.setAccepted(true);
+                applicationDao.merge(applicationEnt);
+                // Alterar status do projecto para approved
+                applicationEnt.getProject().setStatus(StatusProject.APPROVED);
+                projDao.merge(applicationEnt.getProject());
+
+                        //TODO notificação para membros do projecto
+
+                // sempre que aceita algum projecto tem de verificar se limite de projectos a concurso foi atingido. Se for, terá de automaticamente recusar os restantes projectos
+                verifyLimitApplicationsToContestHasBeanReached(applicationEnt.getContest());
+                res=true;
+            } else if (status==0){
+                applicationEnt.setAnswered(true);
+                applicationEnt.setAccepted(false);
+                applicationDao.merge(applicationEnt);
+
+                applicationEnt.getProject().setStatus(StatusProject.READY);
+                projDao.merge(applicationEnt.getProject());
+                res=true;
+            }
+        }
+
+return res;
+    }
+
+    private void verifyLimitApplicationsToContestHasBeanReached(entity.Contest contest) {
+        // verifica se limite de projectos aceites a um concurso foi atingido. Se sim, terá de recusar todos os projectos à espera de resposta
+
+        boolean res = checkApplicationsLimit(contest.getId());
+
+        if(res){
+            refuseUnansweredApplications(contest);
+
+        }
+
+    }
+
+    private void refuseUnansweredApplications(entity.Contest contest){
+        List<ContestApplication> applicationsWaitingForResponse = applicationDao.findApplicationsNotAnsweredForGivenContestId(contest.getId());
+
+        if(applicationsWaitingForResponse!=null){
+            for (ContestApplication a : applicationsWaitingForResponse){
+                a.setAnswered(true);
+                a.setAccepted(false);
+                applicationDao.merge(a);
+            }
+        }
+    }
+
+
+
+    public boolean checkApplicationsLimit(int contestId) {
+        // verifica se concurso já atingiu limite de projectos que pode aceitar
+boolean res=false;
+
+        entity.Contest contest = contestDao.find(contestId);
+if (contest!=null){
+        List<ContestApplication> list = applicationDao.findAcceptedApplicationsForGivenContestId(contestId);
+
+        if(list!=null) {
+            if(list.size()==contest.getMaxNumberProjects()){
+                res=true;
+                // limite foi atingido, não poderá aceitar mais projectos a concurso
+    }}}
+    return res;}
 }

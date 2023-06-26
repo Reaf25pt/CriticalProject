@@ -54,6 +54,27 @@ function ContestComponent({ toggleComponent }) {
       .catch((err) => console.log(err));
   };
 
+  const applyToContest = (event) => {
+    console.log(event);
+
+    fetch("http://localhost:8080/projetofinal/rest/contest/application", {
+      method: "POST",
+      headers: {
+        Accept: "*/*",
+        "Content-Type": "application/json",
+        token: user.token,
+        contestId: contest.id,
+      },
+    }).then((response) => {
+      if (response.status === 200) {
+        alert("Candidatura com sucesso");
+        //navigate("/home", { replace: true });
+      } else {
+        alert("Algo correu mal");
+      }
+    });
+  };
+
   return (
     <div class="container-fluid">
       <div className="row mt-5">
@@ -176,6 +197,17 @@ function ContestComponent({ toggleComponent }) {
                     name="Terminar concurso"
                     onClick={() => handleStatus(3)}
                   />
+                </div>
+              ) : null}
+              {contest.statusInt === 1 && !user.noActiveProject ? (
+                <div className="row mx-auto justify-content-around mt-5">
+                  <div className="col-lg-12">
+                    <ButtonComponent
+                      type="button"
+                      name="Concorrer com o meu projecto"
+                      onClick={applyToContest}
+                    />
+                  </div>
                 </div>
               ) : null}
             </div>{" "}

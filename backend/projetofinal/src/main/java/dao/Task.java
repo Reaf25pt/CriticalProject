@@ -55,6 +55,17 @@ public class Task extends Abstract<entity.Task>{
         return count;
     }
 
+    public entity.Task findFinalTaskByProjectId(int id) {
+       entity.Task ent = null;
+        try {
+            ent = (entity.Task) em.createNamedQuery("Task.findFinalTaskByProjectId").setParameter("id", id)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            // e.printStackTrace();
+            return null;
+        }
+        return ent;
+    }
 
 
 
