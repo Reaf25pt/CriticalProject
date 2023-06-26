@@ -59,9 +59,13 @@ public class Project implements Serializable {
     @OneToMany(mappedBy = "project")
     private List<Task> listTasks = new ArrayList<>();
 
+    @OneToMany(mappedBy = "project")
+    private List<ContestApplicants> listContest = new ArrayList<>();
+
+    /*
     @ManyToOne
     private Contest contest;
-
+*/
 
     public Project() {
     }
@@ -170,12 +174,14 @@ public class Project implements Serializable {
         this.listTasks = listTasks;
     }
 
-    public Contest getContest() {
-        return contest;
+
+
+    public List<ContestApplicants> getListContest() {
+        return listContest;
     }
 
-    public void setContest(Contest contest) {
-        this.contest = contest;
+    public void setListContest(List<ContestApplicants> listContest) {
+        this.listContest = listContest;
     }
 
     @Override
