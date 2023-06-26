@@ -62,10 +62,12 @@ public class Project implements Serializable {
     @OneToMany(mappedBy = "project")
     private List<ContestApplicants> listContest = new ArrayList<>();
 
-    /*
+
     @ManyToOne
     private Contest contest;
-*/
+
+
+
 
     public Project() {
     }
@@ -184,6 +186,14 @@ public class Project implements Serializable {
         this.listContest = listContest;
     }
 
+    public Contest getContest() {
+        return contest;
+    }
+
+    public void setContest(Contest contest) {
+        this.contest = contest;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -196,4 +206,6 @@ public class Project implements Serializable {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+
 }

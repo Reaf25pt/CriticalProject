@@ -18,6 +18,21 @@ public class ValidateNewAccount {
      */
     public static void main(String recipientEmail, String tokenForActivaction) {
 
+        final String fromEmail = "reaf25pt@gmail.com"; // requires valid gmail id
+        final String password = "gbsbenrhlnnfylow"; // correct password for gmail id
+        // String toEmail = "joanaramalho@student.dei.uc.pt"; // can be any email id
+        String toEmail = recipientEmail; // can be any email id
+
+        System.out.println("TLSEmail Start");
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com"); //SMTP Host
+        props.put("mail.smtp.port", "465"); //SMTP Port
+        props.put("mail.smtp.ssl.enable", "true");
+        props.put("mail.smtp.auth", "true"); //Enabling SMTP Authentication
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+
+
+        /*
         final String fromEmail = "joanaramalho@student.dei.uc.pt"; // requires valid gmail id
         final String password = ""; // correct password for gmail id
         // String toEmail = "joanaramalho@student.dei.uc.pt"; // can be any email id
@@ -30,6 +45,8 @@ public class ValidateNewAccount {
         props.put("mail.smtp.auth", "true"); // enable authentication
         props.put("mail.smtp.starttls.enable", "true"); // enable STARTTLS
 
+
+         */
         // create Authenticator object to pass in Session.getInstance argument
         Authenticator auth = new Authenticator() {
             // override the getPasswordAuthentication method
