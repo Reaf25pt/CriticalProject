@@ -61,6 +61,8 @@ public class Project implements Serializable {
 
     @OneToMany(mappedBy = "project")
     private List<ContestApplication> listContest = new ArrayList<>();
+    @OneToMany(mappedBy = "project")
+    private List<ProjectHistory> listRecords = new ArrayList<>();
 
 /*
     @ManyToOne
@@ -185,7 +187,15 @@ public class Project implements Serializable {
     public void setListContest(List<ContestApplication> listContest) {
         this.listContest = listContest;
     }
-/*
+
+    public List<ProjectHistory> getListRecords() {
+        return listRecords;
+    }
+
+    public void setListRecords(List<ProjectHistory> listRecords) {
+        this.listRecords = listRecords;
+    }
+    /*
     public Contest getContest() {
         return contest;
     }

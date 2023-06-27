@@ -120,6 +120,7 @@ public class Contest {
         if (userBean.checkStringInfo(token) ) {
             r = Response.status(401).entity("Unauthorized!").build();
         }  else if (!userBean.checkUserPermission(token) || !contestBean.verifyPermissionToApply( contestId)|| !projBean.verifyProjectCanApply(token, contestId)) {
+            // TODO verificar se nenhuma tarefa do plano de execução tem datas q saiam do timing do concurso
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);

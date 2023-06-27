@@ -16,6 +16,10 @@ public class ProjectHistory {
     private String authorFirstName;
     private String authorLastName;
 
+
+    public ProjectHistory() {
+    }
+
     public ProjectHistory(int id, String message, Date creationTime, int taskId, String taskTitle, int authorId, String authorPhoto, String authorFirstName, String authorLastName) {
         this.id = id;
         this.message = message;

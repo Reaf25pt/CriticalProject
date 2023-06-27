@@ -3,6 +3,7 @@ package bean;
 import ENUM.StatusContest;
 import ENUM.StatusProject;
 import dto.Application;
+import dto.Task;
 import entity.ContestApplication;
 import entity.Project;
 import jakarta.ejb.EJB;
@@ -428,4 +429,25 @@ if (contest!=null){
                 // limite foi atingido, não poderá aceitar mais projectos a concurso
     }}}
     return res;}
+
+    public boolean newDatesAreWithinContestPeriod(entity.Task taskEnt, Task editTask) {
+        // verifica se datas de uma tarefa editada estão dentro do periodo de execução do concurso
+        // startDate da task igual ou after startDate do concurso
+        // finishDate da task igual ou anterior a finishDate do concurso
+boolean res=false;
+        ContestApplication acceptedApplication = applicationDao.findAcceptedApplicationForGivenProjectId(taskEnt.getProject().getId());
+        // representa a candidatura aceita do projecto da tarefa.
+
+        if(acceptedApplication!=null){
+            entity.Contest contest = acceptedApplication.getContest();
+
+            if((editTask.getStartDate().equals(contest.getStartDate()) || editTask.getStartDate().after(contest.getStartDate()) ) && (editTask.getFinishDate().equals(contest.getFinishDate()) || editTask.getFinishDate().before(contest.getFinishDate()) )){
+                res=true;
+            }
+
+        }
+
+
+return res;
+    }
 }

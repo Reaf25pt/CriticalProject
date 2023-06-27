@@ -166,6 +166,7 @@ return r;
             userBean.updateSessionTime(token);
 
             boolean res = projBean.deleteProjMember(userId, projId, token);
+            // TODO falta record no historico e pensar melhor validações. o que fazer se sair de cancelado mas ele voltar? é q n se pode mudar nada no cancelado mas saindo tem de sair de tarefas
 
             if (!res) {
                 r = Response.status(404).entity("Not found").build();
@@ -225,7 +226,7 @@ return r;
 
             userBean.updateSessionTime(token);
 
-            // TODO terminar de implementar
+            // TODO testar
             boolean res = projBean.editProjectStatus(token, projId, status, finalTask);
 
             if (!res) {
@@ -289,7 +290,7 @@ return r;
 
         } else {
 
-            //TODO falta verificar datas e pre required tasks
+
 
             userBean.updateSessionTime(token);
 
@@ -484,6 +485,36 @@ return r;
 
         return r;
     }
+
+
+    // GET LISTA DE REGISTO DE ACTIVIDADES DE PROJECTO PELO SEU ID
+    @GET
+    @Path("/{id}/record")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectRecords(@HeaderParam("token") String token,  @PathParam("id") int id) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token) || !projBean.isProjMember(id, token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<dto.ProjectHistory> list = projBean.getProjectRecords(id);
+
+            if (list == null || list.size() == 0) {
+                r = Response.status(404).entity(list).build();
+            } else {
+
+                r = Response.status(200).entity(list).build();
+            }
+        }
+
+        return r;
+    }
+
 
 
     // GET LIST OF SKILLS TO SUGGEST TO PROJECT

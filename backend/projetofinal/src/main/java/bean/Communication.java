@@ -31,6 +31,8 @@ public class Communication implements Serializable {
     dao.User userDao;
     @EJB
     dao.ContestApplication applicationDao;
+    @EJB
+    dao.ProjectHistory recordDao;
 
     public void notifyNewPossibleProjectMember(ProjectMember projMember, Project project, User user, boolean isInvited) {
         // gera notificação para avisar que membro foi convidado: isInvited = true/    se auto-convidou isInvited = false
@@ -498,5 +500,83 @@ if (value==0){
 
                     }}}
                     }
+    }
+
+    public void recordProjectCreation(Project newProjEnt, User user) {
+        // guarda registo no histórico do projecto da sua criação
+
+        ProjectHistory record = new ProjectHistory();
+        record.setCreationTime(Date.from(Instant.now()));
+        record.setMessage("Projecto criado: " + newProjEnt.getTitle()+". Estado: Planning");
+        record.setAuthor(user);
+record.setProject(newProjEnt);
+        recordDao.persist(record);
+    }
+
+    public void recordProjectEdition(Project project, User user) {
+        // guarda registo no histórico do projecto da sua edição
+
+        ProjectHistory record = new ProjectHistory();
+        record.setCreationTime(Date.from(Instant.now()));
+        record.setMessage("Informação geral editada");
+        record.setAuthor(user);
+        record.setProject(project);
+        recordDao.persist(record);
+    }
+
+    public void recordProjectStatusChange(Project project, User user, int status) {
+        // guarda registo no histórico do projecto da mudança de status
+
+        ProjectHistory record = new ProjectHistory();
+        record.setCreationTime(Date.from(Instant.now()));
+        record.setAuthor(user);
+        record.setProject(project);
+
+        switch (status){
+            case 0:
+                record.setMessage("Estado do projecto: Planning");
+                break;
+            case 1:
+                record.setMessage("Estado do projecto: Ready");
+                break;
+            case 2:
+                record.setMessage("Estado do projecto: Proposed to contest");
+                break;
+            case 3:
+                record.setMessage("Estado do projecto: Approved to contest");
+                break;
+            case 4:
+                record.setMessage("Estado do projecto: In progress");
+                break;
+            case 5:
+                record.setMessage("Estado do projecto: Cancelled");
+                break;
+            case 6:
+                record.setMessage("Estado do projecto: Finished");
+                break;
+            case 7:
+                record.setMessage("O projecto foi re-activado. Estado: Planning");
+                break;
+        }
+        recordDao.persist(record);
+    }
+
+    public void recordTaskStatusEdit(User user, Task task, int status) {
+        // guarda registo no histórico do projecto da mudança de status de tarefa
+
+        ProjectHistory record = new ProjectHistory();
+        record.setCreationTime(Date.from(Instant.now()));
+        record.setAuthor(user);
+record.setProject(task.getProject());
+
+        switch (status) {
+            case 1:
+                record.setMessage("Estado do tarefa "+task.getTitle()+": In progress");
+                break;
+            case 2:
+                record.setMessage("Estado do tarefa "+task.getTitle()+": Finished");
+                break;
+        }
+        recordDao.persist(record);
     }
 }

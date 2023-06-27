@@ -1,7 +1,7 @@
 INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated, timestampForToken) values (1,1, false, 'jccramalho@hotmail.com', true, 'Joana', 'Ramalho', false, '25D55AD283AA400AF464C76D713C07AD', true, 0);
 INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken) values (2,2, false, 'jccramalho+1@hotmail.com', true, 'João', 'Ramalho', false, '25D55AD283AA400AF464C76D713C07AD', true, 0);
 INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken) values (3,3, false, 'jccramalho+2@hotmail.com', true, 'Rodrigo', 'Ferreira', false, '25D55AD283AA400AF464C76D713C07AD', true, 0);
-INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken) values (4,4, false, 'jccramalho+3@hotmail.com', true, 'Raquel', 'Soares', false, '25D55AD283AA400AF464C76D713C07AD', true, 0);
+INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken) values (4,4, true, 'jccramalho+3@hotmail.com', true, 'Raquel', 'Soares', false, '25D55AD283AA400AF464C76D713C07AD', true, 0);
 INSERT INTO hobby (id, title) value (1, 'viajar');
 INSERT INTO hobby (id, title) value (2, 'passear');
 INSERT INTO hobby (id, title) value (3, 'comer');

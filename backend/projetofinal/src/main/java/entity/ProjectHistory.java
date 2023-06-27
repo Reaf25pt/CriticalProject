@@ -7,6 +7,8 @@ import java.util.Date;
 
 @Entity
 @Table(name="ProjectHistory")
+@NamedQuery(name = "ProjectHistory.findListOfRecordsByProjId", query = "SELECT r FROM ProjectHistory r WHERE r.project.id = :id ")
+
 public class ProjectHistory implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,6 +33,8 @@ public class ProjectHistory implements Serializable {
     private Task task;
     @ManyToOne
     private User author;
+    @ManyToOne
+    private Project project;
 
 public ProjectHistory(){
 
@@ -74,5 +78,13 @@ public ProjectHistory(){
 
     public void setAuthor(User author) {
         this.author = author;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
     }
 }
