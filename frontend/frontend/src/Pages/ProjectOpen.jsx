@@ -14,6 +14,7 @@ import { userStore } from "../stores/UserStore";
 import ModalDeleteProjMember from "../Components/ModalDeleteProjMember";
 import InviteMember from "../Components/InviteMember";
 import ProjectMembersList from "../Components/ProjectMembersList";
+import ProjectMembersInvited from "../Components/ProjectMembersInvited";
 
 function ProjectOpen() {
   const [showComponentA, setShowComponentA] = useState(true);
@@ -281,7 +282,11 @@ function ProjectOpen() {
               showProjects={showProjects}
               setMembers={setMembers}
             />
-
+            <div className="row">
+              {showProjects.manager ? (
+                <ProjectMembersInvited showProjects={showProjects} />
+              ) : null}
+            </div>
             {/* <div className="col-8 col-sm-10 col-md-7 col-lg-5 mx-auto bg-secondary mt-5 rounded-5 ">
               <div>
                 <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">

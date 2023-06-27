@@ -45,62 +45,6 @@ public class Contest {
         return r;}
 
 
-    // GET LIST OF ALL CONTESTS IN DB
-    @GET
-    @Path("/allcontests")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllContests(@HeaderParam("token") String token) {
-
-        Response r = null;
-
-        if (userBean.checkStringInfo(token)) {
-            r = Response.status(401).entity("Unauthorized!").build();
-        } else if (!userBean.checkUserPermission(token)) {
-            r = Response.status(403).entity("Forbidden!").build();
-        } else {
-            userBean.updateSessionTime(token);
-
-            List<dto.Contest> list = contestBean.getAllContests(token);
-
-            if (list == null || list.size() == 0) {
-                r = Response.status(404).entity(list).build();
-            } else {
-
-                r = Response.status(200).entity(list).build();
-            }
-        }
-
-        return r;
-    }
-
-    // GET CONTEST BY CONTEST ID
-    @GET
-    @Path("/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getContest(@HeaderParam("token") String token,  @PathParam("id") int id) {
-
-        Response r = null;
-
-        if (userBean.checkStringInfo(token)) {
-            r = Response.status(401).entity("Unauthorized!").build();
-        } else if (!userBean.checkUserPermission(token)) {
-            r = Response.status(403).entity("Forbidden!").build();
-        } else {
-            userBean.updateSessionTime(token);
-
-            dto.Contest contest = contestBean.getContest(token, id);
-
-            if (contest == null ) {
-                r = Response.status(404).entity("Not found").build();
-            } else {
-
-                r = Response.status(200).entity(contest).build();
-            }
-        }
-
-        return r;
-    }
-
     // EDIT CONTEST INFO
     @PATCH
     @Path("/")
@@ -191,34 +135,6 @@ public class Contest {
         }
         return r;}
 
-    // GET LIST OF ALL PROJECTS ASSOCIATED WITH GIVEN CONTEST
-    @GET
-    @Path("/projects")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllProjects(@HeaderParam("token") String token, @HeaderParam("contestId") int contestId) {
-
-        Response r = null;
-
-        if (userBean.checkStringInfo(token)) {
-            r = Response.status(401).entity("Unauthorized!").build();
-        } else if (!userBean.checkUserPermission(token)) {
-            r = Response.status(403).entity("Forbidden!").build();
-        } else {
-            userBean.updateSessionTime(token);
-
-            List<Application> list = contestBean.getAllApplications(token, contestId);
-
-            if (list == null || list.size() == 0) {
-                r = Response.status(404).entity(list).build();
-            } else {
-
-                r = Response.status(200).entity(list).build();
-            }
-        }
-
-        return r;
-    }
-
 
     // RESPONSE TO PROJECT APPLICATION : accept - 1 ; refuse - 0
     @PATCH
@@ -277,5 +193,89 @@ public class Contest {
             }
         }
         return r;}
+
+    // GET LIST OF ALL CONTESTS IN DB
+    @GET
+    @Path("/allcontests")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllContests(@HeaderParam("token") String token) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<dto.Contest> list = contestBean.getAllContests(token);
+
+            if (list == null || list.size() == 0) {
+                r = Response.status(404).entity(list).build();
+            } else {
+
+                r = Response.status(200).entity(list).build();
+            }
+        }
+
+        return r;
+    }
+
+    // GET CONTEST BY CONTEST ID
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getContest(@HeaderParam("token") String token,  @PathParam("id") int id) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            dto.Contest contest = contestBean.getContest(token, id);
+
+            if (contest == null ) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+
+                r = Response.status(200).entity(contest).build();
+            }
+        }
+
+        return r;
+    }
+
+    // GET LIST OF ALL PROJECTS ASSOCIATED WITH GIVEN CONTEST
+    @GET
+    @Path("/projects")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllProjects(@HeaderParam("token") String token, @HeaderParam("contestId") int contestId) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<Application> list = contestBean.getAllApplications(token, contestId);
+
+            if (list == null || list.size() == 0) {
+                r = Response.status(404).entity(list).build();
+            } else {
+
+                r = Response.status(200).entity(list).build();
+            }
+        }
+
+        return r;
+    }
 
 }

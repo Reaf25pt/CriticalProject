@@ -1015,7 +1015,7 @@ return projectsList;
     }
 
     public boolean modifyProfileType(int role, int userId) {
-        // método para postman. Altera perfil do user: 1 - gestor de concurso (perfil A) / 0 - user normal (perfil B)
+        // método administrativo para postman. Altera perfil do user: 1 - gestor de concurso (perfil A) / 0 - user normal (perfil B)
 
         boolean res = false;
 
@@ -1027,14 +1027,14 @@ return projectsList;
                 if (role == 0) {
                     //altera para perfil B - user normal. Não precisa de validar nada, apenas mudar o atributo contestManager
 
-                    // TODO retirar notificações que digam respeito a concursos, ou pelo menos retirar a necessidade de input
+                    // TODO retirar notificações que digam respeito a concursos, ou pelo menos retirar a necessidade de input.
 
                     user.setContestManager(false);
                     userDao.merge(user);
                     res = true;
 
                 } else if (role == 1) {
-                    // altera para perfil A - gestor de concursos.Precisa de várias verificações:
+                    // altera para perfil A - gestor de concursos. Precisa de várias verificações:
                     // sair de projecto activo, se o tiver. Se n for o único gestor
                     // sair de tarefas onde seja responsável e atribuir outro membro como responsável da tarefa. Se não houver outro membro nunca poderá ter perfil alterado
                     //TODO  retirar notificações que digam respeito a coisas do projecto e que precisem de input ou retirar a necessidade de input
@@ -1042,11 +1042,12 @@ return projectsList;
 
                     entity.ProjectMember pm = projMemberDao.findActiveProjectMemberByUserId(userId);
                     if (pm != null) {
+                        // lida com as pendências do projecto activo
                         System.out.println("ID proj member " + pm.getId());
                         if (projBean.hasEnoughManagers(pm.getProjectToParticipate().getId(), userId)) {
                             // projecto fica com gestor depois de pessoa sair. Senao não pode ser alterado
 
-                // se projecto estiver no estado finished ou cancelled pode sair sem problema, senão tem de verificar tarefas
+                  // se projecto estiver no estado finished ou cancelled pode sair sem problema, senão tem de verificar tarefas
                             if (pm.getProjectToParticipate().getStatus() == StatusProject.CANCELLED || pm.getProjectToParticipate().getStatus() == StatusProject.FINISHED) {
                                     user.setContestManager(true);
                                     userDao.merge(user);
@@ -1056,14 +1057,18 @@ return projectsList;
                                boolean canLeave= projBean.dealWithTasksBeforeLeavingProject(userId, pm.getProjectToParticipate());
 
                                if(canLeave){
+refusePendingInvitations(userId);
+                                   // tem de retirar convites pendentes para participar noutros projectos, se os houver
+
                                    user.setContestManager(true);
                                    userDao.merge(user);
                                    res = true;
                                }
                             }
                         }
-                    } else {
+                    }   else {
                         // não tem projecto activo, pode simplesmente mudar o atributo contestManager
+                        refusePendingInvitations(userId); // recusa convites pendentes para outros projectos
                         user.setContestManager(true);
                         userDao.merge(user);
                         res = true;
@@ -1073,6 +1078,16 @@ return projectsList;
         }
 
         return res;
+    }
+
+    private void refusePendingInvitations(int userId) {
+        // recusa convites pendentes para participar em projectos
+        List<entity.ProjectMember> listPotentialpm = projMemberDao.findListOfPotentialMembersByUserId(userId);
+        if (listPotentialpm != null) {
+            for (entity.ProjectMember p : listPotentialpm) {
+                p.setAnswered(true);
+                projMemberDao.merge(p);
+            }}
     }
 }
 

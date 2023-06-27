@@ -4,6 +4,7 @@ import ENUM.StatusProject;
 import entity.Project;
 import entity.User;
 import jakarta.ejb.Stateless;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.NoResultException;
 
 import java.util.ArrayList;
@@ -92,7 +93,7 @@ public class ProjectMember extends Abstract<entity.ProjectMember>{
     public entity.ProjectMember findActiveProjectMemberByUserId(int userId) {
         entity.ProjectMember ent = null;
         try {
-            ent = (entity.ProjectMember) em.createNamedQuery("ProjectMember.findActiveProjectMemberByUserId").setParameter("userId", userId)
+            ent = (entity.ProjectMember) em.createNamedQuery("ProjectMember.findActiveProjectMemberByUserId").setParameter("userId", userId).setParameter("cancelled", StatusProject.CANCELLED).setParameter("finished", StatusProject.FINISHED)
                     .getSingleResult();
         } catch (NoResultException e) {
             // e.printStackTrace();
@@ -112,6 +113,33 @@ public class ProjectMember extends Abstract<entity.ProjectMember>{
         }
         return ent;
     }
+
+    public List<entity.ProjectMember> findListOfPotentialMembersByProjectId(int projId) {
+
+        List<entity.ProjectMember> membersList = new ArrayList<>();
+        try {
+            membersList = (List<entity.ProjectMember>) em.createNamedQuery("ProjectMember.findListOfPotentialMembersByProjectId").setParameter("id", projId)
+                    .getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return membersList;
+    }
+
+    public List<entity.ProjectMember> findListOfPotentialMembersByUserId(int id) {
+ // lista de pm sem resposta, de um dado userId
+        List<entity.ProjectMember> membersList = new ArrayList<>();
+        try {
+            membersList = (List<entity.ProjectMember>) em.createNamedQuery("ProjectMember.findListOfPotentialMembersByUserId").setParameter("id", id)
+                    .getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return membersList;
+    }
+
 
 
 

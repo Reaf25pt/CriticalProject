@@ -3,10 +3,7 @@ package bean;
 import ENUM.Office;
 import ENUM.StatusProject;
 import ENUM.StatusTask;
-import dto.Keyword;
-import dto.Skill;
-import dto.Task;
-import dto.UserInfo;
+import dto.*;
 import entity.Contest;
 import entity.ProjectMember;
 import jakarta.ejb.EJB;
@@ -374,16 +371,17 @@ public class Project implements Serializable {
 
         if (user != null && userEnt != null && project != null) {
 
-            // encontrar se ja existe relação prévia entre user a ser convidado e projecto. Se encontrar, altera-se os campos para novo convite senão faz-se nova antrada na tabela
+            // procurar se ja existe relação prévia entre user a ser convidado e projecto. Se encontrar, altera-se os campos para novo convite senão faz-se nova entrada na tabela
             ProjectMember pm = projMemberDao.findProjectMemberByProjectIdAndUserId(projId, userId);
             // pm pode ou não estar answered / accepted / removed
             if (pm != null) {
-                System.out.println("existe relacao pm ");
+               //existe relação pm -  se está removed, actualiza info pq a pessoa quer participar / foi novamente convidada.
+
+
                 if (!pm.isRemoved()) {
-                    System.out.println("n esta removed ");
+                    // não está removed
                     if (pm.isAnswered()) {
-                        System.out.println("está respondido ");
-                        // se convite estiver pendente não faz nada. Senão altera info de pm entity
+                        // está respondido - recusado (pq os users aceites não são sugeridos no frontend. User pode ter decidido tentar novamente participar
 
                         pm.setManager(false);
                         pm.setRemoved(false);
@@ -417,10 +415,13 @@ public class Project implements Serializable {
                             communicationBean.notifyNewPossibleProjectMember(pm, pm.getProjectToParticipate(), pm.getUserInvited(), true);
                             res = true;
                         }
+                    } else {
+                        // está à espera de resposta, não faz nada mesmo que o campo self-invitation pudesse ser alterado
+                        res=true;
                     }
 
                 } else {
-                    // está removido mas pode querer participar novamente
+                    // está removido do projecto mas pode querer participar novamente
                     pm.setManager(false);
                     pm.setRemoved(false);
                     pm.setAccepted(false);
@@ -453,23 +454,19 @@ public class Project implements Serializable {
                         communicationBean.notifyNewPossibleProjectMember(pm, pm.getProjectToParticipate(), pm.getUserInvited(), true);
                         res = true;
                     }
-
-
                 }
-
-
             } else {
-                System.out.println("entra no else de n pm relation");
+
                 // não há relação prévia. é preciso criar nova associação entre user e projecto
                 if (userEnt.getUserId() == userId) {
                     // self-invitation to participate in project
                     //TODO colocar aqui o log de ter convite para participar no projecto ?!!?!
-                    ProjectMember projMember = associateUserToProject(user, project, false);
+                    ProjectMember projMember = associateUserToProject(user, project, true);
                     communicationBean.notifyNewPossibleProjectMember(projMember, project, user, false);
                     res = true;
                 } else {
                     // not self-invitation
-                    ProjectMember projMember = associateUserToProject(user, project, true);
+                    ProjectMember projMember = associateUserToProject(user, project, false);
                     communicationBean.notifyNewPossibleProjectMember(projMember, project, user, true);
                     res = true;
                 }
@@ -1330,7 +1327,7 @@ if(project.getStatus()==StatusProject.READY) {
                 }
                 if (count == taskList.size()) {
                     System.out.println("all tasks dealt with");
-                    // significa que todas as tarefas foram dealed with
+                    // significa que todas as tarefas foram tratadas
                     res = true;
                 }
 
@@ -1787,4 +1784,33 @@ boolean res=false;
     }
 
 
+    public List<PotentialProjMember> getPotentialProjectMembers(int id) {
+        // obter lista de membros à espera de resposta para participar de um projecto pelo seu ID
+
+        List<dto.PotentialProjMember> list = new ArrayList<>();
+
+        List<ProjectMember> entList = projMemberDao.findListOfPotentialMembersByProjectId(id);
+
+        if (entList != null) {
+
+            for (ProjectMember p : entList) {
+                dto.PotentialProjMember pm = new dto.PotentialProjMember();
+                pm.setId(p.getId());
+                pm.setProjectId(p.getProjectToParticipate().getId());
+                pm.setUserInvitedId(p.getUserInvited().getUserId());
+                pm.setUserInvitedFirstName(p.getUserInvited().getFirstName());
+                pm.setUserInvitedLastName(p.getUserInvited().getLastName());
+                if (p.getUserInvited().getPhoto() != null) {
+                    pm.setUserInvitedPhoto(p.getUserInvited().getPhoto());
+                }
+                pm.setAnswered(p.isAnswered());
+                System.out.println(p.isAnswered() + " " + p.getId());
+                pm.setSelfInvitation(p.isSelfInvitation());
+
+                list.add(pm);
+            }
+        }
+
+        return list;
+    }
 }

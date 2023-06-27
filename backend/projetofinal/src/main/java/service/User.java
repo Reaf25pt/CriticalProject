@@ -225,8 +225,6 @@ public class User {
 
 
 
-
-
     // EDIT OWN PROFILE INFORMATION, EXCEPT PASSWORD
     @POST
     @Path("/ownprofile")
@@ -296,66 +294,6 @@ public class User {
     }
 
 
-
-    // GET LIST OF PROJECTS OF LOGGED USER
-    @GET
-    @Path("/ownprojects")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getOwnProjects(@HeaderParam("token") String token) {
-
-        // verificar se token tem sessão iniciada e válida, se sim actualizar session time
-        // ir buscar lista de projectos que user id do token logado seja membro (accepted and not removed)
-        Response r = null;
-
-        if (userBean.checkStringInfo(token)) {
-            r = Response.status(401).entity("Unauthorized!").build();
-        } else if (!userBean.checkUserPermission(token)) {
-            r = Response.status(403).entity("Forbidden!").build();
-        } else {
-            userBean.updateSessionTime(token);
-
-            List<Project> projects = userBean.getOwnProjectsList(token);
-
-            if (projects == null || projects.size() == 0) {
-                r = Response.status(404).entity("Not found").build();
-            } else {
-
-                r = Response.status(200).entity(projects).build();
-            }
-        }
-
-        return r;
-    }
-
-    // GET LIST OF OWN HOBBIES
-    @GET
-    @Path("/ownhobbies")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getOwnHobbies(@HeaderParam("token") String token) {
-
-        // verificar se token tem sessão iniciada e válida, se sim actualizar session time
-        Response r = null;
-
-        if (userBean.checkStringInfo(token)) {
-            r = Response.status(401).entity("Unauthorized!").build();
-        } else if (!userBean.checkUserPermission(token)) {
-            r = Response.status(403).entity("Forbidden!").build();
-        } else {
-            userBean.updateSessionTime(token);
-
-            List<Hobby> hobbies = userBean.getOwnHobbiesList(token);
-
-            if (hobbies == null || hobbies.size() == 0) {
-                r = Response.status(404).entity("Not found").build();
-            } else {
-
-                r = Response.status(200).entity(hobbies).build();
-            }
-        }
-
-        return r;
-    }
-
     // ADICIONAR HOBBY À PP LISTA DE HOBBIES
     @POST
     @Path("/newhobby")
@@ -388,59 +326,6 @@ public class User {
 
     }
 
-    // GET LIST OF OFFICES
-    @GET
-    @Path("/offices")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getListOffices(@HeaderParam("token") String token) {
-
-        Response r = null;
-
-        if (userBean.checkStringInfo(token)) {
-            r = Response.status(401).entity("Unauthorized!").build();
-        } else if (!userBean.checkUserPermission(token)) {
-            r = Response.status(403).entity("Forbidden!").build();
-        } else {
-            userBean.updateSessionTime(token);
-
-            HashMap<Integer, String> list = userBean.getOfficeList();
-
-            if (list == null ) {
-                r = Response.status(404).entity("Not found").build();
-            } else {
-                r = Response.status(200).entity(list).build();
-            }
-        }
-
-        return r;
-    }
-
-    // GET LIST OF SKILL TYPES
-    @GET
-    @Path("/skilltypes")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getListOfSkillTypes(@HeaderParam("token") String token) {
-
-        Response r = null;
-
-        if (userBean.checkStringInfo(token)) {
-            r = Response.status(401).entity("Unauthorized!").build();
-        } else if (!userBean.checkUserPermission(token)) {
-            r = Response.status(403).entity("Forbidden!").build();
-        } else {
-            userBean.updateSessionTime(token);
-
-            HashMap<Integer, String> list = userBean.getSkillTypesList();
-
-            if (list == null ) {
-                r = Response.status(404).entity("Not found").build();
-            } else {
-                r = Response.status(200).entity(list).build();
-            }
-        }
-
-        return r;
-    }
 
     // ADICIONAR SKILL À PP LISTA DE SKILLS
     @POST
@@ -471,35 +356,6 @@ public class User {
         }
         return r;
 
-    }
-
-    // GET LIST OF OWN SKILLS
-    @GET
-    @Path("/ownskills")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getOwnSkills(@HeaderParam("token") String token) {
-
-        // verificar se token tem sessão iniciada e válida, se sim actualizar session time
-        Response r = null;
-
-        if (userBean.checkStringInfo(token)) {
-            r = Response.status(401).entity("Unauthorized!").build();
-        } else if (!userBean.checkUserPermission(token)) {
-            r = Response.status(403).entity("Forbidden!").build();
-        } else {
-            userBean.updateSessionTime(token);
-
-            List<Skill> skills = userBean.getOwnSkillsList(token);
-
-            if (skills == null || skills.size() == 0) {
-                r = Response.status(404).entity("Not found").build();
-            } else {
-
-                r = Response.status(200).entity(skills).build();
-            }
-        }
-
-        return r;
     }
 
 
@@ -535,7 +391,6 @@ public class User {
     }
 
     // DELETE SKILL
-
     @DELETE
     @Path("/skill")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -565,6 +420,96 @@ public class User {
         return r;
 
     }
+
+    // GET LIST OF PROJECTS OF LOGGED USER
+    @GET
+    @Path("/ownprojects")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getOwnProjects(@HeaderParam("token") String token) {
+
+        // verificar se token tem sessão iniciada e válida, se sim actualizar session time
+        // ir buscar lista de projectos que user id do token logado seja membro (accepted and not removed)
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<Project> projects = userBean.getOwnProjectsList(token);
+
+            if (projects == null || projects.size() == 0) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+
+                r = Response.status(200).entity(projects).build();
+            }
+        }
+
+        return r;
+    }
+
+
+    // GET LIST OF OWN HOBBIES
+    @GET
+    @Path("/ownhobbies")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getOwnHobbies(@HeaderParam("token") String token) {
+
+        // verificar se token tem sessão iniciada e válida, se sim actualizar session time
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<Hobby> hobbies = userBean.getOwnHobbiesList(token);
+
+            if (hobbies == null || hobbies.size() == 0) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+
+                r = Response.status(200).entity(hobbies).build();
+            }
+        }
+
+        return r;
+    }
+
+    // GET LIST OF OWN SKILLS
+    @GET
+    @Path("/ownskills")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getOwnSkills(@HeaderParam("token") String token) {
+
+        // verificar se token tem sessão iniciada e válida, se sim actualizar session time
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<Skill> skills = userBean.getOwnSkillsList(token);
+
+            if (skills == null || skills.size() == 0) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+
+                r = Response.status(200).entity(skills).build();
+            }
+        }
+
+        return r;
+    }
+
 
     // GET LIST OF SKILLS TO SUGGEST TO USER
     @GET
@@ -622,6 +567,60 @@ public class User {
         return r;
     }
 
+    // GET LIST OF OFFICES ENUM
+    @GET
+    @Path("/offices")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getListOffices(@HeaderParam("token") String token) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            HashMap<Integer, String> list = userBean.getOfficeList();
+
+            if (list == null ) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+                r = Response.status(200).entity(list).build();
+            }
+        }
+
+        return r;
+    }
+
+    // GET LIST OF SKILL TYPES ENUM
+    @GET
+    @Path("/skilltypes")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getListOfSkillTypes(@HeaderParam("token") String token) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            HashMap<Integer, String> list = userBean.getSkillTypesList();
+
+            if (list == null ) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+                r = Response.status(200).entity(list).build();
+            }
+        }
+
+        return r;
+    }
+
 
     // ALTERA PAPEL DE USER: GESTOR DE CONCURSO OU USER NORMAL
     // Apenas para usar no postman - método administrativo
@@ -633,19 +632,9 @@ public class User {
 
         Response r = null;
 
-     /*   if (userBean.checkStringInfo(token) ) {
-            r = Response.status(401).entity("Unauthorized!").build();
-
-        } else if (!userBean.checkUserPermission(token)) {
-            r = Response.status(403).entity("Forbidden!").build();
-
-        } else {
-
-            userBean.updateSessionTime(token);*/
-
             boolean res = userBean.modifyProfileType(role, userId);
             if (!res) {
-                r = Response.status(404).entity("Not found!").build();
+                r = Response.status(404).entity("Forbidden").build();
             } else {
                 r = Response.status(200).entity("Success").build();
 
