@@ -8,7 +8,6 @@ public class Profile {
     private String firstName;
     private String lastName;
     private String office;
-    //TODO office provavelmente tem de ser definido como int
     private int officeInfo;
     private String nickname;
     private String photo;

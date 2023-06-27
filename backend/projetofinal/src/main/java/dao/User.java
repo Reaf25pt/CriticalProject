@@ -65,6 +65,27 @@ public class User extends Abstract<entity.User> {
         return usersList;
     }
 
+    public List<entity.User> findListContestManagers() {
+        List<entity.User> usersList = new ArrayList<>();
+        try {
+            usersList = (List<entity.User>) em.createNamedQuery("User.findListContestManagers").getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return usersList;
+    }
+
+    public List<entity.User> findAllUsersWithValidatedAccount() {
+        List<entity.User> usersList = new ArrayList<>();
+        try {
+            usersList = (List<entity.User>) em.createNamedQuery("User.findAllUsersWithValidatedAccount").getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return usersList;
+    }
 
 
 

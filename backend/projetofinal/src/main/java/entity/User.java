@@ -9,10 +9,12 @@ import java.util.*;
 
 @Entity
 @Table(name = "User")
-@NamedQuery(name = "User.findUserByEmail", query = "SELECT u FROM User u WHERE u.email = :email")
+@NamedQuery(name = "User.findUserByEmail", query = "SELECT u FROM User u WHERE u.email = :email ")
 @NamedQuery(name = "User.findUserByTokenForActivationOrRecoverPass", query = "SELECT u FROM User u WHERE u.token = :token")
-@NamedQuery(name = "User.findUserById", query = "SELECT u FROM User u WHERE u.userId = :userId")
-@NamedQuery(name = "User.findUserContainingStr", query = "SELECT u FROM User u WHERE LOWER(u.firstName) LIKE LOWER(:str) OR LOWER(u.lastName) LIKE LOWER(:str)")
+@NamedQuery(name = "User.findUserById", query = "SELECT u FROM User u WHERE u.userId = :userId AND u.validated = true")
+@NamedQuery(name = "User.findUserContainingStr", query = "SELECT u FROM User u WHERE LOWER(u.firstName) LIKE LOWER(:str) OR LOWER(u.lastName) LIKE LOWER(:str) AND u.validated = true")
+@NamedQuery(name = "User.findListContestManagers", query = "SELECT u FROM User u WHERE u.contestManager = true AND u.validated = true")
+@NamedQuery(name = "User.findAllUsersWithValidatedAccount", query = "SELECT u FROM User u WHERE u.validated = true")
 
 
 public class User implements Serializable {

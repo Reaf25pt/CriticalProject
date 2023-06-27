@@ -5,6 +5,7 @@ import ENUM.StatusProject;
 import ENUM.StatusTask;
 import dto.*;
 import entity.Contest;
+import entity.ContestApplication;
 import entity.ProjectMember;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
@@ -44,6 +45,8 @@ public class Project implements Serializable {
     dao.Skill skillDao;
     @EJB
     dao.Contest contestDao;
+    @EJB
+    dao.ContestApplication applicationDao;
 
 
     public Project() {
@@ -1003,16 +1006,20 @@ return list;
                 if (pm.getProjectToParticipate().getStatus() == StatusProject.CANCELLED || pm.getProjectToParticipate().getStatus() == StatusProject.FINISHED) {
                     pm.setRemoved(true);
                     projMemberDao.merge(pm);
+                   communicationBean.notifyProjectMembersOfMemberLeavingProject(pm.getProjectToParticipate(), pm.getUserInvited());
                     delete = true;
+
                 } else {
                     System.out.println("Proj not concluded / finished ");
-                    // TODO antes de retirar, confirmar que membro n é responsavel por nenhuma tarefa. se for tem de alterar isso se projecto n estiver finished ou cancelled .
+                    // TODO FALTA TESTAR : se for tem de alterar isso se projecto n estiver finished ou cancelled .
                     boolean canLeave = dealWithTasksBeforeLeavingProject(userId, pm.getProjectToParticipate());
 
                     if (canLeave) {
                         System.out.println("pode sair");
                         pm.setRemoved(true);
                         projMemberDao.merge(pm);
+                        communicationBean.notifyProjectMembersOfMemberLeavingProject(pm.getProjectToParticipate(), pm.getUserInvited());
+
                         delete = true;
                     }
                 }
@@ -1182,27 +1189,28 @@ return list;
                     res =changeProjStatusToFinished(project);
                     break;
                 case 7:
-                    // TODO acabar de implementar : pode colocar ready se tiver tarefa final ou planning se não. ou apagar a tarefa final e colocar planning
-                    //definir como ready um projecto cancelado se não está associado a nenhum concurso
-                    res =reactivatesCancelledProj(project);
+                    //definir como planning um projecto cancelado se não está associado a nenhum concurso
+                    res =reactivateCancelledProj(project);
                     break;
             }
         }
         return res;
     }
 
-    private boolean reactivatesCancelledProj(entity.Project project) {
-        // reactiva um projecto, definindo como ready se não está associado a um concurso, admitindo que ao ser recusado concurso fica null
+    private boolean reactivateCancelledProj(entity.Project project) {
+        // reactiva um projecto, definindo como planning se não está associado a um concurso
         boolean res=false;
+        // verificar 1º se projecto está aceite em algum concurso. neste caso n poderá ser reactivado
 
-        if(project.getContest()==null){
+        ContestApplication application = applicationDao.findAcceptedApplicationForGivenProjectId(project.getId());
 
-            // TODO verificar se faz sentido ready ou planning, porque pode n ter tarefa final
-            project.setStatus(StatusProject.READY);
+        if(application==null){
+// n foi aceite em nenhum concurso - pode ser reactivado
+            project.setStatus(StatusProject.PLANNING);
             projDao.merge(project);
             res=true;
-
-        }
+// TODO testar mas à partida nunca terá tarefa final associada neste ponto
+       }
 
 
         return res;
@@ -1223,22 +1231,30 @@ if (count==0){
     }
 
     private boolean changeProjStatusToCancelled(entity.Project project) {
-        // status de projecto pode ser mudado para cancelled em qq altura
+        // status de projecto pode ser mudado para cancelled em qq altura. Consequências serão diferentes caso esteja aceite ou não em concurso
 
         boolean res = false;
 
         project.setStatus(StatusProject.CANCELLED);
         projDao.merge(project);
+
+      // verificar se projecto está aceite em concurso. neste caso n apaga tarefa final, mas se não estiver em concurso ,apaga tarefa final para que possa mais tarde concorrer a outro concurso
+           ContestApplication acceptedApplication = applicationDao.findAcceptedApplicationForGivenProjectId(project.getId());
+
+           if(acceptedApplication==null){
+               // projecto não está aceite em nenhum concurso. é preciso apagar a tarefa final pq ao retomar terá status planning
+               deleteFinalTaskOfProject(project.getId());
+           }
+
             res=true;
 
-//TODO : procurar projmembers com convite pendente e apagar notificacoes que estejam associadas a esses projmembers 
+//TODO : Garantir que proj cancelado n pode adicionar membros / aceitar membros
 
         return res;
     }
 
     private boolean changeProjStatusToProgress(entity.Project project) {
-        // status de projecto tem de estar approved
-        // TODO verificar neste ou no anterior se data da tarefa final está de acordo com data de concurso
+        // status de projecto tem de estar approved, data da finalTask foi validada no aceitar projecto
 
         boolean res = false;
         if(project.getStatus()==StatusProject.APPROVED) {
@@ -1252,7 +1268,7 @@ if (count==0){
     private boolean changeProjStatusToReady(entity.Project project, Task finalTask) {
         // modifica apenas se proj status for ready. Tem de adicionar tarefa final ao projecto e só então mudar status
 
-        //TODO verificar se precisa de garantir / apagar q n tem tarefa final definida por ter antes passado por ready
+        //TODO verificar se precisa de garantir / apagar q n tem tarefa final definida por ter antes passado por ready. será apagada sempre a partida
         boolean res=false;
 
         if(finalTask!=null){
@@ -1287,14 +1303,25 @@ taskEnt.setFinalTask(true);
     }
 
     private boolean changeProjStatusToPlanning(entity.Project project) {
-        // modifica apenas se proj status é ready
+        // modifica apenas se proj status é ready. Apaga tarefa final definida
         boolean res = false;
 if(project.getStatus()==StatusProject.READY) {
     project.setStatus(StatusProject.PLANNING);
     projDao.merge(project);
+
+    deleteFinalTaskOfProject(project.getId());
+
     res=true;
 }
       return res;
+    }
+
+    private void deleteFinalTaskOfProject(int id) {
+//TODO confirmar q funciona
+        entity.Task finalTask = taskDao.findFinalTaskByProjectId(id);
+        if(finalTask!=null){
+            taskDao.remove(finalTask);
+        }
     }
 
     public boolean dealWithTasksBeforeLeavingProject(int userId, entity.Project project) {
@@ -1321,6 +1348,7 @@ if(project.getStatus()==StatusProject.READY) {
                         randomManager.getListTasks().add(t);
                         userDao.merge(randomManager);
                         taskDao.merge(t);
+                        communicationBean.notifyNewOwnerOfTask(randomManager, t.getTitle());
                         count++;
 
                     }
@@ -1379,6 +1407,20 @@ boolean res = false;
         return res;
     }
 
+    public boolean verifyProjectStatus(int projId) {
+        // membro só pode sair do projecto nas fases em que n há bloqueio de alterações relacionadas com candidatura a concurso
+        boolean res = false;
+        entity.Project project = projDao.findProjectById(projId);
+        if(project!=null){
+            if (project.getStatus()==StatusProject.READY ||project.getStatus()==StatusProject.PROPOSED || project.getStatus()==StatusProject.APPROVED){
+                res = true;
+                // membro n pode sair do projecto
+            }
+
+        }
+        return res;
+    }
+
 
 
     public boolean verifyIfTaskBelongsToProject(int taskId, int projId) {
@@ -1423,6 +1465,7 @@ boolean res=false;
                     if (user != null) {
                         user.getListTasks().remove(taskEnt);
                         userDao.merge(user);
+                        communicationBean.notifyTaskWasRemoved(user, taskEnt.getTitle());
                     }
 
                     projDao.merge(projEnt);
@@ -1643,6 +1686,8 @@ return res;
                     } else if (editTask.getStatusInfo() == 2 && taskEnt.getStatus().ordinal() == 1) {
                         taskEnt.setStatus(StatusTask.FINISHED);
                         taskDao.merge(taskEnt);
+                        // avisar todos os membros do projecto que tarefa está concluída, em x de avisar potenciais tarefas que precisem desta para avançar
+                        communicationBean.notifyAllMembersTaskIsFinished(taskEnt);
                         res = true;
                     } else {
                         res = false;

@@ -102,8 +102,10 @@ return r;
 
         if (userBean.checkStringInfo(token) ) {
             r = Response.status(401).entity("Unauthorized!").build();
-        }  else if (!userBean.checkUserPermission(token) || !projBean.verifyIfProjectHasAvailableSpots(projId) || !projBean.verifyPermissionToAddMember(token, projId, userId)) {
+        }  else if (!userBean.checkUserPermission(token) || projBean.verifyProjectStatusToModifyTask(projId)|| !projBean.verifyIfProjectHasAvailableSpots(projId) || !projBean.verifyPermissionToAddMember(token, projId, userId)) {
+            // só pode adicionar membro a projecto se status for planning ou in progress
             //TODO falta testar verify permission
+
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
@@ -157,7 +159,8 @@ return r;
 
         if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
-        } else if (!userBean.checkUserPermission(token) || !projBean.verifyPermissionToDeleteUser(token, projId, userId)) {
+        } else if (!userBean.checkUserPermission(token) || projBean.verifyProjectStatus(projId) ||!projBean.verifyPermissionToDeleteUser(token, projId, userId)) {
+           // TODO membro pode sair em que fases do proj ? neste momento n pode sair em ready, proposed, approved
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);

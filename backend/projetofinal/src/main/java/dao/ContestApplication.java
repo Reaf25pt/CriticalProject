@@ -60,7 +60,28 @@ public class ContestApplication extends Abstract<entity.ContestApplication>{
         return list;
     }
 
+    public List<entity.Project> findAcceptedProjectsForGivenContestId(int contestId) {
+        List<entity.Project> list = new ArrayList<>();
+        try {
+            list = (List<entity.Project>) em.createNamedQuery("ContestApplication.findAcceptedProjectsForGivenContestId").setParameter("contestId", contestId).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return list;
+    }
 
+    public entity.ContestApplication findAcceptedApplicationForGivenProjectId(int projectId) {
+        entity.ContestApplication ent = null;
+        try {
+            ent = (entity.ContestApplication) em.createNamedQuery("ContestApplication.findAcceptedApplicationForGivenProjectId").setParameter("projectId", projectId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            // e.printStackTrace();
+            return null;
+        }
+        return ent;
+    }
 
 
 
