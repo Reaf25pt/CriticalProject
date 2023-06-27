@@ -7,6 +7,7 @@ import entity.ContestApplication;
 import entity.Project;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
 
 import java.time.Instant;
@@ -31,6 +32,8 @@ public class Contest {
     dao.ProjectMember projMemberDao;
     @EJB
     dao.ContestApplication applicationDao;
+    @Inject
+    Communication communicationBean;
 
     public Contest(){
     }
@@ -53,6 +56,7 @@ public class Contest {
             contest.setStatus(StatusContest.PLANNING);
 
             contestDao.persist(contest);
+            communicationBean.notifyAllContestManagers(0, "");
             res=true;
         }
         return res;
@@ -152,6 +156,7 @@ public class Contest {
             // TODO CONFIRMAR Q n actualiza status nem vencedor porque não será  por aqui
 
             contestDao.merge(contestEnt);
+            communicationBean.notifyAllContestManagers(1, contestEnt.getTitle());
             contestDto = convertContestEntToDto(contestEnt);
         }
 
@@ -175,6 +180,7 @@ public class Contest {
                         contest.setStatus(StatusContest.OPEN);
                         contestDao.merge(contest);
                         contestDto = convertContestEntToDto(contest);
+                       communicationBean.notifyAllUsers(contest);
                         res = true;
                     }
 
@@ -185,7 +191,7 @@ public class Contest {
                         contest.setStatus(StatusContest.ONGOING);
                         contestDao.merge(contest);
                         contestDto = convertContestEntToDto(contest);
-
+                        communicationBean.notifyProjectMembersExecutionHasStarted(contest);
                         refuseUnansweredApplications(contest);
 
                         res = true;
@@ -198,6 +204,7 @@ public class Contest {
                         contest.setStatus(StatusContest.CONCLUDED);
                         contestDao.merge(contest);
                         contestDto = convertContestEntToDto(contest);
+                        communicationBean.notifyContestHasFinished(contest);
                         res = true;
                     }
                     break;
@@ -284,6 +291,7 @@ public class Contest {
                         // alterar status de projecto para proposed
                         project.setStatus(StatusProject.PROPOSED);
                         projDao.merge(project);
+                        communicationBean.notifyAllContestManagers(2, contest.getTitle());
                         res=true; // nova candidatura - precisa de actualizar os atributos que definem a relação concurso - projecto
                     }
                 } else {
@@ -296,11 +304,14 @@ public class Contest {
                     application.setAccepted(false);
 
                     applicationDao.persist(application);
-                    res=true;
+                    communicationBean.notifyAllContestManagers(2, contest.getTitle());
+
 
 // alterar status de projecto para proposed
+                    //TODO registar no historico do projecto
                     project.setStatus(StatusProject.PROPOSED);
                     projDao.merge(project);
+                    res=true;
                 }
             }}}
 
@@ -340,15 +351,15 @@ application.setAccepted(a.isAccepted());
         return application;
     }
 
-    public boolean replyToApplication(String token, int applicationId, int status) {
-        // Perfil A responde a candidatura de projecto aceitando (status = 1) ou rejeitando (status =0)
+    public boolean replyToApplication(String token, int applicationId, int answer) {
+        // Perfil A responde a candidatura de projecto aceitando (answer = 1) ou rejeitando (answer =0)
         System.out.println("metodo " + applicationId);
 boolean res=false;
         ContestApplication applicationEnt = applicationDao.find(applicationId);
 
         if(applicationEnt!=null){
             System.out.println("encontrou applicaion");
-            if (status==1){
+            if (answer==1){
                 applicationEnt.setAnswered(true);
                 applicationEnt.setAccepted(true);
                 applicationDao.merge(applicationEnt);
@@ -356,12 +367,12 @@ boolean res=false;
                 applicationEnt.getProject().setStatus(StatusProject.APPROVED);
                 projDao.merge(applicationEnt.getProject());
 
-                        //TODO notificação para membros do projecto
+                        //TODO testar notificacoes
 
                 // sempre que aceita algum projecto tem de verificar se limite de projectos a concurso foi atingido. Se for, terá de automaticamente recusar os restantes projectos
                 verifyLimitApplicationsToContestHasBeanReached(applicationEnt.getContest());
                 res=true;
-            } else if (status==0){
+            } else if (answer==0){
                 applicationEnt.setAnswered(true);
                 applicationEnt.setAccepted(false);
                 applicationDao.merge(applicationEnt);
@@ -370,6 +381,7 @@ boolean res=false;
                 projDao.merge(applicationEnt.getProject());
                 res=true;
             }
+            communicationBean.notifyProjectMembersOfApplicationResponse(applicationEnt.getProject(), answer);
         }
 
 return res;
@@ -395,6 +407,7 @@ return res;
                 a.setAnswered(true);
                 a.setAccepted(false);
                 applicationDao.merge(a);
+                //TODO Registar no historico do proj
             }
         }
     }

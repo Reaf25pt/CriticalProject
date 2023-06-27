@@ -10,6 +10,8 @@ import java.io.Serializable;
 @NamedQuery(name = "ContestApplication.findApplicationForGivenContestIdAndProjectId", query = "SELECT a FROM ContestApplication a WHERE a.contest.id = :contestId AND a.project.id = :projectId ")
 @NamedQuery(name = "ContestApplication.findAcceptedApplicationsForGivenContestId", query = "SELECT a FROM ContestApplication a WHERE a.contest.id = :contestId AND a.accepted = true ")
 @NamedQuery(name = "ContestApplication.findApplicationsNotAnsweredForGivenContestId", query = "SELECT a FROM ContestApplication a WHERE a.contest.id = :contestId AND a.answered = false ")
+@NamedQuery(name = "ContestApplication.findAcceptedProjectsForGivenContestId", query = "SELECT a.project FROM ContestApplication a WHERE a.contest.id = :contestId AND a.accepted = true ")
+@NamedQuery(name = "ContestApplication.findAcceptedApplicationForGivenProjectId", query = "SELECT a FROM ContestApplication a WHERE a.project.id = :projectId AND a.accepted=true")
 
 public class ContestApplication implements Serializable {
 

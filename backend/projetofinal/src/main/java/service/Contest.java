@@ -141,7 +141,7 @@ public class Contest {
     @Path("/application")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response replyToApplication(@HeaderParam("token") String token, @HeaderParam("status") int status, @HeaderParam("applicationId") int applicationId, @HeaderParam("contestId") int contestId) {
+    public Response replyToApplication(@HeaderParam("token") String token, @HeaderParam("answer") int answer, @HeaderParam("applicationId") int applicationId, @HeaderParam("contestId") int contestId) {
 
         Response r = null;
 
@@ -155,7 +155,7 @@ public class Contest {
 
             userBean.updateSessionTime(token);
             System.out.println("endpoint");
-            boolean res = contestBean.replyToApplication(token, applicationId, status);
+            boolean res = contestBean.replyToApplication(token, applicationId, answer);
 
             if (!res) {
                 r = Response.status(404).entity("Not found!").build();
@@ -182,7 +182,7 @@ public class Contest {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
-
+// TODO FAlta implementar
             boolean res = contestBean.applyToContest(contestId, token);
 
             if (!res) {

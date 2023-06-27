@@ -62,10 +62,10 @@ public class Project implements Serializable {
     @OneToMany(mappedBy = "project")
     private List<ContestApplication> listContest = new ArrayList<>();
 
-
+/*
     @ManyToOne
     private Contest contest;
-
+*/
 
 
 
@@ -185,14 +185,14 @@ public class Project implements Serializable {
     public void setListContest(List<ContestApplication> listContest) {
         this.listContest = listContest;
     }
-
+/*
     public Contest getContest() {
         return contest;
     }
 
     public void setContest(Contest contest) {
         this.contest = contest;
-    }
+    }*/
 
     @Override
     public boolean equals(Object o) {

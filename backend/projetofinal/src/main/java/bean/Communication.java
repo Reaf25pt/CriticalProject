@@ -1,6 +1,7 @@
 package bean;
 
 import entity.*;
+import entity.Contest;
 import entity.Project;
 import entity.User;
 import jakarta.ejb.EJB;
@@ -26,6 +27,10 @@ public class Communication implements Serializable {
     dao.ProjectMember projMemberDao;
     @EJB
     dao.Token tokenDao;
+    @EJB
+    dao.User userDao;
+    @EJB
+    dao.ContestApplication applicationDao;
 
     public void notifyNewPossibleProjectMember(ProjectMember projMember, Project project, User user, boolean isInvited) {
         // gera notificação para avisar que membro foi convidado: isInvited = true/    se auto-convidou isInvited = false
@@ -254,5 +259,244 @@ public class Communication implements Serializable {
 */
 
 
+    }
+
+    public void notifyProjectMembersOfApplicationResponse(Project project, int answer) {
+        // Notifica membros do projecto se candidatura a concurso foi aceite (status = 1) ou rejeitada (status =0)
+
+        List<User> membersList = projMemberDao.findListOfUsersByProjectId(project.getId());
+
+        if (membersList != null) {
+            for(User u : membersList){
+                Notification notif = new Notification();
+                notif.setCreationTime(Date.from(Instant.now()));
+                notif.setSeen(false);
+                notif.setNeedsInput(false);
+               // notif.setProjectMember(projMember);
+            if (answer == 0) {
+                // projecto rejeitado a concurso
+                notif.setMessage( "A candidatura a concurso do projecto " + project.getTitle() + " foi recusada");
+                notif.setMessageEng("Application for contest of project "+ project.getTitle() + " has been refused");
+
+
+            } else if (answer == 1) {
+                // projecto aceite a concurso
+                notif.setMessage( "A candidatura a concurso do projecto " + project.getTitle() + " foi aceite. A execução do projecto pode avançar assim que o concurso abrir a fase de execução");
+                notif.setMessageEng("Application for contest of project "+ project.getTitle() + " has been accepted. Project development can start once contest execution phase opens ");
+
+            }
+                notif.setNotificationOwner(u);
+                notifDao.persist(notif);
+                notifyRealTime(notif, u);
+
+            }
+        }
+
+    }
+
+    public void notifyProjectMembersOfMemberLeavingProject(Project project, User user) {
+        // Notifica membros do projecto que membro user saiu do projecto
+
+        List<User> membersList = projMemberDao.findListOfUsersByProjectId(project.getId());
+
+        if (membersList != null) {
+            for(User u : membersList){
+                Notification notif = new Notification();
+                notif.setCreationTime(Date.from(Instant.now()));
+                notif.setSeen(false);
+                notif.setNeedsInput(false);
+                // notif.setProjectMember(projMember);
+
+                    notif.setMessage(user.getFirstName() + " " + user.getLastName() + " saiu do projecto " + project.getTitle());
+                    notif.setMessageEng(user.getFirstName() +" " + user.getLastName() + " has left project "+ project.getTitle());
+
+                notif.setNotificationOwner(u);
+                notifDao.persist(notif);
+                notifyRealTime(notif, u);
+
+            }
+        }
+
+    }
+
+
+    public void notifyNewOwnerOfTask(User user, String taskTitle) {
+        // notifica user que tem nova tarefa à sua responsabilidade
+
+        Notification notif = new Notification();
+        notif.setCreationTime(Date.from(Instant.now()));
+        notif.setSeen(false);
+        notif.setNeedsInput(false);
+        // notif.setProjectMember(projMember);
+
+        notif.setMessage("Tem uma nova tarefa à sua responsabilidade: " + taskTitle );
+        notif.setMessageEng("You have been designated responsible for task: " + taskTitle );
+
+        notif.setNotificationOwner(user);
+        notifDao.persist(notif);
+        notifyRealTime(notif, user);
+    }
+
+    public void notifyTaskWasRemoved(User user, String taskTitle) {
+        // notifica que tarefa à responsabilidade do owner foi removida
+
+        Notification notif = new Notification();
+        notif.setCreationTime(Date.from(Instant.now()));
+        notif.setSeen(false);
+        notif.setNeedsInput(false);
+        // notif.setProjectMember(projMember);
+
+        notif.setMessage("A tarefa " + taskTitle + ", à sua responsabilidade, foi apagada" );
+        notif.setMessageEng("Task " + taskTitle + ", of which you were responsible, has been deleted" );
+
+        notif.setNotificationOwner(user);
+        notifDao.persist(notif);
+        notifyRealTime(notif, user);
+    }
+
+    public void notifyAllMembersTaskIsFinished(Task taskEnt) {
+        // notifica todos os membros que tarefa foi concluída
+
+        List<User> members = projMemberDao.findListOfUsersByProjectId(taskEnt.getProject().getId());
+        if(members!=null) {
+            for (User u : members){
+
+            Notification notif = new Notification();
+            notif.setCreationTime(Date.from(Instant.now()));
+            notif.setSeen(false);
+            notif.setNeedsInput(false);
+            // notif.setProjectMember(projMember);
+
+            notif.setMessage("A tarefa " + taskEnt.getTitle() + " está concluída");
+            notif.setMessageEng("Task " + taskEnt.getTitle() + " has been completed");
+
+            notif.setNotificationOwner(u);
+            notifDao.persist(notif);
+            notifyRealTime(notif, u);
+        }}
+    }
+
+    public void notifyAllContestManagers(int value, String contestTitle) {
+        // notifica todos os gestores de concurso de acontecimento relevante, de acordo com value
+
+        List<User> contestManagersList = userDao.findListContestManagers();
+
+        if(contestManagersList!=null){
+            for (User u : contestManagersList){
+                Notification notif = new Notification();
+                notif.setCreationTime(Date.from(Instant.now()));
+                notif.setSeen(false);
+                notif.setNeedsInput(false);
+                // notif.setProjectMember(projMember);
+if (value==0){
+    // novo concurso criado
+    notif.setMessage("Um novo concurso foi criado");
+    notif.setMessageEng("A new contest has been created ");
+} else if (value==1){
+    // info de concurso foi editada
+    notif.setMessage("Informação do concurso " + contestTitle + " foi editada");
+    notif.setMessageEng("Details of contest " + contestTitle + "have been edited");
+} else if(value==2){
+    // projecto concorreu a concurso
+    notif.setMessage("Nova candidatura recebida para o concurso " + contestTitle);
+    notif.setMessageEng("New application for contest " + contestTitle );
+}
+
+
+                notif.setNotificationOwner(u);
+                notifDao.persist(notif);
+                notifyRealTime(notif, u);
+            }
+        }
+
+    }
+
+    public void notifyAllUsers(Contest contest) {
+        //notifica todos os utilizadores que concurso iniciou a fase de candidaturas
+        List<User> allUsers= userDao.findAllUsersWithValidatedAccount();
+
+        if(allUsers!=null){
+            for (User u : allUsers){
+                Notification notif = new Notification();
+                notif.setCreationTime(Date.from(Instant.now()));
+                notif.setSeen(false);
+                notif.setNeedsInput(false);
+                // notif.setProjectMember(projMember);
+
+                notif.setMessage("O concurso " + contest.getTitle() + " abriu a fase de candidaturas");
+                notif.setMessageEng("Contest " + contest.getTitle() + " has opened to project applications");
+
+                notif.setNotificationOwner(u);
+                notifDao.persist(notif);
+                notifyRealTime(notif, u);
+            }
+        }
+
+
+    }
+
+    public void notifyProjectMembersExecutionHasStarted(Contest contest) {
+        // notifica todos os membros de projectos aceites num concurso que a fase ongoing começou. A execução dos projectos pode avançar
+// TODO mesmo que projecto esteja cancelado ?!
+
+        List<Project> acceptedProjects = applicationDao.findAcceptedProjectsForGivenContestId(contest.getId());
+
+        if(acceptedProjects!=null){
+            for(Project p : acceptedProjects){
+                // encontrar lista de membros activos e not removed para serem notificados
+                List<User> members = projMemberDao.findListOfUsersByProjectId(p.getId());
+
+                if(members!=null){
+                    for (User u : members){
+                        Notification notif = new Notification();
+                        notif.setCreationTime(Date.from(Instant.now()));
+                        notif.setSeen(false);
+                        notif.setNeedsInput(false);
+                        // notif.setProjectMember(projMember);
+
+                        notif.setMessage("O concurso " + contest.getTitle() + " abriu a fase de execução dos projectos. Já pode iniciar a execução do seu projecto");
+                        notif.setMessageEng("Contest " + contest.getTitle() + " has started execution phase. You can now start execution of your project");
+
+                        notif.setNotificationOwner(u);
+                        notifDao.persist(notif);
+                        notifyRealTime(notif, u);
+                    }
+                }
+
+
+            }
+        }
+
+
+    }
+
+    public void notifyContestHasFinished(Contest contest) {
+        // notifica membros de projectos envolvidos num concurso que concurso acabou e avisa qual o vencedor
+        List<Project> acceptedProjects = applicationDao.findAcceptedProjectsForGivenContestId(contest.getId());
+
+        if(acceptedProjects!=null){
+            for(Project p : acceptedProjects){
+                // encontrar lista de membros activos e not removed para serem notificados
+                List<User> members = projMemberDao.findListOfUsersByProjectId(p.getId());
+
+                if(members!=null){
+                    for (User u : members) {
+                        Notification notif = new Notification();
+                        notif.setCreationTime(Date.from(Instant.now()));
+                        notif.setSeen(false);
+                        notif.setNeedsInput(false);
+                        // notif.setProjectMember(projMember);
+
+                        notif.setMessage("O concurso " + contest.getTitle() + " está concluído. O projecto vencedor é " + contest.getWinner().getTitle());
+                        notif.setMessageEng("Contest " + contest.getTitle() + " has finished. Contest winner is "+  contest.getWinner().getTitle());
+
+                        notif.setNotificationOwner(u);
+                        notifDao.persist(notif);
+                        notifyRealTime(notif, u);
+
+
+
+                    }}}
+                    }
     }
 }

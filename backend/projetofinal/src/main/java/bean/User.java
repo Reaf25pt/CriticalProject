@@ -1049,7 +1049,9 @@ return projectsList;
 
                   // se projecto estiver no estado finished ou cancelled pode sair sem problema, senão tem de verificar tarefas
                             if (pm.getProjectToParticipate().getStatus() == StatusProject.CANCELLED || pm.getProjectToParticipate().getStatus() == StatusProject.FINISHED) {
-                                    user.setContestManager(true);
+                                // TODO se estiver cancelado pode ter tarefas em seu nome, conforme tenha ou n concurso.
+                                // TODO se proj cancelado for reinsituído, terá de ter atenção a membros do projecto que tenham outro proj activo
+                                user.setContestManager(true);
                                     userDao.merge(user);
                                     res = true;
                             } else {
@@ -1057,7 +1059,7 @@ return projectsList;
                                boolean canLeave= projBean.dealWithTasksBeforeLeavingProject(userId, pm.getProjectToParticipate());
 
                                if(canLeave){
-refusePendingInvitations(userId);
+                                refusePendingInvitations(userId);
                                    // tem de retirar convites pendentes para participar noutros projectos, se os houver
 
                                    user.setContestManager(true);
