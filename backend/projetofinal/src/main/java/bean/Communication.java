@@ -48,15 +48,15 @@ public class Communication implements Serializable {
             // pessoa "auto-convidou". Preciso notificar todos os gestores do projecto
 
             List<User> managersList = projMemberDao.findListOfManagersByProjectId(project.getId());
-// n precisa de validar null pq um projecto tem sempre um gestor
+            // n precisa de validar null pq um projecto tem sempre um gestor
             for (User u : managersList) {
                 Notification notif = new Notification();
                 notif.setCreationTime(Date.from(Instant.now()));
                 notif.setSeen(false);
-                notif.setNeedsInput(true);
+                notif.setNeedsInput(false);
                 notif.setProjectMember(projMember);
-                notif.setMessage(user.getFirstName() + " " + user.getLastName() + " tem interesse em participar no projecto: " + project.getTitle() + " .");
-                notif.setMessageEng(user.getFirstName() + " " + user.getLastName() + " is interested in participating in project: " + project.getTitle() + " .");
+                notif.setMessage(user.getFirstName() + " " + user.getLastName() + " tem interesse em participar no projecto: " + project.getTitle() + " . Pode responder ao pedido na página do projecto");
+                notif.setMessageEng(user.getFirstName() + " " + user.getLastName() + " is interested in participating in project: " + project.getTitle() + " . You can answer to request in the project page");
 
                 notif.setNotificationOwner(u);
                 notifDao.persist(notif);
@@ -157,8 +157,8 @@ public class Communication implements Serializable {
     }
 
     public dto.Notification answerInvitation(String token, int notifId, int answer) {
-        // responde a convite enviado por notificação. answer == 0 -> false REFUSE INVITE / answer == 1 -> true ACCEPT INVITE
-
+        // user responde a convite enviado por notificação. answer == 0 -> false REFUSE INVITE / answer == 1 -> true ACCEPT INVITE
+        // método só pode ser usado por token, pq é o dono da notificação
         dto.Notification notifDto = null;
 
         User user = tokenDao.findUserEntByToken(token);
@@ -172,75 +172,78 @@ public class Communication implements Serializable {
                     ProjectMember projMember = notif.getProjectMember();
                     projMember.setAnswered(true);
 
+
+                    notif.setSeen(true);
+                    notif.setNeedsInput(false);
                     if (answer == 0) {
                         // recusar convite para participar no projecto
-                        // TODO verificar que convite é mesmo do token ?!
+
                         projMember.setAccepted(false);
 
                     } else if (answer == 1) {
                         // aceitar convite para participar no projecto
                         projMember.setAccepted(true);
                     }
-                    notif.setSeen(true);
-                    notif.setNeedsInput(false);
                     notifDao.merge(notif);
                     projMemberDao.merge(projMember);
 
                     notifyRelevantPartsOfInvitationResponse(projMember, answer);
+
+                    if(answer==1){
+                        // convite aceite. Tem de verificar se vagas do projecto foi atingido. Se sim, é preciso recusar os restantes convites pendentes para o projecto em causa
+                   // TODO verificar limite vagas do projecto e recusar os outros ou verificar à entrada e não deixar botões disponvieis no frontend se n der pra adicionar mais membros?
+                    }
 
                     notifDto = convertNotifEntToDto(notif);
 
                 }
             }
         }
-//TODO sempre q 1 convite é aceite, verificar se numero de vagas foi atingido. Se for é preciso apagar as notificações por responder que digam respeito a convite para o mesmo projecto
 
         return notifDto;
     }
 
     private void notifyRelevantPartsOfInvitationResponse(ProjectMember projMember, int answer) {
-        // avisar pessoas relevantes se convite foi ou não aceite
-        // convite normal: pessoa visada responde a convite e membros de projecto são avisados
-        // auto-convite: algum gestor do projecto responde a convite. Pessoa visada e outros membros do projecto são avisados. Notificações q digam respeito ao mesmo auto-convite terão de ser "canceladas"- input deixa de ser necessário
+        // avisa pessoas relevantes se convite foi ou não aceite pelo USER convidado: avisa todos os membros do projecto se convite foi aceite ou apenas os gestores se convite foi recusado
+        // answer == 0 -> false REFUSE INVITE / answer == 1 -> true ACCEPT INVITE
 
-        Notification notif = new Notification();
-        notif.setCreationTime(Date.from(Instant.now()));
-        notif.setSeen(false);
-        notif.setNeedsInput(false);
-        notif.setProjectMember(projMember);
+        if (answer == 0) {
+            // recusou convite para participar no projecto. Avisar apenas os gestores do projecto
 
-        List<User> projectMembersList = projMemberDao.findListOfUsersByProjectId(projMember.getProjectToParticipate().getId());
-
-        if (projectMembersList!= null){
-        if(!projMember.isSelfInvitation()){
-            // convite normal por membro do projecto. Avisar todos os membros do projecto a q diz respeito o convite
-
-
-                if(answer==0){
-                    // convite recusado
-                    notif.setMessage(projMember.getUserInvited().getFirstName() + " " + projMember.getUserInvited().getLastName() +" recusou o convite para participar no projecto " + projMember.getProjectToParticipate().getTitle());
-                    notif.setMessageEng(projMember.getUserInvited().getFirstName() + " " + projMember.getUserInvited().getLastName() +" has refused  to participate in the project " + projMember.getProjectToParticipate().getTitle());
-                } else if (answer==1){
-                    // convite aceite
-                    notif.setMessage(projMember.getUserInvited().getFirstName() + " " + projMember.getUserInvited().getLastName() +" aceitou o convite para participar no projecto " + projMember.getProjectToParticipate().getTitle());
-                    notif.setMessageEng(projMember.getUserInvited().getFirstName() + " " + projMember.getUserInvited().getLastName() +" has accepted  to participate in the project " + projMember.getProjectToParticipate().getTitle());
-                }
-                for (User u: projectMembersList){
+            List<User> managersList = projMemberDao.findListOfManagersByProjectId(projMember.getProjectToParticipate().getId());
+            if (managersList != null) {
+                for (User u : managersList) {
+                    Notification notif = new Notification();
+                    notif.setCreationTime(Date.from(Instant.now()));
+                    notif.setSeen(false);
+                    notif.setNeedsInput(false);
+                    notif.setProjectMember(projMember);
+                    notif.setMessage(projMember.getUserInvited().getFirstName() + " " + projMember.getUserInvited().getLastName() + " recusou o convite para participar no projecto " + projMember.getProjectToParticipate().getTitle());
+                    notif.setMessageEng(projMember.getUserInvited().getFirstName() + " " + projMember.getUserInvited().getLastName() + " has refused  to participate in the project " + projMember.getProjectToParticipate().getTitle());
                     notif.setNotificationOwner(u);
                     notifDao.persist(notif);
                     notifyRealTime(notif, u);
                 }
-
             }
-
-        } else {
-            // auto-convite. Pessoa visada recebe notificação a avisar se foi aceite ou não
-            // Membros do projecto recebem notificação a avisar que já foi tomada a decisão de aceitar / recusar. Notificações que digam respeito ao mesmo projMember ID terão de ser modificadas para não precisar de input/ read
-
-            if((answer==0)){
-                // auto-convite recusado
-
-                notif.setMessage("O pedido de " + projMember.getUserInvited().getFirstName() + " " + projMember.getUserInvited().getLastName() +" para participar no projecto " + projMember.getProjectToParticipate().getTitle() + " foi recusado");
+        } else if (answer == 1) {
+            // aceitou convite para participar no projecto. Avisar todos os membros
+            List<User> projectMembersList = projMemberDao.findListOfUsersByProjectId(projMember.getProjectToParticipate().getId());
+            if (projectMembersList != null) {
+                for (User u : projectMembersList) {
+                    Notification notif = new Notification();
+                    notif.setCreationTime(Date.from(Instant.now()));
+                    notif.setSeen(false);
+                    notif.setNeedsInput(false);
+                    notif.setProjectMember(projMember);
+                    notif.setMessage(projMember.getUserInvited().getFirstName() + " " + projMember.getUserInvited().getLastName() + " aceitou o convite para participar no projecto " + projMember.getProjectToParticipate().getTitle());
+                    notif.setMessageEng(projMember.getUserInvited().getFirstName() + " " + projMember.getUserInvited().getLastName() + " has accepted  to participate in the project " + projMember.getProjectToParticipate().getTitle());
+                    notif.setNotificationOwner(u);
+                    notifDao.persist(notif);
+                    notifyRealTime(notif, u);
+                }
+            }
+        }
+               /* notif.setMessage("O pedido de " + projMember.getUserInvited().getFirstName() + " " + projMember.getUserInvited().getLastName() +" para participar no projecto " + projMember.getProjectToParticipate().getTitle() + " foi recusado");
                 notif.setMessageEng("Self-invite of "+ projMember.getUserInvited().getFirstName() + " " + projMember.getUserInvited().getLastName() +" to participate in the project " + projMember.getProjectToParticipate().getTitle() + " has been refused");
 
 
@@ -248,26 +251,8 @@ public class Communication implements Serializable {
                 // auto-convite aceite
                 notif.setMessage("O pedido de " + projMember.getUserInvited().getFirstName() + " " + projMember.getUserInvited().getLastName() +" para participar no projecto " + projMember.getProjectToParticipate().getTitle() + " foi aceite");
                 notif.setMessageEng("Self-invite of "+ projMember.getUserInvited().getFirstName() + " " + projMember.getUserInvited().getLastName() +" to participate in the project " + projMember.getProjectToParticipate().getTitle() + " has been accepted");
-            }
-// avisar pessoas visada
-            notif.setNotificationOwner(projMember.getUserInvited());
-            notifDao.persist(notif);
-            notifyRealTime(notif, projMember.getUserInvited());
+*/
 
-            // avisar membros do projecto
-            for (User u : projectMembersList){
-                notif.setNotificationOwner(u);
-                notifDao.persist(notif);
-                notifyRealTime(notif, u);
 
-                Notification notifEnt = notifDao.findNotificationByUserIdAndProjectMember(u.getUserId(), projMember.getId());
-                if(notifEnt!= null) {
-                    notifEnt.setNeedsInput(false);
-                    notifEnt.setSeen(true);
-                    notifDao.persist(notifEnt);
-                    notifyRealTime(notifEnt, u);
-                }
-            }
-
-    }}
+    }
 }

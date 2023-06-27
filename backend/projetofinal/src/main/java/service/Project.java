@@ -91,7 +91,7 @@ return r;
     }
 
 
-    // ADICIONAR MEMBRO A PROJECTO
+    // ADICIONAR MEMBRO A PROJECTO (convite)
     @POST
     @Path("/newmember")
     @Consumes(MediaType.APPLICATION_JSON)
