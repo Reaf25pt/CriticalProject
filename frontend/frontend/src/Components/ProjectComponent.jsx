@@ -100,22 +100,23 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
               </div>
 
               {project.manager ? (
-                <>
-                  {project.statusInt === 0 ? (
-                    <div className="row mx-auto justify-content-around mt-5">
-                      <div className="col-lg-12">
-                        <ButtonComponent
-                          type="button"
-                          name="Editar Projeto"
-                          onClick={toggleComponent}
-                        />
+                <div className="row">
+                  <>
+                    {project.statusInt === 0 ? (
+                      <div className="row mx-auto justify-content-around mt-5">
+                        <div className="col-lg-12">
+                          <ButtonComponent
+                            type="button"
+                            name="Editar Projeto"
+                            onClick={toggleComponent}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  ) : null}
+                    ) : null}
 
-                  {project.statusInt === 0 ? (
-                    <ModalFinalTask setProjects={setProjects} />
-                  ) : /*  <div className="row mx-auto justify-content-around mt-5">
+                    {project.statusInt === 0 ? (
+                      <ModalFinalTask setProjects={setProjects} />
+                    ) : /*  <div className="row mx-auto justify-content-around mt-5">
                       <div className="col-lg-12">
                         <ButtonComponent
                           type="button"
@@ -124,62 +125,63 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
                         />
                       </div>
                     </div> */
-                  project.statusInt === 1 ? (
-                    <div className="row mx-auto justify-content-around mt-5">
-                      <div className="col-lg-12">
-                        <ButtonComponent
-                          type="button"
-                          name="Mudar status: planning"
-                          onClick={() => handleProjectStatus(0)}
-                        />
-                      </div>
-                    </div>
-                  ) : project.statusInt === 3 ? (
-                    <>
+                    project.statusInt === 1 ? (
                       <div className="row mx-auto justify-content-around mt-5">
                         <div className="col-lg-12">
                           <ButtonComponent
                             type="button"
-                            name="Mudar status: in progress"
-                            onClick={() => handleProjectStatus(4)}
+                            name="Mudar status: planning"
+                            onClick={() => handleProjectStatus(0)}
                           />
                         </div>
                       </div>
-                    </>
-                  ) : project.statusInt === 4 ? (
-                    <div className="row mx-auto justify-content-around mt-5">
-                      <div className="col-lg-12">
-                        <ButtonComponent
-                          type="button"
-                          name="Mudar status: finished"
-                          onClick={() => handleProjectStatus(6)}
-                        />
+                    ) : project.statusInt === 3 ? (
+                      <>
+                        <div className="row mx-auto justify-content-around mt-5">
+                          <div className="col-lg-12">
+                            <ButtonComponent
+                              type="button"
+                              name="Mudar status: in progress"
+                              onClick={() => handleProjectStatus(4)}
+                            />
+                          </div>
+                        </div>
+                      </>
+                    ) : project.statusInt === 4 ? (
+                      <div className="row mx-auto justify-content-around mt-5">
+                        <div className="col-lg-12">
+                          <ButtonComponent
+                            type="button"
+                            name="Mudar status: finished"
+                            onClick={() => handleProjectStatus(6)}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  ) : null}
+                    ) : null}
 
-                  {project.statusInt !== 6 && project.statusInt !== 5 ? (
-                    <div className="row mx-auto justify-content-around mt-5">
-                      <div className="col-lg-12">
-                        <ButtonComponent
-                          type="button"
-                          name="Cancelar"
-                          onClick={() => handleProjectStatus(5)}
-                        />
+                    {project.statusInt !== 6 && project.statusInt !== 5 ? (
+                      <div className="row mx-auto justify-content-around mt-5">
+                        <div className="col-lg-12">
+                          <ButtonComponent
+                            type="button"
+                            name="Cancelar"
+                            onClick={() => handleProjectStatus(5)}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  ) : project.statusInt !== 6 ? (
-                    <div className="row mx-auto justify-content-around mt-5">
-                      <div className="col-lg-12">
-                        <ButtonComponent
-                          type="button"
-                          name="Re-activar projecto"
-                          onClick={() => handleProjectStatus(7)}
-                        />
+                    ) : project.statusInt !== 6 ? (
+                      <div className="row mx-auto justify-content-around mt-5">
+                        <div className="col-lg-12">
+                          <ButtonComponent
+                            type="button"
+                            name="Re-activar projecto"
+                            onClick={() => handleProjectStatus(7)}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  ) : null}
-                </>
+                    ) : null}
+                  </>
+                </div>
               ) : !user.contestManager &&
                 !project.member &&
                 user.noActiveProject &&

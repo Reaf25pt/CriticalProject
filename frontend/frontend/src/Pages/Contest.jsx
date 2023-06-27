@@ -106,7 +106,7 @@ function Contest() {
                 </div>
               </div>
               <div className="row mx-auto mt-5">
-                <div>
+                <div className="col-lg-9 bg-secondary p-3 rounded-4 mx-auto">
                   <DataTable value={showList}>
                     <Column field="title" header="Nome" sortable />
                     <Column field="status" header="Estado" sortable />

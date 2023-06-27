@@ -223,7 +223,7 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
       </div>
 
       {showProjects.member ? (
-        <div className="col-lg-6 mx-auto">
+        <div className="col-lg-4 mx-auto mb-4">
           <ButtonComponent
             onClick={handleRemove}
             name={"Sair do projecto"}
