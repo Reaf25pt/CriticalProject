@@ -6,6 +6,8 @@ import { Link, useParams } from "react-router-dom";
 import { userStore } from "../stores/UserStore";
 import { contestOpenStore } from "../stores/ContestOpenStore";
 import { BsEyeFill, BsCheck2, BsXLg } from "react-icons/bs";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 function ContestOpen() {
   const [showComponentA, setShowComponentA] = useState(true);
@@ -59,6 +61,16 @@ function ContestOpen() {
   if (!contest) {
     return <div>Loading...</div>;
   }
+
+  const renderLink = (rowData) => {
+    /*   console.log(rowData.id);
+    console.log(typeof rowData.id); */
+    return (
+      <Link to={`/home/projects/${rowData.id}`}>
+        <BsEyeFill />
+      </Link>
+    );
+  };
 
   return (
     <div>
@@ -119,13 +131,13 @@ function ContestOpen() {
             >
               <div>
                 <div className="row ">
-                  {projects.map((project) =>
-                    project.answered === false ? (
-                      <div className="col-lg-4 bg-secondary rounded-5 p-4">
-                        <h3 className="bg-white p-1 rounded-5 text-center mb-4">
-                          Lista de projetos pendentes
-                        </h3>
-                        <div className="row bg-white w-50 p-1 rounded-5 mx-auto ">
+                  <div className="col-lg-4 bg-secondary rounded-5 p-4">
+                    <h3 className="bg-white p-1 rounded-5 text-center mb-4">
+                      Lista de projetos pendentes
+                    </h3>
+                    {projects.map((project) =>
+                      project.answered === false ? (
+                        <div className="row bg-white w-50 p-1 rounded-5 mx-auto mb-2 ">
                           <div
                             key={project.id}
                             className="d-flex justify-content-between"
@@ -142,9 +154,15 @@ function ContestOpen() {
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ) : null
-                  )}
+                      ) : null
+                    )}
+                  </div>{" "}
+                  <div className="col-lg-4">
+                    <DataTable value={projects} selectionMode="single ">
+                      <Column field="projectTitle" header="Nome do Projeto" />
+                      <Column body={renderLink} header="#" />
+                    </DataTable>
+                  </div>
                 </div>
               </div>
             </div>

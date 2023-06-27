@@ -137,32 +137,33 @@ function ContestComponent({ toggleComponent }) {
             </div>
           </div> */}
           <div className="row mt-5">
-            {contest.statusInt !== 0 ? (
+            <div className="row d-flex align-items-center">
+              {contest.statusInt !== 0 ? (
+                <div className="col-lg-6">
+                  {" "}
+                  {/* <h5 className="text-center text-white mb-3">
+                    Projectos participantes
+                  </h5> */}
+                  <h3 className="text-center text-white bg-warning rounded-3 p-2 mt-3">
+                    100/200
+                  </h3>
+                </div>
+              ) : (
+                <div className="col-lg-6">
+                  <h5 className="text-center text-white mb-3">
+                    Vagas disponíveis a concurso
+                  </h5>
+                  <h3 className="text-center text-white bg-warning rounded-3 p-2 mt-3">
+                    {contest.maxNumberProjects}
+                  </h3>
+                </div>
+              )}
               <div className="col-lg-6">
-                {" "}
-                <h5 className="text-center text-white mb-3">
-                  Projectos participantes
-                </h5>
-                <h3 className="text-center text-white bg-warning rounded-3 p-2 mt-3">
-                  Inserir size da lista de projectos
+                {/*    <h5 className="text-center text-white">Estado </h5> */}
+                <h3 className="text-center text-white bg-danger rounded-3 p-2 mt-3">
+                  {contest.status}
                 </h3>
               </div>
-            ) : (
-              <div className="col-lg-6">
-                {" "}
-                <h5 className="text-center text-white mb-3">
-                  Vagas disponíveis a concurso
-                </h5>
-                <h3 className="text-center text-white bg-warning rounded-3 p-2 mt-3">
-                  {contest.maxNumberProjects}
-                </h3>
-              </div>
-            )}
-            <div className="col-lg-6">
-              {/*    <h5 className="text-center text-white">Estado </h5> */}
-              <h3 className="text-center text-white bg-danger rounded-3 p-2 mt-3">
-                {contest.status}
-              </h3>
             </div>
             <div className="row mx-auto justify-content-around mt-5">
               {contest.statusInt === 0 && user.contestManager ? (
@@ -209,7 +210,9 @@ function ContestComponent({ toggleComponent }) {
                     />
                   </div>
                 </div>
-              ) : null}
+              ) : (
+                <div className="row"></div>
+              )}
             </div>{" "}
           </div>
         </div>
