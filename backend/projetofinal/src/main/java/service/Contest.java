@@ -252,9 +252,9 @@ public class Contest {
 
     // GET LIST OF ALL PROJECTS ASSOCIATED WITH GIVEN CONTEST
     @GET
-    @Path("/projects")
+    @Path("/projects/{contestId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllProjects(@HeaderParam("token") String token, @HeaderParam("contestId") int contestId) {
+    public Response getAllProjects(@HeaderParam("token") String token, @PathParam("contestId") int contestId) {
 
         Response r = null;
 

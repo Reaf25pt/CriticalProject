@@ -2,15 +2,17 @@ import { useEffect, useState } from "react";
 import ContestComponent from "../Components/ContestComponent";
 import TextAreaComponent from "../Components/TextAreaComponent";
 import EditContestComponent from "../Components/EditContestComponent";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { userStore } from "../stores/UserStore";
 import { contestOpenStore } from "../stores/ContestOpenStore";
+import { BsEyeFill, BsCheck2, BsXLg } from "react-icons/bs";
 
 function ContestOpen() {
   const [showComponentA, setShowComponentA] = useState(true);
   const user = userStore((state) => state.user);
   const setContestOpen = contestOpenStore((state) => state.setContestOpen);
   const contest = contestOpenStore((state) => state.contest);
+  const [projects, setProjects] = useState([]);
 
   const toggleComponent = () => {
     setShowComponentA(!showComponentA);
@@ -33,6 +35,23 @@ function ContestOpen() {
         // console.log(data);
         // setShowProjects(data);
         // console.log(showProjects);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  useEffect(() => {
+    fetch(`http://localhost:8080/projetofinal/rest/contest/projects/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        token: user.token,
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        setProjects(data);
+        console.log("Projetos");
+        console.log(data);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -98,7 +117,36 @@ function ContestOpen() {
               role="tabpanel"
               aria-labelledby="profile-tab"
             >
-              <h5 className="text-white">Projetos</h5>
+              <div>
+                <div className="row ">
+                  {projects.map((project) =>
+                    project.answered === false ? (
+                      <div className="col-lg-4 bg-secondary rounded-5 p-4">
+                        <h3 className="bg-white p-1 rounded-5 text-center mb-4">
+                          Lista de projetos pendentes
+                        </h3>
+                        <div className="row bg-white w-50 p-1 rounded-5 mx-auto ">
+                          <div
+                            key={project.id}
+                            className="d-flex justify-content-between"
+                          >
+                            <div>
+                              <h4>{project.projectTitle}</h4>
+                            </div>
+                            <div>
+                              <Link to={`/home/projects/${project.id}`}>
+                                <BsEyeFill color="red" size={30} />
+                              </Link>
+                              <BsCheck2 size={30} color="green" />
+                              <BsXLg size={30} />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : null
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>
