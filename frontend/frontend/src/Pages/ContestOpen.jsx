@@ -67,9 +67,46 @@ function ContestOpen() {
     console.log(typeof rowData.id); */
     return (
       <Link to={`/home/projects/${rowData.id}`}>
-        <BsEyeFill />
+        <BsEyeFill size={30} color="black" />
       </Link>
     );
+  };
+
+  const accept = (rowData) => {
+    if (rowData.answered === true) {
+      return <div></div>;
+    } else {
+      return <BsCheck2 size={30} color="green" />;
+    }
+
+    /*   console.log(rowData.id);
+    console.log(typeof rowData.id); */
+  };
+
+  const reject = (rowData) => {
+    if (rowData.answered === true) {
+      return <div></div>;
+    } else {
+      return <BsXLg size={30} color="red" />;
+    }
+  };
+
+  const answer = (rowData) => {
+    if (rowData.accepted == false && rowData.answered === true) {
+      return (
+        <div className="bg-danger text-white text-center rounded-4">
+          Recusado
+        </div>
+      );
+    } else if (rowData.accepted == true && rowData.answered === true) {
+      return (
+        <div className="bg-success text-white text-center rounded-4">
+          Aprovado
+        </div>
+      );
+    } else {
+      return <p></p>;
+    }
   };
 
   return (
@@ -130,8 +167,8 @@ function ContestOpen() {
               aria-labelledby="profile-tab"
             >
               <div>
-                <div className="row ">
-                  <div className="col-lg-4 bg-secondary rounded-5 p-4">
+                <div className="row mx-auto">
+                  {/* <div className="col-lg-4 bg-secondary rounded-5 p-4">
                     <h3 className="bg-white p-1 rounded-5 text-center mb-4">
                       Lista de projetos pendentes
                     </h3>
@@ -156,11 +193,29 @@ function ContestOpen() {
                         </div>
                       ) : null
                     )}
-                  </div>{" "}
-                  <div className="col-lg-4">
-                    <DataTable value={projects} selectionMode="single ">
-                      <Column field="projectTitle" header="Nome do Projeto" />
-                      <Column body={renderLink} header="#" />
+                  </div>{" "} */}
+                  <div className="col-lg-6 mx-auto mt-5 bg-secondary p-3 rounded-4">
+                    <DataTable
+                      value={projects}
+                      selectionMode="single  "
+                      paginator
+                      rows={5}
+                      rowsPerPageOptions={[5, 10, 25, 50]}
+                    >
+                      <Column
+                        field="projectTitle"
+                        header="Nome do Projeto"
+                        style={{
+                          textAlign: "center",
+                          fontSize: "20px",
+                          fontWeight: "bolder",
+                        }}
+                        sortable
+                      />
+                      <Column header="" body={accept} />;
+                      <Column body={reject} header="" />;
+                      <Column body={answer} header="" />
+                      <Column body={renderLink} header="" />
                     </DataTable>
                   </div>
                 </div>
