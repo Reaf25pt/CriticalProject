@@ -52,7 +52,7 @@ function App() {
       })
       .then((loggedUser) => {
         user(loggedUser);
-        navigate("/home", { replace: true });
+        navigate("/home/start", { replace: true });
       })
       .catch(console.error);
     // TODO confirmar que está certo?

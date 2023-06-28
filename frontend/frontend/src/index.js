@@ -22,6 +22,7 @@ import ContestCreate from "./Pages/ContestCreate";
 import Chat from "./Pages/Chat";
 import Notifications from "./Pages/Notifications";
 import ContestOpen from "./Pages/ContestOpen";
+import Start from "./Pages/Start";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -33,6 +34,7 @@ root.render(
       <Route path="/changepassword/:token" element={<ChangePassword />} />
       <Route path="/ativateaccount/:token" element={<ActivateAccount />} />
       <Route path="/home" element={<Home />}>
+        <Route path="start" element={<Start />} />
         <Route path="profile" element={<Profile />} />
         <Route path="projects" element={<Projects />} />
         <Route path="contests" element={<Contest />} />

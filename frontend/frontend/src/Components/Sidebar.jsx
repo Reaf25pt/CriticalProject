@@ -8,7 +8,6 @@ import {
 } from "react-icons/bs";
 import { userStore } from "../stores/UserStore";
 import Logout from "./Logout";
-import SearchUser from "./SearchUser";
 function Sidebar() {
   const user = userStore((state) => state.user);
 
@@ -26,15 +25,13 @@ function Sidebar() {
               Laboratório de Inovação
               <hr className="hr" />
             </span>
-            <div className="row mt-3 mb-2 ">
-              <SearchUser />{" "}
-            </div>
+
             <ul
               className="nav nav-pills flex-column mb-sm-auto  align-items-center align-items-sm-start"
               id="menu"
             >
               <li className="nav-item ">
-                <Link to={"/home"} className="nav-link align-middle px-0">
+                <Link to={"/home/start"} className="nav-link align-middle px-0">
                   <BsFillHouseFill color="white" />{" "}
                   <span className="ms-1 d-none d-sm-inline text-white">
                     Início
