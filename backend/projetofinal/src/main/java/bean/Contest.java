@@ -360,13 +360,14 @@ boolean res=false;
         if(applicationEnt!=null){
             System.out.println("encontrou applicaion");
             if (answer==1){
+                // TODO verificar se entretanto foi cancelado ?! pode ser aprovado e isso dar ânimo a membros de projecto e o re-activem ?
                 applicationEnt.setAnswered(true);
                 applicationEnt.setAccepted(true);
                 applicationDao.merge(applicationEnt);
                 // Alterar status do projecto para approved
                 applicationEnt.getProject().setStatus(StatusProject.APPROVED);
                 projDao.merge(applicationEnt.getProject());
-
+// TODO adicionar record para manter no histórico do projecto
                         //TODO testar notificacoes
 
                 // sempre que aceita algum projecto tem de verificar se limite de projectos a concurso foi atingido. Se for, terá de automaticamente recusar os restantes projectos

@@ -197,6 +197,8 @@ public class Communication implements Serializable {
                     projMemberDao.merge(projMember);
 
                     notifyRelevantPartsOfInvitationResponse(projMember, answer);
+                    recordMemberInvitationResponse(user, projMember.getProjectToParticipate(), answer);
+
 
                     if(answer==1){
                         // convite aceite. Tem de verificar se vagas do projecto foi atingido. Se sim, é preciso recusar os restantes convites pendentes para o projecto em causa
@@ -252,16 +254,6 @@ public class Communication implements Serializable {
                 }
             }
         }
-               /* notif.setMessage("O pedido de " + projMember.getUserInvited().getFirstName() + " " + projMember.getUserInvited().getLastName() +" para participar no projecto " + projMember.getProjectToParticipate().getTitle() + " foi recusado");
-                notif.setMessageEng("Self-invite of "+ projMember.getUserInvited().getFirstName() + " " + projMember.getUserInvited().getLastName() +" to participate in the project " + projMember.getProjectToParticipate().getTitle() + " has been refused");
-
-
-            } else if (answer == 1){
-                // auto-convite aceite
-                notif.setMessage("O pedido de " + projMember.getUserInvited().getFirstName() + " " + projMember.getUserInvited().getLastName() +" para participar no projecto " + projMember.getProjectToParticipate().getTitle() + " foi aceite");
-                notif.setMessageEng("Self-invite of "+ projMember.getUserInvited().getFirstName() + " " + projMember.getUserInvited().getLastName() +" to participate in the project " + projMember.getProjectToParticipate().getTitle() + " has been accepted");
-*/
-
 
     }
 
@@ -300,6 +292,7 @@ public class Communication implements Serializable {
 
     public void notifyProjectMembersOfMemberLeavingProject(Project project, User user) {
         // Notifica membros do projecto que membro user saiu do projecto
+        // TODO talvez seja redundante com record. Pode-se remover notificação
 
         List<User> membersList = projMemberDao.findListOfUsersByProjectId(project.getId());
 
@@ -580,5 +573,91 @@ record.setProject(task.getProject());
                 break;
         }
         recordDao.persist(record);
+    }
+
+    public void recordMemberInvitationResponse(User user, Project project, int answer) {
+        // guarda registo no histórico do projecto da resposta a um convite para participar no projecto
+
+        ProjectHistory record = new ProjectHistory();
+        record.setCreationTime(Date.from(Instant.now()));
+        record.setAuthor(user);
+        record.setProject(project);
+
+        switch (answer) {
+            case 0:
+                //recusou convite para participar no projecto
+                record.setMessage(user.getFirstName() +" " + user.getLastName() + " recusou o convite para participar no projecto");
+                break;
+            case 1:
+                //aceitou convite para participar no projecto
+                record.setMessage(user.getFirstName() +" " + user.getLastName() + " aceitou o convite para participar no projecto");
+                break;
+        }
+        recordDao.persist(record);
+    }
+
+    public void recordMemberRemovalFromProject(User user, Project project) {
+        // guarda registo no histórico do projecto da saída de um membro do projecto
+
+        ProjectHistory record = new ProjectHistory();
+        record.setCreationTime(Date.from(Instant.now()));
+        record.setAuthor(user);  // TODO diferenciar quem remove ?
+        record.setProject(project);
+        record.setMessage(user.getFirstName() +" " + user.getLastName() + " saiu do projecto");
+
+        recordDao.persist(record);
+    }
+
+    public void recordManagerResponseToSelfInvitation(User manager, User user,Project project, int answer) {
+        // guarda registo no histórico do projecto da resposta que gestor deu a um pedido para participar no projecto
+        // manager do projecto é author da resposta ao pedido. user é a pessoa que pediu para participar
+
+        ProjectHistory record = new ProjectHistory();
+        record.setCreationTime(Date.from(Instant.now()));
+        record.setAuthor(manager);
+        record.setProject(project);
+
+        switch (answer) {
+            case 0:
+                //recusou pedido para participar no projecto
+                record.setMessage("Pedido de " +user.getFirstName() +" " + user.getLastName() + " para participar no projecto foi recusado");
+                break;
+            case 1:
+                //aceitou pedido para participar no projecto
+                record.setMessage("Pedido de " +user.getFirstName() +" " + user.getLastName() + " para participar no projecto foi aceite");
+                break;
+        }
+        recordDao.persist(record);
+    }
+
+
+    public void notifyPotentialMemberOfSelfInvitationResponse(ProjectMember pm, int answer) {
+        // notifica user que pedido para participar em projecto foi aceite (1) ou recusado (0)
+
+        Notification notif = new Notification();
+        notif.setCreationTime(Date.from(Instant.now()));
+        notif.setSeen(false);
+        notif.setNeedsInput(false);
+        notif.setProjectMember(pm);
+
+        if(answer==0){
+            // pedido recusado
+            notif.setMessage("O pedido de " + pm.getUserInvited().getFirstName() + " " + pm.getUserInvited().getLastName() +" para participar no projecto " + pm.getProjectToParticipate().getTitle() + " foi recusado");
+            notif.setMessageEng("Self-invite of "+ pm.getUserInvited().getFirstName() + " " + pm.getUserInvited().getLastName() +" to participate in the project " + pm.getProjectToParticipate().getTitle() + " has been refused");
+
+
+        } else if (answer==1){
+            // pedido aceite
+            notif.setMessage("O pedido de " + pm.getUserInvited().getFirstName() + " " + pm.getUserInvited().getLastName() +" para participar no projecto " + pm.getProjectToParticipate().getTitle() + " foi aceite");
+            notif.setMessageEng("Self-invite of "+ pm.getUserInvited().getFirstName() + " " + pm.getUserInvited().getLastName() +" to participate in the project " + pm.getProjectToParticipate().getTitle() + " has been accepted");
+
+        }
+
+        notif.setNotificationOwner(pm.getUserInvited());
+        notifDao.persist(notif);
+        notifyRealTime(notif, pm.getUserInvited());
+
+
+
     }
 }

@@ -284,7 +284,10 @@ function ProjectOpen() {
             />
             <div className="row">
               {showProjects.manager ? (
-                <ProjectMembersInvited showProjects={showProjects} />
+                <ProjectMembersInvited
+                  showProjects={showProjects}
+                  setMembers={setMembers}
+                />
               ) : null}
             </div>
             {/* <div className="col-8 col-sm-10 col-md-7 col-lg-5 mx-auto bg-secondary mt-5 rounded-5 ">

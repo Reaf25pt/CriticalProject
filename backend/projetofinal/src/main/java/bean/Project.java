@@ -1001,7 +1001,7 @@ return list;
     public boolean deleteProjMember(int userId, int projId, String token) {
         // remove projMember relationship with project (não apaga na BD mas apenas setRemove = true
         // só pode remover se ficar pelo menos 1 gestor no projecto após remoção.
-        // Incluir possibilidade de se auto-remover
+        // TODO verificar se inclui possibilidade de se auto-remover
         boolean delete = false;
 
         ProjectMember pm = projMemberDao.findProjectMemberByProjectIdAndUserId(projId, userId);
@@ -1017,6 +1017,7 @@ return list;
                     projMemberDao.merge(pm);
                    communicationBean.notifyProjectMembersOfMemberLeavingProject(pm.getProjectToParticipate(), pm.getUserInvited());
                     delete = true;
+                    communicationBean.recordMemberRemovalFromProject(pm.getUserInvited(), pm.getProjectToParticipate());
 
                 } else {
                     System.out.println("Proj not concluded / finished ");
@@ -1028,8 +1029,10 @@ return list;
                         pm.setRemoved(true);
                         projMemberDao.merge(pm);
                         communicationBean.notifyProjectMembersOfMemberLeavingProject(pm.getProjectToParticipate(), pm.getUserInvited());
-
+// TODO Manter notificações ou apenas notificar pessoa no caso de ser removida do projecto senão não entende pq ja n tem acesso ao projecto
                         delete = true;
+                        communicationBean.recordMemberRemovalFromProject(pm.getUserInvited(), pm.getProjectToParticipate());
+
                     }
                 }
 
@@ -2083,5 +2086,51 @@ boolean res=false;
 
 
         return recordDto;
+    }
+
+    public boolean replyToSelfInvitation(int projMemberId, int projId, String token, int answer) {
+        // actualiza relação projMember, respeitante ao user e projecto. answer == 0  -> gestor recusa membro ; answer == 1 -> gestor aceita membro
+        // verificar se há vagas disponíveis no caso de answer == 1 (aceitar)
+        System.out.println("metodo resposta a self invite " + answer + projId + projMemberId);
+        boolean res = false;
+
+        entity.User loggedUser= tokenDao.findUserEntByToken(token);
+        if(loggedUser!=null){
+        ProjectMember pm = projMemberDao.find(projMemberId);
+
+
+        if (pm != null) {
+            System.out.println("pm not null");
+
+            if(answer==0){
+                // sendo recusa não precisa de mais nenhuma validação
+                pm.setAnswered(true);
+                pm.setAccepted(false);
+                projMemberDao.merge(pm);
+                res=true;
+                communicationBean.recordManagerResponseToSelfInvitation(loggedUser, pm.getUserInvited(), pm.getProjectToParticipate(), answer);
+                communicationBean.notifyPotentialMemberOfSelfInvitationResponse(pm, answer);
+
+            } else if (answer==1){
+                // pedido aceite. é preciso garantir que há vagas disponíveis
+                // contar quantos projMembers aceites e not removed existem e comparar com vagas que projecto determina
+
+               if( verifyIfProjectHasAvailableSpots(projId)){
+                   // há vagas, a pessoa pode ter o seu pedido efectivamente aceite
+                   pm.setAnswered(true);
+                   pm.setAccepted(true);
+                   projMemberDao.merge(pm);
+                   res=true;
+                   communicationBean.recordManagerResponseToSelfInvitation(loggedUser, pm.getUserInvited(), pm.getProjectToParticipate(), answer);
+                   communicationBean.notifyPotentialMemberOfSelfInvitationResponse(pm, answer);
+
+
+                   // TODO verificar limite vagas do projecto e recusar os outros ou verificar à entrada e não deixar botões disponvieis no frontend se n der pra adicionar mais membros?
+
+               }
+            }
+        }}
+
+        return res;
     }
 }

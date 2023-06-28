@@ -149,6 +149,36 @@ return r;
         return r;}
 
 
+    // GESTOR DE PROJECTO RESPONDE A PEDIDO PARA PARTICIPAR NO PROJECTO - actualiza info da relação do projMember
+    @PATCH
+    @Path("/selfinvitation")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response replyToSelfInvitation(@HeaderParam("token") String token, @HeaderParam("projMemberId") int projMemberId,@HeaderParam("projId") int projId ,@HeaderParam("answer") int answer ) {
+        System.out.println("Service");
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token) || projBean.verifyProjectStatusToModifyTask(projId) || !projBean.isProjManager(token, projId)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            boolean res = projBean.replyToSelfInvitation(projMemberId, projId, token, answer);
+
+            if (!res) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+
+                r = Response.status(200).entity("Success").build();
+            }
+        }
+
+        return r;
+    }
+
+
     // DELETE MEMBER FROM PROJECT - na verdade não remove da DB, apenas actualiza info do atributo removed do projMember
     @PATCH
     @Path("/member")
