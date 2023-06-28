@@ -101,8 +101,9 @@ public class Communication implements Serializable {
         dto.setMessageEng(notif.getMessageEng());
         dto.setSeen(notif.isSeen());
         dto.setNeedsInput(notif.isNeedsInput());
-        dto.setRelationId(notif.getProjectMember().getId());
-
+        if(notif.getProjectMember()!=null) {
+            dto.setRelationId(notif.getProjectMember().getId());
+        }
         return dto;
     }
 

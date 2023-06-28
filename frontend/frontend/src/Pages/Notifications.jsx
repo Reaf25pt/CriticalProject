@@ -8,14 +8,18 @@ function Notifications() {
 
   const [showAllNotifications, setShowAllNotifications] = useState([]);
   const [notification, setNotification] = useState([]);
+
   useEffect(() => {
-    fetch(`http://localhost:8080/projetofinal/rest/project/allprojects`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        token: user.token,
-      },
-    })
+    fetch(
+      `http://localhost:8080/projetofinal/rest/communication/notifications`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          token: user.token,
+        },
+      }
+    )
       .then((resp) => resp.json())
       .then((data) => {
         console.log(data);
@@ -23,6 +27,35 @@ function Notifications() {
       })
       .catch((err) => console.log(err));
   }, [notification]);
+
+  function handleInvitation(status, notifId) {
+    // event.preventDefault();
+
+    console.log(status + " " + notifId);
+
+    fetch(
+      `http://localhost:8080/projetofinal/rest/communication/invitation/${notifId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: user.token,
+          status: status,
+        },
+      }
+    ).then((response) => {
+      if (response.status === 200) {
+        console.log(response);
+        setNotification([]);
+        alert("notif respondida");
+
+        //navigate("/home", { replace: true });
+      } else {
+        alert("Algo correu mal. Tente novamente");
+      }
+    });
+  }
+
   return (
     <div>
       <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -49,27 +82,40 @@ function Notifications() {
           role="tabpanel"
           aria-labelledby="home-tab"
         >
-          <div className="row mx-auto col-10 col-md-8 col-lg-6 mt-5">
-            <div class="card bg-light">
-              <div class="card-body">
-                <h5 class="card-title ">Card title</h5>
-                <hr />
-                <div className="row">
-                  <div className="col-lg-10">
-                    <p class="card-text">
-                      Some quick example text to build on the card title and
-                      make up the bulk of the card's content.
-                    </p>
+          {showAllNotifications && showAllNotifications.length > 0 ? (
+            <div className="row mx-auto col-10 col-md-8 col-lg-6 mt-5">
+              <div class="card bg-light">
+                {showAllNotifications.map((item) => (
+                  <div class="card-body">
+                    <h5 class="card-title ">Card title</h5>
+                    <hr />
+                    <div className="row">
+                      <div className="col-lg-10">
+                        <p class="card-text">{item.message}</p>
+                      </div>
+                      {item.needsInput ? (
+                        <div className="col-lg-2 d-flex justify-content-around">
+                          <BsCheck2Circle
+                            color="green"
+                            size={40}
+                            onClick={() => handleInvitation(1, item.id)}
+                          />
+                          <BsXLg
+                            color="red"
+                            size={40}
+                            onClick={() => handleInvitation(0, item.id)}
+                          />
+                        </div>
+                      ) : null}
+                    </div>
                   </div>
-                  <div className="col-lg-2 d-flex justify-content-around">
-                    <BsCheck2Circle color="green" size={40} />
-                    <BsXLg color="red" size={40} />
-                  </div>
-                </div>
+                ))}
               </div>
-            </div>{" "}
-          </div>
-        </div>
+            </div>
+          ) : (
+            <p class="card-text">Não tem notificações</p>
+          )}
+        </div>{" "}
       </div>
     </div>
   );

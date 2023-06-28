@@ -108,9 +108,9 @@ List<Notification> list = comBean.getOwnNotificationList(token);
 
     // RESPONDER A CONVITE PARA PARTICIPAR EM PROJECTO: true== 1 ACCEPT INVITE/ false ==0 REFUSE INVITE
     @POST
-    @Path("/invitation/{id}/{answer}")
+    @Path("/invitation/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response answerInvitation(@HeaderParam("token") String token, @PathParam("id") int id, @PathParam("answer") int answer ) {
+    public Response answerInvitation(@HeaderParam("token") String token, @PathParam("id") int id, @HeaderParam("answer") int answer ) {
         Response r = null;
 
         if (userBean.checkStringInfo(token) ) {
