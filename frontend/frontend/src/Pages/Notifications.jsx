@@ -8,6 +8,7 @@ import {
   BsTrash,
   BsEnvelopeOpenFill,
 } from "react-icons/bs";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function Notifications() {
   const user = userStore((state) => state.user);
@@ -147,10 +148,28 @@ function Notifications() {
                           size={25}
                         />
                         {item.seen /*  <BsEnvelopeFill size={25} /> */ ? null : (
-                          <BsEnvelopeOpenFill
-                            size={25}
-                            onClick={() => handleRead(item.id)}
-                          />
+                          <OverlayTrigger
+                            placement="top"
+                            overlay={<Tooltip>Marcar como lida</Tooltip>}
+                          >
+                            <span
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                            >
+                              {" "}
+                              <BsEnvelopeOpenFill
+                                size={25}
+                                onClick={() => handleRead(item.id)}
+                              />
+                            </span>
+                          </OverlayTrigger>
+
+                          /*    <Tooltip placement="top" title="Read">
+                            <BsEnvelopeOpenFill
+                              size={25}
+                              onClick={() => handleRead(item.id)}
+                            />
+                          </Tooltip> */
                         )}
                       </div>
                     </div>
