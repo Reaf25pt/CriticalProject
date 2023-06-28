@@ -1,13 +1,24 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { userStore } from "../stores/UserStore";
-import { BsXLg, BsCheck2Circle } from "react-icons/bs";
+import {
+  BsXLg,
+  BsCheck2Circle,
+  BsEnvelopeFill,
+  BsTrash,
+  BsEnvelopeOpenFill,
+} from "react-icons/bs";
 
 function Notifications() {
   const user = userStore((state) => state.user);
 
   const [showAllNotifications, setShowAllNotifications] = useState([]);
   const [notification, setNotification] = useState([]);
+
+  const convertTimestampToDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString(); // Adjust the format as per your requirement
+  };
 
   useEffect(() => {
     fetch(
@@ -87,7 +98,18 @@ function Notifications() {
               <div class="card bg-light">
                 {showAllNotifications.map((item) => (
                   <div class="card-body">
-                    <h5 class="card-title ">Card title</h5>
+                    <div class="card-title d-flex justify-content-between">
+                      <h5>{convertTimestampToDate(item.creationTime)}</h5>
+                      <div>
+                        <BsTrash size={25} />
+                        {item.seen === true ? (
+                          <BsEnvelopeFill size={25} />
+                        ) : (
+                          <BsEnvelopeOpenFill size={25} />
+                        )}
+                      </div>
+                    </div>
+
                     <hr />
                     <div className="row">
                       <div className="col-lg-10">
