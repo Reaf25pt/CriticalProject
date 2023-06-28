@@ -1011,6 +1011,7 @@ return list;
 
             if (res) {
                 // pode remover user
+                // TODO à partida canceled e finished já n faz sentido aqui
                 if (pm.getProjectToParticipate().getStatus() == StatusProject.CANCELLED || pm.getProjectToParticipate().getStatus() == StatusProject.FINISHED) {
                     pm.setRemoved(true);
                     projMemberDao.merge(pm);
@@ -1019,7 +1020,7 @@ return list;
 
                 } else {
                     System.out.println("Proj not concluded / finished ");
-                    // TODO ACABAR DE IMPLMENTAR se for cancelado e reactivado ?! FALTA TESTAR : se for tem de alterar isso se projecto n estiver finished ou cancelled .
+                    // TODO FALTA TESTAR : se for tem de alterar isso se projecto n estiver finished ou cancelled .
                     boolean canLeave = dealWithTasksBeforeLeavingProject(userId, pm.getProjectToParticipate());
 
                     if (canLeave) {
@@ -1196,6 +1197,7 @@ return list;
                     break;
                 case 7:
                     //definir como planning um projecto cancelado se não está associado a nenhum concurso
+                    // só pode acontecer se nenhum membro tem algum projecto activo no momento da reactivação
                     res =reactivateCancelledProj(project, token);
                     break;
             }
@@ -1204,21 +1206,47 @@ return list;
     }
 
     private boolean reactivateCancelledProj(entity.Project project, String token) {
-        // reactiva um projecto, definindo como planning se não está associado a um concurso
+        // reactiva um projecto, definindo como planning se não está associado a um concurso e todos os membros não tem proj activo
         boolean res=false;
         // verificar 1º se projecto está aceite em algum concurso. neste caso n poderá ser reactivado
 
         ContestApplication application = applicationDao.findAcceptedApplicationForGivenProjectId(project.getId());
 
-        if(application==null){
+        if(application==null) {
+            if (verifyExistingMembersHaveNoActiveProject(project)) {
+
 // n foi aceite em nenhum concurso - pode ser reactivado
-            project.setStatus(StatusProject.PLANNING);
-            projDao.merge(project);
-            res=true;
-            entity.User user = tokenDao.findUserEntByToken(token);
-            communicationBean.recordProjectStatusChange(project, user, 7);
+                project.setStatus(StatusProject.PLANNING);
+                projDao.merge(project);
+                res = true;
+                entity.User user = tokenDao.findUserEntByToken(token);
+                communicationBean.recordProjectStatusChange(project, user, 7);
 // TODO testar mas à partida nunca terá tarefa final associada neste ponto
-       }
+            }
+        }
+
+        return res;
+    }
+
+    private boolean verifyExistingMembersHaveNoActiveProject(entity.Project project) {
+        // verifica se todos os membro estão livres para que o projecto cancelado possa ser reactivado e nenhum membro fique com 2 proj activos em simultaneo
+        boolean res= false;
+int count = 0;  // conta o número de membros com projecto activo. Se no final o valor n for 0, não pode reactiva projecto
+List<entity.User> members = projMemberDao.findListOfUsersByProjectId(project.getId());
+if (members!=null){
+    for (entity.User u : members){
+        entity.Project activeProj = projMemberDao.findActiveProjectByUserId(u.getUserId());
+        if (project!=null){
+            // à partida nunca será o ID do projecto a ser reactivado
+            System.out.println("confirmar que proj activo e proj a ser reactivado não é o mesmo, ID do 1º " + activeProj.getId() + "  ID do 2º " + project.getId());
+        count++;
+
+        }
+    }
+    if (count==0){
+        res=true;
+    }
+}
 
 
         return res;
@@ -1450,6 +1478,7 @@ boolean res = false;
     public boolean verifyProjectStatusToModifyTask(int projId) {
         // impedir caso projecto tenha status finished, cancelled, proposed, approved, ready pq nestes casos o plano de execução não pode ser alterado
         // vale para adicionar, editar, apagar tarefa
+        // vale para membro sair de projecto
         boolean res = false;
         entity.Project project = projDao.findProjectById(projId);
         if(project!=null){
@@ -1462,7 +1491,7 @@ boolean res = false;
         return res;
     }
 
-    public boolean verifyProjectStatus(int projId) {
+   /* public boolean verifyProjectStatus(int projId) {
         // membro só pode sair do projecto nas fases em que n há bloqueio de alterações relacionadas com candidatura a concurso
         boolean res = false;
         entity.Project project = projDao.findProjectById(projId);
@@ -1475,7 +1504,7 @@ boolean res = false;
         }
         return res;
     }
-
+*/
 
 
     public boolean verifyIfTaskBelongsToProject(int taskId, int projId) {

@@ -421,6 +421,37 @@ public class User {
 
     }
 
+    // GET LIST OF ALL USERS
+    @GET
+    @Path("/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllUsers(@HeaderParam("token") String token) {
+
+        // verificar se token tem sessão iniciada e válida, se sim actualizar session time
+        // ir buscar lista de projectos que user id do token logado seja membro (accepted and not removed)
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<UserInfo> users = userBean.getAllUsers(token);
+
+            if (users == null || users.size() == 0) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+
+                r = Response.status(200).entity(users).build();
+            }
+        }
+
+        return r;
+    }
+
+
     // GET LIST OF PROJECTS OF LOGGED USER
     @GET
     @Path("/ownprojects")

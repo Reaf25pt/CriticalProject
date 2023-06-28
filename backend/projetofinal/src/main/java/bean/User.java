@@ -1091,5 +1091,33 @@ return projectsList;
                 projMemberDao.merge(p);
             }}
     }
+
+    public List<UserInfo> getAllUsers(String token) {
+        // lista de todos os users com conta válida na app
+
+        List<UserInfo> list = new ArrayList<>();
+
+        List<entity.User> allUsers = userDao.findAllUsersWithValidatedAccount();
+        if (allUsers!=null){
+            for (entity.User u : allUsers){
+               list.add( convertUserEntToMinimalDto(u));
+
+            }
+        }
+
+        return list;
+    }
+
+    private UserInfo convertUserEntToMinimalDto(entity.User u) {
+        UserInfo user = new UserInfo();
+
+        user.setId(u.getUserId());
+        user.setFirstName(u.getFirstName());
+        user.setLastName(u.getLastName());
+        user.setNickname(u.getNickname());
+        user.setPhoto(u.getPhoto());
+user.setOpenProfile(u.isOpenProfile());
+        return user;
+    }
 }
 

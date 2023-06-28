@@ -50,9 +50,9 @@ public class Communication {
 
     // MARK NOTIFICATION AS READ
     @POST
-    @Path("/notification")
+    @Path("/notification/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response markNotifAsRead(@HeaderParam("token") String token, int id) {
+    public Response markNotifAsRead(@HeaderParam("token") String token, @PathParam("id") int id) {
         Response r = null;
 
         if (userBean.checkStringInfo(token) ) {
@@ -79,9 +79,9 @@ public class Communication {
 
     // DELETE NOTIFICATION
     @DELETE
-    @Path("/notification")
+    @Path("/notification/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteNotif(@HeaderParam("token") String token, int id) {
+    public Response deleteNotif(@HeaderParam("token") String token, @PathParam("id") int id) {
         Response r = null;
 
         if (userBean.checkStringInfo(token) ) {
@@ -112,7 +112,7 @@ List<Notification> list = comBean.getOwnNotificationList(token);
     @Produces(MediaType.APPLICATION_JSON)
     public Response answerInvitation(@HeaderParam("token") String token, @PathParam("id") int id, @HeaderParam("answer") int answer ) {
         Response r = null;
-
+        System.out.println("answer endpoint"+answer);
         if (userBean.checkStringInfo(token) ) {
             r = Response.status(401).entity("Unauthorized!").build();
 

@@ -14,6 +14,7 @@ function ContestComponent({ toggleComponent }) {
   };
 
   const handleStatus = (event) => {
+    event.preventDefault();
     var status;
     console.log(event);
 
@@ -55,6 +56,7 @@ function ContestComponent({ toggleComponent }) {
   };
 
   const applyToContest = (event) => {
+    event.preventDefault();
     console.log(event);
 
     fetch("http://localhost:8080/projetofinal/rest/contest/application", {

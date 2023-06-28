@@ -168,6 +168,7 @@ public class Communication implements Serializable {
         // user responde a convite enviado por notificação. answer == 0 -> false REFUSE INVITE / answer == 1 -> true ACCEPT INVITE
         // método só pode ser usado por token, pq é o dono da notificação
         dto.Notification notifDto = null;
+        System.out.println("answer metodo"+answer);
 
         User user = tokenDao.findUserEntByToken(token);
         if (user != null) {
@@ -179,7 +180,7 @@ public class Communication implements Serializable {
 
                     ProjectMember projMember = notif.getProjectMember();
                     projMember.setAnswered(true);
-
+                    System.out.println("answer metodo para colocar set"+answer);
 
                     notif.setSeen(true);
                     notif.setNeedsInput(false);

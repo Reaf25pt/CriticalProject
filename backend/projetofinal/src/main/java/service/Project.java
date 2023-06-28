@@ -159,8 +159,8 @@ return r;
 
         if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
-        } else if (!userBean.checkUserPermission(token) || projBean.verifyProjectStatus(projId) ||!projBean.verifyPermissionToDeleteUser(token, projId, userId)) {
-           // TODO membro pode sair em que fases do proj ? neste momento n pode sair em ready, proposed, approved
+        } else if (!userBean.checkUserPermission(token) || projBean.verifyProjectStatusToModifyTask(projId) ||!projBean.verifyPermissionToDeleteUser(token, projId, userId)) {
+           // TODO membro pode sair em que fases do proj ? neste momento n pode sair em ready, proposed, approved, nem finished, nem cancelled
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);

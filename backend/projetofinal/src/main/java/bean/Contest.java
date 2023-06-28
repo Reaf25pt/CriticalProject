@@ -154,7 +154,6 @@ public class Contest {
             contestEnt.setDetails(editContest.getDetails());
             contestEnt.setRules(editContest.getRules());
             contestEnt.setMaxNumberProjects(editContest.getMaxNumberProjects());
-            // TODO CONFIRMAR Q n actualiza status nem vencedor porque não será  por aqui
 
             contestDao.merge(contestEnt);
             communicationBean.notifyAllContestManagers(1, contestEnt.getTitle());

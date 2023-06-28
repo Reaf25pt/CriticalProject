@@ -20,6 +20,46 @@ function Notifications() {
     return date.toLocaleDateString(); // Adjust the format as per your requirement
   };
 
+  function handleRemove(id) {
+    console.log(id);
+    fetch(
+      `http://localhost:8080/projetofinal/rest/communication/notification/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          token: user.token,
+        },
+      }
+    )
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log(data);
+        setNotification([]);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  function handleRead(id) {
+    console.log(id);
+    fetch(
+      `http://localhost:8080/projetofinal/rest/communication/notification/${id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: user.token,
+        },
+      }
+    )
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log(data);
+        setNotification([]);
+      })
+      .catch((err) => console.log(err));
+  }
+
   useEffect(() => {
     fetch(
       `http://localhost:8080/projetofinal/rest/communication/notifications`,
@@ -41,7 +81,8 @@ function Notifications() {
 
   function handleInvitation(status, notifId) {
     // event.preventDefault();
-
+    console.log(typeof status);
+    console.log(JSON.parse(status));
     console.log(status + " " + notifId);
 
     fetch(
@@ -51,7 +92,7 @@ function Notifications() {
         headers: {
           "Content-Type": "application/json",
           token: user.token,
-          status: status,
+          answer: status,
         },
       }
     ).then((response) => {
@@ -101,11 +142,15 @@ function Notifications() {
                     <div class="card-title d-flex justify-content-between">
                       <h5>{convertTimestampToDate(item.creationTime)}</h5>
                       <div>
-                        <BsTrash size={25} />
-                        {item.seen === true ? (
-                          <BsEnvelopeFill size={25} />
-                        ) : (
-                          <BsEnvelopeOpenFill size={25} />
+                        <BsTrash
+                          onClick={() => handleRemove(item.id)}
+                          size={25}
+                        />
+                        {item.seen /*  <BsEnvelopeFill size={25} /> */ ? null : (
+                          <BsEnvelopeOpenFill
+                            size={25}
+                            onClick={() => handleRead(item.id)}
+                          />
                         )}
                       </div>
                     </div>

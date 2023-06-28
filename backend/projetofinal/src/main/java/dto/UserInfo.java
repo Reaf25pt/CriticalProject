@@ -8,6 +8,7 @@ public class UserInfo {
     private String nickname;
     private String photo;
 
+private boolean openProfile;
 
     public UserInfo(int id, String firstName, String lastName, String nickname, String photo) {
         this.id = id;
@@ -58,5 +59,13 @@ public class UserInfo {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public boolean isOpenProfile() {
+        return openProfile;
+    }
+
+    public void setOpenProfile(boolean openProfile) {
+        this.openProfile = openProfile;
     }
 }
