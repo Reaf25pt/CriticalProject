@@ -5,16 +5,8 @@ import SelectComponent from "./SelectComponent";
 import TextAreaComponent from "./TextAreaComponent";
 import { userStore } from "../stores/UserStore";
 import { useParams } from "react-router-dom";
-import {
-  Gantt,
-  Task,
-  EventOption,
-  StylingOption,
-  ViewMode,
-  DisplayOption,
-  TaskListTable,
-} from "gantt-task-react";
-import "gantt-task-react/dist/index.css";
+import { Chart } from "react-google-charts";
+
 import ProjectMembersSelect from "./ProjectMembersSelect";
 import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
 import ModalEditTask from "./ModalEditTask";
@@ -63,6 +55,93 @@ function FormTask(listMembers) {
       .catch((err) => console.log(err));
   }, [task]);
 
+  function arrayToString(arr) {
+    return arr.join(",");
+  }
+
+  const columns = [
+    { type: "string", label: "Task ID" },
+    { type: "string", label: "Task Name" },
+    { type: "string", label: "Member" },
+    { type: "date", label: "Start Date" },
+    { type: "date", label: "End Date" },
+    { type: "number", label: "Duration" },
+    { type: "number", label: "Percent Complete" },
+    { type: "string", label: "Dependencies" },
+  ];
+
+  function calculateDurationInDays(start, end) {
+    const millisecondsPerDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
+    const percentage = 0;
+    // Convert the timestamps to Date objects
+    const date1 = new Date(start);
+    const date2 = new Date(end);
+    const now = new Date().getTime();
+
+    // Calculate the difference in milliseconds between the two dates
+    if (date1 <= now) {
+      const differenceInMillisecondsstartend = Math.abs(date2 - date1);
+      const differenceInMillisecondsnowend = Math.abs(date2 - now);
+
+      // Calculate the duration in days
+      const durationInDaysTasks = Math.floor(
+        differenceInMillisecondsstartend / millisecondsPerDay
+      );
+
+      const durationInDaysTasksfinshed = Math.floor(
+        differenceInMillisecondsnowend / millisecondsPerDay
+      );
+      const percentage =
+        ((durationInDaysTasksfinshed + 1) / durationInDaysTasks) * 100;
+
+      //return durationInDaysTasksfinshed + 1;
+      //return durationInDaysTasks;
+
+      return percentage;
+    } else {
+      return percentage;
+    }
+  }
+
+  console.log("calculatePercentage");
+  console.log(calculateDurationInDays(1687741200000, 1688086800000));
+
+  const rows = [
+    ...showTasks.map((task) => [
+      task.id.toString(),
+      task.title,
+      task.taskOwnerFirstName,
+      new Date(
+        new Date(task.startDate).getFullYear(),
+        new Date(task.startDate).getMonth(),
+        new Date(task.startDate).getDate()
+      ),
+      new Date(
+        new Date(task.finishDate).getFullYear(),
+        new Date(task.finishDate).getMonth(),
+        new Date(task.finishDate).getDate()
+      ),
+      null, //calculatePercentage(task.startDate, task.finishDate),
+      calculateDurationInDays(task.startDate, task.finishDate),
+
+      task.preRequiredTasks.length > 0
+        ? arrayToString(task.preRequiredTasks.map((item) => item.id))
+        : null,
+    ]),
+  ];
+
+  const options = {
+    height: 400,
+    gantt: {
+      trackHeight: 30,
+    },
+  };
+
+  console.log("rows");
+  console.log(rows);
+
+  var data2 = [columns, ...rows];
+
   useEffect(() => {
     fetch(`http://localhost:8080/projetofinal/rest/project/${id}`, {
       method: "GET",
@@ -73,28 +152,10 @@ function FormTask(listMembers) {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log(data);
         setProjInfo(data);
-        console.log(projInfo);
       })
       .catch((err) => console.log(err));
   }, []);
-
-  function formatTimestamp(timestamp) {
-    const date = new Date(timestamp);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const formattedDate = `${year}-${month}-${day}`;
-    return formattedDate;
-  }
-
-  const mappedTasks = showTasks.map((task) => ({
-    id: task.id,
-    name: task.title,
-    start: new Date(formatTimestamp(task.startDate)),
-    end: new Date(formatTimestamp(task.finishDate)),
-  }));
 
   function convertWord(word) {
     // Convert the word to lowercase first
@@ -455,20 +516,17 @@ function FormTask(listMembers) {
             </div>
           </div>
         </div>
-        {/* <div className="col-lg-12 bg-white mx-auto w-50 ">
-          {" "}
+        <div className="row mt-4 w-75 bg-secondary p-3 rounded-4 mx-auto">
           {showTasks && showTasks.length > 0 && (
-            <>
-              <Gantt
-                tasks={mappedTasks}
-                startDate="2023-01-01"
-                endDate="2023-12-30"
-                viewMode="Day"
-                barBackgroundColor="red"
-              />
-            </>
+            <Chart
+              chartType="Gantt"
+              data={data2}
+              options={options}
+              width="100%"
+              height="50%"
+            />
           )}
-        </div> */}
+        </div>
       </div>
     </div>
   );
