@@ -8,6 +8,7 @@ import { contestOpenStore } from "../stores/ContestOpenStore";
 import { BsEyeFill, BsCheck2, BsXLg } from "react-icons/bs";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { Tag } from "primereact/tag";
 
 function ContestOpen() {
   const [showComponentA, setShowComponentA] = useState(true);
@@ -15,6 +16,7 @@ function ContestOpen() {
   const setContestOpen = contestOpenStore((state) => state.setContestOpen);
   const contest = contestOpenStore((state) => state.contest);
   const [projects, setProjects] = useState([]);
+  const [showProjects, setShowProjects] = useState([]);
 
   const toggleComponent = () => {
     setShowComponentA(!showComponentA);
@@ -34,9 +36,6 @@ function ContestOpen() {
       .then((resp) => resp.json())
       .then((data) => {
         setContestOpen(data);
-        // console.log(data);
-        // setShowProjects(data);
-        // console.log(showProjects);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -51,20 +50,18 @@ function ContestOpen() {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        setProjects(data);
+        setShowProjects(data);
         console.log("Projetos");
         console.log(data);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [projects]);
 
   if (!contest) {
     return <div>Loading...</div>;
   }
 
   const renderLink = (rowData) => {
-    /*   console.log(rowData.id);
-    console.log(typeof rowData.id); */
     return (
       <Link to={`/home/projects/${rowData.id}`}>
         <BsEyeFill size={30} color="black" />
@@ -168,35 +165,9 @@ function ContestOpen() {
             >
               <div>
                 <div className="row mx-auto">
-                  {/* <div className="col-lg-4 bg-secondary rounded-5 p-4">
-                    <h3 className="bg-white p-1 rounded-5 text-center mb-4">
-                      Lista de projetos pendentes
-                    </h3>
-                    {projects.map((project) =>
-                      project.answered === false ? (
-                        <div className="row bg-white w-50 p-1 rounded-5 mx-auto mb-2 ">
-                          <div
-                            key={project.id}
-                            className="d-flex justify-content-between"
-                          >
-                            <div>
-                              <h4>{project.projectTitle}</h4>
-                            </div>
-                            <div>
-                              <Link to={`/home/projects/${project.id}`}>
-                                <BsEyeFill color="red" size={30} />
-                              </Link>
-                              <BsCheck2 size={30} color="green" />
-                              <BsXLg size={30} />
-                            </div>
-                          </div>
-                        </div>
-                      ) : null
-                    )}
-                  </div>{" "} */}
                   <div className="col-lg-6 mx-auto mt-5 bg-secondary p-3 rounded-4">
                     <DataTable
-                      value={projects}
+                      value={showProjects}
                       selectionMode="single  "
                       paginator
                       rows={5}
@@ -212,9 +183,14 @@ function ContestOpen() {
                         }}
                         sortable
                       />
-                      <Column header="" body={accept} />;
+                      <Column body={accept} header="" />;
                       <Column body={reject} header="" />;
-                      <Column body={answer} header="" />
+                      <Column
+                        field="accepted"
+                        body={answer}
+                        header=""
+                        sortable
+                      />
                       <Column body={renderLink} header="" />
                     </DataTable>
                   </div>
