@@ -17,9 +17,12 @@ public class ProjectChat {
     private String userSenderFirstName;
     private String userSenderLastName;
     private String userSenderPhoto;
-    private StatusProject status;
+   // private StatusProject status;
 
     private int projectId;
+
+    public ProjectChat() {
+    }
 
     public ProjectChat(int chatMessageId, Date creationTime, String message, int userSenderId, String userSenderFirstName, String userSenderLastName, String userSenderPhoto, StatusProject status, int projectId) {
         this.chatMessageId = chatMessageId;
@@ -29,7 +32,7 @@ public class ProjectChat {
         this.userSenderFirstName = userSenderFirstName;
         this.userSenderLastName = userSenderLastName;
         this.userSenderPhoto = userSenderPhoto;
-        this.status = status;
+      //  this.status = status;
         this.projectId = projectId;
     }
 
@@ -90,13 +93,6 @@ public class ProjectChat {
         this.userSenderPhoto = userSenderPhoto;
     }
 
-    public StatusProject getStatus() {
-        return status;
-    }
-
-    public void setStatus(StatusProject status) {
-        this.status = status;
-    }
 
     public int getProjectId() {
         return projectId;

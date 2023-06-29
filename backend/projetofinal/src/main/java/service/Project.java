@@ -149,6 +149,34 @@ return r;
         return r;}
 
 
+    // ADICIONAR PROJECT CHAT MESSAGE
+    @POST
+    @Path("/chat/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addProjectChatMessage(@PathParam("id") int projId, ProjectChat message, @HeaderParam("token") String token) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) || message== null ) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        }  else if (!userBean.checkUserPermission(token) || !projBean.isProjMember(projId, token) || projBean.verifyPermissionToChat(projId)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            ProjectChat newMessage = projBean.addMessageToProjectChat(projId, message, token);
+
+            if (newMessage!=null) {
+                r = Response.status(404).entity("Something went wrong!").build();
+            } else {
+
+                r = Response.status(200).entity(newMessage).build();
+            }
+        }
+        return r;}
+
+
     // GESTOR DE PROJECTO RESPONDE A PEDIDO PARA PARTICIPAR NO PROJECTO - actualiza info da relação do projMember
     @PATCH
     @Path("/selfinvitation")
@@ -545,6 +573,33 @@ return r;
         return r;
     }
 
+    // GET LIST OF CHAT MESSAGES FROM GIVEN PROJECT ID
+    @GET
+    @Path("/chat/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProjectChatMessages(@HeaderParam("token") String token, @PathParam("id") int projId) {
+        System.out.println("service chat projecto");
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token) || !projBean.isProjMember(projId, token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<dto.ProjectChat> list = projBean.getProjectChatList(token, projId);
+
+            if (list == null || list.size() == 0) {
+                r = Response.status(404).entity(list).build();
+            } else {
+
+                r = Response.status(200).entity(list).build();
+            }
+        }
+
+        return r;
+    }
 
 
     // GET LIST OF SKILLS TO SUGGEST TO PROJECT

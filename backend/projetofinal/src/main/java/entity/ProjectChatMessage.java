@@ -7,6 +7,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
+@Table(name = "projectchatmessage")
+@NamedQuery(name = "ProjectChatMessage.findListOfMessagesByProjId", query = "SELECT m FROM ProjectChatMessage m WHERE m.project.id = :id")
+
 public class ProjectChatMessage implements Serializable {
 
     private static final long serialVersionUID = 1L;

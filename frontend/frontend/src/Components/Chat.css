@@ -1,0 +1,232 @@
+#outerBoxMessage {
+  position: relative;
+  width: 80%;
+  display: flex;
+  min-height: 80vh;
+  padding-top: 100px;
+  background-color: rgb(233, 231, 231);
+}
+
+#leftSide {
+  position: relative;
+  flex: 40%;
+  border-right: 1px solid rgb(44, 43, 43);
+  overflow-y: auto;
+  font-size: 17px;
+  /* background-color: blueviolet;*/
+}
+
+#rightSide {
+  position: relative;
+  flex: 60%;
+  font-size: 17px;
+  /*  overflow-y: auto; */
+}
+
+#rightSide::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  /* background-color: rgb(206, 206, 211); */
+}
+
+#topChatContainer {
+  overflow-y: auto;
+  height: 100%;
+}
+
+#headerListChat {
+  position: relative;
+  width: 100%;
+  height: 60;
+  /*  background-color: aquamarine; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #9ebdd8;
+  height: 50px;
+}
+
+.rowEachUserChat {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid rgb(153, 151, 151);
+  cursor: pointer;
+}
+
+.rowEachUserChat:hover {
+  background-color: rgb(194, 194, 194);
+}
+
+.rowEachUserChat:active {
+  background-color: rgb(114, 94, 94);
+}
+
+#imageUserToChat {
+  position: relative;
+  border-radius: 50%;
+  /* overflow: hidden;*/
+
+  height: 45px;
+  width: 45px;
+}
+
+#headerChatBox {
+  position: relative;
+  width: 100%;
+  height: 60;
+  /*  background-color: aquamarine; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #9ebdd8;
+  height: 50px;
+}
+
+#chatBox {
+  position: relative;
+  width: 100%;
+  /*  overflow-y: scroll; */
+  overflow-y: auto;
+  height: 100%;
+  margin-top: 10px;
+}
+
+/* para cada uma das mensagens */
+.message {
+  position: relative;
+  display: flex;
+  width: 100%;
+  margin: 5px 0;
+}
+
+/*para formatar a propria mensagem*/
+.message p {
+  position: relative;
+  right: 0;
+  text-align: right;
+  max-width: 65%;
+  padding: 12px;
+  background: #ecc8c8;
+
+  border-radius: 10px;
+  /* font-size: ; */
+}
+
+/*para ficar com tick de ser mensagem*/
+.message p::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -14px;
+  width: 20px;
+  height: 11px;
+  background: linear-gradient(
+    135deg,
+    #ecc8c8 0%,
+    #ecc8c8 50%,
+    transparent 50%,
+    transparent
+  );
+}
+
+/*minhas msg*/
+.myMessage {
+  justify-content: flex-end;
+}
+
+/*msg de amigo*/
+.friendMessage {
+  justify-content: flex-start;
+}
+
+.friendMessage p {
+  background: #9ebdd8;
+  text-align: left;
+}
+
+/*para ficar com tick de ser mensagem*/
+.message.friendMessage p::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -14px;
+  width: 20px;
+  height: 11px;
+
+  background: linear-gradient(
+    225deg,
+    #9ebdd8 0%,
+    #9ebdd8 50%,
+    transparent 50%,
+    transparent
+  );
+}
+
+#chatBoxInput {
+  position: relative;
+  width: 100%;
+  height: 60px;
+  background: #f0f0f0;
+  padding: 15px;
+  display: flex;
+  border-radius: 10px;
+  /*  top: 500px; */
+  /* justify-content: ; */
+}
+
+#chatBox input {
+  position: relative;
+  width: 90%;
+  margin: 0 20px;
+  padding: 10px 20px;
+  border: none;
+  outline: none;
+  border-radius: 30px;
+
+  /*  font-size: ; */
+}
+
+.rowEachMessage {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  /*   border-bottom: 1px solid rgb(153, 151, 151);
+ */
+  cursor: pointer;
+}
+
+#messageDate {
+  font-size: 12px;
+}
+
+#topContainerWholeRightSideChat {
+  height: 61vh;
+  margin-bottom: 46px;
+  background-color: white;
+}
+
+#messageForUnexistentUser {
+  color: black;
+  font-size: 20px;
+  text-align: center;
+}
+
+#badgeMsgEachUser {
+  /*  background-color: red; */
+  color: red;
+  font-weight: bold;
+  /*   border-radius: 50%;
+  margin: -2rem 2.5rem;
+
+  position: absolute; */
+}

@@ -15,6 +15,7 @@ import ModalDeleteProjMember from "../Components/ModalDeleteProjMember";
 import InviteMember from "../Components/InviteMember";
 import ProjectMembersList from "../Components/ProjectMembersList";
 import ProjectMembersInvited from "../Components/ProjectMembersInvited";
+import ProjectChat from "../Components/ProjectChat";
 
 function ProjectOpen() {
   const [showComponentA, setShowComponentA] = useState(true);
@@ -361,8 +362,9 @@ function ProjectOpen() {
           role="tabpanel"
           aria-labelledby="tab4"
         >
-          <h3>Tab 4 Content</h3>
-          <p>This is the content for Tab 4.</p>
+          {/*  <h3>Tab 4 Content</h3> */}
+          <ProjectChat project={showProjects} />
+          {/*  <p>This is the content for Tab 4.</p> */}
         </div>
         <div
           class="tab-pane fade"

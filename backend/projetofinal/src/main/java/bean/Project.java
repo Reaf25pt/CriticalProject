@@ -6,6 +6,7 @@ import ENUM.StatusTask;
 import dto.*;
 import entity.Contest;
 import entity.ContestApplication;
+import entity.ProjectChatMessage;
 import entity.ProjectMember;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
@@ -51,6 +52,8 @@ public class Project implements Serializable {
     bean.Contest contestBean;
     @EJB
     dao.ProjectHistory recordDao;
+    @EJB
+    dao.ProjectChatMessage projChatDao;
 
 
     public Project() {
@@ -2132,5 +2135,69 @@ boolean res=false;
         }}
 
         return res;
+    }
+
+    public List<ProjectChat> getProjectChatList(String token, int projId) {
+        // obter lista de mensagens do chat de projecto, pelo seu ID
+
+        List<ProjectChat> listDto = new ArrayList<>();
+
+        List<ProjectChatMessage> listEnt = projChatDao.findListOfMessagesByProjId(projId);
+        if(listEnt!=null){
+            for (ProjectChatMessage m : listEnt){
+                listDto.add(convertProjChatEntToDto(m));
+
+            }
+        }
+     return listDto;
+    }
+
+    private ProjectChat convertProjChatEntToDto(ProjectChatMessage m) {
+        ProjectChat message = new ProjectChat();
+        message.setChatMessageId(m.getId());
+        message.setCreationTime(m.getCreationTime());
+        message.setMessage(m.getMessage());
+        message.setUserSenderId(m.getMessageSender().getUserId());
+        message.setUserSenderFirstName(m.getMessageSender().getFirstName());
+        message.setUserSenderLastName(m.getMessageSender().getLastName());
+        message.setUserSenderPhoto(m.getMessageSender().getPhoto());
+        message.setProjectId(m.getProject().getId());
+
+        return message;
+    }
+
+    public boolean verifyPermissionToChat(int projId) {
+        // chat apenas funciona para envio de mensagens se status do projecto não for CANCELLED ou FINISHED
+
+        boolean res=false;
+        entity.Project project = projDao.findProjectById(projId);
+        if(project!=null){
+            if(project.getStatus()==StatusProject.CANCELLED || project.getStatus()==StatusProject.FINISHED){
+                res= true; // n pode enviar mensagem
+            }
+        }return res;
+    }
+
+    public ProjectChat addMessageToProjectChat(int projId, ProjectChat message, String token) {
+        // adiciona nova mensagem ao chat do projecto
+ProjectChat messageDto = new ProjectChat();
+
+        entity.User user = tokenDao.findUserEntByToken(token);
+        if(user!=null){
+            entity.Project project = projDao.findProjectById(projId);
+            if(project!=null) {
+                ProjectChatMessage newMessage = new ProjectChatMessage();
+                newMessage.setCreationTime(Date.from(Instant.now()));
+                newMessage.setProject(project);
+                newMessage.setMessageSender(user);
+                newMessage.setMessage(message.getMessage());
+projChatDao.persist(newMessage);
+
+                messageDto=convertProjChatEntToDto(newMessage);
+
+
+            }
+        }
+return messageDto;
     }
 }
