@@ -1,8 +1,12 @@
 package dto;
 
-public class Profile {
-    private int userId;
-    private String token;
+import java.io.Serializable;
+import java.util.List;
+
+public class AnotherProfile {
+
+    private int id;
+
     private String email;
     private String firstName;
     private String lastName;
@@ -12,31 +16,24 @@ public class Profile {
     private String photo;
     private String bio;
     private boolean openProfile;
-    private boolean contestManager;
-    private boolean fillInfo;
 
-    private boolean noActiveProject;
 
-    public Profile(){}
+    private List<Hobby> hobbies;
 
-    public int getUserId() {
-        return userId;
+    private List<Skill> skills;
+
+    private List<ProjectMinimal> projects;
+
+
+    public AnotherProfile() {
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public int getId() {
+        return id;
     }
 
-    public boolean isContestManager() {
-        return contestManager;
-    }
-
-    public void setContestManager(boolean contestManager) {
-        this.contestManager = contestManager;
-    }
-
-    public String getToken() {
-        return token;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -45,10 +42,6 @@ public class Profile {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public String getFirstName() {
@@ -73,6 +66,14 @@ public class Profile {
 
     public void setOffice(String office) {
         this.office = office;
+    }
+
+    public int getOfficeInfo() {
+        return officeInfo;
+    }
+
+    public void setOfficeInfo(int officeInfo) {
+        this.officeInfo = officeInfo;
     }
 
     public String getNickname() {
@@ -108,28 +109,27 @@ public class Profile {
     }
 
 
-    public int getOfficeInfo() {
-        return officeInfo;
+    public List<Hobby> getHobbies() {
+        return hobbies;
     }
 
-    public void setOfficeInfo(int officeInfo) {
-        this.officeInfo = officeInfo;
+    public void setHobbies(List<Hobby> hobbies) {
+        this.hobbies = hobbies;
     }
 
-
-    public boolean isFillInfo() {
-        return fillInfo;
+    public List<Skill> getSkills() {
+        return skills;
     }
 
-    public void setFillInfo(boolean fillInfo) {
-        this.fillInfo = fillInfo;
+    public void setSkills(List<Skill> skills) {
+        this.skills = skills;
     }
 
-    public boolean isNoActiveProject() {
-        return noActiveProject;
+    public List<ProjectMinimal> getProjects() {
+        return projects;
     }
 
-    public void setNoActiveProject(boolean noActiveProject) {
-        this.noActiveProject = noActiveProject;
+    public void setProjects(List<ProjectMinimal> projects) {
+        this.projects = projects;
     }
 }

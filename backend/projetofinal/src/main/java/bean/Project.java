@@ -111,7 +111,7 @@ public class Project implements Serializable {
         return listKeywordDTO;
     }
 
-    private List<Skill> convertListSkillsDTO(List<entity.Skill> listSkills) {
+    public List<Skill> convertListSkillsDTO(List<entity.Skill> listSkills) {
         // convert skill ENTITY list to skill DTO list
 
         List<Skill> listSkillsDTO = new ArrayList<>();

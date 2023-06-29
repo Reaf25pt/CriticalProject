@@ -480,6 +480,36 @@ public class User {
     }
 
 
+    // GET USER PROFILE BY USER ID
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProject(@HeaderParam("token") String token,  @PathParam("id") int id) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token) || !userBean.checkUserHasOpenProfile(id)) {
+
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            AnotherProfile profile = userBean.getAnotherProfile(token, id);
+
+            if (profile == null ) {
+                r = Response.status(404).entity(profile).build();
+            } else {
+
+                r = Response.status(200).entity(profile).build();
+            }
+        }
+
+        return r;
+    }
+
+
     // GET LIST OF PROJECTS OF LOGGED USER
     @GET
     @Path("/ownprojects")

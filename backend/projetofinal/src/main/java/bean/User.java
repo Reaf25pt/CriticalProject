@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequestScoped
 public class User implements Serializable {
@@ -1130,13 +1131,108 @@ user.setOpenProfile(u.isOpenProfile());
             List<entity.User> listEnt = userDao.findUserContainingStr(str.toLowerCase());
 
             if (listEnt != null) {
-                for (entity.User u : listEnt) {
+                List<entity.User> tempList = listEnt.stream().filter(userE -> userE.getUserId() != user.getUserId()).collect(Collectors.toList());
+// remove o pp user que faz a pesquisa
+if (tempList!=null){
+
+
+                for (entity.User u : tempList) {
                         list.add(convertUserEntToMinimalDto(u));
                     }
                 }
             }
+        }
+return list;
+    }
+
+    public AnotherProfile getAnotherProfile(String token, int userId) {
+        // obter a informação de um perfil ID se o seu perfil for aberto
+        AnotherProfile profile = new AnotherProfile();
+        entity.User user = userDao.findUserById(userId);
+        if(user!=null) {
+            profile.setId(user.getUserId());
+            profile.setEmail(user.getEmail());
+            profile.setFirstName(user.getFirstName());
+            profile.setLastName(user.getLastName());
+            profile.setOffice(user.getOffice().getCity());
+            profile.setOfficeInfo(user.getOffice().ordinal());
+            // TODO testar q nulos não partem o programa
+            profile.setNickname(user.getNickname());
+            profile.setPhoto(user.getPhoto());
+            profile.setBio(user.getBio());
+            profile.setOpenProfile(user.isOpenProfile());
+
+            if(user.getListSkills()!=null){
+                profile.setSkills(projBean.convertListSkillsDTO(user.getListSkills()));
+            }
+
+            if(user.getListHobbies()!=null){
+                profile.setHobbies(convertListHobbiesToDto(user.getListHobbies()));
+            }
+
+            if(getListOfProjectsOfGivenUser(userId)){
+                // user tem projectos associados ao seu perfil
+profile.setProjects(getUserProjects(userId));
+            }
+
+
+        }
+
+    return profile;
+    }
+
+    private List<ProjectMinimal> getUserProjects(int userId) {
+        // obtém lista de projectos de dado user
+List<ProjectMinimal> list = new ArrayList<>();
+
+        List<entity.Project> listEnt = projMemberDao.findListOfProjectsByUserId(userId);
+if(listEnt!=null){
+    for (entity.Project p : listEnt){
+        ProjectMinimal proj = new ProjectMinimal();
+        proj.setId(p.getId());
+        proj.setTitle(p.getTitle());
+        proj.setStatus(p.getStatus().getStatus());
+        proj.setStatusInt(p.getStatus().ordinal());
+        proj.setCreationDate(p.getCreationDate());
+        list.add(proj);
+    }
+}
+
 
 return list;
+    }
+
+    private boolean getListOfProjectsOfGivenUser(int userId) {
+        // verifica se user tem lista de projectos (active and not removed)
+     boolean res=false;
+        List<entity.Project> list = projMemberDao.findListOfProjectsByUserId(userId);
+   if(list!=null){
+       res=true;
+   }
+   return res;
+    }
+
+    private List<Hobby> convertListHobbiesToDto(List<entity.Hobby> listHobbies) {
+List<Hobby> listDtos = new ArrayList<>();
+
+for (entity.Hobby h : listHobbies){
+    listDtos.add(convertToHobbyDto(h));
+}
+return listDtos;
+    }
+
+
+    public boolean checkUserHasOpenProfile(int id) {
+        //verifica se userId tem perfil aberto e a sua conta está validada, para que possa ser visitado por outros users
+
+        boolean res= false;
+        entity.User user = userDao.findUserById(id);
+        if(user!=null){
+            if(user.isOpenProfile()){
+            res=true;
+        }}
+
+        return res;
     }
 }
 

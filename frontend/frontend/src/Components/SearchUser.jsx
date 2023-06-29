@@ -97,6 +97,18 @@ function SearchUser() {
     setSuggestions([]);
   };
 
+  function handleSeeProfile(userId) {
+    // event.preventDefault();
+
+    console.log(userId);
+  }
+
+  function handleSendMessage(userId) {
+    // event.preventDefault();
+
+    console.log(userId);
+  }
+
   return (
     <div className="form-outline">
       <InputComponent
@@ -129,6 +141,7 @@ function SearchUser() {
                         src="https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png"
                         width={30}
                         height={30}
+                        alt=""
                       />
                     ) : (
                       <img
@@ -136,6 +149,7 @@ function SearchUser() {
                         width={35}
                         height={35}
                         className="rounded-5"
+                        alt=""
                       />
                     )}
                   </div>
@@ -146,18 +160,25 @@ function SearchUser() {
                     {item.lastName}
                   </div>
                   <div className="col-lg-1">
-                    {item.openProfile === false ? (
+                    {!item.openProfile ? (
                       <BsEyeSlashFill size={25} />
                     ) : (
                       <Link>
-                        <BsEyeFill size={25} color="black" />
+                        <BsEyeFill
+                          size={25}
+                          color="black"
+                          onClick={() => handleSeeProfile(item.id)}
+                        />
                       </Link>
                     )}
                   </div>
                   <div className="col-lg-1">
                     <Link>
                       {" "}
-                      <BsMessenger color="black" />
+                      <BsMessenger
+                        color="black"
+                        onClick={() => handleSendMessage(item.id)}
+                      />
                     </Link>
                   </div>
                 </div>
