@@ -133,11 +133,11 @@ function Skill() {
           As Minhas Skills:
         </h3>
       </div>
-      <div class="row mb-3 mt-3  d-flex justify-content-between d-flex align-items-center">
-        <div className="col-lg-5 ">
+      <div class="row mb-3 mt-3 mb-3 d-flex justify-content-between d-flex align-items-center">
+        <div className="col-6 col-sm-6 col-md-4 col-lg-8  ">
           <input
             type="search"
-            class="rounded  "
+            class="rounded col-lg-12 p-1 "
             placeholder="Adicionar skill"
             required={true}
             aria-label="Search"
@@ -146,15 +146,8 @@ function Skill() {
             name="skillInput"
             defaultValue={""}
             onChange={handleChange}
-            /*    onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                handleClick(event);
-              } else {
-                handleSearch(search);
-              }
-            }} */
           />{" "}
-          <div className="dropdownz">
+          <div className="dropdownz ">
             {suggestions &&
               suggestions
                 .filter((item) => {
@@ -175,8 +168,8 @@ function Skill() {
                 ))}
           </div>
         </div>
-        <div class="form-group col-lg-4">
-          <div class="input-group rounded">
+        <div class="form-group col-2 col-sm-6 col-md-6 col-lg-2">
+          <div class="input-group ">
             <SelectSkillType
               name="skillType"
               id="skillType"
@@ -189,7 +182,7 @@ function Skill() {
             </span> */}
           </div>
         </div>
-        <div className="col-lg-2">
+        <div className="col-2 col-sm-2 col-md-2 col-lg-2">
           <ButtonComponent onClick={handleClick} name={"+"} />
         </div>
       </div>
@@ -198,15 +191,15 @@ function Skill() {
           <BsSearch />
         </span> */}
 
-      <div className="row  d-flex justify-content-around  ">
+      <div className="row">
         {showSkills && showSkills.length !== 0 ? (
-          <div className="row d-flex   ">
+          <div className="row">
             {showSkills.map(
               (skill) =>
                 skill.skillType === 0 ? (
                   <div
                     key={skill.id}
-                    className="d-flex mx-auto  w-75  bg-danger m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
+                    className="col-7 col-lg-7 mx-auto   bg-danger m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
                   >
                     <div className="col-lg-10 ">
                       <h4>{skill.title} </h4>{" "}
@@ -223,7 +216,7 @@ function Skill() {
                 ) : skill.skillType === 1 ? (
                   <div
                     key={skill.id}
-                    className="d-flex mx-auto w-75  bg-success m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
+                    className="col-7 col-lg-7  mx-auto  bg-success m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
                   >
                     <div className="col-lg-10  ">
                       {" "}
@@ -241,9 +234,9 @@ function Skill() {
                 ) : skill.skillType === 2 ? (
                   <div
                     key={skill.id}
-                    className="bg-primary d-flex mx-auto w-75   m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
+                    className=" col-7  col-lg-7 bg-primary d-flex mx-auto  m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
                   >
-                    <div className="col-lg-10">
+                    <div className="col-lg-10 overflow-auto">
                       {" "}
                       <h4>{skill.title} </h4>{" "}
                     </div>
@@ -260,7 +253,7 @@ function Skill() {
                 ) : (
                   <div
                     key={skill.id}
-                    className="bg-warning d-flex mx-auto  w-75  m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1 "
+                    className="col-7 col-lg-7 mx-auto  bg-warning d-flex mx-auto   m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1 "
                   >
                     <div className="col-lg-10">
                       {" "}

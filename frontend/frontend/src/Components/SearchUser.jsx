@@ -122,9 +122,25 @@ function SearchUser() {
         .slice(0, 10) */
             .map((item) => (
               <option key={item.id} onClick={() => handleSelection(item)}>
-                <div className="row d-flex justify-content-around">
-                  <div className="col-lg-7">
-                    {item.photo}
+                <div className="row d-flex justify-content-around p-2 ">
+                  <div className="col-lg-2 ">
+                    {item.photo === null ? (
+                      <img
+                        src="https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png"
+                        width={30}
+                        height={30}
+                      />
+                    ) : (
+                      <img
+                        src={item.photo}
+                        width={35}
+                        height={35}
+                        className="rounded-5"
+                      />
+                    )}
+                  </div>
+
+                  <div className="col-lg-5">
                     {item.firstName}
                     {emptyStr}
                     {item.lastName}

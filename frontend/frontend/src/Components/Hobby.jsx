@@ -119,7 +119,7 @@ function Hobby() {
           </h3>{" "}
         </div>
         <div class="row mb-3 mt-3 d-flex justify-content-between d-flex align-items-center">
-          <div className="col-lg-8">
+          <div className="col-10 col-sm-10 col-md-10 col-lg-10">
             <input
               type="search"
               class="form-control rounded "
@@ -141,22 +141,14 @@ function Hobby() {
             />
             <div className="dropdown bg-white">
               {suggestions &&
-                suggestions
-                  /*      .filter((item) => {
-                    return (
-                      item &&
-                      item.title.toLowerCase().includes(search) 
-                    );
-                  }) */
-                  .slice(0, 10)
-                  .map((item) => (
-                    <option key={item.id} onClick={() => handleSelection(item)}>
-                      <div>{item.title}</div>
-                    </option>
-                  ))}
+                suggestions.slice(0, 10).map((item) => (
+                  <option key={item.id} onClick={() => handleSelection(item)}>
+                    <div>{item.title}</div>
+                  </option>
+                ))}
             </div>
           </div>
-          <div className="col-lg-2">
+          <div className="col-2 col-sm-2 col-md-2 col-lg-2">
             <ButtonComponent onClick={handleClick} name={"+"} />
           </div>
         </div>
@@ -166,7 +158,7 @@ function Hobby() {
               {showHobbies.map((hobby) => (
                 <div
                   key={hobby.id}
-                  className="bg-dark mx-auto w-75  m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
+                  className="col-6 bg-dark mx-auto m-1 p-2 rounded-2 d-flex align-items-center text-white border border-white mb-1"
                 >
                   <div className="col-lg-10">{hobby.title} </div>
                   <div className="col-lg-2">

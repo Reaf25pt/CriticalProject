@@ -218,35 +218,35 @@ function Profile() {
                 />
               )}
             </div>
-            <div class="row mt-5">
-              <div class="col-lg-5 ">
-                <div class="p-4 bg-secondary rounded-3">
-                  <div>
-                    <h3 className="bg-white text-center text-nowrap rounded-5 p-0  ">
-                      Os meus Projetos:
-                    </h3>
-                    <DataTable value={showProjects} selectionMode="single ">
-                      <Column field="title" header="Nome do Projeto" sortable />
-                      <Column field="status" header="Estado" sortable />
-                      <Column
-                        field="creationDate"
-                        header="Data de Registo"
-                        sortable
-                        body={(rowData) =>
-                          convertTimestampToDate(rowData.creationDate)
-                        }
-                      />
-
-                      <Column body={renderLink} header="#" />
-                    </DataTable>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-4 ">
+            <div class="row mt-5 mb-5 d-flex justify-content-start">
+              <div class="col-12 col-sm-12 col-md-12 col-lg-6 mb-5 ">
                 <Skill />
               </div>
-              <div class="col-lg-3 ">
+              <div class="col-12 col-sm-12 col-md-12 col-lg-6 ">
                 <Hobby />
+              </div>
+            </div>
+            <div class="row mt-5">
+              <div class="col-auto col-sm-auto col-md-12 col-lg-8 p-4 bg-secondary rounded-3 mx-auto">
+                <div className="">
+                  <h3 className="bg-white text-center text-nowrap rounded-5 p-0  ">
+                    Os meus Projetos:
+                  </h3>
+                  <DataTable value={showProjects} selectionMode="single ">
+                    <Column field="title" header="Nome do Projeto" sortable />
+                    <Column field="status" header="Estado" sortable />
+                    <Column
+                      field="creationDate"
+                      header="Data de Registo"
+                      sortable
+                      body={(rowData) =>
+                        convertTimestampToDate(rowData.creationDate)
+                      }
+                    />
+
+                    <Column body={renderLink} header="#" />
+                  </DataTable>
+                </div>
               </div>
             </div>
           </div>
