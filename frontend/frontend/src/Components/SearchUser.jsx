@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { userStore } from "../stores/UserStore";
 
-import ButtonComponent from "./ButtonComponent";
 import InputComponent from "../Components/InputComponent";
+import { BsEyeFill, BsEyeSlashFill, BsMessenger } from "react-icons/bs";
+import { Link } from "react-router-dom";
 
 function SearchUser() {
   const [credentials, setCredentials] = useState({});
@@ -121,17 +122,32 @@ function SearchUser() {
         .slice(0, 10) */
             .map((item) => (
               <option key={item.id} onClick={() => handleSelection(item)}>
-                <div className="">
-                  {item.firstName}
-                  {emptyStr}
-                  {item.lastName}
+                <div className="row d-flex justify-content-around">
+                  <div className="col-lg-7">
+                    {item.photo}
+                    {item.firstName}
+                    {emptyStr}
+                    {item.lastName}
+                  </div>
+                  <div className="col-lg-1">
+                    {item.openProfile === false ? (
+                      <BsEyeSlashFill size={25} />
+                    ) : (
+                      <Link>
+                        <BsEyeFill size={25} color="black" />
+                      </Link>
+                    )}
+                  </div>
+                  <div className="col-lg-1">
+                    <Link>
+                      {" "}
+                      <BsMessenger color="black" />
+                    </Link>
+                  </div>
                 </div>
               </option>
             ))}
       </div>
-      {/* <div className="col-lg-1 mx-auto">
-        <ButtonComponent onClick={handleClick} name={"Convidar"} />
-      </div> */}
     </div>
   );
 }
