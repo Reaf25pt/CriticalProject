@@ -54,6 +54,7 @@ function SearchUser() {
       });
   };
 
+  /*
   const handleClick = (event) => {
     event.preventDefault();
 
@@ -66,7 +67,7 @@ function SearchUser() {
       /*  const userToInvite = {
           id: credentials.id,
         }; */
-      fetch("http://localhost:8080/projetofinal/rest/project/newmember", {
+  /*    fetch("http://localhost:8080/projetofinal/rest/project/newmember", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -85,9 +86,9 @@ function SearchUser() {
       document.getElementById("nameInput").value = "";
       setCredentials({});
     }
-  };
+  };*/
 
-  const handleSelection = (user) => {
+  /* const handleSelection = (user) => {
     const name = user.firstName + emptyStr + user.lastName;
     credentials.nameInput = name;
     credentials.id = user.id;
@@ -95,7 +96,7 @@ function SearchUser() {
     document.getElementById("nameInput").value = name;
 
     setSuggestions([]);
-  };
+  };*/
 
   function handleSeeProfile(userId) {
     // event.preventDefault();
@@ -133,7 +134,7 @@ function SearchUser() {
         })
         .slice(0, 10) */
             .map((item) => (
-              <option key={item.id} onClick={() => handleSelection(item)}>
+              <option key={item.id} /* onClick={() => handleSelection(item)} */>
                 <div className="row d-flex justify-content-around p-2 ">
                   <div className="col-lg-2 ">
                     {item.photo === null ? (
@@ -163,11 +164,11 @@ function SearchUser() {
                     {!item.openProfile ? (
                       <BsEyeSlashFill size={25} />
                     ) : (
-                      <Link>
+                      <Link to={`/home/profile/${item.id}`}>
                         <BsEyeFill
                           size={25}
                           color="black"
-                          onClick={() => handleSeeProfile(item.id)}
+                          //onClick={() => handleSeeProfile(item.id)}
                         />
                       </Link>
                     )}
