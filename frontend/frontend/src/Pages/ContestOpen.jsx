@@ -70,10 +70,16 @@ function ContestOpen() {
   };
 
   const accept = (rowData) => {
-    if (rowData.answered === true) {
+    if (rowData.answered) {
       return <div></div>;
     } else {
-      return <BsCheck2 size={30} color="green" />;
+      return (
+        <BsCheck2
+          size={30}
+          onClick={() => handleApplication(1, rowData.id)}
+          color="green"
+        />
+      );
     }
 
     /*   console.log(rowData.id);
@@ -81,21 +87,27 @@ function ContestOpen() {
   };
 
   const reject = (rowData) => {
-    if (rowData.answered === true) {
+    if (rowData.answered) {
       return <div></div>;
     } else {
-      return <BsXLg size={30} color="red" />;
+      return (
+        <BsXLg
+          size={30}
+          onClick={() => handleApplication(0, rowData.id)}
+          color="red"
+        />
+      );
     }
   };
 
   const answer = (rowData) => {
-    if (rowData.accepted == false && rowData.answered === true) {
+    if (!rowData.accepted && rowData.answered) {
       return (
         <div className="bg-danger text-white text-center rounded-4">
           Recusado
         </div>
       );
-    } else if (rowData.accepted == true && rowData.answered === true) {
+    } else if (rowData.accepted && rowData.answered) {
       return (
         <div className="bg-success text-white text-center rounded-4">
           Aprovado
@@ -105,6 +117,39 @@ function ContestOpen() {
       return <p></p>;
     }
   };
+
+  function handleApplication(status, applicationId) {
+    var status;
+
+    /* if (event === 0) {
+        status = 0;
+      } else if (event === 1) {
+        status = 1;
+      } */
+
+    console.log(status + " " + applicationId);
+
+    fetch("http://localhost:8080/projetofinal/rest/contest/application", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        token: user.token,
+        answer: status,
+        applicationId: applicationId,
+        contestId: id,
+      },
+    }).then((response) => {
+      if (response.status === 200) {
+        console.log(response);
+        setProjects([]);
+        alert("candidatura respondida");
+
+        //navigate("/home", { replace: true });
+      } else {
+        alert("Algo correu mal. Tente novamente");
+      }
+    });
+  }
 
   return (
     <div>
@@ -183,8 +228,18 @@ function ContestOpen() {
                         }}
                         sortable
                       />
-                      <Column body={accept} header="" />;
-                      <Column body={reject} header="" />;
+                      <Column
+                        body={accept}
+                        /*                         onClick={() => handleApplication(1, showProjects.id)}
+                         */ header=""
+                      />
+                      ;
+                      <Column
+                        body={reject}
+                        /*                         onClick={() => handleApplication(0, showProjects.id)}
+                         */ header=""
+                      />
+                      ;
                       <Column
                         field="accepted"
                         body={answer}

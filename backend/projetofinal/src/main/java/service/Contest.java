@@ -151,7 +151,7 @@ public class Contest {
 
         } else if (!userBean.checkUserPermission(token) || !contestBean.verifyUserProfile(token) || !contestBean.verifyPermissionToApply( contestId)|| contestBean.checkApplicationsLimit(contestId) ) {
             r = Response.status(403).entity("Forbidden!").build();
-
+// TODO verificar se projecto está cancelado? entretanto pode ter mudado de status
         } else {
 
             userBean.updateSessionTime(token);

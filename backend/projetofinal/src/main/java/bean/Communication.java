@@ -656,8 +656,32 @@ record.setProject(task.getProject());
         notif.setNotificationOwner(pm.getUserInvited());
         notifDao.persist(notif);
         notifyRealTime(notif, pm.getUserInvited());
-
-
-
     }
+
+    public void recordProjectApplicationResult(User user, Project project, int answer) {
+        // guarda registo no histórico do projecto de ser aceite (1) / rejeitado (0) a concurso
+        //TODO faz sentido identificar o gestor de concurso, autor da decisão?
+        System.out.println("record application response");
+        ProjectHistory record = new ProjectHistory();
+        record.setCreationTime(Date.from(Instant.now()));
+        record.setAuthor(user);
+        record.setProject(project);
+
+        if(answer == 0){
+            //rejeitado
+            record.setMessage("A candidatura para participar no concurso foi rejeitada");
+
+        }else if(answer==1){
+            //aceite
+            record.setMessage("A candidatura para participar no concurso foi aceite");
+
+        }
+
+        System.out.println("FIM record application response");
+
+        recordDao.persist(record);
+    }
+
+
+
 }

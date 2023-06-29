@@ -355,6 +355,10 @@ application.setAccepted(a.isAccepted());
         // Perfil A responde a candidatura de projecto aceitando (answer = 1) ou rejeitando (answer =0)
         System.out.println("metodo " + applicationId);
 boolean res=false;
+
+        entity.User user = tokenDao.findUserEntByToken(token);
+        if(user!=null){
+
         ContestApplication applicationEnt = applicationDao.find(applicationId);
 
         if(applicationEnt!=null){
@@ -367,7 +371,9 @@ boolean res=false;
                 // Alterar status do projecto para approved
                 applicationEnt.getProject().setStatus(StatusProject.APPROVED);
                 projDao.merge(applicationEnt.getProject());
-// TODO adicionar record para manter no histórico do projecto
+                System.out.println("record application call");
+
+                communicationBean.recordProjectApplicationResult(user, applicationEnt.getProject(), answer);
                         //TODO testar notificacoes
 
                 // sempre que aceita algum projecto tem de verificar se limite de projectos a concurso foi atingido. Se for, terá de automaticamente recusar os restantes projectos
@@ -381,15 +387,20 @@ boolean res=false;
                 applicationEnt.getProject().setStatus(StatusProject.READY);
                 projDao.merge(applicationEnt.getProject());
                 res=true;
+                System.out.println("record application call");
+
+                communicationBean.recordProjectApplicationResult(user, applicationEnt.getProject(), answer);
+
             }
             communicationBean.notifyProjectMembersOfApplicationResponse(applicationEnt.getProject(), answer);
-        }
+        }}
 
 return res;
     }
 
     private void verifyLimitApplicationsToContestHasBeanReached(entity.Contest contest) {
         // verifica se limite de projectos aceites a um concurso foi atingido. Se sim, terá de recusar todos os projectos à espera de resposta
+        System.out.println("verifica limite vagas atingido");
 
         boolean res = checkApplicationsLimit(contest.getId());
 
@@ -409,6 +420,8 @@ return res;
                 a.setAccepted(false);
                 applicationDao.merge(a);
                 //TODO Registar no historico do proj
+
+
             }
         }
     }
