@@ -28,10 +28,7 @@ function ProjectOpen() {
     setShowComponentA(!showComponentA);
   };
 
-  const { id } = useParams();
-
-  console.log(id);
-  console.log(typeof id);
+  const { id } = useParams(); // id do projecto
 
   useEffect(() => {
     console.log("use effect projecto");
@@ -356,7 +353,7 @@ function ProjectOpen() {
           role="tabpanel"
           aria-labelledby="tab3"
         >
-          <FormTask projStatus={showProjects} listMembers={showMembers} />
+          <FormTask project={showProjects} listMembers={showMembers} />
         </div>
         <div
           class="tab-pane fade"

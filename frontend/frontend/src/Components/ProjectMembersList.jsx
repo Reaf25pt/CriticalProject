@@ -113,7 +113,8 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
             <div className="col-lg-6 ">
               {member.userInvitedFirstName} {member.userInvitedLastName}
             </div>
-            {showProjects.manager ? (
+            {showProjects.manager &&
+            (showProjects.statusInt === 0 || showProjects.statusInt === 4) ? (
               <>
                 <div className="col-lg-1">
                   <ModalDeleteProjMember
@@ -222,7 +223,8 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
         ))}
       </div>
 
-      {showProjects.member ? (
+      {showProjects.member &&
+      (showProjects.statusInt === 0 || showProjects.statusInt === 4) ? (
         <div className="col-lg-4 mx-auto mb-4">
           <ButtonComponent
             onClick={handleRemove}

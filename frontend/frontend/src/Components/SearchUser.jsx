@@ -32,7 +32,7 @@ function SearchUser() {
     //setValue(searchStr);
 
     fetch(
-      `http://localhost:8080/projetofinal/rest/project/possiblemembers?name=${searchStr}`,
+      `http://localhost:8080/projetofinal/rest/user/suggestion?name=${searchStr}`,
       {
         method: "GET",
         headers: {
@@ -101,7 +101,7 @@ function SearchUser() {
       <InputComponent
         type="search"
         class="form-control rounded "
-        placeholder="Nome"
+        placeholder="Procurar utilizador "
         required={true}
         aria-label="Search"
         aria-describedby="search-addon"

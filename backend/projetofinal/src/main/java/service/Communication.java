@@ -38,7 +38,7 @@ public class Communication {
             List<Notification> list = comBean.getOwnNotificationList(token);
 
             if (list == null || list.size() == 0) {
-                r = Response.status(404).entity("Not found").build();
+                r = Response.status(404).entity(list).build();
             } else {
 
                 r = Response.status(200).entity(list).build();

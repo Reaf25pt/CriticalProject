@@ -1119,5 +1119,24 @@ return projectsList;
 user.setOpenProfile(u.isOpenProfile());
         return user;
     }
+
+    public List<UserInfo> getUsersToSuggest(String str, String token) {
+        // lista de users cujo nome ou alcunha fazem match com string inserida na pesquisa
+
+        List<UserInfo> list = new ArrayList<>();
+
+        entity.User user = tokenDao.findUserEntByToken(token);
+        if (user != null) {
+            List<entity.User> listEnt = userDao.findUserContainingStr(str.toLowerCase());
+
+            if (listEnt != null) {
+                for (entity.User u : listEnt) {
+                        list.add(convertUserEntToMinimalDto(u));
+                    }
+                }
+            }
+
+return list;
+    }
 }
 

@@ -16,7 +16,7 @@ function Start() {
             aria-selected="true"
             style={{ background: "#C01722", color: "white" }}
           >
-            Inicio
+            Início
           </button>
         </li>
       </ul>

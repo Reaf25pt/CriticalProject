@@ -137,9 +137,9 @@ function Notifications() {
         >
           {showAllNotifications && showAllNotifications.length > 0 ? (
             <div className="row mx-auto col-10 col-md-8 col-lg-6 mt-5">
-              <div class="card bg-light">
-                {showAllNotifications.map((item) => (
-                  <div class="card-body">
+              {showAllNotifications.map((item) => (
+                <div class="card bg-light card border-primary mb-3">
+                  <div class="card-body ">
                     <div class="card-title d-flex justify-content-between">
                       <h5>{convertTimestampToDate(item.creationTime)}</h5>
                       <div>
@@ -157,7 +157,7 @@ function Notifications() {
                               data-bs-placement="top"
                             >
                               {" "}
-                              <BsEnvelopeOpenFill
+                              <BsEnvelopeFill
                                 size={25}
                                 onClick={() => handleRead(item.id)}
                               />
@@ -195,8 +195,8 @@ function Notifications() {
                       ) : null}
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           ) : (
             <p class="card-text">Não tem notificações</p>

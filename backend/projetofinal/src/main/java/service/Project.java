@@ -391,7 +391,7 @@ return r;
             List<Task> tasks = projBean.getTasksList(projId);
 
             if (tasks == null || tasks.size() == 0) {
-                r = Response.status(404).entity("Not found").build();
+                r = Response.status(404).entity(tasks).build();
             } else {
 
                 r = Response.status(200).entity(tasks).build();
@@ -420,7 +420,7 @@ return r;
             List<dto.Project> projects = projBean.getAllProjectsList(token);
 
             if (projects == null || projects.size() == 0) {
-                r = Response.status(404).entity("Not found").build();
+                r = Response.status(404).entity(projects).build();
             } else {
 
                 r = Response.status(200).entity(projects).build();
@@ -448,7 +448,7 @@ return r;
             dto.Project project = projBean.getProject(token, id);
 
             if (project == null ) {
-                r = Response.status(404).entity("Not found").build();
+                r = Response.status(404).entity(project).build();
             } else {
 
                 r = Response.status(200).entity(project).build();
@@ -477,7 +477,7 @@ return r;
             List<dto.ProjectMember> projMembers = projBean.getProjectMembers(id);
 
             if (projMembers == null || projMembers.size() == 0) {
-                r = Response.status(404).entity("Not found").build();
+                r = Response.status(404).entity(projMembers).build();
             } else {
 
                 r = Response.status(200).entity(projMembers).build();

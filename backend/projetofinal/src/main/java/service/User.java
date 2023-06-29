@@ -441,10 +441,38 @@ public class User {
             List<UserInfo> users = userBean.getAllUsers(token);
 
             if (users == null || users.size() == 0) {
-                r = Response.status(404).entity("Not found").build();
+                r = Response.status(404).entity(users).build();
             } else {
 
                 r = Response.status(200).entity(users).build();
+            }
+        }
+
+        return r;
+    }
+
+    // GET LIST OF USERS TO SUGGEST
+    @GET
+    @Path("/suggestion")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUsersToSuggest(@QueryParam("name") String name,  @HeaderParam("token") String token) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<UserInfo> list = userBean.getUsersToSuggest(name, token);
+
+            if (list == null || list.size() == 0) {
+                r = Response.status(404).entity(list).build();
+            } else {
+
+                r = Response.status(200).entity(list).build();
             }
         }
 
@@ -472,7 +500,7 @@ public class User {
             List<Project> projects = userBean.getOwnProjectsList(token);
 
             if (projects == null || projects.size() == 0) {
-                r = Response.status(404).entity("Not found").build();
+                r = Response.status(404).entity(projects).build();
             } else {
 
                 r = Response.status(200).entity(projects).build();
@@ -502,7 +530,7 @@ public class User {
             List<Hobby> hobbies = userBean.getOwnHobbiesList(token);
 
             if (hobbies == null || hobbies.size() == 0) {
-                r = Response.status(404).entity("Not found").build();
+                r = Response.status(404).entity(hobbies).build();
             } else {
 
                 r = Response.status(200).entity(hobbies).build();
@@ -531,7 +559,7 @@ public class User {
             List<Skill> skills = userBean.getOwnSkillsList(token);
 
             if (skills == null || skills.size() == 0) {
-                r = Response.status(404).entity("Not found").build();
+                r = Response.status(404).entity(skills).build();
             } else {
 
                 r = Response.status(200).entity(skills).build();
@@ -616,7 +644,7 @@ public class User {
             HashMap<Integer, String> list = userBean.getOfficeList();
 
             if (list == null ) {
-                r = Response.status(404).entity("Not found").build();
+                r = Response.status(404).entity(list).build();
             } else {
                 r = Response.status(200).entity(list).build();
             }
@@ -643,7 +671,7 @@ public class User {
             HashMap<Integer, String> list = userBean.getSkillTypesList();
 
             if (list == null ) {
-                r = Response.status(404).entity("Not found").build();
+                r = Response.status(404).entity(list).build();
             } else {
                 r = Response.status(200).entity(list).build();
             }

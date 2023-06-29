@@ -241,7 +241,7 @@ public class Contest {
             dto.Contest contest = contestBean.getContest(token, id);
 
             if (contest == null ) {
-                r = Response.status(404).entity("Not found").build();
+                r = Response.status(404).entity(contest).build();
             } else {
 
                 r = Response.status(200).entity(contest).build();
