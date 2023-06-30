@@ -10,6 +10,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Tag } from "primereact/tag";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import ContestApplications from "../Components/ContestApplications";
 
 function ContestOpen() {
   const [showComponentA, setShowComponentA] = useState(true);
@@ -36,6 +37,7 @@ function ContestOpen() {
       .then((resp) => resp.json())
       .then((data) => {
         setContestOpen(data);
+        console.log(data);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -55,6 +57,11 @@ function ContestOpen() {
       .catch((err) => console.log(err));
   }, [projects]);
 
+  const answeredProjects = showProjects.filter((item) => item.answered);
+
+  const pendingApplications = showProjects.filter((item) => !item.answered);
+
+  console.log(pendingApplications);
   if (!contest) {
     return <div>Loading...</div>;
   }
@@ -74,7 +81,7 @@ function ContestOpen() {
       </Link>
     );
   };
-
+  /* 
   const accept = (rowData) => {
     if (rowData.answered) {
       return <div></div>;
@@ -117,7 +124,7 @@ function ContestOpen() {
         </OverlayTrigger>
       );
     }
-  };
+  }; */
 
   const answer = (rowData) => {
     if (!rowData.accepted && rowData.answered) {
@@ -137,7 +144,7 @@ function ContestOpen() {
     }
   };
 
-  function handleApplication(status, applicationId) {
+  /*  function handleApplication(status, applicationId) {
     var status;
 
     /* if (event === 0) {
@@ -146,7 +153,7 @@ function ContestOpen() {
         status = 1;
       } */
 
-    fetch("http://localhost:8080/projetofinal/rest/contest/application", {
+  /*   fetch("http://localhost:8080/projetofinal/rest/contest/application", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -165,7 +172,7 @@ function ContestOpen() {
         alert("Algo correu mal. Tente novamente");
       }
     });
-  }
+  } */
 
   return (
     <div>
@@ -211,7 +218,10 @@ function ContestOpen() {
           >
             <div>
               {showComponentA ? (
-                <ContestComponent toggleComponent={toggleComponent} />
+                <ContestComponent
+                  toggleComponent={toggleComponent}
+                  projects={answeredProjects}
+                />
               ) : (
                 <EditContestComponent toggleComponent={toggleComponent} />
               )}
@@ -228,7 +238,7 @@ function ContestOpen() {
                 <div className="row mx-auto">
                   <div className="col-lg-6 mx-auto mt-5 bg-secondary p-3 rounded-4">
                     <DataTable
-                      value={showProjects}
+                      value={answeredProjects}
                       selectionMode="single  "
                       paginator
                       rows={5}
@@ -244,18 +254,16 @@ function ContestOpen() {
                         }}
                         sortable
                       />
-                      <Column
+                      {/*    <Column
                         body={accept}
-                        /*                         onClick={() => handleApplication(1, showProjects.id)}
-                         */ header=""
+                         header=""
                       />
                       ;
                       <Column
                         body={reject}
-                        /*                         onClick={() => handleApplication(0, showProjects.id)}
-                         */ header=""
+                         header=""
                       />
-                      ;
+                      ; */}
                       <Column
                         field="accepted"
                         body={answer}
@@ -267,6 +275,11 @@ function ContestOpen() {
                   </div>
                 </div>
               </div>
+
+              <ContestApplications
+                pendingApplications={pendingApplications}
+                setProjects={setProjects}
+              />
             </div>
           </div>
         </div>

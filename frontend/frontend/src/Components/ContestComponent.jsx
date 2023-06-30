@@ -3,7 +3,7 @@ import ButtonComponent from "./ButtonComponent";
 import { contestOpenStore } from "../stores/ContestOpenStore";
 import { userStore } from "../stores/UserStore";
 
-function ContestComponent({ toggleComponent }) {
+function ContestComponent({ toggleComponent, projects }) {
   const contest = contestOpenStore((state) => state.contest);
   const user = userStore((state) => state.user);
   const setContestOpen = contestOpenStore((state) => state.setContestOpen);
@@ -14,7 +14,7 @@ function ContestComponent({ toggleComponent }) {
   };
 
   const handleStatus = (event) => {
-    event.preventDefault();
+    // event.preventDefault();
     var status;
 
     if (event === 1) {
@@ -137,11 +137,11 @@ function ContestComponent({ toggleComponent }) {
               {contest.statusInt !== 0 ? (
                 <div className="col-lg-6">
                   {" "}
-                  {/* <h5 className="text-center text-white mb-3">
-                    Projectos participantes
-                  </h5> */}
+                  <h5 className="text-center text-white mb-3">
+                    Projectos a concurso
+                  </h5>
                   <h3 className="text-center text-white bg-warning rounded-3 p-2 mt-3">
-                    100/200
+                    {projects.length} / {contest.maxNumberProjects}
                   </h3>
                 </div>
               ) : (
