@@ -88,7 +88,7 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
         {showMembers.map((member, index) => (
           <div
             key={index}
-            className="row bg-white text-black mb-3 rounded-3 w-50 mx-auto align-items-center"
+            className="row bg-white text-black mb-3 rounded-3  mx-auto align-items-center p-2"
           >
             <div className="col-lg-2 ">
               {member.userInvitedPhoto === null ? (
@@ -169,7 +169,7 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
                               data-bs-placement="top"
                             >
                               {" "}
-                              <BsStarFill color="#C01722" />
+                              <BsStarFill color="#C01722"size={20}/>
                             </span>
                           </OverlayTrigger>
                         </label>
@@ -263,7 +263,7 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
 
       {showProjects.member &&
       (showProjects.statusInt === 0 || showProjects.statusInt === 4) ? (
-        <div className="col-lg-4 mx-auto mb-4">
+        <div className="col-lg-6 mx-auto mb-4">
           <ButtonComponent
             onClick={handleRemove}
             name={"Sair do projecto"}

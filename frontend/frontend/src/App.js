@@ -59,7 +59,7 @@ function App() {
   };
 
   return (
-    <div className="container-fluid bg-dark vh-100">
+    <div className="container-fluid bg-dark ">
       <div className="row">
         <MainTitle />
       </div>

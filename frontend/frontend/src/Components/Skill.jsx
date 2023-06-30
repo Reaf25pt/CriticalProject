@@ -135,7 +135,7 @@ function Skill() {
         </h3>
       </div>
       <div class="row mb-3 mt-3 mb-3 d-flex justify-content-between d-flex align-items-center">
-        <div className="col-6 col-sm-6 col-md-4 col-lg-8  ">
+        <div className="col-6 col-sm-6 col-md-4 col-lg-6  ">
           <input
             type="search"
             class="rounded col-lg-12 p-1 "
@@ -169,7 +169,7 @@ function Skill() {
                 ))}
           </div>
         </div>
-        <div class="form-group col-2 col-sm-6 col-md-6 col-lg-2">
+        <div class="form-group col-2 col-sm-6 col-md-6 col-lg-4">
           <div class="input-group ">
             <SelectSkillType
               name="skillType"

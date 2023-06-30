@@ -187,7 +187,7 @@ function EditProject({ toggleComponent, project, set }) {
         </div>{" "}
       </div>
       <div className="row mx-auto justify-content-around mt-5">
-        <div className="col-lg-4">
+        <div className="col-lg-5">
           <div className="row bg-secondary rounded-5 p-4 mb-4">
             <div className="col-lg-12 bg-white rounded-5">
               <h4 className="text-center">Palavras-Chave</h4>
@@ -224,7 +224,7 @@ function EditProject({ toggleComponent, project, set }) {
             </div> */}
           </div>
         </div>
-        <div className="col-lg-4">
+        <div className="col-lg-6">
           <div className="row bg-secondary rounded-5 p-4">
             <div className="col-lg-12 bg-white rounded-5">
               <h4 className="text-center">Skills</h4>

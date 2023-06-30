@@ -86,7 +86,7 @@ function Projects() {
               </div>
             ) : null}
 
-            <div className="col-lg-9 bg-secondary p-3 rounded-4">
+            <div className="col-lg-10 bg-secondary p-3 rounded-4">
               <DataTable
                 value={showAllProjects}
                 sortMode="multiple"

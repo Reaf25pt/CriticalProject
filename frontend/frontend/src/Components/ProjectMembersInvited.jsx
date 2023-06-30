@@ -67,7 +67,9 @@ function ProjectMembersInvited({ showProjects, setMembers }) {
 
   if (showPendingInvites.length === 0) {
     return (
-      <div className="row bg-white ">Não há pedidos à espera de resposta</div>
+      <div className="row mt-5">
+        <h5 className="text-white">Não há pedidos à espera de resposta</h5>
+        </div>
     );
   }
   return (

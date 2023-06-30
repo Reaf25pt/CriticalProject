@@ -118,7 +118,7 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
   return (
     <>
       <div className="row mt-3 ">
-        <div className="col-lg-6 d-flex ">
+        <div className="col-lg-9 d-flex ">
           <div className="search-select-container">
             <InputComponent
               placeholder={"Adicionar palavra-chave *"}
@@ -140,8 +140,7 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
             {/* <div className="col-lg-2 input-group-text border-0 ">
               <BsSearch />
             </div> */}
-          </div>
-          <div className="dropdownz">
+             <div className="dropdownz">
             {suggestions &&
               suggestions
                 .filter((item) => {
@@ -161,6 +160,8 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
                   </div>
                 ))}
           </div>
+          </div>
+         
         </div>
 
         <div className="col-lg-3">

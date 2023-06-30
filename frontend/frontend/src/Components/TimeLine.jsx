@@ -94,8 +94,10 @@ function TimeLine() {
           <h5 className="card-title">
             {item.authorFirstName} {item.authorLastName}
           </h5>
-          <h7>{formatDate(item.creationTime)}</h7>
-          <p class="card-text">{item.message}</p>
+          <hr/>
+          <h8>{formatDate(item.creationTime)}</h8>
+          <hr/>
+          <h8 class="card-text">{item.message}</h8>
         </div>
       </div>
     );
@@ -154,16 +156,18 @@ function TimeLine() {
                 onChange={handleChange}
               />
             </div>
-            <div className="row">
+            <div className="row ">
+              <div className="col-lg-12 mx-auto">
               <ButtonComponent
                 name="Adicionar ocorrência"
                 onClick={addRecord}
               />
+              </div>
             </div>
           </form>
         </div>
         {recordList && recordList.length > 0 ? (
-          <div className="col-lg-6">
+          <div className="col-lg-8">
             <Timeline
               value={recordList}
               align="alternate"
@@ -173,9 +177,9 @@ function TimeLine() {
             />
           </div>
         ) : (
-          <p className="bg-secondary">
+          <h5 className="text-white">
             Não há histórico de registos para apresentar
-          </p>
+          </h5>
         )}
       </div>
     </div>

@@ -95,9 +95,9 @@ function ProjectAllTasksSelect({
   };
 
   return (
-    <div className="container-fluid">
+    <div className="container">
       <div className="row">
-        <div className="col-lg-6">
+        <div className="col-lg-8">
           <select
             name="preRequiredTasks"
             id="preRequiredTasks"
@@ -105,7 +105,7 @@ function ProjectAllTasksSelect({
             // onClick={handleChange}
             placeholder={"Tarefas precedentes "}
             local={"Tarefas precedentes "}
-            className="form-control"
+            className="form-control col-lg-8"
 
             /*  listMembers={props.listMembers}
         projId={props.projId} */

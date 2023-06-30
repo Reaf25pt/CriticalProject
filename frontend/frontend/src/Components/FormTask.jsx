@@ -285,7 +285,7 @@ function FormTask(listMembers) {
           className="row d-flex justify-content-around bg-secondary 
           rounded-5 p-4"
         >
-          <div className="col-lg-4">
+          <div className="col-lg-6">
             <div className="row ">
               <div className="col-lg-12 ">
                 <div className="row mb-3">
@@ -366,7 +366,7 @@ function FormTask(listMembers) {
               </div>
             </div>
           </div>
-          <div class="col-lg-6 d-flex align-items-center ">
+          <div class="col-lg-4 d-flex align-items-center ">
             <TextAreaComponent
               placeholder={"Descrição da tarefa *"}
               id="details"
@@ -383,7 +383,7 @@ function FormTask(listMembers) {
               type="text"
             ></textarea> */}
           </div>{" "}
-          <div className="col-lg-1 d-flex align-items-center">
+          <div className="col-lg-2 d-flex align-items-center">
             <ButtonComponent name={"Adicionar tarefa"} onClick={handleSubmit} />
           </div>
         </div>
@@ -421,8 +421,8 @@ function FormTask(listMembers) {
                       >
                         <div className="accordion-body ">
                           {" "}
-                          <div className="row d-flex justify-content-between ">
-                            <div className="col-lg-10">
+                          <div className="row">
+                            <div className="col-lg-8">
                               <h5 className="row mb-3">
                                 {" "}
                                 Início: {formatDate(task.startDate)}
@@ -432,7 +432,7 @@ function FormTask(listMembers) {
                                 Fim: {formatDate(task.finishDate)}
                               </h5>
                             </div>
-                            <div className="col-lg-2 d-flex">
+                            <div className="col-lg-3 d-flex">
                               {!user.contestManager &&
                               task.statusInfo !== 2 &&
                               (projInfo.statusInt === 0 ||
@@ -474,6 +474,7 @@ function FormTask(listMembers) {
                                 </button>
                               ) : null}
                             </div>
+                            <hr/>
 
                             <div className="row">
                               {" "}
@@ -490,7 +491,7 @@ function FormTask(listMembers) {
                               </div>
                             ) : null}
 
-                            {task.preRequiredTasks.length > 0 ? (
+                            {/* {task.preRequiredTasks.length > 0 ? (
                               <div className="row">
                                 {" "}
                                 Tarefas precedentes:
@@ -500,8 +501,8 @@ function FormTask(listMembers) {
                                   </div>
                                 ))}
                               </div>
-                            ) : null}
-
+                            ) : null} */}
+                            
                             <h4 className="row d-flex justify-content-end">
                               Responsável: {task.taskOwnerFirstName}{" "}
                               {task.taskOwnerLastName}

@@ -138,7 +138,7 @@ function SkillsProject({ skills, setSkills, addSkills }) {
   return (
     <div className="cointaner-fluid">
       <div className="row mt-3">
-        <div className="col-lg-5">
+        <div className="col-lg-6">
           <div className="search-select-container ">
             <InputComponent
               placeholder={"Adicionar skill "}
@@ -182,7 +182,7 @@ function SkillsProject({ skills, setSkills, addSkills }) {
                 ))}
           </div>
         </div>
-        <div class="form-group col-lg-3">
+        <div class="form-group col-lg-4">
           <div class="input-group rounded">
             <SelectSkillType
               name="skillType"
