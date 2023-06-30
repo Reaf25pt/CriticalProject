@@ -56,23 +56,11 @@ function ModalDeleteTask({ task, set, setTriggerList }) {
 
   return (
     <>
-      <OverlayTrigger
-        placement="top"
-        overlay={
-          <Tooltip /* defaultMessage="Apagar" */ id="userHobbyDeleteTooltip">
-            {/* <FormattedMessage
-                id="deleteTaskDetail.tooltip"
-                defaultMessage="Apagar"
-              /> */}
-            {/*    Editar tarefa */}
-          </Tooltip>
-        }
-      >
-        {/*  <FontAwesomeIcon onClick={handleShow} icon={faTrash} /> */}
-
-        <BsFillTrashFill onClick={handleShow} size={40} color="red" />
-        {/*  <BsXLg onClick={handleShow} /> */}
-        {/*  <FontAwesomeIcon onClick={handleShow} icon={faToggleOn} /> */}
+      <OverlayTrigger placement="top" overlay={<Tooltip>Apagar</Tooltip>}>
+        <span data-bs-toggle="tooltip" data-bs-placement="top">
+          {" "}
+          <BsFillTrashFill onClick={handleShow} size={40} color="red" />
+        </span>
       </OverlayTrigger>
 
       <Modal

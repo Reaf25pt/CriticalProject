@@ -186,7 +186,7 @@ function ProjectsCreate() {
 
               <div class="form-outline mb-4">
                 <TextAreaComponent
-                  placeholder={"Recursos (separar por vírgula)"}
+                  placeholder={"Recursos necessários"}
                   id="resources"
                   name="resources"
                   type="text"

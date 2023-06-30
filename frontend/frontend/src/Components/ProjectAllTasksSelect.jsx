@@ -3,6 +3,7 @@ import { userStore } from "../stores/UserStore";
 import { useParams } from "react-router-dom";
 import ButtonComponent from "../Components/ButtonComponent";
 import { BsXLg, BsSearch } from "react-icons/bs";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function ProjectAllTasksSelect({
   preReqTasks,
@@ -124,7 +125,15 @@ function ProjectAllTasksSelect({
         </div>
 
         <div className="col-lg-3">
-          <ButtonComponent onClick={handleClick} name={"+"} />
+          <OverlayTrigger
+            placement="top"
+            overlay={<Tooltip>Adicionar tarefa precedente</Tooltip>}
+          >
+            <span data-bs-toggle="tooltip" data-bs-placement="top">
+              {" "}
+              <ButtonComponent onClick={handleClick} name={"+"} />
+            </span>
+          </OverlayTrigger>
         </div>
       </div>
       {preReqTasks && preReqTasks.length > 0 ? (

@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { BsEyeFill } from "react-icons/bs";
 import { Rating } from "primereact/rating";
 import { useParams } from "react-router-dom";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function ProfileOpen() {
   const user = userStore((state) => state.user);
@@ -51,7 +52,15 @@ function ProfileOpen() {
     console.log(typeof rowData.id); */
     return (
       <Link to={`/home/projects/${rowData.id}`}>
-        <BsEyeFill />
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip>Ver detalhes</Tooltip>}
+        >
+          <span data-bs-toggle="tooltip" data-bs-placement="top">
+            {" "}
+            <BsEyeFill />
+          </span>
+        </OverlayTrigger>
       </Link>
     );
   };
@@ -139,7 +148,9 @@ function ProfileOpen() {
                           <textarea
                             class="text-dark bg-white h-100 w-100 rounded-2"
                             disabled
-                          ></textarea>
+                          >
+                            Biografia não disponibilizada
+                          </textarea>
                         )}
                       </div>
                     </div>

@@ -107,7 +107,7 @@ function InviteMember({ projId }) {
               <InputComponent
                 type="search"
                 class="form-control rounded "
-                placeholder="Nome"
+                placeholder="Pesquisar por nome *"
                 required={true}
                 aria-label="Search"
                 aria-describedby="search-addon"

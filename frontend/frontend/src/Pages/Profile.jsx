@@ -10,6 +10,7 @@ import { Column } from "primereact/column";
 import { Link } from "react-router-dom";
 import { BsEyeFill } from "react-icons/bs";
 import { Rating } from "primereact/rating";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function Profile() {
   const user = userStore((state) => state.user);
@@ -161,7 +162,15 @@ function Profile() {
     console.log(typeof rowData.id); */
     return (
       <Link to={`/home/projects/${rowData.id}`}>
-        <BsEyeFill />
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip>Ver detalhes</Tooltip>}
+        >
+          <span data-bs-toggle="tooltip" data-bs-placement="top">
+            {" "}
+            <BsEyeFill />
+          </span>
+        </OverlayTrigger>
       </Link>
     );
   };

@@ -73,23 +73,11 @@ function ModalEditTask({ task, set, formatDate, setTriggerList }) {
 
   return (
     <>
-      <OverlayTrigger
-        placement="top"
-        overlay={
-          <Tooltip /* defaultMessage="Apagar" */ id="userHobbyDeleteTooltip">
-            {/* <FormattedMessage
-                id="deleteTaskDetail.tooltip"
-                defaultMessage="Apagar"
-              /> */}
-            {/*    Editar tarefa */}
-          </Tooltip>
-        }
-      >
-        {/*  <FontAwesomeIcon onClick={handleShow} icon={faTrash} /> */}
-
-        <BsFillPencilFill onClick={handleShow} size={40} color="green" />
-        {/*  <BsXLg onClick={handleShow} /> */}
-        {/*  <FontAwesomeIcon onClick={handleShow} icon={faToggleOn} /> */}
+      <OverlayTrigger placement="top" overlay={<Tooltip>Editar</Tooltip>}>
+        <span data-bs-toggle="tooltip" data-bs-placement="top">
+          {" "}
+          <BsFillPencilFill onClick={handleShow} size={40} color="green" />
+        </span>
       </OverlayTrigger>
 
       <Modal

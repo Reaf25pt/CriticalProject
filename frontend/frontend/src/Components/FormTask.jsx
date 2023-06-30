@@ -6,6 +6,7 @@ import TextAreaComponent from "./TextAreaComponent";
 import { userStore } from "../stores/UserStore";
 import { useParams } from "react-router-dom";
 import { Chart } from "react-google-charts";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 import ProjectMembersSelect from "./ProjectMembersSelect";
 import ProjectAllTasksSelect from "./ProjectAllTasksSelect";

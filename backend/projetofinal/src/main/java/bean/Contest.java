@@ -463,4 +463,20 @@ boolean res=false;
 
 return res;
     }
+
+    /*
+    private int countContestPeriod(int contestId){
+        // calcula a duração de um período, desde que abre o período de candidatura até terminar com a escolha do vencedor
+
+        entity.Contest contest = contestDao.find(contestId);
+        if(contest!=null){
+
+        }
+
+
+    }
+*/
+
+
+
 }

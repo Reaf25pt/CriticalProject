@@ -46,21 +46,11 @@ function ModalDeleteProjMember({ member, set, projId }) {
 
   return (
     <>
-      <OverlayTrigger
-        placement="top"
-        overlay={
-          <Tooltip /* defaultMessage="Apagar" */ id="memberDeleteTooltip">
-            {/* <FormattedMessage
-                id="deleteTaskDetail.tooltip"
-                defaultMessage="Apagar"
-              /> */}
-            Apagar
-          </Tooltip>
-        }
-      >
-        {/*  <FontAwesomeIcon onClick={handleShow} icon={faTrash} /> */}
-        <BsXLg onClick={handleShow} />
-        {/*  <FontAwesomeIcon onClick={handleShow} icon={faToggleOn} /> */}
+      <OverlayTrigger placement="top" overlay={<Tooltip>Remover</Tooltip>}>
+        <span data-bs-toggle="tooltip" data-bs-placement="top">
+          {" "}
+          <BsXLg onClick={handleShow} />
+        </span>
       </OverlayTrigger>
 
       <Modal

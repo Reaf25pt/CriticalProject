@@ -5,6 +5,7 @@ import ButtonComponent from "./ButtonComponent";
 import InputComponent from "../Components/InputComponent";
 import { useNavigate } from "react-router-dom";
 import { BsStarFill } from "react-icons/bs";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function ProjectMembersList({ showMembers, showProjects, setMembers }) {
   const user = userStore((state) => state.user);
@@ -127,25 +128,50 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
                   {member.manager ? (
                     <>
                       <div class="form-check form-switch">
-                        <input
-                          class="form-check-input bg-secondary"
-                          type="checkbox"
-                          //role="switch"
-                          id="flexSwitchCheckChecked"
-                          //checked
-                          defaultChecked
-                          onClick={(event) =>
-                            handleRole(
-                              event.target.checked,
-                              member.userInvitedId
-                            )
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={
+                            <Tooltip>Retirar permissão de gestor</Tooltip>
                           }
-                        />
+                        >
+                          <span
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                          >
+                            {" "}
+                            <input
+                              class="form-check-input bg-secondary"
+                              type="checkbox"
+                              //role="switch"
+                              id="flexSwitchCheckChecked"
+                              //checked
+                              defaultChecked
+                              onClick={(event) =>
+                                handleRole(
+                                  event.target.checked,
+                                  member.userInvitedId
+                                )
+                              }
+                            />{" "}
+                          </span>
+                        </OverlayTrigger>
+
                         <label
                           class="form-check-label"
                           for="flexSwitchCheckChecked"
                         >
-                          <BsStarFill color="#C01722" />
+                          <OverlayTrigger
+                            placement="top"
+                            overlay={<Tooltip>Gestor</Tooltip>}
+                          >
+                            <span
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                            >
+                              {" "}
+                              <BsStarFill color="#C01722" />
+                            </span>
+                          </OverlayTrigger>
                         </label>
                       </div>
                       {/*    <div class="form-check form-switch">
@@ -178,18 +204,30 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
                         </label>
                       </div> */}
                       <div class="form-check form-switch">
-                        <input
-                          class="form-check-input "
-                          type="checkbox"
-                          //  role="switch"
-                          id="flexSwitchCheckDefault"
-                          onClick={(event) =>
-                            handleRole(
-                              event.target.checked,
-                              member.userInvitedId
-                            )
-                          }
-                        />
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={<Tooltip>Tornar gestor</Tooltip>}
+                        >
+                          <span
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                          >
+                            {" "}
+                            <input
+                              class="form-check-input "
+                              type="checkbox"
+                              //  role="switch"
+                              id="flexSwitchCheckDefault"
+                              onClick={(event) =>
+                                handleRole(
+                                  event.target.checked,
+                                  member.userInvitedId
+                                )
+                              }
+                            />
+                          </span>
+                        </OverlayTrigger>
+
                         <label
                           class="form-check-label"
                           for="flexSwitchCheckDefault"

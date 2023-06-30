@@ -143,10 +143,22 @@ function Notifications() {
                     <div class="card-title d-flex justify-content-between">
                       <h5>{convertTimestampToDate(item.creationTime)}</h5>
                       <div>
-                        <BsTrash
-                          onClick={() => handleRemove(item.id)}
-                          size={25}
-                        />
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={<Tooltip>Apagar</Tooltip>}
+                        >
+                          <span
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                          >
+                            {" "}
+                            <BsTrash
+                              onClick={() => handleRemove(item.id)}
+                              size={25}
+                            />
+                          </span>
+                        </OverlayTrigger>
+
                         {item.seen /*  <BsEnvelopeFill size={25} /> */ ? null : (
                           <OverlayTrigger
                             placement="top"

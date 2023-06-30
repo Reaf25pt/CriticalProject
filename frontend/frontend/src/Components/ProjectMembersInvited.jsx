@@ -6,6 +6,7 @@ import InputComponent from "../Components/InputComponent";
 import { useNavigate } from "react-router-dom";
 import { BsStarFill } from "react-icons/bs";
 import { BsEyeFill, BsCheck2, BsXLg } from "react-icons/bs";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function ProjectMembersInvited({ showProjects, setMembers }) {
   const user = userStore((state) => state.user);
@@ -105,18 +106,34 @@ function ProjectMembersInvited({ showProjects, setMembers }) {
               {member.userInvitedFirstName} {member.userInvitedLastName}
             </div>
             <div className="col-lg-6 ">
-              <BsCheck2
-                size={30}
-                color="green"
-                onClick={() => handleResponse(member.id, 1)}
-              />
+              <OverlayTrigger
+                placement="top"
+                overlay={<Tooltip>Aceitar pedido</Tooltip>}
+              >
+                <span data-bs-toggle="tooltip" data-bs-placement="top">
+                  {" "}
+                  <BsCheck2
+                    size={30}
+                    color="green"
+                    onClick={() => handleResponse(member.id, 1)}
+                  />{" "}
+                </span>
+              </OverlayTrigger>
             </div>
             <div className="col-lg-6 ">
-              <BsXLg
-                size={30}
-                color="red"
-                onClick={() => handleResponse(member.id, 0)}
-              />
+              <OverlayTrigger
+                placement="top"
+                overlay={<Tooltip>Recusar pedido</Tooltip>}
+              >
+                <span data-bs-toggle="tooltip" data-bs-placement="top">
+                  {" "}
+                  <BsXLg
+                    size={30}
+                    color="red"
+                    onClick={() => handleResponse(member.id, 0)}
+                  />
+                </span>
+              </OverlayTrigger>
             </div>
           </div>
         ))}

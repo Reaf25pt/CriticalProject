@@ -9,6 +9,7 @@ import { BsEyeFill, BsCheck2, BsXLg } from "react-icons/bs";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Tag } from "primereact/tag";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function ContestOpen() {
   const [showComponentA, setShowComponentA] = useState(true);
@@ -64,7 +65,15 @@ function ContestOpen() {
   const renderLink = (rowData) => {
     return (
       <Link to={`/home/projects/${rowData.id}`}>
-        <BsEyeFill size={30} color="black" />
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip>Ver detalhes</Tooltip>}
+        >
+          <span data-bs-toggle="tooltip" data-bs-placement="top">
+            {" "}
+            <BsEyeFill size={30} color="black" />
+          </span>
+        </OverlayTrigger>
       </Link>
     );
   };
@@ -74,11 +83,19 @@ function ContestOpen() {
       return <div></div>;
     } else {
       return (
-        <BsCheck2
-          size={30}
-          onClick={() => handleApplication(1, rowData.id)}
-          color="green"
-        />
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip>Aceitar projecto</Tooltip>}
+        >
+          <span data-bs-toggle="tooltip" data-bs-placement="top">
+            {" "}
+            <BsCheck2
+              size={30}
+              onClick={() => handleApplication(1, rowData.id)}
+              color="green"
+            />{" "}
+          </span>
+        </OverlayTrigger>
       );
     }
 
@@ -91,11 +108,19 @@ function ContestOpen() {
       return <div></div>;
     } else {
       return (
-        <BsXLg
-          size={30}
-          onClick={() => handleApplication(0, rowData.id)}
-          color="red"
-        />
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip>Recusar projecto</Tooltip>}
+        >
+          <span data-bs-toggle="tooltip" data-bs-placement="top">
+            {" "}
+            <BsXLg
+              size={30}
+              onClick={() => handleApplication(0, rowData.id)}
+              color="red"
+            />
+          </span>
+        </OverlayTrigger>
       );
     }
   };

@@ -45,21 +45,11 @@ function ModalDeleteUserSkill({ skill, set, setS }) {
 
   return (
     <>
-      <OverlayTrigger
-        placement="top"
-        overlay={
-          <Tooltip /* defaultMessage="Apagar" */ id="userSkillDeleteTooltip">
-            {/* <FormattedMessage
-                id="deleteTaskDetail.tooltip"
-                defaultMessage="Apagar"
-              /> */}
-            Apagar
-          </Tooltip>
-        }
-      >
-        {/*  <FontAwesomeIcon onClick={handleShow} icon={faTrash} /> */}
-        <BsXLg onClick={handleShow} />
-        {/*  <FontAwesomeIcon onClick={handleShow} icon={faToggleOn} /> */}
+      <OverlayTrigger placement="top" overlay={<Tooltip>Apagar</Tooltip>}>
+        <span data-bs-toggle="tooltip" data-bs-placement="top">
+          {" "}
+          <BsXLg onClick={handleShow} />
+        </span>
       </OverlayTrigger>
 
       <Modal

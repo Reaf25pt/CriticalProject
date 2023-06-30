@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import SkillCss from "../Components/SkillCss.css";
 import ModalDeleteHobby from "../Components/ModalDeleteHobby";
 import ButtonComponent from "./ButtonComponent";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function Hobby() {
   const [credentials, setCredentials] = useState({});
@@ -149,7 +150,15 @@ function Hobby() {
             </div>
           </div>
           <div className="col-2 col-sm-2 col-md-2 col-lg-2">
-            <ButtonComponent onClick={handleClick} name={"+"} />
+            <OverlayTrigger
+              placement="top"
+              overlay={<Tooltip>Adicionar</Tooltip>}
+            >
+              <span data-bs-toggle="tooltip" data-bs-placement="top">
+                {" "}
+                <ButtonComponent onClick={handleClick} name={"+"} />{" "}
+              </span>
+            </OverlayTrigger>
           </div>
         </div>
         <div className="row d-flex  ">

@@ -2,6 +2,7 @@ import styles from "./footer.module.css";
 import { BsXLg, BsSearch } from "react-icons/bs";
 import { userStore } from "../stores/UserStore";
 import { useEffect, useState } from "react";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 import InputComponent from "../Components/InputComponent";
 import ButtonComponent from "../Components/ButtonComponent";
@@ -163,7 +164,15 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
         </div>
 
         <div className="col-lg-3">
-          <ButtonComponent onClick={handleClick} name={"+"} />
+          <OverlayTrigger
+            placement="top"
+            overlay={<Tooltip>Adicionar</Tooltip>}
+          >
+            <span data-bs-toggle="tooltip" data-bs-placement="top">
+              {" "}
+              <ButtonComponent onClick={handleClick} name={"+"} />
+            </span>
+          </OverlayTrigger>
         </div>
       </div>
       {keywords && keywords.length > 0 ? (
@@ -175,7 +184,15 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
                   <div className="bg-secondary text-white rounded-3 p-2 m-1 d-flex justify-content-between">
                     {item.title}{" "}
                     <div className="">
-                      <BsXLg onClick={() => removeKeywords(position)} />
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={<Tooltip>Apagar</Tooltip>}
+                      >
+                        <span data-bs-toggle="tooltip" data-bs-placement="top">
+                          {" "}
+                          <BsXLg onClick={() => removeKeywords(position)} />
+                        </span>
+                      </OverlayTrigger>
                     </div>
                   </div>
                 </>

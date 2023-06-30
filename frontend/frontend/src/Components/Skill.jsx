@@ -6,6 +6,7 @@ import SelectSkillType from "../Components/SelectSkillType";
 import ModalDeleteUserSkill from "../Components/ModalDeleteUserSkill";
 import SkillCss from "../Components/SkillCss.css";
 import ButtonComponent from "./ButtonComponent";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function Skill() {
   const [credentials, setCredentials] = useState({});
@@ -183,7 +184,15 @@ function Skill() {
           </div>
         </div>
         <div className="col-2 col-sm-2 col-md-2 col-lg-2">
-          <ButtonComponent onClick={handleClick} name={"+"} />
+          <OverlayTrigger
+            placement="top"
+            overlay={<Tooltip>Adicionar</Tooltip>}
+          >
+            <span data-bs-toggle="tooltip" data-bs-placement="top">
+              {" "}
+              <ButtonComponent onClick={handleClick} name={"+"} />
+            </span>
+          </OverlayTrigger>
         </div>
       </div>
 

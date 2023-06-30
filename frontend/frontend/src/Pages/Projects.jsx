@@ -5,6 +5,7 @@ import { userStore } from "../stores/UserStore";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BsEyeFill } from "react-icons/bs";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function Projects() {
   const user = userStore((state) => state.user);
@@ -15,7 +16,15 @@ function Projects() {
   const renderLink = (rowData) => {
     return (
       <Link to={`/home/projects/${rowData.id}`}>
-        <BsEyeFill />
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip>Ver detalhes</Tooltip>}
+        >
+          <span data-bs-toggle="tooltip" data-bs-placement="top">
+            {" "}
+            <BsEyeFill />
+          </span>
+        </OverlayTrigger>
       </Link>
     );
   };

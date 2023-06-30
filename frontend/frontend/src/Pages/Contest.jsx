@@ -6,6 +6,7 @@ import { Column } from "primereact/column";
 import { BsEyeFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { userStore } from "../stores/UserStore";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function Contest() {
   const user = userStore((state) => state.user);
@@ -63,7 +64,15 @@ function Contest() {
   const renderLink = (rowData) => {
     return (
       <Link to={`/home/contests/${rowData.id}`}>
-        <BsEyeFill />
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip>Ver detalhes</Tooltip>}
+        >
+          <span data-bs-toggle="tooltip" data-bs-placement="top">
+            {" "}
+            <BsEyeFill />
+          </span>
+        </OverlayTrigger>
       </Link>
     );
   };
