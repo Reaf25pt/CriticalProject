@@ -47,9 +47,6 @@ function Skill() {
   };
 
   const handleSearch = (searchStr) => {
-    console.log(searchStr);
-    //setValue(searchStr);
-
     fetch(
       `http://localhost:8080/projetofinal/rest/user/skills?title=${searchStr}`,
       {
@@ -68,7 +65,6 @@ function Skill() {
       })
       .then((response) => {
         setSuggestions(response);
-        console.log(suggestions);
       });
   };
 

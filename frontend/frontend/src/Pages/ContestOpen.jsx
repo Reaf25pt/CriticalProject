@@ -24,7 +24,6 @@ function ContestOpen() {
   };
 
   const { id } = useParams();
-  console.log(id);
 
   useEffect(() => {
     fetch(`http://localhost:8080/projetofinal/rest/contest/${id}`, {
@@ -52,8 +51,6 @@ function ContestOpen() {
       .then((resp) => resp.json())
       .then((data) => {
         setShowProjects(data);
-        console.log("Projetos");
-        console.log(data);
       })
       .catch((err) => console.log(err));
   }, [projects]);
@@ -98,9 +95,6 @@ function ContestOpen() {
         </OverlayTrigger>
       );
     }
-
-    /*   console.log(rowData.id);
-    console.log(typeof rowData.id); */
   };
 
   const reject = (rowData) => {
@@ -152,8 +146,6 @@ function ContestOpen() {
         status = 1;
       } */
 
-    console.log(status + " " + applicationId);
-
     fetch("http://localhost:8080/projetofinal/rest/contest/application", {
       method: "PATCH",
       headers: {
@@ -165,7 +157,6 @@ function ContestOpen() {
       },
     }).then((response) => {
       if (response.status === 200) {
-        console.log(response);
         setProjects([]);
         alert("candidatura respondida");
 

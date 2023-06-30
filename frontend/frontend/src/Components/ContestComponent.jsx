@@ -16,7 +16,6 @@ function ContestComponent({ toggleComponent }) {
   const handleStatus = (event) => {
     event.preventDefault();
     var status;
-    console.log(event);
 
     if (event === 1) {
       status = 1;
@@ -25,8 +24,6 @@ function ContestComponent({ toggleComponent }) {
     } else if (event === 3) {
       status = 3;
     }
-
-    console.log(status);
 
     fetch("http://localhost:8080/projetofinal/rest/contest/status", {
       method: "PUT",
@@ -39,8 +36,6 @@ function ContestComponent({ toggleComponent }) {
     })
       .then((response) => {
         if (response.status === 200) {
-          console.log(response);
-
           alert("Status alterado");
           return response.json();
           //navigate("/home", { replace: true });
@@ -57,7 +52,6 @@ function ContestComponent({ toggleComponent }) {
 
   const applyToContest = (event) => {
     event.preventDefault();
-    console.log(event);
 
     fetch("http://localhost:8080/projetofinal/rest/contest/application", {
       method: "POST",

@@ -12,10 +12,6 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
   const navigate = useNavigate();
   const updateUser = userStore((state) => state.updateUser);
 
-  useEffect(() => {
-    console.log(showMembers);
-  }, []);
-
   const handleRemove = (event) => {
     event.preventDefault();
 
@@ -48,7 +44,6 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
   const handleRole = (event, id) => {
     //event.preventDefault();
 
-    console.log(event + " " + id); //true - 1 - membro para gestor , false - 0 - gestor para membro
     var role;
     if (event) {
       role = 1;
@@ -169,7 +164,7 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
                               data-bs-placement="top"
                             >
                               {" "}
-                              <BsStarFill color="#C01722"size={20}/>
+                              <BsStarFill color="#C01722" size={20} />
                             </span>
                           </OverlayTrigger>
                         </label>

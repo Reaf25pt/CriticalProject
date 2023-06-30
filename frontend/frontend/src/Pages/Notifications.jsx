@@ -22,7 +22,6 @@ function Notifications() {
   };
 
   function handleRemove(id) {
-    console.log(id);
     fetch(
       `http://localhost:8080/projetofinal/rest/communication/notification/${id}`,
       {
@@ -35,14 +34,12 @@ function Notifications() {
     )
       .then((resp) => resp.json())
       .then((data) => {
-        console.log(data);
         setNotification([]);
       })
       .catch((err) => console.log(err));
   }
 
   function handleRead(id) {
-    console.log(id);
     fetch(
       `http://localhost:8080/projetofinal/rest/communication/notification/${id}`,
       {
@@ -55,7 +52,6 @@ function Notifications() {
     )
       .then((resp) => resp.json())
       .then((data) => {
-        console.log(data);
         setNotification([]);
       })
       .catch((err) => console.log(err));
@@ -74,7 +70,6 @@ function Notifications() {
     )
       .then((resp) => resp.json())
       .then((data) => {
-        console.log(data);
         setShowAllNotifications(data);
       })
       .catch((err) => console.log(err));
@@ -82,9 +77,6 @@ function Notifications() {
 
   function handleInvitation(status, notifId) {
     // event.preventDefault();
-    console.log(typeof status);
-    console.log(JSON.parse(status));
-    console.log(status + " " + notifId);
 
     fetch(
       `http://localhost:8080/projetofinal/rest/communication/invitation/${notifId}`,
@@ -98,7 +90,6 @@ function Notifications() {
       }
     ).then((response) => {
       if (response.status === 200) {
-        console.log(response);
         setNotification([]);
         alert("notif respondida");
 

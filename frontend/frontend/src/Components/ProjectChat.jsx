@@ -36,8 +36,6 @@ function ProjectChat({ project }) {
   };
 
   useEffect(() => {
-    console.log("use effect");
-
     fetch(`http://localhost:8080/projetofinal/rest/project/chat/${id}`, {
       method: "GET",
       headers: {
@@ -48,7 +46,6 @@ function ProjectChat({ project }) {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log(response);
         setShowMessageChat(response);
 
         const element = document.getElementById("chatBox");
@@ -65,7 +62,6 @@ function ProjectChat({ project }) {
       message: credentials.messageInput,
       userSenderId: user.userId,
     };
-    console.log(newMessage);
 
     fetch(`http://localhost:8080/projetofinal/rest/project/chat/${id}`, {
       method: "POST",
@@ -81,8 +77,6 @@ function ProjectChat({ project }) {
         }
       })
       .then((response) => {
-        console.log(response);
-        console.log(typeof response);
         // addChatMessage(response);
         setMessageChat([]);
         document.getElementById("messageInput").value = "";

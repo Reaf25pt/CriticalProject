@@ -45,9 +45,6 @@ function Hobby() {
   };
 
   const handleSearch = (searchStr) => {
-    console.log(searchStr);
-    //setValue(searchStr);
-
     const handleFetchData = async () => {
       const response = await fetch(
         `http://localhost:8080/projetofinal/rest/user/hobby?title=${searchStr}`,

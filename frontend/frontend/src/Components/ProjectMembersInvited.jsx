@@ -17,7 +17,6 @@ function ProjectMembersInvited({ showProjects, setMembers }) {
   const [showPendingInvites, setShowPendingInvites] = useState([]);
 
   useEffect(() => {
-    console.log("pending invites");
     fetch(
       `http://localhost:8080/projetofinal/rest/project/${id}/potentialmembers`,
       {
@@ -30,17 +29,13 @@ function ProjectMembersInvited({ showProjects, setMembers }) {
     )
       .then((resp) => resp.json())
       .then((data) => {
-        console.log(data);
         setShowPendingInvites(data);
-        console.log(showPendingInvites);
       })
       .catch((err) => console.log(err));
   }, [pendingInvites]);
 
   function handleResponse(projMemberId, answer) {
     // event.preventDefault();
-
-    console.log(projMemberId + " " + answer);
 
     fetch(`http://localhost:8080/projetofinal/rest/project/selfinvitation`, {
       method: "PATCH",
@@ -53,7 +48,6 @@ function ProjectMembersInvited({ showProjects, setMembers }) {
       },
     }).then((response) => {
       if (response.status === 200) {
-        console.log(response);
         setPendingInvites([]);
         setMembers([]);
         alert("pedido respondido");
@@ -69,7 +63,7 @@ function ProjectMembersInvited({ showProjects, setMembers }) {
     return (
       <div className="row mt-5">
         <h5 className="text-white">Não há pedidos à espera de resposta</h5>
-        </div>
+      </div>
     );
   }
   return (

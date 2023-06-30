@@ -29,17 +29,14 @@ function SkillsProject({ skills, setSkills, addSkills }) {
     }
 
     if (name === "skillType") {
-      console.log(event.target.value);
     }
 
     setCredentials((values) => {
       return { ...values, [name]: value };
     });
-    console.log(credentials.skillProjInput);
   };
 
   const handleSearch = (searchStr) => {
-    console.log(searchStr);
     //setValue(searchStr);
 
     fetch(
@@ -60,7 +57,6 @@ function SkillsProject({ skills, setSkills, addSkills }) {
       })
       .then((response) => {
         setSuggestions(response);
-        console.log(suggestions);
       });
   };
 
@@ -93,7 +89,6 @@ function SkillsProject({ skills, setSkills, addSkills }) {
       }
 
       addSkills(newSkill);
-      console.log(skills);
       document.getElementById("skillProjInput").value = "";
       document.getElementById("skillType").value = "20";
       setCredentials({});
@@ -106,20 +101,14 @@ function SkillsProject({ skills, setSkills, addSkills }) {
     credentials.title = skill.title;
     credentials.skillType = skill.skillType;
 
-    console.log(credentials.skillType);
-
     document.getElementById("skillProjInput").value = skill.title;
-    console.log(credentials.id);
     setSuggestions([]);
   };
 
   const removeSkills = (position) => {
-    console.log(position);
-
     setSkills((prevSkills) => {
       const updateSkills = [...prevSkills];
       updateSkills.splice(position, 1);
-      console.log(updateSkills);
       return updateSkills;
     });
     /*   setKeywords((prevKeywords) => {

@@ -32,8 +32,6 @@ function ProjectOpen() {
   const { id } = useParams(); // id do projecto
 
   useEffect(() => {
-    console.log("use effect projecto");
-
     fetch(`http://localhost:8080/projetofinal/rest/project/${id}`, {
       method: "GET",
       headers: {
@@ -43,9 +41,7 @@ function ProjectOpen() {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log(data);
         setShowProjects(data);
-        console.log(showProjects);
       })
       .catch((err) => console.log(err));
   }, [projects]);
@@ -60,10 +56,7 @@ function ProjectOpen() {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        //console.log(data);
         setShowMembers(data);
-        // console.log(showMembers);
-        //console.log(members);
       })
       .catch((err) => console.log(err));
   }, [members]);

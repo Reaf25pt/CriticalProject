@@ -9,7 +9,6 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
 
   const handleProjectStatus = (event) => {
     var status;
-    console.log(event);
 
     if (event === 0) {
       status = 0;
@@ -25,8 +24,6 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
       status = 4;
     }
 
-    console.log(status);
-
     fetch("http://localhost:8080/projetofinal/rest/project/status", {
       method: "PUT",
       headers: {
@@ -37,7 +34,6 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
       },
     }).then((response) => {
       if (response.status === 200) {
-        console.log(response);
         setProjects([]);
         alert("Status alterado");
 

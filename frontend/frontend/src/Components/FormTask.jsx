@@ -38,8 +38,6 @@ function FormTask(listMembers) {
   };
 
   useEffect(() => {
-    console.log(id);
-
     fetch(`http://localhost:8080/projetofinal/rest/project/tasks/${id}`, {
       method: "GET",
       headers: {
@@ -49,8 +47,6 @@ function FormTask(listMembers) {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log("Lista de Tarefas");
-        console.log(data);
         setShowTasks(data);
       })
       .catch((err) => console.log(err));
@@ -104,9 +100,6 @@ function FormTask(listMembers) {
     }
   }
 
-  console.log("calculatePercentage");
-  console.log(calculateDurationInDays(1687741200000, 1688086800000));
-
   const rows = [
     ...showTasks.map((task) => [
       task.id.toString(),
@@ -138,9 +131,6 @@ function FormTask(listMembers) {
       criticalPathEnabled: true,
     },
   };
-
-  console.log("rows");
-  console.log(rows);
 
   var data2 = [columns, ...rows];
 
@@ -194,8 +184,6 @@ function FormTask(listMembers) {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    console.log(credentials);
-
     if (
       !credentials.title ||
       !credentials.startDate ||
@@ -204,7 +192,6 @@ function FormTask(listMembers) {
       !credentials.taskOwnerId ||
       credentials.taskOwnerId === "-1"
     ) {
-      console.log(credentials);
       alert("Insira os dados assinalados como obrigatórios");
     } else if (credentials.startDate >= credentials.finishDate) {
       alert("Insira uma data de fim posterior à data de início indicada");
@@ -243,7 +230,6 @@ function FormTask(listMembers) {
   };
 
   const handleClick = (event) => {
-    console.log(activeId);
     if (event.target.name === "statusInProgress") {
       var editTask = {
         id: activeId,
@@ -255,7 +241,6 @@ function FormTask(listMembers) {
         statusInfo: 2,
       };
     }
-    console.group(editTask);
 
     fetch(`http://localhost:8080/projetofinal/rest/project/${id}/task`, {
       method: "PUT",
@@ -474,7 +459,7 @@ function FormTask(listMembers) {
                                 </button>
                               ) : null}
                             </div>
-                            <hr/>
+                            <hr />
 
                             <div className="row">
                               {" "}
@@ -502,7 +487,7 @@ function FormTask(listMembers) {
                                 ))}
                               </div>
                             ) : null} */}
-                            
+
                             <h4 className="row d-flex justify-content-end">
                               Responsável: {task.taskOwnerFirstName}{" "}
                               {task.taskOwnerLastName}

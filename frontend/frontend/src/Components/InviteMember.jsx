@@ -28,9 +28,6 @@ function InviteMember({ projId }) {
   };
 
   const handleSearch = (searchStr) => {
-    console.log(searchStr);
-    //setValue(searchStr);
-
     fetch(
       `http://localhost:8080/projetofinal/rest/project/possiblemembers?name=${searchStr}`,
       {
@@ -50,7 +47,6 @@ function InviteMember({ projId }) {
       })
       .then((response) => {
         setSuggestions(response);
-        console.log(suggestions);
       });
   };
 

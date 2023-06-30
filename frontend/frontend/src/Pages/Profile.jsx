@@ -45,7 +45,6 @@ function Profile() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(credentials);
 
     var editedUser;
 
@@ -74,7 +73,6 @@ function Profile() {
     } else {
       editedUser = credentials;
     }
-    console.log(editedUser);
     /*  if (
       !user.contestManager &&
       (credentials.office === null ||
@@ -151,15 +149,12 @@ function Profile() {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log(data);
         setShowProjects(data);
       })
       .catch((err) => console.log(err));
   }, [projects]);
 
   const renderLink = (rowData) => {
-    /*   console.log(rowData.id);
-    console.log(typeof rowData.id); */
     return (
       <Link to={`/home/projects/${rowData.id}`}>
         <OverlayTrigger

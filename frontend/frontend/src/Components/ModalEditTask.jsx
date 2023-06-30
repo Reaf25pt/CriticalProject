@@ -41,10 +41,6 @@ function ModalEditTask({ task, set, formatDate, setTriggerList }) {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    console.log(credentials);
-    console.log(formatDate(credentials.startDate));
-    console.log(preReqTasks.length);
-
     var editedTask = credentials;
     editedTask.preRequiredTasks = preReqTasks;
 

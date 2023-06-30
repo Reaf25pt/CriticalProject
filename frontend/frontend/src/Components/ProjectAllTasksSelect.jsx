@@ -24,8 +24,6 @@ function ProjectAllTasksSelect({
   };
 
   useEffect(() => {
-    console.log(task);
-
     fetch(`http://localhost:8080/projetofinal/rest/project/tasks/${id}`, {
       method: "GET",
       headers: {
@@ -35,8 +33,6 @@ function ProjectAllTasksSelect({
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log("Lista de Tarefas");
-        console.log(data);
         setProjTasks(data);
       })
       .catch((err) => console.log(err));
@@ -52,30 +48,17 @@ function ProjectAllTasksSelect({
 
       setTask(taskSelected);
     }
-    console.log("Selected Title:", selectedTitle);
-    console.log("Selected Id:", selectedId);
-    console.log(taskSelected);
-
-    /*     const name = event.target.name;
-    const value = event.target.value;
-    console.log(value);
-    setCredentials((values) => {
-      return { ...values, [name]: value };
-    }); */
   };
 
   const handleClick = (event) => {
     event.preventDefault();
 
-    console.log(task);
     if (Object.keys(task).length === 0) {
       alert("Seleccione uma tarefa, se aplicável");
     } else {
       //var task = { id: credentials.id, title: credentials.title };
-      console.log(task);
 
       addPreReqTask(task);
-      console.log(preReqTasks);
 
       setTask({});
     }
@@ -84,12 +67,9 @@ function ProjectAllTasksSelect({
   };
 
   const removeTask = (position) => {
-    console.log(position);
-
     setPreReqTasks((prevTasks) => {
       const updateList = [...prevTasks];
       updateList.splice(position, 1);
-      console.log(updateList);
       return updateList;
     });
   };

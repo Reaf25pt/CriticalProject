@@ -11,11 +11,6 @@ function EditContestComponent({ toggleComponent }) {
   const user = userStore((state) => state.user);
   const [credentials, setCredentials] = useState(contest);
 
-  const convertTimestampToDate = (timestamp) => {
-    const date = new Date(timestamp);
-    return date.toLocaleDateString(); // Adjust the format as per your requirement
-  };
-
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -28,7 +23,6 @@ function EditContestComponent({ toggleComponent }) {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    console.log(credentials);
     if (
       !credentials.title ||
       !credentials.startOpenCall ||
@@ -68,7 +62,6 @@ function EditContestComponent({ toggleComponent }) {
           }
         })
         .then((data) => {
-          console.log(data);
           setContestOpen(data);
           toggleComponent();
           alert("Concurso editado com sucesso");

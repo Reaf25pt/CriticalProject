@@ -37,8 +37,6 @@ function ModalFinalTask({ setProjects }) {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    console.log(credentials);
-
     if (
       !credentials.startDate ||
       !credentials.details ||
@@ -61,7 +59,6 @@ function ModalFinalTask({ setProjects }) {
         body: JSON.stringify(finalTask),
       }).then((response) => {
         if (response.status === 200) {
-          console.log(response);
           setProjects([]);
           alert("Status alterado");
 

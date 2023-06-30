@@ -30,9 +30,6 @@ function SearchUser() {
   };
 
   const handleSearch = (searchStr) => {
-    console.log(searchStr);
-    //setValue(searchStr);
-
     fetch(
       `http://localhost:8080/projetofinal/rest/user/suggestion?name=${searchStr}`,
       {
@@ -51,7 +48,6 @@ function SearchUser() {
       })
       .then((response) => {
         setSuggestions(response);
-        console.log(suggestions);
       });
   };
 
@@ -101,14 +97,10 @@ function SearchUser() {
 
   function handleSeeProfile(userId) {
     // event.preventDefault();
-
-    console.log(userId);
   }
 
   function handleSendMessage(userId) {
     // event.preventDefault();
-
-    console.log(userId);
   }
 
   return (

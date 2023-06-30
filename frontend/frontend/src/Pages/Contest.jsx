@@ -14,10 +14,8 @@ function Contest() {
   const [showList, setShowList] = useState([]);
 
   const activeContestList = showList.filter((item) => item.statusInt !== 0);
-  console.log(activeContestList);
 
   useEffect(() => {
-    console.log("use effect contest");
     fetch(`http://localhost:8080/projetofinal/rest/contest/allcontests`, {
       method: "GET",
       headers: {
@@ -27,7 +25,6 @@ function Contest() {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log(data);
         setShowList(data);
       })
       .catch((err) => console.log(err));

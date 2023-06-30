@@ -57,7 +57,6 @@ function TimeLine() {
 */
 
   useEffect(() => {
-    console.log("use effect timeline");
     fetch(`http://localhost:8080/projetofinal/rest/project/${id}/record`, {
       method: "GET",
       headers: {
@@ -67,9 +66,7 @@ function TimeLine() {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log(data);
         setRecordList(data);
-        //console.log(showProjects);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -94,9 +91,9 @@ function TimeLine() {
           <h5 className="card-title">
             {item.authorFirstName} {item.authorLastName}
           </h5>
-          <hr/>
+          <hr />
           <h8>{formatDate(item.creationTime)}</h8>
-          <hr/>
+          <hr />
           <h8 class="card-text">{item.message}</h8>
         </div>
       </div>
@@ -116,8 +113,6 @@ function TimeLine() {
     event.preventDefault();
   };
   useEffect(() => {
-    console.log(id);
-
     fetch(`http://localhost:8080/projetofinal/rest/project/tasks/${id}`, {
       method: "GET",
       headers: {
@@ -127,8 +122,6 @@ function TimeLine() {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log("Lista de Tarefas");
-        console.log(data);
         setShowTasks(data);
       })
       .catch((err) => console.log(err));
@@ -158,10 +151,10 @@ function TimeLine() {
             </div>
             <div className="row ">
               <div className="col-lg-12 mx-auto">
-              <ButtonComponent
-                name="Adicionar ocorrência"
-                onClick={addRecord}
-              />
+                <ButtonComponent
+                  name="Adicionar ocorrência"
+                  onClick={addRecord}
+                />
               </div>
             </div>
           </form>

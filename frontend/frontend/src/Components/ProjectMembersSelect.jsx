@@ -6,9 +6,6 @@ function ProjectMembersSelect(props) {
   const [projMembers, setProjMembers] = useState([]);
 
   useEffect(() => {
-    console.log(props.listMembers);
-    console.log(props.projId);
-
     fetch(
       `http://localhost:8080/projetofinal/rest/project/${props.projId}/members`,
       {
@@ -21,10 +18,7 @@ function ProjectMembersSelect(props) {
     )
       .then((resp) => resp.json())
       .then((data) => {
-        //console.log(data);
         setProjMembers(data);
-        // console.log(showMembers);
-        //console.log(members);
       })
       .catch((err) => console.log(err));
   }, []);

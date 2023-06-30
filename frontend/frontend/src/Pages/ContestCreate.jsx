@@ -25,8 +25,6 @@ function ContestCreate() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    console.log(credentials);
-
     if (
       credentials.startOpenCall >= credentials.finishOpenCall ||
       credentials.finishOpenCall >= credentials.startDate ||
