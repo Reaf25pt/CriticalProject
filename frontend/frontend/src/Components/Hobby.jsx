@@ -161,13 +161,13 @@ function Hobby() {
             </OverlayTrigger>
           </div>
         </div>
-        <div className="row d-flex  ">
+        <div className="row overflow-auto" style={{ maxHeight: "200px" }}>
           {showHobbies && showHobbies.length !== 0 ? (
             <div className="row d-flex  ">
               {showHobbies.map((hobby) => (
                 <div
                   key={hobby.id}
-                  className="col-6 bg-dark mx-auto m-1 p-2 rounded-2 d-flex align-items-center text-white border border-white mb-1"
+                  className="col-8 bg-dark mx-auto m-1 p-2 rounded-2 d-flex align-items-center text-white border border-white mb-1"
                 >
                   <div className="col-lg-10">{hobby.title} </div>
                   <div className="col-lg-2">

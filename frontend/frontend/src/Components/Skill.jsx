@@ -200,7 +200,7 @@ function Skill() {
           <BsSearch />
         </span> */}
 
-      <div className="row">
+      <div className="row overflow-auto" style={{ maxHeight: "200px" }}>
         {showSkills && showSkills.length !== 0 ? (
           <div className="row">
             {showSkills.map(
