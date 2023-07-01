@@ -179,13 +179,12 @@ public class Contest {
 
         if (userBean.checkStringInfo(token) ) {
             r = Response.status(401).entity("Unauthorized!").build();
-        }  else if (!userBean.checkUserPermission(token) || !contestBean.verifyPermissionToApply( contestId)|| !projBean.verifyProjectCanApply(token, contestId)) {
+        }  else if (!userBean.checkUserPermission(token) || !contestBean.verifyUserProfile( token)|| !contestBean.verifyPermissionToChooseWinner(contestId) || !contestBean.verifyProjectIsFinished(projId)) {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
-// TODO FAlta implementar
-            boolean res = contestBean.applyToContest(contestId, token);
-
+            boolean res = contestBean.chooseContestWinner(contestId,projId, token);
+// TODO falta testar
             if (!res) {
                 r = Response.status(404).entity("Something went wrong!").build();
             } else {

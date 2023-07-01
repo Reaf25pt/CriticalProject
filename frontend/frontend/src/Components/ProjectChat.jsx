@@ -67,35 +67,41 @@ function ProjectChat({ project }) {
     <div className="container">
       <div className="row overflow-auto" style={{ maxHeight: "100vh" }}>
         <div className="col-lg-6 bg-secondary rounded-4 mx-auto p-5 mt-5">
-          {messages.map((message, index) => (
-            <div key={index}>
-              {message.userSenderId === user.userId ? (
-                <MessageBox
-                  position={"right"}
-                  type="text"
-                  title={
-                    message.userSenderFirstName +
-                    " " +
-                    message.userSenderLastName
-                  }
-                  date={message.creationTime}
-                  text={message.message}
-                />
-              ) : (
-                <MessageBox
-                  position={"left"}
-                  type="text"
-                  title={
-                    message.userSenderFirstName +
-                    " " +
-                    message.userSenderLastName
-                  }
-                  date={message.creationTime}
-                  text={message.message}
-                />
-              )}
+          {messages.length !== 0 ? (
+            <div>
+              {messages.map((message, index) => (
+                <div key={index}>
+                  {message.userSenderId === user.userId ? (
+                    <MessageBox
+                      position={"right"}
+                      type="text"
+                      title={
+                        message.userSenderFirstName +
+                        " " +
+                        message.userSenderLastName
+                      }
+                      date={message.creationTime}
+                      text={message.message}
+                    />
+                  ) : (
+                    <MessageBox
+                      position={"left"}
+                      type="text"
+                      title={
+                        message.userSenderFirstName +
+                        " " +
+                        message.userSenderLastName
+                      }
+                      date={message.creationTime}
+                      text={message.message}
+                    />
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
+          ) : (
+            <p>Inicie conversa com os restantes membros do projecto</p>
+          )}
           <div>
             <hr />
             <Input

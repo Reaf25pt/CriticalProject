@@ -35,6 +35,8 @@ public class Contest {
     dao.ContestApplication applicationDao;
     @Inject
     Communication communicationBean;
+    @EJB
+    dao.Task taskDao;
 
     public Contest(){
     }
@@ -199,7 +201,7 @@ public class Contest {
                     break;
                 case 3:
                     // mudar para concluded: data de finishDate tem de ser igual ou anterior a date.now()
-                    // TODO será triggered automaticamente com escolha de vencedor
+
                     if (validateDate(contest.getFinishDate()) && checkWinner(contest)) {
                         contest.setStatus(StatusContest.CONCLUDED);
                         contestDao.merge(contest);
@@ -463,6 +465,93 @@ boolean res=false;
 
 return res;
     }
+
+    public boolean verifyPermissionToChooseWinner(int contestId) {
+        // verifica se data .now() é posterior a data de task final de todos os projectos aceites
+        // poderia verificar se todos os prjectos estão finished e task final finished mas isso poderia significar que o concurso nunca poderia ficar concluído por algum gestor de projecto não marcar o projecto / task final como finished
+        // verifica tb se concurso status é ongoing
+boolean res =false;
+        entity.Contest contest = contestDao.find(contestId);
+        if (contest!=null){
+            if (contest.getStatus()==StatusContest.ONGOING){
+               if(checkProjectsAcceptedFinalTaskDates(contestId)) {
+                   res=true; // pode escolher vencedor
+               }
+            }
+        }
+return res;
+    }
+
+    private boolean checkProjectsAcceptedFinalTaskDates(int contestId) {
+        // verifica se data .now() é posterior a data de task final de todos os projectos aceites
+        // poderia verificar se todos os prjectos estão finished e task final finished mas isso poderia significar que o concurso nunca poderia ficar concluído por algum gestor de projecto não marcar o projecto / task final como finished
+boolean res= false;
+
+List <Project> projectsAccepted = applicationDao.findAcceptedProjectsForGivenContestId(contestId);
+if(projectsAccepted!=null){
+    // verificar se data de final task é anterior a data.now(). Dá-se hipótese a todos os projectos para cumprirem o seu calendário
+    Date today = Date.from(Instant.now());
+    int count = 0; // conta ocorrências em que data não é válida. Basta que uma data n seja válida para n permitir que se escolha vencedor
+
+    for (Project p : projectsAccepted){
+        entity.Task finalTask = taskDao.findFinalTaskByProjectId(p.getId());
+
+        if(finalTask!=null){
+            if (finalTask.getFinishDate().equals(today) || finalTask.getFinishDate().after(today)){
+                count++;
+            }
+        }
+    }
+
+    if(count==0){
+        res=true; // pode escolher vencedor
+    }
+
+
+}
+
+
+return res;
+    }
+
+    public boolean verifyProjectIsFinished(int projId) {
+        // verifica se status do projecto (a declarar vencedor) é finished. Só estes projectos poderão ser declarados vencedores
+        boolean res=false;
+        Project project = projDao.findProjectById(projId);
+
+        if(project!=null){
+            if (project.getStatus()==StatusProject.FINISHED){
+                res=true;
+            }
+        }return res;
+    }
+
+    public boolean chooseContestWinner(int contestId, int projId, String token) {
+        // declara o projecto vencedor de um dado concurso
+boolean res=false;
+
+        entity.User user = tokenDao.findUserEntByToken(token);
+        if (user!=null){
+        entity.Contest contest = contestDao.find(contestId);
+        if (contest!=null){
+            Project project = projDao.findProjectById(projId);
+
+            if(project!=null){
+                contest.setWinner(project);
+                contestDao.merge(contest);
+                res=true;
+
+communicationBean.notifyContestHasWinner(contest);
+communicationBean.recordProjectDeclaredWinner(user, project, contest);
+
+            }}}
+return res;
+    }
+
+
+
+
+
 
     /*
     private int countContestPeriod(int contestId){
