@@ -464,18 +464,28 @@ boolean res=false;
 return res;
     }
 
-    /*
-    private int countContestPeriod(int contestId){
-        // calcula a duração de um período, desde que abre o período de candidatura até terminar com a escolha do vencedor
-
+    public String statsContenst(int contestId) {
         entity.Contest contest = contestDao.find(contestId);
-        if(contest!=null){
+        String title = contest.getTitle();
+        String startDate = String.valueOf(contest.getStartDate());
+        String endDate = String.valueOf(contest.getFinishDate());
+        return startDate;
+    }
 
-        }
 
+    public int statsLocal(int contestId) {
+        entity.Contest contest = contestDao.find(contestId);
+
+
+        return 0;
 
     }
-*/
+
+
+
+
+
+
 
 
 

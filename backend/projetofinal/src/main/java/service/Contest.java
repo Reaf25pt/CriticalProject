@@ -279,4 +279,21 @@ public class Contest {
         return r;
     }
 
+
+    @GET
+    @Path("stats/{contestId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response statsContests(@PathParam("contestId") int contestId){
+        Response r = null;
+        String titulo = contestBean.statsContenst(contestId);
+        r = Response.status(200).entity(titulo).build();
+        System.out.println(r);
+        return r;
+
+    }
+
+
+
+
+
 }
