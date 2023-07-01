@@ -62,7 +62,6 @@ function Notifications() {
     )
       .then((resp) => resp.json())
       .then((data) => {
-        console.log(data);
         updateNotifications(data);
         // filterNotification(data);
       })

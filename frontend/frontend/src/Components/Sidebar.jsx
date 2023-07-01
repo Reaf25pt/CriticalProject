@@ -14,12 +14,12 @@ import { useState, useEffect } from "react";
 
 function Sidebar() {
   const user = userStore((state) => state.user);
+  const fullName = user.firstName + " " + user.lastName;
+  const notifications = notificationStore((state) => state.notifications);
   const updateNotifications = notificationStore(
     (state) => state.updateNotifications
   );
-  const fullName = user.firstName + " " + user.lastName;
-  const addNotifications = notificationStore((state) => state.addNotifications);
-  const notifications = notificationStore((state) => state.notifications);
+  const addNotifications = notificationStore((state) => state.addNotification);
 
   useEffect(() => {
     fetch(
@@ -53,10 +53,6 @@ function Sidebar() {
       const data = JSON.parse(event.data);
 
       addNotifications(data);
-
-      /* setBadgeValue(
-        notifications.filter((notification) => !notification.read).length
-      ); */
     };
     return () => {
       ws.close();
