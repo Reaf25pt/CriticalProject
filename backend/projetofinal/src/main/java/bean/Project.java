@@ -2195,6 +2195,7 @@ boolean res = false;
 
                 messageDto = convertProjChatEntToDto(newMessage);
 
+          communicationBean.notifyProjectChatRealTime(messageDto, project);
 
             }
         }

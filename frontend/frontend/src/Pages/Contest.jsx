@@ -90,7 +90,7 @@ function Contest() {
               </div>
               <div className="row mx-auto mt-5">
                 <div className="col-lg-9 bg-secondary p-3 rounded-4 mx-auto ">
-                  <DataTable value={showList}>
+                  <DataTable value={showList} rows={10} paginator>
                     <Column field="title" header="Nome" sortable />
                     <Column field="status" header="Estado" sortable />
                     <Column
@@ -117,7 +117,7 @@ function Contest() {
           ) : (
             <div className="row mx-auto mt-5">
               <div className="col-lg-9 bg-secondary p-3 rounded-4 mx-auto ">
-                <DataTable value={activeContestList}>
+                <DataTable value={activeContestList} rows={10} paginator>
                   <Column field="title" header="Nome" sortable />
                   <Column field="status" header="Estado" sortable />
                   <Column

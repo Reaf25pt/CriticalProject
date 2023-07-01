@@ -1,5 +1,6 @@
 package bean;
 
+import dto.ProjectChat;
 import dto.UserInfo;
 import entity.*;
 import entity.Contest;
@@ -86,7 +87,7 @@ public class Communication implements Serializable {
             dto.Notification notifDto = convertNotifEntToDto(notif);
 
             for (String t : listTokens) {
-// TODO falta testar socket
+
                 Notifier.sendNotification(notifDto, t);
             }
 
@@ -762,6 +763,7 @@ return contactsList;
 
     public List<dto.PersonalMessage> getAllPersonalMessages(String token) {
         // obter lista de todas as mensagens de token
+        // TODO corrigir pq para ja manda apenas as que ele recebbe
 List<dto.PersonalMessage> listDto = new ArrayList<>();
 
         User user = tokenDao.findUserEntByToken(token);
@@ -785,4 +787,23 @@ if(allTokenMessages!=null){
         return listDto;
 
     }
-}
+
+
+    public void notifyProjectChatRealTime(ProjectChat message, Project project) {
+        // envia mensagem em tempo-real por chat do projecto a todos os tokens cujo user seja membro activo do projecto
+
+        List<User> membersList = projMemberDao.findListOfUsersByProjectId(project.getId());
+
+        if(membersList!=null){
+            for( User u:membersList){
+                List<String> listTokens = tokenDao.findTokenListByUserId(u.getUserId());
+                if (listTokens != null) {
+                    for (String t : listTokens) {
+// TODO falta testar socket
+                        websocket.ProjectChat.sendNotification(message, t);
+                    }
+
+            }
+        }
+    }
+}}

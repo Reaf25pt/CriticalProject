@@ -8,6 +8,7 @@ import {
 } from "react-icons/bs";
 import { userStore } from "../stores/UserStore";
 import { notificationStore } from "../stores/NotificationStore";
+import { messageStore } from "../stores/MessageStore";
 
 import Logout from "./Logout";
 import { useState, useEffect } from "react";
@@ -20,6 +21,10 @@ function Sidebar() {
     (state) => state.updateNotifications
   );
   const addNotifications = notificationStore((state) => state.addNotification);
+
+  const messages = messageStore((state) => state.messages);
+  const updateMessages = messageStore((state) => state.updateMessages);
+  const addMessages = messageStore((state) => state.addMessages);
 
   useEffect(() => {
     fetch(
@@ -38,14 +43,35 @@ function Sidebar() {
         updateNotifications(response);
         // console.log(messages);
       });
+
+    fetch(`http://localhost:8080/projetofinal/rest/communication/messages`, {
+      method: "GET",
+      headers: {
+        Accept: "*/*",
+        "Content-Type": "application/json",
+        token: user.token,
+      },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        updateMessages(response);
+        // console.log(messages);
+      });
   }, []);
 
   useEffect(() => {
     const ws = new WebSocket(
       "ws://localhost:8080/projetofinal/websocket/notifier/" + user.token
     );
+    const wsM = new WebSocket(
+      "ws://localhost:8080/projetofinal/websocket/personalchat/" + user.token
+    );
 
     ws.onopen = () => {
+      console.log("connected notif socket");
+    };
+
+    wsM.onopen = () => {
       console.log("connected chat socket");
     };
 
@@ -54,8 +80,15 @@ function Sidebar() {
 
       addNotifications(data);
     };
+    wsM.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+
+      addMessages(data);
+    };
+
     return () => {
       ws.close();
+      wsM.close();
     };
   }, []);
 
@@ -109,6 +142,11 @@ function Sidebar() {
                 </Link>
                 <Link to={"/home/chat"} className="nav-link align-middle px-0">
                   <BsWechat color="white" />
+                  {messages.length > 0 ? (
+                    <span class="badge badge-dark">
+                      {messages.filter((message) => !message.seen).length}
+                    </span>
+                  ) : null}
                   <span className="ms-1 d-none d-sm-inline text-white">
                     Mensagens
                   </span>

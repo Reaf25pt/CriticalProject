@@ -14,7 +14,11 @@ function ProjectChat({ project }) {
   const [inputValue, setInputValue] = useState("");
 
   const [messages, setMessages] = useState([]);
-  const [showMessages, setShowMessages] = useState([]);
+  // const [showMessages, setShowMessages] = useState([]);
+
+  const addMessage = (newMessage) => {
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+  };
 
   const user = userStore((state) => state.user);
 
@@ -35,6 +39,26 @@ function ProjectChat({ project }) {
       })
       .catch((err) => console.log(err));
   }, [inputValue]);
+
+  useEffect(() => {
+    const ws = new WebSocket(
+      "ws://localhost:8080/projetofinal/websocket/projectchat/" + user.token
+    );
+
+    ws.onopen = () => {
+      console.log("connected projectChat socket");
+    };
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+
+      addMessage(data);
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, []);
 
   const handleSendMessage = (event) => {
     event.preventDefault();
