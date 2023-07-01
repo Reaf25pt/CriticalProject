@@ -42,6 +42,7 @@ function ProfileOpen() {
       })
       .then((user) => {
         setUserProfile(user);
+
         // navigate("/home", { replace: true });
       });
   }, []);

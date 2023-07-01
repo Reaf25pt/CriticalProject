@@ -8,6 +8,9 @@ import java.util.Date;
 
 @Entity
 @Table(name="PersonalMessage")
+@NamedQuery(name = "PersonalMessage.findListOfContactsOfGivenUser", query = "SELECT m.messageSender FROM PersonalMessage m WHERE m.messageReceiver.id = :id")
+@NamedQuery(name = "PersonalMessage.findListOfMessagesOfGivenUser", query = "SELECT m FROM PersonalMessage m WHERE m.messageReceiver.id = :id")
+
 public class PersonalMessage implements Serializable {
 
     private static final long serialVersionUID = 1L;

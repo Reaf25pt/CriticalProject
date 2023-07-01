@@ -7,11 +7,63 @@ import {
   BsEnvelopeFill,
 } from "react-icons/bs";
 import { userStore } from "../stores/UserStore";
+import { notificationStore } from "../stores/NotificationStore";
+
 import Logout from "./Logout";
+import { useState, useEffect } from "react";
+
 function Sidebar() {
   const user = userStore((state) => state.user);
-
+  const updateNotifications = notificationStore(
+    (state) => state.updateNotifications
+  );
   const fullName = user.firstName + " " + user.lastName;
+  const addNotifications = notificationStore((state) => state.addNotifications);
+  const notifications = notificationStore((state) => state.notifications);
+
+  useEffect(() => {
+    fetch(
+      `http://localhost:8080/projetofinal/rest/communication/notifications`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "*/*",
+          "Content-Type": "application/json",
+          token: user.token,
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((response) => {
+        updateNotifications(response);
+        // console.log(messages);
+      });
+  }, []);
+
+  useEffect(() => {
+    const ws = new WebSocket(
+      "ws://localhost:8080/projetofinal/websocket/notifier/" + user.token
+    );
+
+    ws.onopen = () => {
+      console.log("connected chat socket");
+    };
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+
+      addNotifications(data);
+
+      /* setBadgeValue(
+        notifications.filter((notification) => !notification.read).length
+      ); */
+    };
+    return () => {
+      ws.close();
+    };
+  }, []);
+
+  // var unreadNotif = notifications.filter((notif) => !notif.seen);
 
   return (
     <div className="container-fluid ">
@@ -69,9 +121,20 @@ function Sidebar() {
                   to={"/home/notifications"}
                   className="nav-link align-middle px-0"
                 >
-                  <BsEnvelopeFill color="white" />{" "}
+                  <BsEnvelopeFill color="white" />
+                  {notifications.length > 0 ? (
+                    <span class="badge badge-dark">
+                      {notifications.filter((notif) => !notif.seen).length}
+                    </span>
+                  ) : null}
+
+                  {/*    {notifications.length > 0 ? (
+                    <span class="badge badge-dark">{unreadNotif.length}</span>
+                  ) : null} */}
+
                   <span className="ms-1 d-none d-sm-inline text-white">
                     Notificações
+                    {/*  <span class="badge badge-light">5</span> */}
                   </span>
                 </Link>
               </li>

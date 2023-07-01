@@ -1,6 +1,8 @@
 package service;
 
 import dto.Notification;
+import dto.PersonalMessage;
+import dto.UserInfo;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.*;
@@ -70,8 +72,8 @@ public class Communication {
             if (notif == null ) {
                 r = Response.status(404).entity("Not found").build();
             } else {
-
-                r = Response.status(200).entity(notif).build();
+                List<Notification> list = comBean.getOwnNotificationList(token);
+                r = Response.status(200).entity(list).build();
             }
         }
         return r;
@@ -127,12 +129,73 @@ List<Notification> list = comBean.getOwnNotificationList(token);
             if (notif == null ) {
                 r = Response.status(404).entity("Not found").build();
             } else {
+                List<Notification> list = comBean.getOwnNotificationList(token);
 
-                r = Response.status(200).entity(notif).build();
+                r = Response.status(200).entity(list).build();
             }
         }
         return r;
     }
+
+    // GET LIST OF CONTACTS LOGGED USER HAS PERSONAL CHAT MESSAGES WITH
+    @GET
+    @Path("/contacts")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getContactsList(@HeaderParam("token") String token) {
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) ) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+
+        } else {
+            userBean.updateSessionTime(token);
+
+
+            List<UserInfo> list = comBean.getContactsList(token);
+
+            if (list == null || list.size() == 0) {
+                r = Response.status(404).entity(list).build();
+            } else {
+
+                r = Response.status(200).entity(list).build();
+            }
+        }
+        return r;
+    }
+
+
+    // GET ALL PERSONAL MESSAGES OF LOGGED USER
+    @GET
+    @Path("/messages")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMessagesList(@HeaderParam("token") String token) {
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) ) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+
+        } else {
+            userBean.updateSessionTime(token);
+
+
+            List<PersonalMessage> list = comBean.getAllPersonalMessages(token);
+
+            if (list == null || list.size() == 0) {
+                r = Response.status(404).entity(list).build();
+            } else {
+
+                r = Response.status(200).entity(list).build();
+            }
+        }
+        return r;
+    }
+
 
 
 }

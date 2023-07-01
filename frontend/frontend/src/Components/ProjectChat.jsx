@@ -8,6 +8,7 @@ import "react-chat-elements/dist/main.css";
 import { Button, MessageBox } from "react-chat-elements";
 
 import { Input } from "react-chat-elements";
+import InputComponent from "./InputComponent";
 
 function ProjectChat({ project }) {
   const [inputValue, setInputValue] = useState("");
@@ -104,20 +105,39 @@ function ProjectChat({ project }) {
           )}
           <div>
             <hr />
-            <Input
-              placeholder="Escreva a sua mensagem"
-              className="bg-dark  p-4 rounded-5 "
-              value={inputValue}
-              onChange={(event) => setInputValue(event.target.value)}
-              rightButtons={
-                <Button
-                  text="Enviar"
-                  className="bg-secondary text-white"
-                  onClick={handleSendMessage}
-                  defaultValue={""}
-                />
-              }
-            />{" "}
+
+            {project.statusInt === 5 || project.statusInt === 6 ? (
+              <InputComponent
+                placeholder="Chat desactivado"
+                className="bg-dark  p-4 rounded-5 "
+                value={inputValue}
+                disabled
+                // onChange={(event) => setInputValue(event.target.value)}
+                rightButtons={
+                  <Button
+                    text="Enviar"
+                    className="bg-secondary text-white"
+                    // onClick={handleSendMessage}
+                    defaultValue={""}
+                  />
+                }
+              />
+            ) : (
+              <Input
+                placeholder="Escreva a sua mensagem"
+                className="bg-dark  p-4 rounded-5 "
+                value={inputValue}
+                onChange={(event) => setInputValue(event.target.value)}
+                rightButtons={
+                  <Button
+                    text="Enviar"
+                    className="bg-secondary text-white"
+                    onClick={handleSendMessage}
+                    defaultValue={""}
+                  />
+                }
+              />
+            )}
           </div>
         </div>
       </div>

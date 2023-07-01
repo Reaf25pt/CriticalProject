@@ -176,7 +176,7 @@ function SearchUser() {
                   )}
                 </div>
                 <div className="col-lg-1">
-                  <Link to={"/home/chat"}>
+                  <Link to={`/home/chat?userId=${item.id}`}>
                     {" "}
                     <OverlayTrigger
                       placement="top"

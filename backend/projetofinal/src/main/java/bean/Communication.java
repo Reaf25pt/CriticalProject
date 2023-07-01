@@ -1,5 +1,6 @@
 package bean;
 
+import dto.UserInfo;
 import entity.*;
 import entity.Contest;
 import entity.Project;
@@ -31,6 +32,8 @@ public class Communication implements Serializable {
     dao.ContestApplication applicationDao;
     @EJB
     dao.ProjectHistory recordDao;
+    @EJB
+    dao.PersonalMessage personalChatDao;
 
     public void notifyNewPossibleProjectMember(ProjectMember projMember, Project project, User user, boolean isInvited) {
         // gera notificação para avisar que membro foi convidado: isInvited = true/    se auto-convidou isInvited = false
@@ -727,5 +730,59 @@ record.setProject(task.getProject());
     }
 
 
+    public List<UserInfo> getContactsList(String token) {
+        // obter contactos (lista de utilizadores) com quem o token tem mensagens pessoais trocadas
+        // ir buscar todos os message sender de mensagens cujo message receiver seja o token
 
+        List<UserInfo> contactsList = new ArrayList<>();
+        User user = tokenDao.findUserEntByToken(token);
+
+        if(user!=null) {
+
+            List<User> contactsEnt = personalChatDao.findListOfContactsOfGivenUser(user.getUserId());
+
+            if(contactsEnt!=null){
+                for (User u : contactsEnt){
+
+UserInfo minimalUser = new UserInfo();
+minimalUser.setId(u.getUserId());
+minimalUser.setFirstName(u.getFirstName());
+minimalUser.setLastName(u.getLastName());
+minimalUser.setNickname(u.getNickname());
+minimalUser.setPhoto(u.getPhoto());
+minimalUser.setOpenProfile(u.isOpenProfile());
+
+contactsList.add(minimalUser);
+                }
+            }
+        }
+
+return contactsList;
+    }
+
+    public List<dto.PersonalMessage> getAllPersonalMessages(String token) {
+        // obter lista de todas as mensagens de token
+List<dto.PersonalMessage> listDto = new ArrayList<>();
+
+        User user = tokenDao.findUserEntByToken(token);
+
+        if(user!=null) {
+List<PersonalMessage> allTokenMessages = personalChatDao.findListOfMessagesOfGivenUser(user.getUserId());
+
+if(allTokenMessages!=null){
+    for (PersonalMessage m:allTokenMessages){
+        dto.PersonalMessage dto = new dto.PersonalMessage();
+        dto.setId(m.getPersonalMessageId());
+        dto.setMessage(m.getMessage());
+        dto.setSeen(m.isSeen());
+        dto.setUserSenderId(m.getMessageSender().getUserId());
+        dto.setCreationTime(m.getCreationTime());
+
+        listDto.add(dto);
+    }
+}
+        }
+        return listDto;
+
+    }
 }

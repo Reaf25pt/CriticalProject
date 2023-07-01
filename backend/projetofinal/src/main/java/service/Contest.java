@@ -279,6 +279,7 @@ public class Contest {
     }
 
 
+/*
     @GET
     @Path("stats/{contestId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -291,6 +292,7 @@ public class Contest {
 
     }
 
+*/
 
 
 

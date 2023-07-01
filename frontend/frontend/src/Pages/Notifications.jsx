@@ -9,12 +9,21 @@ import {
   BsEnvelopeOpenFill,
 } from "react-icons/bs";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { notificationStore } from "../stores/NotificationStore";
 
 function Notifications() {
   const user = userStore((state) => state.user);
 
-  const [showAllNotifications, setShowAllNotifications] = useState([]);
-  const [notification, setNotification] = useState([]);
+  const updateNotifications = notificationStore(
+    (state) => state.updateNotifications
+  );
+  const addNotifications = notificationStore((state) => state.addNotifications);
+  const notifications = notificationStore((state) => state.notifications);
+  const filterNotification = notificationStore(
+    (state) => state.filterNotification
+  );
+  // const [showAllNotifications, setShowAllNotifications] = useState([]);
+  // const [notification, setNotification] = useState([]);
 
   const convertTimestampToDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -34,12 +43,13 @@ function Notifications() {
     )
       .then((resp) => resp.json())
       .then((data) => {
-        setNotification([]);
+        updateNotifications(data);
       })
       .catch((err) => console.log(err));
   }
 
   function handleRead(id) {
+    console.log(id);
     fetch(
       `http://localhost:8080/projetofinal/rest/communication/notification/${id}`,
       {
@@ -52,12 +62,14 @@ function Notifications() {
     )
       .then((resp) => resp.json())
       .then((data) => {
-        setNotification([]);
+        console.log(data);
+        updateNotifications(data);
+        // filterNotification(data);
       })
       .catch((err) => console.log(err));
   }
 
-  useEffect(() => {
+  /* useEffect(() => {
     fetch(
       `http://localhost:8080/projetofinal/rest/communication/notifications`,
       {
@@ -73,7 +85,7 @@ function Notifications() {
         setShowAllNotifications(data);
       })
       .catch((err) => console.log(err));
-  }, [notification]);
+  }, [notification]);*/
 
   function handleInvitation(status, notifId) {
     // event.preventDefault();
@@ -88,16 +100,21 @@ function Notifications() {
           answer: status,
         },
       }
-    ).then((response) => {
-      if (response.status === 200) {
-        setNotification([]);
-        alert("notif respondida");
+    )
+      .then((response) => {
+        if (response.status === 200) {
+          alert("notif respondida");
+          return response.json();
 
-        //navigate("/home", { replace: true });
-      } else {
-        alert("Algo correu mal. Tente novamente");
-      }
-    });
+          //navigate("/home", { replace: true });
+        } else {
+          alert("Algo correu mal. Tente novamente");
+        }
+      })
+      .then((response) => {
+        updateNotifications(response);
+        //filterNotification(response);
+      });
   }
 
   return (
@@ -126,9 +143,9 @@ function Notifications() {
           role="tabpanel"
           aria-labelledby="home-tab"
         >
-          {showAllNotifications && showAllNotifications.length > 0 ? (
+          {notifications && notifications.length > 0 ? (
             <div className="row mx-auto col-10 col-md-8 col-lg-6 mt-5">
-              {showAllNotifications.map((item) => (
+              {notifications.map((item) => (
                 <div class="card bg-light card border-primary mb-3">
                   <div class="card-body ">
                     <div class="card-title d-flex justify-content-between">

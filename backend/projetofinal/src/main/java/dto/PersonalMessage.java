@@ -19,6 +19,9 @@ public class PersonalMessage {
         this.userSenderId = userSenderId;
     }
 
+    public PersonalMessage() {
+    }
+
     public int getId() {
         return id;
     }
