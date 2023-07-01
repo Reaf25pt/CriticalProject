@@ -15,10 +15,7 @@ import org.jboss.logging.Logger;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequestScoped
@@ -387,7 +384,7 @@ public class Project implements Serializable {
             ProjectMember pm = projMemberDao.findProjectMemberByProjectIdAndUserId(projId, userId);
             // pm pode ou não estar answered / accepted / removed
             if (pm != null) {
-               //existe relação pm -  se está removed, actualiza info pq a pessoa quer participar / foi novamente convidada.
+                //existe relação pm -  se está removed, actualiza info pq a pessoa quer participar / foi novamente convidada.
 
 
                 if (!pm.isRemoved()) {
@@ -429,7 +426,7 @@ public class Project implements Serializable {
                         }
                     } else {
                         // está à espera de resposta, não faz nada mesmo que o campo self-invitation pudesse ser alterado
-                        res=true;
+                        res = true;
                     }
 
                 } else {
@@ -659,37 +656,37 @@ public class Project implements Serializable {
         boolean res = false;
         entity.Task newTask = new entity.Task();
 
-        if(task!= null){
+        if (task != null) {
 
 
-        newTask.setTitle(task.getTitle());
-        newTask.setStartDate(task.getStartDate());
+            newTask.setTitle(task.getTitle());
+            newTask.setStartDate(task.getStartDate());
             System.out.println(task.getStartDate());
-        newTask.setFinishDate(task.getFinishDate());
+            newTask.setFinishDate(task.getFinishDate());
             System.out.println(task.getFinishDate());
-        newTask.setDetails(task.getDetails());
+            newTask.setDetails(task.getDetails());
 
-        newTask.setAdditionalExecutors(task.getAdditionalExecutors());
+            newTask.setAdditionalExecutors(task.getAdditionalExecutors());
 
-        //TODO proteger de nulo - pesquisar user à parte e n directamente?
-        newTask.setTaskOwner(userDao.findUserById(task.getTaskOwnerId()));
+            //TODO proteger de nulo - pesquisar user à parte e n directamente?
+            newTask.setTaskOwner(userDao.findUserById(task.getTaskOwnerId()));
 
-        newTask.setStatus(StatusTask.PLANNED);
+            newTask.setStatus(StatusTask.PLANNED);
 
-        newTask.setProject(projDao.findProjectById(projId));
-newTask.setFinalTask(false);
+            newTask.setProject(projDao.findProjectById(projId));
+            newTask.setFinalTask(false);
 
-        taskDao.persist(newTask);
+            taskDao.persist(newTask);
 
-        // persistir 1º tarefa para então associar tarefas precedentes se houver
-        System.out.println(task.getPreRequiredTasks().size());
-        System.out.println(task.getPreRequiredTasks());
-        if (task.getPreRequiredTasks() != null) {
+            // persistir 1º tarefa para então associar tarefas precedentes se houver
+            System.out.println(task.getPreRequiredTasks().size());
+            System.out.println(task.getPreRequiredTasks());
+            if (task.getPreRequiredTasks() != null) {
 
-            associatePreRequiredTasksWithCurrentTask(task.getPreRequiredTasks(), newTask);
-        }
+                associatePreRequiredTasksWithCurrentTask(task.getPreRequiredTasks(), newTask);
+            }
 
-        res = true;
+            res = true;
         }
 
         return res;
@@ -699,12 +696,13 @@ newTask.setFinalTask(false);
         // associa cada preRequired task a current task
         System.out.println(preRequiredTasks.size());
         for (Task t : preRequiredTasks) {
-            entity.Task taskEnt= taskDao.find(t.getId());
-            if (taskEnt.getFinishDate().before(currentTask.getStartDate())){
+            entity.Task taskEnt = taskDao.find(t.getId());
+            if (taskEnt.getFinishDate().before(currentTask.getStartDate())) {
 
-            // adicionar cada tarefa q seja pre requisito à lista da current task, desde que as datas não se sobreponham!!!
-            currentTask.getListPreRequiredTasks().add(taskDao.find(t.getId()));
-        }}
+                // adicionar cada tarefa q seja pre requisito à lista da current task, desde que as datas não se sobreponham!!!
+                currentTask.getListPreRequiredTasks().add(taskDao.find(t.getId()));
+            }
+        }
 
         taskDao.merge(currentTask);
         //TODO será necessário fazer merge de cada task t ? em teoria apenas a task tem lista de tarefas required
@@ -761,7 +759,7 @@ newTask.setFinalTask(false);
         task.setTaskOwnerLastName(t.getTaskOwner().getLastName());
         task.setTaskOwnerPhoto(t.getTaskOwner().getPhoto());
         task.setAdditionalExecutors(t.getAdditionalExecutors());
-        if (t.getListPreRequiredTasks()!=null){
+        if (t.getListPreRequiredTasks() != null) {
             task.setPreRequiredTasks(convertTaskEntToMinimalDto(t.getListPreRequiredTasks()));
         }
 
@@ -774,7 +772,7 @@ newTask.setFinalTask(false);
 
         List<Task> list = new ArrayList<>();
 
-        for (entity.Task t : listPreRequiredTasks){
+        for (entity.Task t : listPreRequiredTasks) {
             Task task = new Task();
             task.setId(t.getId());
             task.setTitle(t.getTitle());
@@ -783,7 +781,7 @@ newTask.setFinalTask(false);
 
             list.add(task);
         }
-return list;
+        return list;
     }
 
     public boolean verifyIfUserHasActiveProject(String token) {
@@ -797,7 +795,7 @@ return list;
             if (projectsList != null) {
                 int count = 0;
                 for (entity.Project p : projectsList) {
-                    System.out.println(  projectsList.size()+ " " +p.getId() + " " + p.getStatus().getStatus());
+                    System.out.println(projectsList.size() + " " + p.getId() + " " + p.getStatus().getStatus());
                     if (p.getStatus() != StatusProject.CANCELLED && p.getStatus() != StatusProject.FINISHED) {
                         count++;
                     }
@@ -838,13 +836,13 @@ return list;
 
         boolean res = false;
         entity.User user = tokenDao.findUserEntByToken(token);
-        if (user!=null){
-        entity.Project projEnt = projDao.findProjectById(editProj.getId());
+        if (user != null) {
+            entity.Project projEnt = projDao.findProjectById(editProj.getId());
 
-        if (projEnt != null) {
-            projEnt.setTitle(editProj.getTitle());
-            if (editProj.getOffice() != 20) {
-                projEnt.setOffice(setOffice(editProj.getOffice()));
+            if (projEnt != null) {
+                projEnt.setTitle(editProj.getTitle());
+                if (editProj.getOffice() != 20) {
+                    projEnt.setOffice(setOffice(editProj.getOffice()));
           /*      switch (editProj.getOffice()) {
                     case 0:
                         projEnt.setOffice(Office.LISBOA);
@@ -865,25 +863,26 @@ return list;
                         projEnt.setOffice(Office.VILAREAL);
                         break;
                 }*/
+                }
+                projEnt.setDetails(editProj.getDetails());
+                projEnt.setResources(editProj.getResources());
+                projEnt.setStatus(setProjectStatus(editProj.getStatusInt()));
+                projEnt.setMembersNumber(editProj.getMembersNumber());
+                projEnt.setCreationDate(editProj.getCreationDate());
+
+                projDao.merge(projEnt); // TODO será aqui ou depois de associar skills e keywords?
+
+                associateKeywordsWithProject(editProj.getKeywords(), projEnt);
+
+                if (editProj.getSkills() != null || editProj.getSkills().size() != 0) {
+                    System.out.println("associar skills");
+                    associateSkillsWithProject(editProj.getSkills(), projEnt);
+                }
+                projDao.merge(projEnt); // TODO será aqui ou antes de associar skills e keywords?
+                res = true;
+                communicationBean.recordProjectEdition(projEnt, user);
             }
-            projEnt.setDetails(editProj.getDetails());
-            projEnt.setResources(editProj.getResources());
-            projEnt.setStatus(setProjectStatus(editProj.getStatusInt()));
-            projEnt.setMembersNumber(editProj.getMembersNumber());
-            projEnt.setCreationDate(editProj.getCreationDate());
-
-            projDao.merge(projEnt); // TODO será aqui ou depois de associar skills e keywords?
-
-            associateKeywordsWithProject(editProj.getKeywords(), projEnt);
-
-            if (editProj.getSkills() != null || editProj.getSkills().size() != 0) {
-                System.out.println("associar skills");
-                associateSkillsWithProject(editProj.getSkills(), projEnt);
-            }
-            projDao.merge(projEnt); // TODO será aqui ou antes de associar skills e keywords?
-            res = true;
-            communicationBean.recordProjectEdition(projEnt,user );
-        }}
+        }
 
 
         return res;
@@ -968,7 +967,7 @@ return list;
             if (usersWithActiveProject != null) {
                 // retirar estes users da lista all users: adicionando apenas o que n coincidem a uma lista auxiliar
                 tempList = matchingUsers.stream().filter(user -> !usersWithActiveProject.contains(user))
-                        .filter(user ->!user.isContestManager())
+                        .filter(user -> !user.isContestManager())
                         .collect(Collectors.toList());
                 System.out.println(tempList.size());
 
@@ -1019,7 +1018,7 @@ return list;
                 if (pm.getProjectToParticipate().getStatus() == StatusProject.CANCELLED || pm.getProjectToParticipate().getStatus() == StatusProject.FINISHED) {
                     pm.setRemoved(true);
                     projMemberDao.merge(pm);
-                   communicationBean.notifyProjectMembersOfMemberLeavingProject(pm.getProjectToParticipate(), pm.getUserInvited());
+                    communicationBean.notifyProjectMembersOfMemberLeavingProject(pm.getProjectToParticipate(), pm.getUserInvited());
                     delete = true;
                     communicationBean.recordMemberRemovalFromProject(pm.getUserInvited(), pm.getProjectToParticipate());
 
@@ -1193,19 +1192,19 @@ return list;
                     break;
                 case 5:
                     // cancelar projecto pode ser feito em qq altura
-                     // TODO garantir que nada é editável, add members
-                    
-                    res =changeProjStatusToCancelled(project, token);
+                    // TODO garantir que nada é editável, add members
+
+                    res = changeProjStatusToCancelled(project, token);
                     break;
                 case 6:
 
                     //definir como finished: proj tem de estar in progress e verificar se precisa de ter tarefas todas concluidas ou outras verificações
-                    res =changeProjStatusToFinished(project, token);
+                    res = changeProjStatusToFinished(project, token);
                     break;
                 case 7:
                     //definir como planning um projecto cancelado se não está associado a nenhum concurso
                     // só pode acontecer se nenhum membro tem algum projecto activo no momento da reactivação
-                    res =reactivateCancelledProj(project, token);
+                    res = reactivateCancelledProj(project, token);
                     break;
             }
         }
@@ -1214,12 +1213,12 @@ return list;
 
     private boolean reactivateCancelledProj(entity.Project project, String token) {
         // reactiva um projecto, definindo como planning se não está associado a um concurso e todos os membros não tem proj activo
-        boolean res=false;
+        boolean res = false;
         // verificar 1º se projecto está aceite em algum concurso. neste caso n poderá ser reactivado
 
         ContestApplication application = applicationDao.findAcceptedApplicationForGivenProjectId(project.getId());
 
-        if(application==null) {
+        if (application == null) {
             if (verifyExistingMembersHaveNoActiveProject(project)) {
 
 // n foi aceite em nenhum concurso - pode ser reactivado
@@ -1237,23 +1236,23 @@ return list;
 
     private boolean verifyExistingMembersHaveNoActiveProject(entity.Project project) {
         // verifica se todos os membro estão livres para que o projecto cancelado possa ser reactivado e nenhum membro fique com 2 proj activos em simultaneo
-        boolean res= false;
-int count = 0;  // conta o número de membros com projecto activo. Se no final o valor n for 0, não pode reactiva projecto
-List<entity.User> members = projMemberDao.findListOfUsersByProjectId(project.getId());
-if (members!=null){
-    for (entity.User u : members){
-        entity.Project activeProj = projMemberDao.findActiveProjectByUserId(u.getUserId());
-        if (project!=null){
-            // à partida nunca será o ID do projecto a ser reactivado
-            System.out.println("confirmar que proj activo e proj a ser reactivado não é o mesmo, ID do 1º " + activeProj.getId() + "  ID do 2º " + project.getId());
-        count++;
+        boolean res = false;
+        int count = 0;  // conta o número de membros com projecto activo. Se no final o valor n for 0, não pode reactiva projecto
+        List<entity.User> members = projMemberDao.findListOfUsersByProjectId(project.getId());
+        if (members != null) {
+            for (entity.User u : members) {
+                entity.Project activeProj = projMemberDao.findActiveProjectByUserId(u.getUserId());
+                if (project != null) {
+                    // à partida nunca será o ID do projecto a ser reactivado
+                    System.out.println("confirmar que proj activo e proj a ser reactivado não é o mesmo, ID do 1º " + activeProj.getId() + "  ID do 2º " + project.getId());
+                    count++;
 
+                }
+            }
+            if (count == 0) {
+                res = true;
+            }
         }
-    }
-    if (count==0){
-        res=true;
-    }
-}
 
 
         return res;
@@ -1261,18 +1260,18 @@ if (members!=null){
 
     private boolean changeProjStatusToFinished(entity.Project project, String token) {
         // define status de proj como finished, se todas as tarefas estiverem finished
-        boolean res=false;
+        boolean res = false;
 
-Long count = taskDao.countNotFinishedTasksFromProjectByProjId(project.getId());
-if (count==0){
-    project.setStatus(StatusProject.FINISHED);
-    projDao.merge(project);
-    res=true;
-    entity.User user = tokenDao.findUserEntByToken(token);
-    communicationBean.recordProjectStatusChange(project, user, 6);
-}
+        Long count = taskDao.countNotFinishedTasksFromProjectByProjId(project.getId());
+        if (count == 0) {
+            project.setStatus(StatusProject.FINISHED);
+            projDao.merge(project);
+            res = true;
+            entity.User user = tokenDao.findUserEntByToken(token);
+            communicationBean.recordProjectStatusChange(project, user, 6);
+        }
 
-     return res;
+        return res;
     }
 
     private boolean changeProjStatusToCancelled(entity.Project project, String token) {
@@ -1281,27 +1280,25 @@ if (count==0){
         boolean res = false;
 
 
+        // verificar se projecto está aceite em concurso. neste caso n apaga tarefa final, mas se não estiver em concurso ,apaga tarefa final para que possa mais tarde concorrer a outro concurso
+        ContestApplication acceptedApplication = applicationDao.findAcceptedApplicationForGivenProjectId(project.getId());
 
-      // verificar se projecto está aceite em concurso. neste caso n apaga tarefa final, mas se não estiver em concurso ,apaga tarefa final para que possa mais tarde concorrer a outro concurso
-           ContestApplication acceptedApplication = applicationDao.findAcceptedApplicationForGivenProjectId(project.getId());
-
-           if(acceptedApplication==null){
-               // projecto não está aceite em nenhum concurso. é preciso apagar a tarefa final pq ao retomar terá status planning
-               deleteFinalTaskOfProject(project.getId());
-               project.setStatus(StatusProject.CANCELLED);
-               projDao.merge(project);
-               res=true;
-               entity.User user = tokenDao.findUserEntByToken(token);
-               communicationBean.recordProjectStatusChange(project, user, 5);
-           } else {
-               // projecto está em concurso. Cancela sem fazer mais nada
-               project.setStatus(StatusProject.CANCELLED);
-               projDao.merge(project);
-               res=true;
-               entity.User user = tokenDao.findUserEntByToken(token);
-               communicationBean.recordProjectStatusChange(project, user, 5);
-           }
-
+        if (acceptedApplication == null) {
+            // projecto não está aceite em nenhum concurso. é preciso apagar a tarefa final pq ao retomar terá status planning
+            deleteFinalTaskOfProject(project.getId());
+            project.setStatus(StatusProject.CANCELLED);
+            projDao.merge(project);
+            res = true;
+            entity.User user = tokenDao.findUserEntByToken(token);
+            communicationBean.recordProjectStatusChange(project, user, 5);
+        } else {
+            // projecto está em concurso. Cancela sem fazer mais nada
+            project.setStatus(StatusProject.CANCELLED);
+            projDao.merge(project);
+            res = true;
+            entity.User user = tokenDao.findUserEntByToken(token);
+            communicationBean.recordProjectStatusChange(project, user, 5);
+        }
 
 
 //TODO : Garantir que proj cancelado n pode adicionar membros / aceitar membros
@@ -1313,10 +1310,10 @@ if (count==0){
         // status de projecto tem de estar approved, data da finalTask foi validada no aceitar projecto
 
         boolean res = false;
-        if(project.getStatus()==StatusProject.APPROVED) {
+        if (project.getStatus() == StatusProject.APPROVED) {
             project.setStatus(StatusProject.PROGRESS);
             projDao.merge(project);
-            res=true;
+            res = true;
             entity.User user = tokenDao.findUserEntByToken(token);
             communicationBean.recordProjectStatusChange(project, user, 4);
         }
@@ -1327,9 +1324,9 @@ if (count==0){
         // modifica apenas se proj status for ready. Tem de adicionar tarefa final ao projecto e só então mudar status
 
         //TODO verificar se precisa de garantir / apagar q n tem tarefa final definida por ter antes passado por ready. será apagada sempre a partida
-        boolean res=false;
+        boolean res = false;
 
-        if(finalTask!=null) {
+        if (finalTask != null) {
             if (verifyFinalTaskDateIsAfterAllProjectTasks(project, finalTask.getStartDate())) ;
             {
 
@@ -1351,20 +1348,20 @@ if (count==0){
     private boolean verifyFinalTaskDateIsAfterAllProjectTasks(entity.Project project, Date startDate) {
         // verifica se data escolhida para data final é mesmo após todas as outras tarefas do projecto
 
-        boolean res=false;
-        int count=0;
+        boolean res = false;
+        int count = 0;
         List<entity.Task> taskList = taskDao.findTasksFromProjectByProjId(project.getId());
 
-        if(taskList!=null) {
-            for (entity.Task t : taskList){
+        if (taskList != null) {
+            for (entity.Task t : taskList) {
                 //basta que finish date da tarefa seja igual ou posterior a startDate para não estar de acordo com as regras
-                if (t.getFinishDate().equals(startDate) || t.getFinishDate().after(startDate)){
+                if (t.getFinishDate().equals(startDate) || t.getFinishDate().after(startDate)) {
                     count++;
                 }
             }
 
-            if(count==0){
-                res=true;
+            if (count == 0) {
+                res = true;
                 // data é ok, tarefa final é mesmo a última tarefa do plano de execução
             }
         }
@@ -1375,41 +1372,41 @@ if (count==0){
 
     private boolean addFinalTaskToProject(entity.Project project, Task finalTask) {
         // adiciona tarefa final ao projecto. Tem a particularidade de data inicial e data final ser igual e título é predefinido. Não tem tarefas precedentes, na prática são todas
-boolean res = false;
+        boolean res = false;
         entity.Task taskEnt = new entity.Task();
         taskEnt.setTitle("Apresentação final");
         taskEnt.setStartDate(finalTask.getStartDate());
         taskEnt.setFinishDate(finalTask.getStartDate());
         taskEnt.setDetails(finalTask.getDetails());
         taskEnt.setTaskOwner(userDao.findUserById(finalTask.getTaskOwnerId()));
-             taskEnt.setStatus(StatusTask.PLANNED);
-   taskEnt.setProject(project);
-taskEnt.setFinalTask(true);
+        taskEnt.setStatus(StatusTask.PLANNED);
+        taskEnt.setProject(project);
+        taskEnt.setFinalTask(true);
         taskDao.persist(taskEnt);
-        res=true;
+        res = true;
         return res;
     }
 
     private boolean changeProjStatusToPlanning(entity.Project project, String token) {
         // modifica apenas se proj status é ready. Apaga tarefa final definida
         boolean res = false;
-if(project.getStatus()==StatusProject.READY) {
-    project.setStatus(StatusProject.PLANNING);
-    projDao.merge(project);
+        if (project.getStatus() == StatusProject.READY) {
+            project.setStatus(StatusProject.PLANNING);
+            projDao.merge(project);
 
-    deleteFinalTaskOfProject(project.getId());
+            deleteFinalTaskOfProject(project.getId());
 
-    res=true;
-    entity.User user = tokenDao.findUserEntByToken(token);
-   communicationBean.recordProjectStatusChange(project, user, 0);
-}
-      return res;
+            res = true;
+            entity.User user = tokenDao.findUserEntByToken(token);
+            communicationBean.recordProjectStatusChange(project, user, 0);
+        }
+        return res;
     }
 
     private void deleteFinalTaskOfProject(int id) {
 //TODO confirmar q funciona
         entity.Task finalTask = taskDao.findFinalTaskByProjectId(id);
-        if(finalTask!=null){
+        if (finalTask != null) {
             taskDao.remove(finalTask);
         }
     }
@@ -1455,7 +1452,7 @@ if(project.getStatus()==StatusProject.READY) {
         } else {
             System.out.println("lista de tarefas nula");
             // lista nula, n tem de fazer nada
-            res=true;
+            res = true;
         }
 
         return res;
@@ -1488,8 +1485,8 @@ boolean res = false;
         // vale para membro sair de projecto
         boolean res = false;
         entity.Project project = projDao.findProjectById(projId);
-        if(project!=null){
-            if (project.getStatus()==StatusProject.READY ||project.getStatus()==StatusProject.PROPOSED || project.getStatus()==StatusProject.APPROVED|| project.getStatus()==StatusProject.CANCELLED|| project.getStatus()==StatusProject.FINISHED ){
+        if (project != null) {
+            if (project.getStatus() == StatusProject.READY || project.getStatus() == StatusProject.PROPOSED || project.getStatus() == StatusProject.APPROVED || project.getStatus() == StatusProject.CANCELLED || project.getStatus() == StatusProject.FINISHED) {
                 res = true;
                 // tarefas do plano de execução não poderão ser alteradas
             }
@@ -1516,16 +1513,16 @@ boolean res = false;
 
     public boolean verifyIfTaskBelongsToProject(int taskId, int projId) {
         // verifica se task realmente está associada ao projecto
-boolean res=false;
+        boolean res = false;
         entity.Task task = taskDao.find(taskId);
 
-        if(task!=null){
-            if (task.getProject().getId()==projId){
+        if (task != null) {
+            if (task.getProject().getId() == projId) {
                 res = true;
             }
         }
 
-      return res;
+        return res;
     }
 
     public boolean deleteTask(String token, int taskId) {
@@ -1576,9 +1573,9 @@ boolean res=false;
         List<entity.Task> list = new ArrayList<>();
         List<entity.Task> allTasks = taskDao.findAll();
 
-        if(allTasks!=null){
-            for (entity.Task t : allTasks){
-                if (t.getListPreRequiredTasks().contains(taskEnt)){
+        if (allTasks != null) {
+            for (entity.Task t : allTasks) {
+                if (t.getListPreRequiredTasks().contains(taskEnt)) {
                     list.add(t);
                 }
             }
@@ -1589,13 +1586,12 @@ boolean res=false;
     }
 
 
-
     public boolean verifyProjectStatusToEditTaskStatus(int projId) {
 //status  de tarefa apenas pode ser alterado se projecto estiver em fase IN PROGRESS
-boolean res = false;
+        boolean res = false;
         entity.Project project = projDao.findProjectById(projId);
-        if(project!=null){
-            if (project.getStatus()!=StatusProject.PROGRESS  ){
+        if (project != null) {
+            if (project.getStatus() != StatusProject.PROGRESS) {
                 res = true;
                 // status de tarefas do plano de execução não poderá ser alterado
             }
@@ -1608,85 +1604,84 @@ boolean res = false;
         // editar tarefa: preciso sempre garantir que datas não impactam outras tarefas associadas. Projecto in progress tb precisa de verificar data de concurso e, se for final task tb precisa de verificar que data é posterior a datas de todas as outras tarefas
 
 
-
         boolean res = false;
-        boolean res1= false;
-        boolean res2= false;
+        boolean res1 = false;
+        boolean res2 = false;
 
-            entity.Task taskEnt = taskDao.find(editTask.getId());
+        entity.Task taskEnt = taskDao.find(editTask.getId());
 
-            if(taskEnt!= null){
+        if (taskEnt != null) {
 // TODO falta testar
-                if(taskEnt.getProject().getStatus()!=StatusProject.PROGRESS){
-                    // editar tarefa num projecto Planning, que não está em andamento. Não é preciso confirmar datas de concurso
+            if (taskEnt.getProject().getStatus() != StatusProject.PROGRESS) {
+                // editar tarefa num projecto Planning, que não está em andamento. Não é preciso confirmar datas de concurso
 
-                    if(editTask.getStartDate()!= taskEnt.getStartDate()){
-                        //significa que data inicio foi alterada e é preciso garantir que não interfere com datas de tarefas associadas, precendentes
+                if (editTask.getStartDate() != taskEnt.getStartDate()) {
+                    //significa que data inicio foi alterada e é preciso garantir que não interfere com datas de tarefas associadas, precendentes
 
-                         res1 = checkNewDatesCompatibilityWithPreRequiredTasks(editTask);
-
-
-                    }
-                    if (editTask.getFinishDate()!=taskEnt.getFinishDate()){
-                        //significa que data final foi alterada e é preciso garantir que não interfere com datas de tarefas associadas, que tenham esta tarefa como precedente
-                        res2=checkNewDatesCompatibilityWithAssociatedTasks(editTask, taskEnt);
-                    }
-
-                    if(!res1 && !res2 ){
-                        //ambos são false, significa que n há conflitos de datas. A tarefa pode ser editada
-
-                       res= taskCanBeEdited(taskEnt, editTask);
-
-                    }
-                } else {
-                    // tarefa pertence a projecto in progress. Começar por verificar se datas alteradas são compatíveis com datas de concurso
-                    // verificar, no caso de ser tarefa final, se alguma tarefa é posterior porque n pode ser
-
-                    if (contestBean.newDatesAreWithinContestPeriod(taskEnt, editTask) && !taskEnt.isFinalTask()){
-                        // datas são compatíveis com concurso e não sendo final task, não precisa de verificação extra
-
-                        if(editTask.getStartDate()!= taskEnt.getStartDate()){
-                            //significa que data inicio foi alterada e é preciso garantir que não interfere com datas de tarefas associadas, precendentes
-
-                            res1 = checkNewDatesCompatibilityWithPreRequiredTasks(editTask);
+                    res1 = checkNewDatesCompatibilityWithPreRequiredTasks(editTask);
 
 
-                        }
-                        if (editTask.getFinishDate()!=taskEnt.getFinishDate()){
-                            //significa que data final foi alterada e é preciso garantir que não interfere com datas de tarefas associadas, que tenham esta tarefa como precedente
-                            res2=checkNewDatesCompatibilityWithAssociatedTasks(editTask, taskEnt);
-                        }
-
-                        if(!res1 && !res2 ){
-                            //ambos são false, significa que n há conflitos de datas. A tarefa pode ser editada
-
-                            res= taskCanBeEdited(taskEnt, editTask);
-
-                        }
-
-
-                    }  else if (contestBean.newDatesAreWithinContestPeriod(taskEnt,editTask) && taskEnt.isFinalTask()){
-                        // precisa de verificar datas da final task n colidem com datas de restantes tarefas do projecto
-
-                        if(verifyFinalTaskDateIsAfterAllProjectTasks(taskEnt.getProject(), editTask.getStartDate())){
-                            // A tarefa pode ser editada
-
-                            res= taskCanBeEdited(taskEnt, editTask);
-
-                        }
-
-
-                    }
+                }
+                if (editTask.getFinishDate() != taskEnt.getFinishDate()) {
+                    //significa que data final foi alterada e é preciso garantir que não interfere com datas de tarefas associadas, que tenham esta tarefa como precedente
+                    res2 = checkNewDatesCompatibilityWithAssociatedTasks(editTask, taskEnt);
                 }
 
+                if (!res1 && !res2) {
+                    //ambos são false, significa que n há conflitos de datas. A tarefa pode ser editada
+
+                    res = taskCanBeEdited(taskEnt, editTask);
+
+                }
+            } else {
+                // tarefa pertence a projecto in progress. Começar por verificar se datas alteradas são compatíveis com datas de concurso
+                // verificar, no caso de ser tarefa final, se alguma tarefa é posterior porque n pode ser
+
+                if (contestBean.newDatesAreWithinContestPeriod(taskEnt, editTask) && !taskEnt.isFinalTask()) {
+                    // datas são compatíveis com concurso e não sendo final task, não precisa de verificação extra
+
+                    if (editTask.getStartDate() != taskEnt.getStartDate()) {
+                        //significa que data inicio foi alterada e é preciso garantir que não interfere com datas de tarefas associadas, precendentes
+
+                        res1 = checkNewDatesCompatibilityWithPreRequiredTasks(editTask);
+
+
+                    }
+                    if (editTask.getFinishDate() != taskEnt.getFinishDate()) {
+                        //significa que data final foi alterada e é preciso garantir que não interfere com datas de tarefas associadas, que tenham esta tarefa como precedente
+                        res2 = checkNewDatesCompatibilityWithAssociatedTasks(editTask, taskEnt);
+                    }
+
+                    if (!res1 && !res2) {
+                        //ambos são false, significa que n há conflitos de datas. A tarefa pode ser editada
+
+                        res = taskCanBeEdited(taskEnt, editTask);
+
+                    }
+
+
+                } else if (contestBean.newDatesAreWithinContestPeriod(taskEnt, editTask) && taskEnt.isFinalTask()) {
+                    // precisa de verificar datas da final task n colidem com datas de restantes tarefas do projecto
+
+                    if (verifyFinalTaskDateIsAfterAllProjectTasks(taskEnt.getProject(), editTask.getStartDate())) {
+                        // A tarefa pode ser editada
+
+                        res = taskCanBeEdited(taskEnt, editTask);
+
+                    }
+
+
+                }
             }
+
+        }
         return res;
     }
 
 
     private boolean taskCanBeEdited(entity.Task taskEnt, Task editTask) {
         // método onde realmente edita a tarefa, depois de verificadas as possíveis condicionantes das datas
-        boolean res=false;
+        boolean res = false;
 
         taskEnt.setTitle(editTask.getTitle());
         taskEnt.setStartDate(editTask.getStartDate());
@@ -1694,23 +1689,23 @@ boolean res = false;
         taskEnt.setDetails(editTask.getDetails());
         taskEnt.setAdditionalExecutors(editTask.getAdditionalExecutors());
 
-        if(taskEnt.getTaskOwner().getUserId()!=editTask.getTaskOwnerId()){
+        if (taskEnt.getTaskOwner().getUserId() != editTask.getTaskOwnerId()) {
             //alteração de membro responsável. Verificar se é membro do projecto
             // TODO redundante pq no frontend so aparecem membros
             ProjectMember pm = projMemberDao.findProjectMemberByProjectIdAndUserId(taskEnt.getProject().getId(), editTask.getTaskOwnerId());
 
-            if(pm !=null){
-                if(pm.isAccepted() && !pm.isRemoved()){
+            if (pm != null) {
+                if (pm.isAccepted() && !pm.isRemoved()) {
                     // relação com projecto está activa
                     entity.User user = userDao.findUserById(editTask.getTaskOwnerId());
-                    if(user!=null){
+                    if (user != null) {
                         taskEnt.setTaskOwner(user);
                     }
                 }
             }
         }
         taskDao.merge(taskEnt); // merge antes de associar, pq lá já faz merge da taskEnt e resultava na duplicação das pre required tasks
-        if(editTask.getPreRequiredTasks()!=null || editTask.getPreRequiredTasks().size()!=0){
+        if (editTask.getPreRequiredTasks() != null || editTask.getPreRequiredTasks().size() != 0) {
 
             // deletePreRequiredTasksWithCurrentTask(taskEnt);
             taskEnt.getListPreRequiredTasks().clear();
@@ -1719,8 +1714,7 @@ boolean res = false;
             associatePreRequiredTasksWithCurrentTask(editTask.getPreRequiredTasks(), taskEnt);
         }
 
-        res=true;
-
+        res = true;
 
 
         return res;
@@ -1746,12 +1740,12 @@ boolean res = false;
         boolean res = false;
         int count = 0;
 
-        if(editTask.getPreRequiredTasks()!=null){
-            for (Task t : editTask.getPreRequiredTasks()){
+        if (editTask.getPreRequiredTasks() != null) {
+            for (Task t : editTask.getPreRequiredTasks()) {
                 // para cada Dto que vem do frontend é preciso ir buscar ENT à DB para comparar data final com nova data de inicio
                 entity.Task taskE = taskDao.find(t.getId());
 
-                if (!taskE.getFinishDate().before(editTask.getStartDate())){
+                if (!taskE.getFinishDate().before(editTask.getStartDate())) {
                     System.out.println("finish " + taskE.getFinishDate());
                     System.out.println("start " + editTask.getStartDate());
                     //significa que data não é compatível
@@ -1759,51 +1753,51 @@ boolean res = false;
                 }
 
             }
-            if (count!=0){
+            if (count != 0) {
                 // significa que há conflito de datas com alguma tarefa
-                res=true;
+                res = true;
             }
         }
-return res;
+        return res;
     }
 
     private boolean checkNewDatesCompatibilityWithAssociatedTasks(Task editTask, entity.Task taskEnt) {
         //significa que data final foi alterada e é preciso garantir que não interfere com datas de tarefas associadas, que tenham esta tarefa como precedente
         // é preciso obter lista de tarefas que tenham a tarefa a editar como sendo prerequired e comparar a nova data final com data de inicio de cada uma dessas tarefas
-    boolean res= false;
+        boolean res = false;
 
-    int count =0;
+        int count = 0;
 
-    List<entity.Task> tasksWhoHaveCurrentTaskAsPrecedent = findTasksWhoHaveCurrentTaskAsPrecedent(taskEnt);
+        List<entity.Task> tasksWhoHaveCurrentTaskAsPrecedent = findTasksWhoHaveCurrentTaskAsPrecedent(taskEnt);
 
-    if(tasksWhoHaveCurrentTaskAsPrecedent != null){
-        for (entity.Task t : tasksWhoHaveCurrentTaskAsPrecedent){
-            // para cada tarefa, comparar data de inicio da tarefa t com nova data final do DTO
-            if (!t.getStartDate().after(editTask.getFinishDate())){
-                //significa que data não é compatível
-                System.out.println("finish " + editTask.getFinishDate());
-                System.out.println("start " + t.getStartDate());
-                count++;
+        if (tasksWhoHaveCurrentTaskAsPrecedent != null) {
+            for (entity.Task t : tasksWhoHaveCurrentTaskAsPrecedent) {
+                // para cada tarefa, comparar data de inicio da tarefa t com nova data final do DTO
+                if (!t.getStartDate().after(editTask.getFinishDate())) {
+                    //significa que data não é compatível
+                    System.out.println("finish " + editTask.getFinishDate());
+                    System.out.println("start " + t.getStartDate());
+                    count++;
+                }
+            }
+            if (count != 0) {
+                // significa que há conflito de datas com alguma tarefa
+                res = true;
             }
         }
-        if (count!=0){
-            // significa que há conflito de datas com alguma tarefa
-            res=true;
-        }
-    }
 
 
-    return res;
+        return res;
     }
 
     public boolean verifyTaskStatusToEditTask(int id) {
         // verifica se status da tarefa é planning ou in progress, para que possa ser alterada
-        boolean res=false;
+        boolean res = false;
 
         entity.Task task = taskDao.find(id);
-        if(task!=null){
-            if(task.getStatus()==StatusTask.FINISHED){
-                res=true;
+        if (task != null) {
+            if (task.getStatus() == StatusTask.FINISHED) {
+                res = true;
                 // tarefa n pode ser alterada
             }
         }
@@ -1816,11 +1810,11 @@ return res;
         // editar status da tarefa: tarefa pode passar de planned para in progress  ou de in progress para finished, nunca 'retroceder na escala'
         // envia do frontend statusInfo = 1  para mudar para IN PROGRESS  / statusInfo = 2 para mudar para FINISHED
 
-        boolean res=false;
+        boolean res = false;
 
         entity.Task taskEnt = taskDao.find(editTask.getId());
 
-        if(taskEnt!=null) {
+        if (taskEnt != null) {
             if (taskEnt.getListPreRequiredTasks() != null) {
                 if (checkPreRequiredTasksAreFinished(taskEnt.getListPreRequiredTasks())) {
 
@@ -1829,7 +1823,7 @@ return res;
                         taskDao.merge(taskEnt);
                         res = true;
                         entity.User user = tokenDao.findUserEntByToken(token);
-                        communicationBean.recordTaskStatusEdit(user, taskEnt,1);
+                        communicationBean.recordTaskStatusEdit(user, taskEnt, 1);
 
 
                     } else if (editTask.getStatusInfo() == 2 && taskEnt.getStatus().ordinal() == 1) {
@@ -1840,7 +1834,7 @@ return res;
                         //TODO decidir se manter notificação ou apenas registar no historico
                         res = true;
                         entity.User user = tokenDao.findUserEntByToken(token);
-                        communicationBean.recordTaskStatusEdit(user, taskEnt,2);
+                        communicationBean.recordTaskStatusEdit(user, taskEnt, 2);
                     } else {
                         res = false;
                     }
@@ -1853,7 +1847,7 @@ return res;
                     taskDao.merge(taskEnt);
                     res = true;
                     entity.User user = tokenDao.findUserEntByToken(token);
-                    communicationBean.recordTaskStatusEdit(user, taskEnt,1);
+                    communicationBean.recordTaskStatusEdit(user, taskEnt, 1);
                 } else if (editTask.getStatusInfo() == 2 && taskEnt.getStatus().ordinal() == 1) {
                     taskEnt.setStatus(StatusTask.FINISHED);
                     taskDao.merge(taskEnt);
@@ -1862,7 +1856,7 @@ return res;
                     //TODO decidir se manter notificação ou apenas registar no historico
                     res = true;
                     entity.User user = tokenDao.findUserEntByToken(token);
-                    communicationBean.recordTaskStatusEdit(user, taskEnt,2);
+                    communicationBean.recordTaskStatusEdit(user, taskEnt, 2);
                 } else {
                     res = false;
                 }
@@ -1874,38 +1868,38 @@ return res;
     private boolean checkPreRequiredTasksAreFinished(List<entity.Task> listPreRequiredTasks) {
         // verifica se tarefas precedentes estão concluídas para que status de task possa ser alterado
         // se count for diferente de 0, significa que alguma tarefa precedente n está concluída, n podendo mudar status da tarefa
-      boolean res=true;
+        boolean res = true;
         int count = 0;
-        for (entity.Task t: listPreRequiredTasks){
-            if(t.getStatus()!=StatusTask.FINISHED){
+        for (entity.Task t : listPreRequiredTasks) {
+            if (t.getStatus() != StatusTask.FINISHED) {
                 count++;
             }
         }
 
-        if (count!=0){
-            res=false;
+        if (count != 0) {
+            res = false;
         }
 
-     return res;
+        return res;
     }
 
     public boolean verifyPermissionToEditTaskStatus(String token, int taskId) {
         // verifica se token é gestor do projecto ou owner da tarefa - únicas pessoas com autorização para editar status de tarefa
-boolean res=false;
+        boolean res = false;
 
 
         entity.Task task = taskDao.find(taskId);
-        if(task!=null){
+        if (task != null) {
 
-            if(isProjManager(token, task.getProject().getId())){
+            if (isProjManager(token, task.getProject().getId())) {
                 // é gestor, pode mudar
-                res=true;
+                res = true;
             } else {
                 // verificar se token é owner da tarefa
-                entity.User loggedUser=tokenDao.findUserEntByToken(token);
-                if(loggedUser.getUserId()==task.getTaskOwner().getUserId()){
+                entity.User loggedUser = tokenDao.findUserEntByToken(token);
+                if (loggedUser.getUserId() == task.getTaskOwner().getUserId()) {
                     // token é owner da tarefa, podendo alterar o seu status
-                    res=true;
+                    res = true;
                 }
 
             }
@@ -1914,7 +1908,7 @@ boolean res=false;
         }
 
 
-return res;
+        return res;
     }
 
     public boolean verifyPermisionToEditProjectInfo(int id) {
@@ -1923,9 +1917,9 @@ return res;
 
         entity.Project project = projDao.findProjectById(id);
 
-        if(project!=null){
-            if(project.getStatus()!=StatusProject.PLANNING){
-                res=true;
+        if (project != null) {
+            if (project.getStatus() != StatusProject.PLANNING) {
+                res = true;
                 // projecto n pode ser editado
             }
         }
@@ -1937,38 +1931,40 @@ return res;
     public boolean verifyProjectCanApply(String token, int contestId) {
         // verifica se token tem projecto activo, se o seu status é READY e tem tarefa final com data compatível com final do concurso para poder de facto concorrer ao concurso
         // verifica tb se todas as tarefas do plano de execução estão dentro do timing de execução do concurso
-boolean res=false;
+        boolean res = false;
 
-            entity.User user = tokenDao.findUserEntByToken(token);
+        entity.User user = tokenDao.findUserEntByToken(token);
 
-            if(user!=null){
-                entity.Project project = projMemberDao.findActiveProjectByUserId(user.getUserId());
+        if (user != null) {
+            entity.Project project = projMemberDao.findActiveProjectByUserId(user.getUserId());
 
 
-                if(project!=null){
+            if (project != null) {
 
-                   if(verifyProjectStatusIsReady(project, contestId));{
-                        res=true;
-                    }
+                if (verifyProjectStatusIsReady(project, contestId)) ;
+                {
+                    res = true;
+                }
 
-                    }
+            }
 
             System.out.println("result verify project can apply: " + res);
-            }return res;
         }
+        return res;
+    }
 
     private boolean verifyProjectStatusIsReady(entity.Project project, int contestId) {
         // verifica se projecto status is READY e se finalTask é compatível com data final de concurso
-        boolean res= false;
+        boolean res = false;
 
-        if(project.getStatus()==StatusProject.READY) {
+        if (project.getStatus() == StatusProject.READY) {
             // verificar se projecto tem final task definida
 
             entity.Task finalTask = taskDao.findFinalTaskByProjectId(project.getId());
 
-            if(finalTask!=null){
-                if(verifyFinalTaskDate(finalTask, contestId)){
-                    res=true;
+            if (finalTask != null) {
+                if (verifyFinalTaskDate(finalTask, contestId)) {
+                    res = true;
                     // proj pode concorrer
                 }
             }
@@ -1983,15 +1979,15 @@ boolean res=false;
 
     private boolean verifyFinalTaskDate(entity.Task finalTask, int contestId) {
         // verifica se data da tarefa final está compreendida no período de execução do concurso
-boolean res=false;
+        boolean res = false;
         Contest contest = contestDao.find(contestId);
 
-        if(contest!=null){
+        if (contest != null) {
             System.out.println(contest.getStartDate() + " " + contest.getFinishDate());
-            if (finalTask.getStartDate().after(contest.getStartDate()) && finalTask.getStartDate().before(contest.getFinishDate())){
+            if (finalTask.getStartDate().after(contest.getStartDate()) && finalTask.getStartDate().before(contest.getFinishDate())) {
                 System.out.println(finalTask.getStartDate() + " " + finalTask.getFinishDate());
 
-                res=true;
+                res = true;
                 // data é OK
             }
         }
@@ -2043,8 +2039,8 @@ boolean res=false;
             if (projMember != null) {
                 if (!projMember.isRemoved()) {
 
-                        res = true;
-                        // token que faz request é membro do projecto, tendo permissão para fazer o request
+                    res = true;
+                    // token que faz request é membro do projecto, tendo permissão para fazer o request
                 }
             }
         }
@@ -2057,14 +2053,14 @@ boolean res=false;
 
         List<ProjectHistory> recordsList = new ArrayList<>();
 
-        List<entity.ProjectHistory> list=recordDao.findListOfRecordsByProjId(projId);
+        List<entity.ProjectHistory> list = recordDao.findListOfRecordsByProjId(projId);
 
-        if (list!=null){
-            for (entity.ProjectHistory r : list){
+        if (list != null) {
+            for (entity.ProjectHistory r : list) {
                 recordsList.add(convertRecordEntToDto(r));
             }
+            Collections.reverse(recordsList);
         }
-
 
 
         return recordsList;
@@ -2072,13 +2068,13 @@ boolean res=false;
 
     private ProjectHistory convertRecordEntToDto(entity.ProjectHistory r) {
         // converte entity to DTO
-
+        System.out.println("metodo converter");
         ProjectHistory recordDto = new ProjectHistory();
         recordDto.setId(r.getId());
         recordDto.setMessage(r.getMessage());
         recordDto.setCreationTime(r.getCreationTime());
 
-        if(r.getTask()!=null){
+        if (r.getTask() != null) {
             recordDto.setTaskId(r.getTask().getId());
             recordDto.setTaskTitle(r.getTask().getTitle());
         }
@@ -2088,7 +2084,7 @@ boolean res=false;
         recordDto.setAuthorFirstName(r.getAuthor().getFirstName());
         recordDto.setAuthorLastName(r.getAuthor().getLastName());
 
-
+        System.out.println("metodo converter saida ");
         return recordDto;
     }
 
@@ -2098,42 +2094,43 @@ boolean res=false;
         System.out.println("metodo resposta a self invite " + answer + projId + projMemberId);
         boolean res = false;
 
-        entity.User loggedUser= tokenDao.findUserEntByToken(token);
-        if(loggedUser!=null){
-        ProjectMember pm = projMemberDao.find(projMemberId);
+        entity.User loggedUser = tokenDao.findUserEntByToken(token);
+        if (loggedUser != null) {
+            ProjectMember pm = projMemberDao.find(projMemberId);
 
 
-        if (pm != null) {
-            System.out.println("pm not null");
+            if (pm != null) {
+                System.out.println("pm not null");
 
-            if(answer==0){
-                // sendo recusa não precisa de mais nenhuma validação
-                pm.setAnswered(true);
-                pm.setAccepted(false);
-                projMemberDao.merge(pm);
-                res=true;
-                communicationBean.recordManagerResponseToSelfInvitation(loggedUser, pm.getUserInvited(), pm.getProjectToParticipate(), answer);
-                communicationBean.notifyPotentialMemberOfSelfInvitationResponse(pm, answer);
+                if (answer == 0) {
+                    // sendo recusa não precisa de mais nenhuma validação
+                    pm.setAnswered(true);
+                    pm.setAccepted(false);
+                    projMemberDao.merge(pm);
+                    res = true;
+                    communicationBean.recordManagerResponseToSelfInvitation(loggedUser, pm.getUserInvited(), pm.getProjectToParticipate(), answer);
+                    communicationBean.notifyPotentialMemberOfSelfInvitationResponse(pm, answer);
 
-            } else if (answer==1){
-                // pedido aceite. é preciso garantir que há vagas disponíveis
-                // contar quantos projMembers aceites e not removed existem e comparar com vagas que projecto determina
+                } else if (answer == 1) {
+                    // pedido aceite. é preciso garantir que há vagas disponíveis
+                    // contar quantos projMembers aceites e not removed existem e comparar com vagas que projecto determina
 
-               if( verifyIfProjectHasAvailableSpots(projId)){
-                   // há vagas, a pessoa pode ter o seu pedido efectivamente aceite
-                   pm.setAnswered(true);
-                   pm.setAccepted(true);
-                   projMemberDao.merge(pm);
-                   res=true;
-                   communicationBean.recordManagerResponseToSelfInvitation(loggedUser, pm.getUserInvited(), pm.getProjectToParticipate(), answer);
-                   communicationBean.notifyPotentialMemberOfSelfInvitationResponse(pm, answer);
+                    if (verifyIfProjectHasAvailableSpots(projId)) {
+                        // há vagas, a pessoa pode ter o seu pedido efectivamente aceite
+                        pm.setAnswered(true);
+                        pm.setAccepted(true);
+                        projMemberDao.merge(pm);
+                        res = true;
+                        communicationBean.recordManagerResponseToSelfInvitation(loggedUser, pm.getUserInvited(), pm.getProjectToParticipate(), answer);
+                        communicationBean.notifyPotentialMemberOfSelfInvitationResponse(pm, answer);
 
 
-                   // TODO verificar limite vagas do projecto e recusar os outros ou verificar à entrada e não deixar botões disponvieis no frontend se n der pra adicionar mais membros?
+                        // TODO verificar limite vagas do projecto e recusar os outros ou verificar à entrada e não deixar botões disponvieis no frontend se n der pra adicionar mais membros?
 
-               }
+                    }
+                }
             }
-        }}
+        }
 
         return res;
     }
@@ -2144,13 +2141,13 @@ boolean res=false;
         List<ProjectChat> listDto = new ArrayList<>();
 
         List<ProjectChatMessage> listEnt = projChatDao.findListOfMessagesByProjId(projId);
-        if(listEnt!=null){
-            for (ProjectChatMessage m : listEnt){
+        if (listEnt != null) {
+            for (ProjectChatMessage m : listEnt) {
                 listDto.add(convertProjChatEntToDto(m));
 
             }
         }
-     return listDto;
+        return listDto;
     }
 
     private ProjectChat convertProjChatEntToDto(ProjectChatMessage m) {
@@ -2170,35 +2167,89 @@ boolean res=false;
     public boolean verifyPermissionToChat(int projId) {
         // chat apenas funciona para envio de mensagens se status do projecto não for CANCELLED ou FINISHED
 
-        boolean res=false;
+
+        boolean res = false;
         entity.Project project = projDao.findProjectById(projId);
-        if(project!=null){
-            if(project.getStatus()==StatusProject.CANCELLED || project.getStatus()==StatusProject.FINISHED){
-                res= true; // n pode enviar mensagem
+        if (project != null) {
+            if (project.getStatus() == StatusProject.CANCELLED || project.getStatus() == StatusProject.FINISHED) {
+                res = true; // n pode enviar mensagem
             }
-        }return res;
+        }
+        return res;
     }
 
     public ProjectChat addMessageToProjectChat(int projId, ProjectChat message, String token) {
         // adiciona nova mensagem ao chat do projecto
-ProjectChat messageDto = new ProjectChat();
+        ProjectChat messageDto = new ProjectChat();
 
         entity.User user = tokenDao.findUserEntByToken(token);
-        if(user!=null){
+        if (user != null) {
             entity.Project project = projDao.findProjectById(projId);
-            if(project!=null) {
+            if (project != null) {
                 ProjectChatMessage newMessage = new ProjectChatMessage();
                 newMessage.setCreationTime(Date.from(Instant.now()));
                 newMessage.setProject(project);
                 newMessage.setMessageSender(user);
                 newMessage.setMessage(message.getMessage());
-projChatDao.persist(newMessage);
+                projChatDao.persist(newMessage);
 
-                messageDto=convertProjChatEntToDto(newMessage);
+                messageDto = convertProjChatEntToDto(newMessage);
 
 
             }
         }
-return messageDto;
+        return messageDto;
     }
+
+    public boolean verifyPermissionToAddManualRecord(int projId) {
+        // verifica se project status é IN PROGRESS pois apenas nesta altura poderá adicionar registo histórico manual
+
+
+        boolean res = false;
+        entity.Project project = projDao.findProjectById(projId);
+        if (project != null) {
+            if (project.getStatus() == StatusProject.PROGRESS) {
+                res = true; //pode adicionar registo manual
+            }
+        }
+        return res;
+
+
+    }
+
+    public ProjectHistory addManualRecord(int projId, ProjectHistory record, String token) {
+        // adiciona registo manual, com ou sem tarefa associada
+
+        ProjectHistory recordDto = new ProjectHistory();
+
+        entity.User user = tokenDao.findUserEntByToken(token);
+        if (user != null) {
+            entity.Project project = projDao.findProjectById(projId);
+            if (project != null) {
+                entity.ProjectHistory recordEnt = new entity.ProjectHistory();
+                recordEnt.setMessage(record.getMessage());
+                recordEnt.setCreationTime(Date.from(Instant.now()));
+                recordEnt.setAuthor(user);
+                recordEnt.setProject(project);
+
+                if (record.getTaskId() != 0) {
+                    // tarefa foi definida para associar a registo
+                    entity.Task task = taskDao.find(record.getTaskId());
+
+                    if (task != null) {
+                        recordEnt.setTask(task);
+                    }
+                }
+
+                recordDao.persist(recordEnt);
+                System.out.println("record ent " + record.getId() + record.getMessage());
+                recordDto = convertRecordEntToDto(recordEnt);
+                System.out.println("record dto " + recordDto.getId() + recordDto.getMessage());
+
+
+            }
+        }
+        return recordDto;
+    }
+
 }

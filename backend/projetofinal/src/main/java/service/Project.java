@@ -167,7 +167,7 @@ return r;
 
             ProjectChat newMessage = projBean.addMessageToProjectChat(projId, message, token);
 
-            if (newMessage!=null) {
+            if (newMessage==null) {
                 r = Response.status(404).entity("Something went wrong!").build();
             } else {
 
@@ -175,6 +175,34 @@ return r;
             }
         }
         return r;}
+
+    // ADICIONAR REGISTO HISTÓRICO MANUAL
+    @POST
+    @Path("/{projId}/record")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addManualRecord(@PathParam("projId") int projId, ProjectHistory record, @HeaderParam("token") String token) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) || record== null ) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        }  else if (!userBean.checkUserPermission(token) || !projBean.isProjMember(projId, token) || !projBean.verifyPermissionToAddManualRecord(projId)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            ProjectHistory newRecord = projBean.addManualRecord(projId, record, token);
+
+            if (newRecord==null) {
+                r = Response.status(404).entity("Something went wrong!").build();
+            } else {
+
+                r = Response.status(200).entity(newRecord).build();
+            }
+        }
+        return r;}
+
 
 
     // GESTOR DE PROJECTO RESPONDE A PEDIDO PARA PARTICIPAR NO PROJECTO - actualiza info da relação do projMember

@@ -38,27 +38,29 @@ function ProjectChat({ project }) {
   const handleSendMessage = (event) => {
     event.preventDefault();
 
-    const newMessage = {
-      message: inputValue,
-      userSenderId: user.userId,
-    };
+    if (inputValue !== "") {
+      const newMessage = {
+        message: inputValue,
+        userSenderId: user.userId,
+      };
 
-    fetch(`http://localhost:8080/projetofinal/rest/project/chat/${id}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        token: user.token,
-      },
-      body: JSON.stringify(newMessage),
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          return response.json();
-        }
+      fetch(`http://localhost:8080/projetofinal/rest/project/chat/${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: user.token,
+        },
+        body: JSON.stringify(newMessage),
       })
-      .then((response) => {
-        setInputValue("");
-      });
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json();
+          }
+        })
+        .then((response) => {
+          setInputValue("");
+        });
+    }
   };
 
   return (
@@ -97,7 +99,7 @@ function ProjectChat({ project }) {
           <div>
             <hr />
             <Input
-              placeholder="Type here..."
+              placeholder="Escreva a sua mensagem"
               className="bg-dark  p-4 rounded-5 "
               value={inputValue}
               onChange={(event) => setInputValue(event.target.value)}

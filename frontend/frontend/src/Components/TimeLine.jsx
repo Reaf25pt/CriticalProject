@@ -6,55 +6,14 @@ import { userStore } from "../stores/UserStore";
 import TextAreaComponent from "./TextAreaComponent";
 import { Timeline } from "primereact/timeline";
 
-function TimeLine() {
+function TimeLine({ project }) {
   const user = userStore((state) => state.user);
   const [recordList, setRecordList] = useState([]);
   const [showTasks, setShowTasks] = useState([]);
   const [task, setTask] = useState([]);
   const { id } = useParams();
   const [credentials, setCredentials] = useState({});
-
-  /*
-  const events = [
-    {
-      status: "Ordered",
-      date: "15/10/2020 10:30",
-      icon: "pi pi-shopping-cart",
-      color: "#9C27B0",
-      image: "game-controller.jpg",
-    },
-    {
-      status: "Processing",
-      date: "15/10/2020 14:00",
-      icon: "pi pi-cog",
-      color: "#673AB7",
-    },
-    {
-      status: "Shipped",
-      date: "15/10/2020 16:15",
-      icon: "pi pi-shopping-cart",
-      color: "#FF9800",
-    },
-    {
-      status: "Delivered",
-      date: "16/10/2020 10:00",
-      icon: "pi pi-check",
-      color: "#607D8B",
-    },
-    {
-      status: "Delivered",
-      date: "16/10/2020 10:00",
-      icon: "pi pi-check",
-      color: "#607D8B",
-    },
-    {
-      status: "Delivered",
-      date: "16/10/2020 10:00",
-      icon: "pi pi-check",
-      color: "#607D8B",
-    },
-  ];
-*/
+  const [newRecord, setNewRecord] = useState([]);
 
   useEffect(() => {
     fetch(`http://localhost:8080/projetofinal/rest/project/${id}/record`, {
@@ -69,7 +28,7 @@ function TimeLine() {
         setRecordList(data);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [newRecord]);
 
   // const customizedMarker = (item) => {
   //   return (
@@ -80,7 +39,7 @@ function TimeLine() {
   // };
 
   const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
+    const options = { year: "numeric", month: "numeric", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
@@ -92,7 +51,14 @@ function TimeLine() {
             {item.authorFirstName} {item.authorLastName}
           </h5>
           <hr />
-          <h8>{formatDate(item.creationTime)}</h8>
+          {item.taskId === 0 ? (
+            <h8>{formatDate(item.creationTime)}</h8>
+          ) : (
+            <h8>
+              {formatDate(item.creationTime)} {item.taskTitle}
+            </h8>
+          )}
+          {/*   <h8>{formatDate(item.creationTime)}</h8> */}
           <hr />
           <h8 class="card-text">{item.message}</h8>
         </div>
@@ -109,9 +75,6 @@ function TimeLine() {
     });
   };
 
-  const addRecord = (event) => {
-    event.preventDefault();
-  };
   useEffect(() => {
     fetch(`http://localhost:8080/projetofinal/rest/project/tasks/${id}`, {
       method: "GET",
@@ -127,38 +90,84 @@ function TimeLine() {
       .catch((err) => console.log(err));
   }, [task]);
 
+  const addRecord = (event) => {
+    event.preventDefault();
+
+    console.log(credentials);
+    console.log(credentials.record);
+
+    if (!credentials.record || credentials.record === "") {
+      alert("Tem de inserir texto");
+    } else {
+      var newRecord = {
+        taskId: credentials.task,
+        message: credentials.record,
+      };
+
+      fetch(`http://localhost:8080/projetofinal/rest/project/${id}/record`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          token: user.token,
+        },
+        body: JSON.stringify(newRecord),
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json();
+          }
+        })
+        .then((response) => {
+          setNewRecord(response);
+        });
+      document.getElementById("record").value = "";
+      document.getElementById("task").value = "0";
+    }
+  };
+
   return (
     <div class="container-fluid">
       <div className="row mt-5 d-flex justify-content-around">
-        <div className="col-lg-4">
-          <form className="bg-secondary p-5 rounded-5">
-            <ProjectAllTasksSelect
-              name="preRequiredTasks"
-              id="preRequiredTasks"
-              placeholder={"Tarefas precedentes "}
-              local={"Tarefas precedentes "}
-              taskList={showTasks}
-            />
-            <div className="row mt-3 mb-3">
-              <TextAreaComponent
-                placeholder={"Registar ocorrência *"}
-                id="record"
-                name="record"
-                required
-                type="text"
+        {project.statusInt === 4 ? (
+          <div className="col-lg-4">
+            <div className="bg-secondary p-5 rounded-5">
+              <select
+                name="task"
+                id="task"
+                placeholder={"Tarefa "}
+                local={"Tarefa "}
+                //taskList={showTasks}
                 onChange={handleChange}
-              />
-            </div>
-            <div className="row ">
-              <div className="col-lg-12 mx-auto">
-                <ButtonComponent
-                  name="Adicionar ocorrência"
-                  onClick={addRecord}
+              >
+                <option value="0">Tarefa</option>
+                {showTasks.map((task) => (
+                  <option key={task.id} value={task.id}>
+                    {task.title}
+                  </option>
+                ))}{" "}
+              </select>
+
+              <div className="row mt-3 mb-3">
+                <TextAreaComponent
+                  placeholder={
+                    "Registar ocorrência * \nPode associar uma tarefa à qual o registo diz respeito"
+                  }
+                  id="record"
+                  name="record"
+                  required
+                  type="text"
+                  onChange={handleChange}
                 />
               </div>
+              <div className="row ">
+                <div className="col-lg-12 mx-auto">
+                  <ButtonComponent name="Registar" onClick={addRecord} />
+                </div>
+              </div>
             </div>
-          </form>
-        </div>
+          </div>
+        ) : null}
+
         {recordList && recordList.length > 0 ? (
           <div className="col-lg-8">
             <Timeline
