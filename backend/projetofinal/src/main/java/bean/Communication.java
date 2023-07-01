@@ -11,9 +11,7 @@ import websocket.Notifier;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RequestScoped
 public class Communication implements Serializable {
@@ -120,6 +118,7 @@ public class Communication implements Serializable {
                 for (Notification n : list) {
                     listDto.add(convertNotifEntToDto(n));
                 }
+                Collections.reverse(listDto);
             }
         }
         return listDto;
@@ -497,6 +496,38 @@ if (value==0){
                     }
     }
 
+
+    public void notifyContestHasWinner(Contest contest) {
+        // notifica membros de projectos envolvidos num concurso que concurso já tem vencedor
+        List<Project> acceptedProjects = applicationDao.findAcceptedProjectsForGivenContestId(contest.getId());
+
+        if(acceptedProjects!=null){
+            for(Project p : acceptedProjects){
+                // encontrar lista de membros activos e not removed para serem notificados
+                List<User> members = projMemberDao.findListOfUsersByProjectId(p.getId());
+
+                if(members!=null){
+                    for (User u : members) {
+                        Notification notif = new Notification();
+                        notif.setCreationTime(Date.from(Instant.now()));
+                        notif.setSeen(false);
+                        notif.setNeedsInput(false);
+                        // notif.setProjectMember(projMember);
+
+                        notif.setMessage("O projecto vencedor do concurso "  + contest.getTitle() + " é " + contest.getWinner().getTitle());
+                        notif.setMessageEng("Project "  + contest.getWinner().getTitle()+ " has been declares winner of contest " + contest.getTitle() );
+
+                        notif.setNotificationOwner(u);
+                        notifDao.persist(notif);
+                        notifyRealTime(notif, u);
+
+
+
+                    }}}
+        }
+    }
+
+
     public void recordProjectCreation(Project newProjEnt, User user) {
         // guarda registo no histórico do projecto da sua criação
 
@@ -678,6 +709,19 @@ record.setProject(task.getProject());
         }
 
         System.out.println("FIM record application response");
+
+        recordDao.persist(record);
+    }
+
+    public void recordProjectDeclaredWinner(User user, Project project, Contest contest) {
+        // guarda registo no histórico do projecto ser declarado vencedor do concurso
+        //TODO faz sentido identificar o gestor de concurso, autor da decisão?
+        ProjectHistory record = new ProjectHistory();
+        record.setCreationTime(Date.from(Instant.now()));
+        record.setAuthor(user);
+        record.setProject(project);
+
+            record.setMessage("O projecto foi declarado vencedor no concurso " + contest.getTitle());
 
         recordDao.persist(record);
     }

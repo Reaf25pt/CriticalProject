@@ -161,7 +161,7 @@ function ContestComponent({ toggleComponent, answeredProjects }) {
                 </div>
               )}
               <div className="col-lg-6">
-                {/*    <h5 className="text-center text-white">Estado </h5> */}
+                <h5 className="text-center text-white mb-3">Estado</h5>
                 <h3 className="text-center text-white bg-danger rounded-3 p-2 mt-3">
                   {contest.status}
                 </h3>
@@ -173,14 +173,15 @@ function ContestComponent({ toggleComponent, answeredProjects }) {
                   <div className="col-lg-12">
                     <ButtonComponent
                       type="button"
-                      name="Editar Concurso"
+                      name="Editar concurso"
                       onClick={toggleComponent}
                     />
                   </div>
+
                   <div className="col-lg-12">
                     <ButtonComponent
                       type="button"
-                      name="Abrir candidaturas"
+                      name="Abrir candidaturas: Open"
                       onClick={() => handleStatus(1)}
                     />
                   </div>
@@ -189,7 +190,7 @@ function ContestComponent({ toggleComponent, answeredProjects }) {
                 <div className="col-lg-12">
                   <ButtonComponent
                     type="button"
-                    name="Fechar candidaturas / iniciar fase de execução"
+                    name="Fechar candidaturas: Ongoing"
                     onClick={() => handleStatus(2)}
                   />
                 </div>

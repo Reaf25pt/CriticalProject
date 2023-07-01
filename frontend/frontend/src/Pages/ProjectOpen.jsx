@@ -365,7 +365,7 @@ function ProjectOpen() {
           role="tabpanel"
           aria-labelledby="tab5"
         >
-          <TimeLine tasks={""} />
+          <TimeLine project={showProjects} />
         </div>
       </div>
     </div>

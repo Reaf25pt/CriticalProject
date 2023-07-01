@@ -35,29 +35,6 @@ function Contest() {
     return date.toLocaleDateString(); // Adjust the format as per your requirement
   };
 
-  /* 
-  const [data, setData] = useState([
-    {
-      title: "Task 1",
-      status: "In Progress",
-      startDate: "2023-06-20",
-      endDate: "2023-06-25",
-    },
-    {
-      title: "Task 2",
-      status: "Completed",
-      startDate: "2023-06-15",
-      endDate: "2023-06-18",
-    },
-    {
-      title: "Task 3",
-      status: "Pending",
-      startDate: "2023-06-22",
-      endDate: "2023-06-24",
-    },
-    // Add more data as needed
-  ]); */
-
   const renderLink = (rowData) => {
     return (
       <Link to={`/home/contests/${rowData.id}`}>

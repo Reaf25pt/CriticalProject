@@ -5,7 +5,7 @@ import EditContestComponent from "../Components/EditContestComponent";
 import { Link, useParams } from "react-router-dom";
 import { userStore } from "../stores/UserStore";
 import { contestOpenStore } from "../stores/ContestOpenStore";
-import { BsEyeFill, BsCheck2, BsXLg } from "react-icons/bs";
+import { BsEyeFill, BsCheck2, BsXLg, BsTrophyFill } from "react-icons/bs";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Tag } from "primereact/tag";
@@ -52,6 +52,7 @@ function ContestOpen() {
       .then((resp) => resp.json())
       .then((data) => {
         setShowProjects(data);
+        console.log(data);
       })
       .catch((err) => console.log(err));
   }, [projects]);
@@ -79,6 +80,26 @@ function ContestOpen() {
       </Link>
     );
   };
+
+  const chooseWinner = (rowData) => {
+    if (rowData.accepted && contest.statusInt === 2)
+      return (
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip>Declarar vencedor</Tooltip>}
+        >
+          <span data-bs-toggle="tooltip" data-bs-placement="top">
+            {" "}
+            <BsTrophyFill
+              size={30}
+              color="black"
+              onClick={() => declareWinner(rowData.projectId)}
+            />
+          </span>
+        </OverlayTrigger>
+      );
+  };
+
   /* 
   const accept = (rowData) => {
     if (rowData.answered) {
@@ -128,13 +149,13 @@ function ContestOpen() {
     if (!rowData.accepted && rowData.answered) {
       return (
         <div className="bg-danger text-white text-center rounded-4">
-          Recusado
+          Recusada
         </div>
       );
     } else if (rowData.accepted && rowData.answered) {
       return (
         <div className="bg-success text-white text-center rounded-4">
-          Aprovado
+          Aprovada
         </div>
       );
     } else {
@@ -142,6 +163,28 @@ function ContestOpen() {
     }
   };
 
+  const declareWinner = (projId) => {
+    // event.preventDefault();
+    console.log(projId);
+
+    fetch("http://localhost:8080/projetofinal/rest/contest/application", {
+      method: "PUT",
+      headers: {
+        Accept: "*/*",
+        "Content-Type": "application/json",
+        token: user.token,
+        contestId: contest.id,
+        projId: projId,
+      },
+    }).then((response) => {
+      if (response.status === 200) {
+        alert("Vencedor declarado");
+        //navigate("/home", { replace: true });
+      } else {
+        alert("Algo correu mal");
+      }
+    });
+  };
   /*  function handleApplication(status, applicationId) {
     var status;
 
@@ -265,10 +308,11 @@ function ContestOpen() {
                       <Column
                         field="accepted"
                         body={answer}
-                        header=""
+                        header="Candidatura"
                         sortable
                       />
                       <Column body={renderLink} header="" />
+                      <Column body={chooseWinner} header="" />
                     </DataTable>
                   </div>
                 </div>
