@@ -797,7 +797,8 @@ return list;
             if (projectsList != null) {
                 int count = 0;
                 for (entity.Project p : projectsList) {
-                    if (p.getStatus() != StatusProject.CANCELLED || p.getStatus() != StatusProject.FINISHED) {
+                    System.out.println(  projectsList.size()+ " " +p.getId() + " " + p.getStatus().getStatus());
+                    if (p.getStatus() != StatusProject.CANCELLED && p.getStatus() != StatusProject.FINISHED) {
                         count++;
                     }
 
@@ -810,7 +811,7 @@ return list;
             }
 
         }
-
+        System.out.println("res metodo " + res);
         return res;
     }
 

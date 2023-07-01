@@ -87,7 +87,7 @@ function ProjectsCreate() {
       }).then((response) => {
         if (response.status === 200) {
           alert("Projecto criado com sucesso");
-          navigate("/home", { replace: true });
+          navigate("/home/projects", { replace: true });
         } else {
           alert("Algo correu mal");
         }

@@ -9,6 +9,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function Projects() {
   const user = userStore((state) => state.user);
+  const activeProject = userStore((state) => state.activeProject);
 
   const [showAllProjects, setAllShowProjects] = useState([]);
   const [projects, setProjects] = useState([]);
@@ -75,7 +76,7 @@ function Projects() {
           aria-labelledby="home-tab"
         >
           <div className="row mt-5 d-flex justify-content-around">
-            {!user.contestManager && user.noActiveProject ? (
+            {!user.contestManager && !activeProject.hasActiveProject ? (
               <div className="col-lg-2 ">
                 //{" "}
                 <LinkButton

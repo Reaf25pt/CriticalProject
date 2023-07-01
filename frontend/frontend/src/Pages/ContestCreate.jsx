@@ -47,7 +47,7 @@ function ContestCreate() {
       }).then((response) => {
         if (response.status === 200) {
           alert("Consurso criado com sucesso");
-          navigate("/home", { replace: true });
+          navigate("/home/contests", { replace: true });
         } else {
           alert("Algo correu mal");
         }

@@ -11,7 +11,14 @@ export const userStore = create(
       updateUser: (key, value) =>
         set((state) => ({ user: { ...state.user, [key]: value } })),
       clearLoggedUser: () => set({ user: null }),
+
+      activeProject: [],
+      setActiveProject: (newInfo) => set({ activeProject: newInfo }),
+
+      trigger: {}, // apenas para actualizar a info no activeProject
+      setTrigger: (data) => set({ trigger: data }),
     }),
+
     {
       name: "user-profile-store", // the name to use for the persisted data
       storage: createJSONStorage(() => sessionStorage), // the storage mechanism to use (sessionStorage or  localStorage)

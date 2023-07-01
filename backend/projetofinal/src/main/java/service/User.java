@@ -480,6 +480,34 @@ public class User {
     }
 
 
+    // GET INFO ON ACTIVE PROJECT THAT LOGGED USER HAS
+    @GET
+    @Path("/activeproject")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getActiveProject(@HeaderParam("token") String token) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token) ) {
+
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            ActiveProjectToken profile = userBean.getActiveProjectInfo(token);
+
+            if (profile == null ) {
+                r = Response.status(404).entity(profile).build();
+            } else {
+
+                r = Response.status(200).entity(profile).build();
+            }
+        }
+
+        return r;
+    }
     // GET USER PROFILE BY USER ID
     @GET
     @Path("/{id}")
@@ -508,6 +536,7 @@ public class User {
 
         return r;
     }
+
 
 
     // GET LIST OF PROJECTS OF LOGGED USER

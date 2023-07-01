@@ -90,60 +90,61 @@ function ContestApplications({ pendingApplications, setProjects }) {
     });
   }
 
-  if (pendingApplications.length === 0) {
+  if (pendingApplications.length === 0 && user.contestManager) {
     return (
       <div className="row mt-5">
         <h5 className="text-white">Não há candidaturas à espera de resposta</h5>
       </div>
     );
-  }
-  return (
-    <div className="col-8 col-sm-10 col-md-7 col-lg-5 mx-auto bg-secondary mt-5 rounded-5 ">
-      <div>
-        <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">
-          Convites pendentes
-        </h3>
-        {pendingApplications.map((application, index) => (
-          <div
-            key={index}
-            className="row bg-white text-black mb-3 rounded-3 w-50 mx-auto align-items-center"
-          >
-            <div className="col-lg-6 ">{application.projectTitle}</div>
-            <div className="col-lg-6 ">
-              <OverlayTrigger
-                placement="top"
-                overlay={<Tooltip>Aceitar pedido</Tooltip>}
-              >
-                <span data-bs-toggle="tooltip" data-bs-placement="top">
-                  {" "}
-                  <BsCheck2
-                    size={30}
-                    color="green"
-                    onClick={() => handleApplication(1, application.id)}
-                  />{" "}
-                </span>
-              </OverlayTrigger>
+  } else if (user.contestManager) {
+    return (
+      <div className="col-8 col-sm-10 col-md-7 col-lg-5 mx-auto bg-secondary mt-5 rounded-5 ">
+        <div>
+          <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">
+            Convites pendentes
+          </h3>
+          {pendingApplications.map((application, index) => (
+            <div
+              key={index}
+              className="row bg-white text-black mb-3 rounded-3 w-50 mx-auto align-items-center"
+            >
+              <div className="col-lg-6 ">{application.projectTitle}</div>
+              <div className="col-lg-6 ">
+                <OverlayTrigger
+                  placement="top"
+                  overlay={<Tooltip>Aceitar pedido</Tooltip>}
+                >
+                  <span data-bs-toggle="tooltip" data-bs-placement="top">
+                    {" "}
+                    <BsCheck2
+                      size={30}
+                      color="green"
+                      onClick={() => handleApplication(1, application.id)}
+                    />{" "}
+                  </span>
+                </OverlayTrigger>
+              </div>
+              <div className="col-lg-6 ">
+                <OverlayTrigger
+                  placement="top"
+                  overlay={<Tooltip>Recusar pedido</Tooltip>}
+                >
+                  <span data-bs-toggle="tooltip" data-bs-placement="top">
+                    {" "}
+                    <BsXLg
+                      size={30}
+                      color="red"
+                      onClick={() => handleApplication(0, application.id)}
+                    />
+                  </span>
+                </OverlayTrigger>
+              </div>
             </div>
-            <div className="col-lg-6 ">
-              <OverlayTrigger
-                placement="top"
-                overlay={<Tooltip>Recusar pedido</Tooltip>}
-              >
-                <span data-bs-toggle="tooltip" data-bs-placement="top">
-                  {" "}
-                  <BsXLg
-                    size={30}
-                    color="red"
-                    onClick={() => handleApplication(0, application.id)}
-                  />
-                </span>
-              </OverlayTrigger>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default ContestApplications;

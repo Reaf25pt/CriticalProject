@@ -37,7 +37,6 @@ function ContestOpen() {
       .then((resp) => resp.json())
       .then((data) => {
         setContestOpen(data);
-        console.log(data);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -61,7 +60,6 @@ function ContestOpen() {
 
   const pendingApplications = showProjects.filter((item) => !item.answered);
 
-  console.log(pendingApplications);
   if (!contest) {
     return <div>Loading...</div>;
   }
@@ -220,7 +218,7 @@ function ContestOpen() {
               {showComponentA ? (
                 <ContestComponent
                   toggleComponent={toggleComponent}
-                  projects={answeredProjects}
+                  answeredProjects={answeredProjects}
                 />
               ) : (
                 <EditContestComponent toggleComponent={toggleComponent} />

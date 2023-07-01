@@ -39,7 +39,7 @@ return r;
     @Produces(MediaType.APPLICATION_JSON)
     public Response addProject(dto.Project project, @HeaderParam("token") String token) {
         Response r = null;
-
+        System.out.println("criar proj service");
         if (userBean.checkStringInfo(token) || project==null) {
             r = Response.status(401).entity("Unauthorized!").build();
         }  else if (!userBean.checkUserPermission(token) || !projBean.verifyIfUserHasActiveProject(token)) {

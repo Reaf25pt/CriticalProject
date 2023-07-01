@@ -3,15 +3,21 @@ import ButtonComponent from "./ButtonComponent";
 import { contestOpenStore } from "../stores/ContestOpenStore";
 import { userStore } from "../stores/UserStore";
 
-function ContestComponent({ toggleComponent, projects }) {
+function ContestComponent({ toggleComponent, answeredProjects }) {
   const contest = contestOpenStore((state) => state.contest);
   const user = userStore((state) => state.user);
   const setContestOpen = contestOpenStore((state) => state.setContestOpen);
+  const activeProject = userStore((state) => state.activeProject);
 
   const convertTimestampToDate = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString(); // Adjust the format as per your requirement
   };
+
+  const renderApplyButton = !answeredProjects.some(
+    (project) => project.id === activeProject.activeProjectId
+  );
+  console.log(renderApplyButton);
 
   const handleStatus = (event) => {
     // event.preventDefault();
@@ -141,7 +147,7 @@ function ContestComponent({ toggleComponent, projects }) {
                     Projectos a concurso
                   </h5>
                   <h3 className="text-center text-white bg-warning rounded-3 p-2 mt-3">
-                    {projects.length} / {contest.maxNumberProjects}
+                    {answeredProjects.length} / {contest.maxNumberProjects}
                   </h3>
                 </div>
               ) : (
@@ -196,7 +202,9 @@ function ContestComponent({ toggleComponent, projects }) {
                   />
                 </div>
               ) : null}
-              {contest.statusInt === 1 && !user.noActiveProject ? (
+              {contest.statusInt === 1 &&
+              renderApplyButton &&
+              !user.contestManager ? (
                 <div className="row mx-auto justify-content-around mt-5">
                   <div className="col-lg-12">
                     <ButtonComponent
