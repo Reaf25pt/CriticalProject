@@ -281,9 +281,11 @@ function ContestOpen() {
                     <DataTable
                       value={answeredProjects}
                       selectionMode="single  "
+                      removableSort
                       paginator
                       rows={5}
                       rowsPerPageOptions={[5, 10, 25, 50]}
+                      emptyMessage="Nenhum projecto encontrado"
                     >
                       <Column
                         field="projectTitle"

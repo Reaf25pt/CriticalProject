@@ -236,7 +236,12 @@ function Profile() {
                   <h3 className="bg-white text-center text-nowrap rounded-5 p-0  ">
                     Os meus Projetos:
                   </h3>
-                  <DataTable value={showProjects} selectionMode="single ">
+                  <DataTable
+                    value={showProjects}
+                    selectionMode="single  "
+                    removableSort
+                    emptyMessage="Nenhum projecto encontrado"
+                  >
                     <Column field="title" header="Nome do Projeto" sortable />
                     <Column field="status" header="Estado" sortable />
                     <Column

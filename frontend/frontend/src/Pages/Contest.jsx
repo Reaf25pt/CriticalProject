@@ -10,6 +10,8 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { Dropdown } from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
+import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
 
 function Contest() {
   const user = userStore((state) => state.user);
@@ -20,8 +22,8 @@ function Contest() {
   const [filters, setFilters] = useState({
     title: { value: null, matchMode: FilterMatchMode.CONTAINS },
     status: { value: null, matchMode: FilterMatchMode.EQUALS },
-    // startOpenCall: { value: null, matchMode: FilterMatchMode.DATE_AFTER },
-    // finishDate: { value: null, matchMode: FilterMatchMode.DATE_BEFORE },
+    startOpenCall: { value: null, matchMode: FilterMatchMode.DATE_AFTER },
+    finishDate: { value: null, matchMode: FilterMatchMode.DATE_BEFORE },
   });
   const [contestStatus] = useState([
     "Planning",
@@ -29,6 +31,7 @@ function Contest() {
     "Ongoing",
     "Concluded",
   ]);
+
   const statusRowFilterTemplate = (options) => {
     return (
       <Dropdown
@@ -42,6 +45,16 @@ function Contest() {
         style={{ minWidth: "12rem" }}
       />
     );
+  };
+
+  const clearFilter = () => {
+    console.log("clear " + filters);
+    setFilters({
+      title: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      status: { value: null, matchMode: FilterMatchMode.EQUALS },
+      startOpenCall: { value: null, matchMode: FilterMatchMode.DATE_AFTER },
+      finishDate: { value: null, matchMode: FilterMatchMode.DATE_BEFORE },
+    });
   };
 
   useEffect(() => {
@@ -81,6 +94,81 @@ function Contest() {
     );
   };
 
+  const renderHeader = () => {
+    return (
+      <div className="flex justify-content-between">
+        <Button
+          type="button"
+          icon="pi pi-filter-slash"
+          label="Limpar filtros"
+          outlined
+          onClick={clearFilter}
+        />
+      </div>
+    );
+  };
+
+  const filterClearTemplate = (options) => {
+    return (
+      <Button
+        type="button"
+        icon="pi pi-times"
+        onClick={options.filterClearCallback}
+        severity="secondary"
+      ></Button>
+    );
+  };
+
+  const filterApplyTemplate = (options) => {
+    return (
+      <Button
+        type="button"
+        icon="pi pi-check"
+        onClick={options.filterApplyCallback}
+        severity="success"
+      ></Button>
+    );
+  };
+
+  const formatDate = (value) => {
+    return new Date(value).toLocaleDateString("pt-PT", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
+  const dateStartBodyTemplate = (rowData) => {
+    return formatDate(rowData.startOpenCall);
+  };
+  const dateFinishBodyTemplate = (rowData) => {
+    return formatDate(rowData.finishDate);
+  };
+
+  const startDateFilterTemplate = (options) => {
+    return (
+      <Calendar
+        value={options.value}
+        onChange={(e) => options.filterCallback(e.value, options.index)}
+        dateFormat="mm/dd/yy"
+        placeholder="mm/dd/yyyy"
+        mask="99/99/9999"
+      />
+    );
+  };
+
+  const finishDateFilterTemplate = (options) => {
+    return (
+      <Calendar
+        value={options.value}
+        onChange={(e) => options.filterCallback(e.value, options.index)}
+        dateFormat="mm/dd/yy"
+        placeholder="mm/dd/yyyy"
+        mask="99/99/9999"
+      />
+    );
+  };
+  const header = renderHeader();
   return (
     <div>
       <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -121,13 +209,20 @@ function Contest() {
               <div className="row mx-auto mt-5">
                 <div className="col-lg-9 bg-secondary p-3 rounded-4 mx-auto ">
                   <DataTable
+                    removableSort
                     value={showList}
                     rows={10}
                     paginator
+                    header={header}
                     filters={filters}
                     filterDisplay="row"
                     loading={loading}
-                    // globalFilterFields={["title", "status"]}
+                    globalFilterFields={[
+                      "title",
+                      "status",
+                      "startOpenCall",
+                      "finishDate",
+                    ]}
                     emptyMessage="Nenhum concurso encontrado"
                   >
                     <Column
@@ -135,7 +230,7 @@ function Contest() {
                       header="Nome"
                       sortable
                       filter
-                      filterPlaceholder="Pesquisar: nome"
+                      filterPlaceholder="Filtrar: nome"
                       style={{ width: "17rem" /* , maxWidth: "9rem"  */ }}
                     />
                     <Column
@@ -155,6 +250,14 @@ function Contest() {
                       body={(rowData) =>
                         convertTimestampToDate(rowData.startOpenCall)
                       }
+                      filterField="startOpenCall"
+                      dataType="date"
+                      style={{ minWidth: "12rem" }}
+                      // body={dateStartBodyTemplate}
+                      filter
+                      filterElement={startDateFilterTemplate}
+                      filterClear={filterClearTemplate}
+                      filterApply={filterApplyTemplate}
                     />
                     <Column
                       field="finishDate"
@@ -163,6 +266,14 @@ function Contest() {
                       body={(rowData) =>
                         convertTimestampToDate(rowData.finishDate)
                       }
+                      filterField="finishDate"
+                      dataType="date"
+                      style={{ minWidth: "12rem" }}
+                      // body={dateFinishBodyTemplate}
+                      filter
+                      filterElement={finishDateFilterTemplate}
+                      filterClear={filterClearTemplate}
+                      filterApply={filterApplyTemplate}
                     />
                     <Column body={renderLink} header="#" />
                   </DataTable>
@@ -173,13 +284,20 @@ function Contest() {
             <div className="row mx-auto mt-5">
               <div className="col-lg-9 bg-secondary p-3 rounded-4 mx-auto ">
                 <DataTable
+                  removableSort
                   value={activeContestList}
                   rows={10}
                   paginator
+                  header={header}
                   filters={filters}
                   filterDisplay="row"
                   loading={loading}
-                  // globalFilterFields={["title", "status"]}
+                  globalFilterFields={[
+                    "title",
+                    "status",
+                    "startOpenCall",
+                    "finishDate",
+                  ]}
                   emptyMessage="Nenhum concurso encontrado"
                 >
                   <Column
@@ -187,8 +305,8 @@ function Contest() {
                     header="Nome"
                     sortable
                     filter
-                    filterPlaceholder="Pesquisar: nome"
-                    style={{ width: "17rem" /* , maxWidth: "9rem" */ }}
+                    filterPlaceholder="Filtrar: nome"
+                    style={{ width: "17rem" /* , maxWidth: "9rem"  */ }}
                   />
                   <Column
                     field="status"
@@ -207,6 +325,14 @@ function Contest() {
                     body={(rowData) =>
                       convertTimestampToDate(rowData.startOpenCall)
                     }
+                    filterField="startOpenCall"
+                    dataType="date"
+                    style={{ minWidth: "12rem" }}
+                    // body={dateStartBodyTemplate}
+                    filter
+                    filterElement={startDateFilterTemplate}
+                    filterClear={filterClearTemplate}
+                    filterApply={filterApplyTemplate}
                   />
                   <Column
                     field="finishDate"
@@ -215,6 +341,14 @@ function Contest() {
                     body={(rowData) =>
                       convertTimestampToDate(rowData.finishDate)
                     }
+                    filterField="finishDate"
+                    dataType="date"
+                    style={{ minWidth: "12rem" }}
+                    // body={dateFinishBodyTemplate}
+                    filter
+                    filterElement={finishDateFilterTemplate}
+                    filterClear={filterClearTemplate}
+                    filterApply={filterApplyTemplate}
                   />
                   <Column body={renderLink} header="#" />
                 </DataTable>

@@ -46,6 +46,7 @@ function Projects() {
       .then((resp) => resp.json())
       .then((data) => {
         setAllShowProjects(data);
+        console.log(data);
       })
       .catch((err) => console.log(err));
   }, [projects]);
@@ -93,6 +94,8 @@ function Projects() {
                 tableStyle={{ minWidth: "50rem" }}
                 paginator
                 rows={10}
+                emptyMessage="Nenhum projecto encontrado"
+                removableSort
               >
                 <Column
                   field="creationDate"
