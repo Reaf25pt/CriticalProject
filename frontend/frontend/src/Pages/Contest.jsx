@@ -1,19 +1,48 @@
 import { Col, Container, Row } from "react-bootstrap";
 import LinkButton from "../Components/LinkButton";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { BsEyeFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { userStore } from "../stores/UserStore";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { FilterMatchMode, FilterOperator } from "primereact/api";
+import { Dropdown } from "primereact/dropdown";
+import { Calendar } from "primereact/calendar";
 
 function Contest() {
   const user = userStore((state) => state.user);
   const [contests, setContests] = useState([]);
   const [showList, setShowList] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   const activeContestList = showList.filter((item) => item.statusInt !== 0);
+  const [filters, setFilters] = useState({
+    title: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    status: { value: null, matchMode: FilterMatchMode.EQUALS },
+    // startOpenCall: { value: null, matchMode: FilterMatchMode.DATE_AFTER },
+    // finishDate: { value: null, matchMode: FilterMatchMode.DATE_BEFORE },
+  });
+  const [contestStatus] = useState([
+    "Planning",
+    "Open",
+    "Ongoing",
+    "Concluded",
+  ]);
+  const statusRowFilterTemplate = (options) => {
+    return (
+      <Dropdown
+        value={options.value}
+        options={contestStatus}
+        onChange={(e) => options.filterApplyCallback(e.value)}
+        // itemTemplate={statusItemTemplate}
+        placeholder="Filtrar: estado"
+        className="p-column-filter"
+        showClear
+        style={{ minWidth: "12rem" }}
+      />
+    );
+  };
 
   useEffect(() => {
     fetch(`http://localhost:8080/projetofinal/rest/contest/allcontests`, {
@@ -26,6 +55,7 @@ function Contest() {
       .then((resp) => resp.json())
       .then((data) => {
         setShowList(data);
+        setLoading(false);
       })
       .catch((err) => console.log(err));
   }, [contests]);
@@ -90,9 +120,34 @@ function Contest() {
               </div>
               <div className="row mx-auto mt-5">
                 <div className="col-lg-9 bg-secondary p-3 rounded-4 mx-auto ">
-                  <DataTable value={showList} rows={10} paginator>
-                    <Column field="title" header="Nome" sortable />
-                    <Column field="status" header="Estado" sortable />
+                  <DataTable
+                    value={showList}
+                    rows={10}
+                    paginator
+                    filters={filters}
+                    filterDisplay="row"
+                    loading={loading}
+                    // globalFilterFields={["title", "status"]}
+                    emptyMessage="Nenhum concurso encontrado"
+                  >
+                    <Column
+                      field="title"
+                      header="Nome"
+                      sortable
+                      filter
+                      filterPlaceholder="Pesquisar: nome"
+                      style={{ width: "17rem" /* , maxWidth: "9rem"  */ }}
+                    />
+                    <Column
+                      field="status"
+                      header="Estado"
+                      sortable
+                      showFilterMenu={false}
+                      filterMenuStyle={{ width: "14rem" }}
+                      style={{ minWidth: "12rem" }}
+                      filter
+                      filterElement={statusRowFilterTemplate}
+                    />
                     <Column
                       field="startOpenCall"
                       header="Data de Início"
@@ -117,9 +172,34 @@ function Contest() {
           ) : (
             <div className="row mx-auto mt-5">
               <div className="col-lg-9 bg-secondary p-3 rounded-4 mx-auto ">
-                <DataTable value={activeContestList} rows={10} paginator>
-                  <Column field="title" header="Nome" sortable />
-                  <Column field="status" header="Estado" sortable />
+                <DataTable
+                  value={activeContestList}
+                  rows={10}
+                  paginator
+                  filters={filters}
+                  filterDisplay="row"
+                  loading={loading}
+                  // globalFilterFields={["title", "status"]}
+                  emptyMessage="Nenhum concurso encontrado"
+                >
+                  <Column
+                    field="title"
+                    header="Nome"
+                    sortable
+                    filter
+                    filterPlaceholder="Pesquisar: nome"
+                    style={{ width: "17rem" /* , maxWidth: "9rem" */ }}
+                  />
+                  <Column
+                    field="status"
+                    header="Estado"
+                    sortable
+                    showFilterMenu={false}
+                    filterMenuStyle={{ width: "14rem" }}
+                    style={{ minWidth: "12rem" }}
+                    filter
+                    filterElement={statusRowFilterTemplate}
+                  />
                   <Column
                     field="startOpenCall"
                     header="Data de Início"
