@@ -5,16 +5,47 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Form from "react-bootstrap/Form";
 import "../Components/Chat.css";
+import { userStore } from "../stores/UserStore";
+import { messageStore } from "../stores/MessageStore";
+import ContactChat from "../Components/ContactChat";
 
 function Chat() {
-  const [listChatUsers, setlistChatUsers] = useState([]);
+  const [contacts, setContacts] = useState([]);
   const [showList, setShowList] = useState([]);
   const [credentials, setCredentials] = useState({});
   const [selectedUser, setSelectedUser] = useState(null);
-  const [messages, setMessages] = useState([]);
+  const prevSelectedUser = useRef(null);
+  const messages = messageStore((state) => state.messages);
+
+  const user = userStore((state) => state.user);
+
+  useEffect(() => {
+    fetch(`http://localhost:8080/projetofinal/rest/communication/contacts`, {
+      method: "GET",
+      headers: {
+        Accept: "*/*",
+        "Content-Type": "application/json",
+        token: user.token,
+      },
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        setContacts(response);
+        console.log(response);
+        // console.log(messages);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (selectedUser !== prevSelectedUser.current) {
+      console.log(selectedUser);
+      console.log(prevSelectedUser);
+      prevSelectedUser.current = selectedUser;
+    }
+  }, [selectedUser]);
 
   // const [userToChat, setUserToChat] = useState(null);
   // const messages = messageStore((state) => state.messages);
@@ -142,13 +173,13 @@ function Chat() {
               Contactos
             </Row>
 
-            {listChatUsers.map((user) => (
+            {contacts.map((user) => (
               <Row
                 className="rowEachUserChat"
                 onClick={() => setUserToChat(user)}
               >
-                {user.photoUrl ? (
-                  <Col>{user.photoUrl}</Col>
+                {user.photo ? (
+                  <Col>{user.photo}</Col>
                 ) : (
                   <Col>
                     <img
@@ -174,7 +205,7 @@ function Chat() {
                   {
                     messages.filter(
                       (message) =>
-                        !message.seen && message.userSenderId === user.userId
+                        !message.seen && message.userSenderId === user.id
                     ).length
                   }
                 </Col>
@@ -184,9 +215,10 @@ function Chat() {
         </Container>
         <Container id="rightSide">
           {selectedUser ? (
-            <Chat user={selectedUser} />
+            <ContactChat selectedUser={selectedUser} />
           ) : (
             <Container id="messageForUnexistentUser">
+              <div> Seleccione uma caixa de mensagens</div>
               {/*  <FormattedMessage
                 id="noChatSelected.text"
                 defaultMessage="  Seleccione uma caixa de mensagens"

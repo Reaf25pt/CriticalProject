@@ -55,7 +55,7 @@ function Sidebar() {
       .then((response) => response.json())
       .then((response) => {
         updateMessages(response);
-        // console.log(messages);
+        console.log(messages);
       });
   }, []);
 
@@ -144,7 +144,13 @@ function Sidebar() {
                   <BsWechat color="white" />
                   {messages.length > 0 ? (
                     <span class="badge badge-dark">
-                      {messages.filter((message) => !message.seen).length}
+                      {
+                        messages.filter(
+                          (message) =>
+                            !message.seen &&
+                            message.userReceiverId === user.userId
+                        ).length
+                      }
                     </span>
                   ) : null}
                   <span className="ms-1 d-none d-sm-inline text-white">

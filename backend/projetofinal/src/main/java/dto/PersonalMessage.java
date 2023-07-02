@@ -11,6 +11,8 @@ public class PersonalMessage {
     private boolean seen;
     private int userSenderId;
 
+    private int userReceiverId;
+
     public PersonalMessage(int id, Date creationTime, String message, boolean seen, int userSenderId) {
         this.id = id;
         this.creationTime = creationTime;
@@ -60,5 +62,13 @@ public class PersonalMessage {
 
     public void setUserSenderId(int userSenderId) {
         this.userSenderId = userSenderId;
+    }
+
+    public int getUserReceiverId() {
+        return userReceiverId;
+    }
+
+    public void setUserReceiverId(int userReceiverId) {
+        this.userReceiverId = userReceiverId;
     }
 }

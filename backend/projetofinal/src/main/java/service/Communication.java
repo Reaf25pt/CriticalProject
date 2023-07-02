@@ -137,6 +137,36 @@ List<Notification> list = comBean.getOwnNotificationList(token);
         return r;
     }
 
+    // MARK ALL MESSAGES EXCHANGED BETWEEN TOKEN AND CONTACT ID AS READ
+    @PATCH
+    @Path("/messages")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response markMessagesRead(@HeaderParam("token") String token, @HeaderParam("contactId") int contactId ) {
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) ) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+
+        } else {
+            userBean.updateSessionTime(token);
+
+            boolean res = comBean.markMessagesRead(token,contactId);
+
+            if (!res ) {
+                r = Response.status(404).entity("Not found").build();
+            } else {
+                List<PersonalMessage> list = comBean.getAllPersonalMessages(token);
+
+                r = Response.status(200).entity(list).build();
+            }
+        }
+        return r;
+    }
+
+
     // GET LIST OF CONTACTS LOGGED USER HAS PERSONAL CHAT MESSAGES WITH
     @GET
     @Path("/contacts")
@@ -167,7 +197,7 @@ List<Notification> list = comBean.getOwnNotificationList(token);
     }
 
 
-    // GET ALL PERSONAL MESSAGES OF LOGGED USER
+    // GET ALL PERSONAL MESSAGES OF LOGGED USER : sent and received
     @GET
     @Path("/messages")
     @Produces(MediaType.APPLICATION_JSON)
@@ -195,6 +225,38 @@ List<Notification> list = comBean.getOwnNotificationList(token);
         }
         return r;
     }
+
+
+    // GET MESSAGES EXCHANGED BETWEEN TOKEN AND GIVEN CONTACT ID
+    @GET
+    @Path("/messages/{contactId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMessagesForSpecificContact(@HeaderParam("token") String token, @PathParam("contactId") int contactId) {
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) ) {
+            r = Response.status(401).entity("Unauthorized!").build();
+
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+
+        } else {
+            userBean.updateSessionTime(token);
+
+
+            List<PersonalMessage> list = comBean.getMessagesForSpecificContact(token, contactId);
+
+            if (list == null || list.size() == 0) {
+                r = Response.status(404).entity(list).build();
+            } else {
+
+                r = Response.status(200).entity(list).build();
+            }
+        }
+        return r;
+    }
+
+
 
 
 

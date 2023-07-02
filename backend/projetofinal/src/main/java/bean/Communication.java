@@ -763,7 +763,7 @@ return contactsList;
 
     public List<dto.PersonalMessage> getAllPersonalMessages(String token) {
         // obter lista de todas as mensagens de token
-        // TODO corrigir pq para ja manda apenas as que ele recebbe
+
 List<dto.PersonalMessage> listDto = new ArrayList<>();
 
         User user = tokenDao.findUserEntByToken(token);
@@ -778,12 +778,14 @@ if(allTokenMessages!=null){
         dto.setMessage(m.getMessage());
         dto.setSeen(m.isSeen());
         dto.setUserSenderId(m.getMessageSender().getUserId());
+        dto.setUserReceiverId(m.getMessageReceiver().getUserId());
         dto.setCreationTime(m.getCreationTime());
 
         listDto.add(dto);
     }
 }
         }
+
         return listDto;
 
     }
@@ -806,4 +808,58 @@ if(allTokenMessages!=null){
             }
         }
     }
-}}
+}
+
+
+    public boolean markMessagesRead(String token, int contactId) {
+        // marca como lidas todas as mensagens trocadas entre token e contactId, quando selecciona este contacto para mandar msg
+
+        boolean res=false;
+
+        User user = tokenDao.findUserEntByToken(token);
+
+        if(user!=null) {
+            List<PersonalMessage> messagesEnt = personalChatDao.findListOfReceivedMessagesOfGivenUserSentByContactId(user.getUserId(), contactId);
+
+            if(messagesEnt!=null){
+                for (PersonalMessage m: messagesEnt){
+                    m.setSeen(true);
+                    personalChatDao.merge(m);
+                }
+                res=true;
+            }
+        }
+        return res;
+    }
+
+    public List<dto.PersonalMessage> getMessagesForSpecificContact(String token, int contactId) {
+        List<dto.PersonalMessage> list=new ArrayList<>();
+
+        User user = tokenDao.findUserEntByToken(token);
+
+        if(user!=null) {
+            List<PersonalMessage> messagesEnt = personalChatDao.findListOfExchangedMessagesBetweenTwoContacts(user.getUserId(), contactId);
+if(messagesEnt!=null){
+    for(PersonalMessage m: messagesEnt){
+        list.add(convertPersonalMessageEntToDto(m));
+    }
+}
+        }
+
+
+        return list;
+    }
+
+    private dto.PersonalMessage convertPersonalMessageEntToDto(PersonalMessage m) {
+        dto.PersonalMessage dto = new dto.PersonalMessage();
+
+        dto.setId(m.getPersonalMessageId());
+        dto.setCreationTime(m.getCreationTime());
+        dto.setMessage(m.getMessage());
+        dto.setSeen(m.isSeen());
+        dto.setUserSenderId(m.getMessageSender().getUserId());
+        dto.setUserReceiverId(m.getMessageReceiver().getUserId());
+
+        return dto;
+    }
+}

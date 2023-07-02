@@ -37,6 +37,28 @@ public class PersonalMessage extends Abstract<entity.PersonalMessage>{
         return list;
     }
 
+    public List<entity.PersonalMessage> findListOfReceivedMessagesOfGivenUserSentByContactId(int userId, int contactId) {
+        List<entity.PersonalMessage> list = new ArrayList<>();
+        try {
+            list = (List<entity.PersonalMessage>) em.createNamedQuery("PersonalMessage.findListOfReceivedMessagesOfGivenUserSentByContactId").setParameter("userId", userId).setParameter("contactId", contactId).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return list;
+    }
+
+    public List<entity.PersonalMessage> findListOfExchangedMessagesBetweenTwoContacts(int userId, int contactId) {
+        List<entity.PersonalMessage> list = new ArrayList<>();
+        try {
+            list = (List<entity.PersonalMessage>) em.createNamedQuery("PersonalMessage.findListOfExchangedMessagesBetweenTwoContacts").setParameter("userId", userId).setParameter("contactId", contactId).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return list;
+    }
+
 
 
 
