@@ -14,6 +14,7 @@ import org.jboss.logging.Logger;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @RequestScoped
@@ -555,6 +556,106 @@ public class Contest {
             }
         }
         return res;
+    }
+
+    public HashMap<String, ArrayList<String>> statsContenst(int contestId) {
+
+
+        HashMap<String, ArrayList<String>> stats = new HashMap<>();
+
+        entity.Contest contest = contestDao.find(contestId);
+        String title = contest.getTitle();
+        String startDate = String.valueOf(contest.getStartDate());
+        String endDate = String.valueOf(contest.getFinishDate());
+
+        ArrayList<String> info = new ArrayList<>();
+        info.add(title);
+        info.add(startDate);
+        info.add(endDate);
+
+        stats.put("info",info);
+
+        ArrayList<String> localStatsAll = projectsGivenAllLocalStats(contestId);
+        String[] local = {"lisboaAll","coimbraAll","portoAll","tomarAll","viseuAll","vilarealAll"};
+
+        for (int i = 0; i < localStatsAll.size() - 1; i += 2) {
+            String key = local[(i / 2 )];
+            ArrayList<String> pairList = new ArrayList<>();
+            pairList.add(localStatsAll.get(i).toString());
+            pairList.add(localStatsAll.get(i + 1).toString());
+            stats.put(key, pairList);
+        }
+
+
+
+        return stats;
+
+
+    }
+
+
+
+
+
+
+    public ArrayList<String> projectsGivenAllLocalStats(int contestId) {
+        double lisboaCount = 0;
+        double coimbraCount = 0;
+        double portoCount = 0;
+        double tomarCount = 0;
+        double viseuCount = 0;
+        double vilarealCount = 0;
+
+        ArrayList<String> localAll = new ArrayList<>();
+
+        List<ContestApplication> projectsGiven = applicationDao.findApplicationsForGivenContestId(contestId);
+        double sizeProjects = applicationDao.findApplicationsForGivenContestId(contestId).size();
+
+        for (ContestApplication contestApplication : projectsGiven) {
+            int office = contestApplication.getProject().getOffice().ordinal();
+            if (office == 0) {
+                lisboaCount++;
+            } else if (office == 1) {
+                coimbraCount++;
+            } else if (office == 2) {
+                portoCount++;
+            } else if (office == 3) {
+                tomarCount++;
+            } else if (office == 4) {
+                viseuCount++;
+            } else if (office == 5) {
+                vilarealCount++;
+            }
+        }
+
+        String lisboaPercentage = String.format("%.2f", (lisboaCount / sizeProjects) * 100);
+        String coimbraPercentage = String.format("%.2f", (coimbraCount / sizeProjects) * 100);
+        String portoPercentage = String.format("%.2f", (portoCount / sizeProjects) * 100);
+        String tomarPercentage = String.format("%.2f", (tomarCount / sizeProjects) * 100);
+        String viseuPercentage = String.format("%.2f", (viseuCount / sizeProjects) * 100);
+        String vilarealPercentage = String.format("%.2f", (vilarealCount / sizeProjects) * 100);
+
+
+        localAll.add(String.valueOf(lisboaCount));
+        localAll.add(lisboaPercentage);
+
+        localAll.add(String.valueOf(coimbraCount));
+        localAll.add(coimbraPercentage);
+
+        localAll.add(String.valueOf(portoCount));
+        localAll.add(portoPercentage);
+
+        localAll.add(String.valueOf(tomarCount));
+        localAll.add(tomarPercentage);
+
+        localAll.add(String.valueOf(viseuCount));
+        localAll.add(viseuPercentage);
+
+        localAll.add(String.valueOf(vilarealCount));
+        localAll.add(vilarealPercentage);
+
+        return localAll;
+
     }
 
 

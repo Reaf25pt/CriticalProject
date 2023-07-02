@@ -5,6 +5,8 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -279,20 +281,18 @@ public class Contest {
     }
 
 
-/*
+
     @GET
     @Path("stats/{contestId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response statsContests(@PathParam("contestId") int contestId){
         Response r = null;
-        String titulo = contestBean.statsContenst(contestId);
-        r = Response.status(200).entity(titulo).build();
-        System.out.println(r);
+        HashMap<String, ArrayList<String>> list = contestBean.statsContenst(contestId);
+        r = Response.status(200).entity(list).build();
+
         return r;
 
     }
-
-*/
 
 
 
