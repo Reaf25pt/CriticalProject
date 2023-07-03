@@ -39,7 +39,6 @@ function Contest() {
         value={options.value}
         options={contestStatus}
         onChange={(e) => options.filterApplyCallback(e.value)}
-        // itemTemplate={statusItemTemplate}
         placeholder="Filtrar: estado"
         className="p-column-filter"
         showClear
@@ -49,7 +48,6 @@ function Contest() {
   };
 
   const clearFilter = () => {
-    console.log("clear " + filters);
     setFilters({
       title: { value: null, matchMode: FilterMatchMode.CONTAINS },
       status: { value: null, matchMode: FilterMatchMode.EQUALS },
@@ -70,7 +68,6 @@ function Contest() {
       .then((data) => {
         setShowList(data);
         setLoading(false);
-        console.log(data);
       })
       .catch((err) => console.log(err));
   }, [contests]);
@@ -360,30 +357,6 @@ function Contest() {
               </div>
             </div>
           )}
-
-          {/*  <div className="row mx-auto mt-5">
-            <div>
-              <DataTable value={showList}>
-                <Column field="title" header="Nome" sortable />
-                <Column field="status" header="Estado" sortable />
-                <Column
-                  field="startOpenCall"
-                  header="Data de Início"
-                  sortable
-                  body={(rowData) =>
-                    convertTimestampToDate(rowData.startOpenCall)
-                  }
-                />
-                <Column
-                  field="finishDate"
-                  header="Data de Fim"
-                  sortable
-                  body={(rowData) => convertTimestampToDate(rowData.finishDate)}
-                />
-                <Column body={renderLink} header="#" />
-              </DataTable>
-            </div>
-          </div> */}
         </div>
       </div>
     </div>

@@ -9,69 +9,25 @@ import { BsEyeFill, BsCheck2, BsXLg } from "react-icons/bs";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import { contestOpenStore } from "../stores/ContestOpenStore";
+import Modal from "react-bootstrap/Modal";
 
-function ContestApplications({ pendingApplications }) {
+import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
+
+function ContestApplications() {
+  const [show, setShow] = useState(false);
   const user = userStore((state) => state.user);
   const navigate = useNavigate();
   const updateUser = userStore((state) => state.updateUser);
   const { id } = useParams();
-
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   const setProjList = contestOpenStore((state) => state.setProjectList);
   const projList = contestOpenStore((state) => state.projectList);
-  //  const [pendingInvites, setPendingInvites] = useState([]);
-  // const [showPendingInvites, setShowPendingInvites] = useState([]);
-
-  /*   useEffect(() => {
-    fetch(
-      `http://localhost:8080/projetofinal/rest/project/${id}/potentialmembers`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          token: user.token,
-        },
-      }
-    )
-      .then((resp) => resp.json())
-      .then((data) => {
-        setShowPendingInvites(data);
-      })
-      .catch((err) => console.log(err));
-  }, [pendingInvites]); */
-
-  /*   function handleResponse(projMemberId, answer) {
-    // event.preventDefault();
-
-    fetch(`http://localhost:8080/projetofinal/rest/project/selfinvitation`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        token: user.token,
-        answer: answer,
-        projMemberId: projMemberId,
-        projId: id,
-      },
-    }).then((response) => {
-      if (response.status === 200) {
-        setPendingInvites([]);
-        setMembers([]);
-        alert("pedido respondido");
-
-        //navigate("/home", { replace: true });
-      } else {
-        alert("Algo correu mal. Tente novamente");
-      }
-    });
-  } */
+  const pendingApplications = projList.filter((item) => !item.answered);
 
   function handleApplication(status, applicationId) {
-    var status;
-
-    /* if (event === 0) {
-        status = 0;
-      } else if (event === 1) {
-        status = 1;
-      } */
+    // var status;
 
     fetch("http://localhost:8080/projetofinal/rest/contest/application", {
       method: "PATCH",
@@ -85,12 +41,13 @@ function ContestApplications({ pendingApplications }) {
     })
       .then((response) => {
         if (response.status === 200) {
-          return response.json();
           alert("candidatura respondida");
+          return response.json();
 
           //navigate("/home", { replace: true });
         } else {
           alert("Algo correu mal. Tente novamente");
+          throw new Error("Request failed");
         }
       })
       .then((data) => {
@@ -110,7 +67,7 @@ function ContestApplications({ pendingApplications }) {
       <div className="col-8 col-sm-10 col-md-7 col-lg-5 mx-auto bg-secondary mt-5 rounded-5 ">
         <div>
           <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">
-            Convites pendentes
+            Candidaturas pendentes
           </h3>
           {pendingApplications.map((application, index) => (
             <div
@@ -121,32 +78,110 @@ function ContestApplications({ pendingApplications }) {
               <div className="col-lg-6 ">
                 <OverlayTrigger
                   placement="top"
-                  overlay={<Tooltip>Aceitar pedido</Tooltip>}
+                  overlay={<Tooltip>Aceitar candidatura</Tooltip>}
                 >
                   <span data-bs-toggle="tooltip" data-bs-placement="top">
                     {" "}
                     <BsCheck2
                       size={30}
                       color="green"
-                      onClick={() => handleApplication(1, application.id)}
+                      onClick={handleShow}
                     />{" "}
                   </span>
                 </OverlayTrigger>
+                <Modal
+                  show={show}
+                  onHide={handleClose}
+                  backdrop="static"
+                  keyboard={false}
+                  size="lg"
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title>
+                      Aceitar candidatura do projecto {application.projectTitle}
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <p>
+                      Tem a certeza que quer aceitar este projecto a concurso?
+                      Uma vez confirmada esta operação não a poderá reverter.
+                      Clique no botão Confirmar para aceitar candidatura
+                    </p>
+                  </Modal.Body>
+                  <Modal.Footer id="modalFooter">
+                    <Col xs={4} className="closeBtnSeeTask">
+                      <Button variant="secondary" onClick={handleClose}>
+                        Fechar
+                      </Button>
+                    </Col>
+                    <Col xs={4}>
+                      <Button
+                        onClick={() => handleApplication(1, application.id)}
+                        className="button"
+                        type="submit"
+                        variant="outline-primary"
+                      >
+                        {" "}
+                        Confirmar
+                      </Button>
+                    </Col>
+                  </Modal.Footer>
+                </Modal>
               </div>
+
               <div className="col-lg-6 ">
                 <OverlayTrigger
                   placement="top"
-                  overlay={<Tooltip>Recusar pedido</Tooltip>}
+                  overlay={<Tooltip>Recusar candidatura</Tooltip>}
                 >
                   <span data-bs-toggle="tooltip" data-bs-placement="top">
                     {" "}
                     <BsXLg
                       size={30}
                       color="red"
-                      onClick={() => handleApplication(0, application.id)}
+                      onClick={handleShow}
+                      //  onClick={() => handleApplication(0, application.id)}
                     />
                   </span>
                 </OverlayTrigger>
+                <Modal
+                  show={show}
+                  onHide={handleClose}
+                  backdrop="static"
+                  keyboard={false}
+                  size="lg"
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title>
+                      Recusar candidatura do projecto {application.projectTitle}
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <p>
+                      Tem a certeza que quer recusar este projecto a concurso?
+                      Uma vez confirmada esta operação não a poderá reverter.
+                      Clique no botão Confirmar para recusar candidatura
+                    </p>
+                  </Modal.Body>
+                  <Modal.Footer id="modalFooter">
+                    <Col xs={4} className="closeBtnSeeTask">
+                      <Button variant="secondary" onClick={handleClose}>
+                        Fechar
+                      </Button>
+                    </Col>
+                    <Col xs={4}>
+                      <Button
+                        onClick={() => handleApplication(0, application.id)}
+                        className="button"
+                        type="submit"
+                        variant="outline-primary"
+                      >
+                        {" "}
+                        Confirmar
+                      </Button>
+                    </Col>
+                  </Modal.Footer>
+                </Modal>
               </div>
             </div>
           ))}

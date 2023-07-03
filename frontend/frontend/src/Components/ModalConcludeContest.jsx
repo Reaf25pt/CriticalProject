@@ -39,6 +39,7 @@ function ModalConcludeContest() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log(credentials.projectWinner);
 
     if (
       !credentials ||
@@ -72,28 +73,6 @@ function ModalConcludeContest() {
         })
         .catch((err) => console.log(err));
     }
-
-    /* 
-      fetch("http://localhost:8080/projetofinal/rest/project/status", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          token: user.token,
-          status: status,
-          projId: id,
-        },
-        body: JSON.stringify(finalTask),
-      }).then((response) => {
-        if (response.status === 200) {
-          setProjects([]);
-          alert("Status alterado");
-
-          //navigate("/home", { replace: true });
-        } else {
-          alert("Algo correu mal. Tente novamente");
-        }
-      });
-    } */
   };
 
   return (
@@ -108,7 +87,6 @@ function ModalConcludeContest() {
               onClick={handleShow}
               type="button"
               name="Terminar concurso"
-              // onClick={() => handleProjectStatus(1)}
             />
           </div>
         </div>
@@ -124,15 +102,11 @@ function ModalConcludeContest() {
         <Modal.Header closeButton>
           <Modal.Title>
             Escolher projecto vencedor e terminar concurso
-            {/* <FormattedMessage
-              id="deleteTaskDetailModalTitle.tooltip"
-              defaultMessage="Apagar actividade"
-            /> */}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            Seleccione o projecto vencedor para dar por terminado o concurso.
+            Seleccione o projecto vencedor para dar por concluído o concurso.
             Atenção, uma vez concluída a operação com sucesso não poderá
             reverter nem alterar detalhes do concurso.
           </p>
@@ -163,7 +137,7 @@ function ModalConcludeContest() {
                                 proj.accepted /* && proj.projectStatusInt === 6 */
                             )
                             .map((proj) => (
-                              <option key={proj.id} value={proj.id}>
+                              <option key={proj.id} value={proj.projectId}>
                                 {proj.projectTitle}
                               </option>
                             ))}
@@ -180,10 +154,6 @@ function ModalConcludeContest() {
           <Col xs={4} className="closeBtnSeeTask">
             <Button variant="secondary" onClick={handleClose}>
               Fechar
-              {/* <FormattedMessage
-                id="closeModal.button"
-                defaultMessage="Fechar"
-              /> */}
             </Button>
           </Col>
           <Col xs={4}>
@@ -195,10 +165,6 @@ function ModalConcludeContest() {
             >
               {" "}
               Confirmar
-              {/*  <FormattedMessage
-                id="confirmChangeModal.button"
-                defaultMessage="Confirmar alteração"
-              /> */}
             </Button>
           </Col>
         </Modal.Footer>

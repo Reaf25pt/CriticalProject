@@ -186,7 +186,7 @@ function Projects() {
           aria-labelledby="home-tab"
         >
           <div className="row mt-5 d-flex justify-content-around">
-            {!user.contestManager && ownProj.id === 0 ? (
+            {!user.contestManager && (ownProj === null || ownProj.id === 0) ? (
               <div className="col-lg-2 ">
                 //{" "}
                 <LinkButton

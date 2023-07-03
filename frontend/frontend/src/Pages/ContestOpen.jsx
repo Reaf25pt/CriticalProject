@@ -20,8 +20,6 @@ function ContestOpen() {
   const setProjList = contestOpenStore((state) => state.setProjectList);
   const projList = contestOpenStore((state) => state.projectList);
   const showProjList = contestOpenStore((state) => state.projectList);
-  // const [projects, setProjects] = useState([]);
-  //const [showProjects, setShowProjects] = useState([]);
 
   const toggleComponent = () => {
     setShowComponentA(!showComponentA);
@@ -55,7 +53,7 @@ function ContestOpen() {
       .then((resp) => resp.json())
       .then((data) => {
         setProjList(data);
-        //setShowProjects(data);
+
         console.log(data);
       })
       .catch((err) => console.log(err));
@@ -63,7 +61,7 @@ function ContestOpen() {
 
   const answeredProjects = projList.filter((item) => item.answered);
 
-  const pendingApplications = projList.filter((item) => !item.answered);
+  // const pendingApplications = projList.filter((item) => !item.answered);
 
   if (!contest) {
     return <div>Loading...</div>;
@@ -85,69 +83,17 @@ function ContestOpen() {
     );
   };
 
-  const chooseWinner = (rowData) => {
-    if (rowData.accepted && contest.statusInt === 2)
+  const winner = (rowData) => {
+    if (rowData.projectId === contest.winnerProjectId)
       return (
-        <OverlayTrigger
-          placement="top"
-          overlay={<Tooltip>Declarar vencedor</Tooltip>}
-        >
+        <OverlayTrigger placement="top" overlay={<Tooltip>Vencedor</Tooltip>}>
           <span data-bs-toggle="tooltip" data-bs-placement="top">
             {" "}
-            <BsTrophyFill
-              size={30}
-              color="black"
-              onClick={() => declareWinner(rowData.projectId)}
-            />
+            <BsTrophyFill size={30} color="black" />
           </span>
         </OverlayTrigger>
       );
   };
-
-  /* 
-  const accept = (rowData) => {
-    if (rowData.answered) {
-      return <div></div>;
-    } else {
-      return (
-        <OverlayTrigger
-          placement="top"
-          overlay={<Tooltip>Aceitar projecto</Tooltip>}
-        >
-          <span data-bs-toggle="tooltip" data-bs-placement="top">
-            {" "}
-            <BsCheck2
-              size={30}
-              onClick={() => handleApplication(1, rowData.id)}
-              color="green"
-            />{" "}
-          </span>
-        </OverlayTrigger>
-      );
-    }
-  };
-
-  const reject = (rowData) => {
-    if (rowData.answered) {
-      return <div></div>;
-    } else {
-      return (
-        <OverlayTrigger
-          placement="top"
-          overlay={<Tooltip>Recusar projecto</Tooltip>}
-        >
-          <span data-bs-toggle="tooltip" data-bs-placement="top">
-            {" "}
-            <BsXLg
-              size={30}
-              onClick={() => handleApplication(0, rowData.id)}
-              color="red"
-            />
-          </span>
-        </OverlayTrigger>
-      );
-    }
-  }; */
 
   const answer = (rowData) => {
     if (!rowData.accepted && rowData.answered) {
@@ -167,6 +113,7 @@ function ContestOpen() {
     }
   };
 
+  /*
   const declareWinner = (projId) => {
     // event.preventDefault();
     console.log(projId);
@@ -174,7 +121,7 @@ function ContestOpen() {
     fetch("http://localhost:8080/projetofinal/rest/contest/application", {
       method: "PUT",
       headers: {
-        Accept: "*/*",
+        Accept: "**",
         "Content-Type": "application/json",
         token: user.token,
         contestId: contest.id,
@@ -188,36 +135,7 @@ function ContestOpen() {
         alert("Algo correu mal");
       }
     });
-  };
-  /*  function handleApplication(status, applicationId) {
-    var status;
-
-    /* if (event === 0) {
-        status = 0;
-      } else if (event === 1) {
-        status = 1;
-      } */
-
-  /*   fetch("http://localhost:8080/projetofinal/rest/contest/application", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        token: user.token,
-        answer: status,
-        applicationId: applicationId,
-        contestId: id,
-      },
-    }).then((response) => {
-      if (response.status === 200) {
-        setProjects([]);
-        alert("candidatura respondida");
-
-        //navigate("/home", { replace: true });
-      } else {
-        alert("Algo correu mal. Tente novamente");
-      }
-    });
-  } */
+  };*/
 
   return (
     <div>
@@ -265,7 +183,7 @@ function ContestOpen() {
               {showComponentA ? (
                 <ContestComponent
                   toggleComponent={toggleComponent}
-                  answeredProjects={answeredProjects}
+                  // answeredProjects={answeredProjects}
                   // projects={projList}
                 />
               ) : (
@@ -302,16 +220,7 @@ function ContestOpen() {
                         }}
                         sortable
                       />
-                      {/*    <Column
-                        body={accept}
-                         header=""
-                      />
-                      ;
-                      <Column
-                        body={reject}
-                         header=""
-                      />
-                      ; */}
+
                       <Column
                         field="accepted"
                         body={answer}
@@ -319,15 +228,15 @@ function ContestOpen() {
                         sortable
                       />
                       <Column body={renderLink} header="" />
-                      <Column body={chooseWinner} header="" />
+                      <Column body={winner} header="" />
                     </DataTable>
                   </div>
                 </div>
               </div>
 
               <ContestApplications
-                pendingApplications={pendingApplications}
-                // setProjects={setProjects}
+              // pendingApplications={pendingApplications}
+              // setProjects={setProjects}
               />
             </div>
           </div>
