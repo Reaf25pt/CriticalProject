@@ -14,6 +14,7 @@ import websocket.Notifier;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RequestScoped
 public class Communication implements Serializable {
@@ -731,34 +732,58 @@ record.setProject(task.getProject());
     }
 
 
-    public List<UserInfo> getContactsList(String token) {
+    public List<UserInfo> getContactsList(String token, int idToChat) {
         // obter contactos (lista de utilizadores) com quem o token tem mensagens pessoais trocadas
         // ir buscar todos os message sender de mensagens cujo message receiver seja o token
-
+// passa valor de query param (geralmente String ?). Se for 0 não faz nada extra. Se for != 0 tem de adicionar a pessoa
         List<UserInfo> contactsList = new ArrayList<>();
         User user = tokenDao.findUserEntByToken(token);
 
-        if(user!=null) {
 
+        if (user != null) {
             List<User> contactsEnt = personalChatDao.findListOfContactsOfGivenUser(user.getUserId());
+            List<entity.User> tempList = contactsEnt.stream().filter(userE -> userE.getUserId() != idToChat).collect(Collectors.toList());
+// retira o id do user para garantir que só aparecerá 1x na lista 
 
-            if(contactsEnt!=null){
-                for (User u : contactsEnt){
+            if (tempList != null) {
+                for (User u : tempList) {
 
-UserInfo minimalUser = new UserInfo();
-minimalUser.setId(u.getUserId());
-minimalUser.setFirstName(u.getFirstName());
-minimalUser.setLastName(u.getLastName());
-minimalUser.setNickname(u.getNickname());
-minimalUser.setPhoto(u.getPhoto());
-minimalUser.setOpenProfile(u.isOpenProfile());
+                    UserInfo minimalUser = new UserInfo();
+                    minimalUser.setId(u.getUserId());
+                    minimalUser.setFirstName(u.getFirstName());
+                    minimalUser.setLastName(u.getLastName());
+                    minimalUser.setNickname(u.getNickname());
+                    minimalUser.setPhoto(u.getPhoto());
+                    minimalUser.setOpenProfile(u.isOpenProfile());
 
-contactsList.add(minimalUser);
+                    contactsList.add(minimalUser);
                 }
+            }
+
+
+
+            if(idToChat!=0) {
+                System.out.println("NAO ZERO");
+                // tem de ir buscar contacto com id
+                User newContact = userDao.findUserById(idToChat);
+
+                if(newContact!=null){
+
+                    UserInfo minimalUser = new UserInfo();
+                    minimalUser.setId(newContact.getUserId());
+                    minimalUser.setFirstName(newContact.getFirstName());
+                    minimalUser.setLastName(newContact.getLastName());
+                    minimalUser.setNickname(newContact.getNickname());
+                    minimalUser.setPhoto(newContact.getPhoto());
+                    minimalUser.setOpenProfile(newContact.isOpenProfile());
+
+                    contactsList.add(minimalUser);
+                }
+
             }
         }
 
-return contactsList;
+        return contactsList;
     }
 
     public List<dto.PersonalMessage> getAllPersonalMessages(String token) {

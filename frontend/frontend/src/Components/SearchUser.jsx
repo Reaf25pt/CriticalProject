@@ -55,10 +55,6 @@ function SearchUser() {
     // event.preventDefault();
   }
 
-  function handleSendMessage(userId) {
-    // event.preventDefault();
-  }
-
   return (
     <div className="form-outline">
       <InputComponent
@@ -142,7 +138,7 @@ function SearchUser() {
                         {" "}
                         <BsMessenger
                           color="black"
-                          onClick={() => handleSendMessage(item.id)}
+                          // onClick={() => handleSendMessage(item.id)}
                         />
                       </span>
                     </OverlayTrigger>

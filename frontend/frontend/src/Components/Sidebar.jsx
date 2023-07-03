@@ -55,7 +55,6 @@ function Sidebar() {
       .then((response) => response.json())
       .then((response) => {
         updateMessages(response);
-        console.log(messages);
       });
   }, []);
 
@@ -140,7 +139,10 @@ function Sidebar() {
                     Concursos
                   </span>
                 </Link>
-                <Link to={"/home/chat"} className="nav-link align-middle px-0">
+                <Link
+                  /* to={"/home/chat"} */ to={`/home/chat?userId=${0}`}
+                  className="nav-link align-middle px-0"
+                >
                   <BsWechat color="white" />
                   {messages.length > 0 ? (
                     <span class="badge badge-dark">

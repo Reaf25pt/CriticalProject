@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -22,15 +22,28 @@ function Chat() {
 
   const user = userStore((state) => state.user);
 
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const userId = queryParams.get("userId");
+  console.log(userId);
+  console.log(typeof userId);
+
+  const idToChat = parseInt(userId);
+  console.log(idToChat);
+  console.log(typeof idToChat);
+
   useEffect(() => {
-    fetch(`http://localhost:8080/projetofinal/rest/communication/contacts`, {
-      method: "GET",
-      headers: {
-        Accept: "*/*",
-        "Content-Type": "application/json",
-        token: user.token,
-      },
-    })
+    fetch(
+      `http://localhost:8080/projetofinal/rest/communication/contacts?idToChat=${idToChat}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "*/*",
+          "Content-Type": "application/json",
+          token: user.token,
+        },
+      }
+    )
       .then((response) => response.json())
       .then((response) => {
         setContacts(response);
@@ -47,49 +60,6 @@ function Chat() {
     }
   }, [selectedUser]);
 
-  // const [userToChat, setUserToChat] = useState(null);
-  // const messages = messageStore((state) => state.messages);
-
-  // const updateMessages = messageStore((state) => state.updateMessages);
-  // const addMessage = messageStore((state) => state.addMessage);
-  /*
-  useEffect(() => {
-    fetch(
-      "http://localhost:8080/joana-proj4/rest/todo_app/users/listchatusers",
-      {
-        method: "GET",
-        headers: {
-          Accept: "**",
-          "Content-Type": "application/json",
-          token: token,
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then((response) => {
-        setlistChatUsers(response);
-      });
-  }, []);
-
-  /* useEffect(() => {
-    fetch(
-      "http://localhost:8080/joana-proj4/rest/todo_app/users/listallmessages",
-      {
-        method: "GET",
-        headers: {
-          Accept: "**",
-          "Content-Type": "application/json",
-          token: token,
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then((response) => {
-        updateMessages(response);
-        console.log(messages);
-      });
-  }, []);*/
-
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -99,13 +69,6 @@ function Chat() {
       return { ...values, [name]: value };
     });
   };
-
-  /*   const selectChat = (event) => {
-    console.log(JSON.stringify(event));
-    setUserToChat(event);
-    console.log(userToChat);
-    console.log(userToChat.userId);
-  }; */
 
   const setUserToChat = (user) => {
     console.log(user);

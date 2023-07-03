@@ -10,6 +10,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import javax.crypto.spec.PSource;
 import java.util.List;
 
 @Path("/communication")
@@ -171,7 +172,10 @@ List<Notification> list = comBean.getOwnNotificationList(token);
     @GET
     @Path("/contacts")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getContactsList(@HeaderParam("token") String token) {
+    public Response getContactsList(@HeaderParam("token") String token, @QueryParam("idToChat") int  idToChat) {
+        System.out.println("ID to chat query param: " + idToChat);
+        System.out.println("ID to chat query param: " + idToChat+idToChat);
+
         Response r = null;
 
         if (userBean.checkStringInfo(token) ) {
@@ -184,7 +188,7 @@ List<Notification> list = comBean.getOwnNotificationList(token);
             userBean.updateSessionTime(token);
 
 
-            List<UserInfo> list = comBean.getContactsList(token);
+            List<UserInfo> list = comBean.getContactsList(token, idToChat);
 
             if (list == null || list.size() == 0) {
                 r = Response.status(404).entity(list).build();
