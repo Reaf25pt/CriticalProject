@@ -7,6 +7,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Path("/project")
@@ -21,14 +22,35 @@ public class Project {
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getALl(@DefaultValue("ola") @QueryParam("statecode") String statecode) {
-        System.out.println(statecode);
+    public Response getALl(/*@DefaultValue("ola")*/ @QueryParam("queryWinner") boolean queryWinner, @QueryParam("global") String global, @HeaderParam("token") String token) {
+        System.out.println(queryWinner);
+        System.out.println(global);
         Response r = null;
 
-        // TODO validar token na mesma? validar que queries estão preenchidos no caso de haver multiplos queries?
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+            List<dto.Project> projects = new ArrayList<>();
+            if(queryWinner){
+                projects = projBean.filterWinnerProjects(token);
+            } else if(!userBean.checkStringInfo(global)){
+                 projects = projBean.filterProjectsForSkillsAndKeywords(token, global);
+            } else {
 
+                projects = projBean.getAllProjectsList(token);
+            }
+            if (projects == null || projects.size() == 0) {
+                r = Response.status(404).entity(projects).build();
+            } else {
 
-return r;
+                r = Response.status(200).entity(projects).build();
+            }
+        }
+
+        return r;
     }
 
 

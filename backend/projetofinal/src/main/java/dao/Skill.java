@@ -2,6 +2,7 @@ package dao;
 
 import ENUM.SkillType;
 import entity.Hobby;
+import entity.Project;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.NoResultException;
@@ -98,6 +99,17 @@ public class Skill extends Abstract<entity.Skill>{
             return null;
         }
         return skillsList;
+    }
+
+    public List<entity.Project> filterProjectsWhoHaveSkillMatchingStr(String str) {
+        List<entity.Project> list = new ArrayList<>();
+        try {
+            list = (List<Project>) em.createNamedQuery("Skill.filterProjectsWhoHaveSkillMatchingStr").setParameter("str", "%"+ str.toLowerCase()+"%").getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return list;
     }
 
 

@@ -2253,4 +2253,42 @@ boolean res = false;
         return recordDto;
     }
 
+    public List<dto.Project> filterWinnerProjects(String token) {
+        // filtrar projectos que sejam vencedores nalgum concurso
+List<dto.Project> projects = new ArrayList<>();
+List<entity.Project> list = contestDao.findListOfWinnerProjects();
+
+if(list!=null){
+for (entity.Project p:list){
+    projects.add(convertProjEntityToDto(p));
+}
+}
+return projects;
+    }
+
+    public List<dto.Project> filterProjectsForSkillsAndKeywords(String token, String str) {
+        // filtrar projectos que tenham alguma keyword/ skill que faça match com str
+List<dto.Project> list = new ArrayList<>();
+Set<entity.Project> mergeSet = new HashSet<>();
+List<entity.Project> projSkills= skillDao.filterProjectsWhoHaveSkillMatchingStr(str.toLowerCase());
+        List<entity.Project> projKeywords= keywordDao.filterProjectsWhoHaveKeywordMatchingStr(str.toLowerCase());
+
+if(projSkills!=null){
+    mergeSet.addAll(projSkills);
+}
+
+if(projKeywords!=null){
+    mergeSet.addAll(projKeywords);
+}
+
+List<entity.Project> mergeList=new ArrayList<>(mergeSet);
+
+if(mergeList!=null) {
+    for (entity.Project p:mergeList){
+        list.add(convertProjEntityToDto(p));
+    }
+}
+
+return list;
+    }
 }

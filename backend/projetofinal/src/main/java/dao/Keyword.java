@@ -1,6 +1,7 @@
 package dao;
 
 import entity.Hobby;
+import entity.Project;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.NoResultException;
@@ -60,6 +61,16 @@ public class Keyword extends Abstract<entity.Keyword>{
             return null;
         }
         return keywordsList;
+    }
+    public List<entity.Project> filterProjectsWhoHaveKeywordMatchingStr(String str) {
+        List<entity.Project> list = new ArrayList<>();
+        try {
+            list = (List<Project>) em.createNamedQuery("Keyword.filterProjectsWhoHaveKeywordMatchingStr").setParameter("str", "%"+ str.toLowerCase()+"%").getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return list;
     }
 
 

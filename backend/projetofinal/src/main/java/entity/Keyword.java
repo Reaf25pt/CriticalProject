@@ -13,6 +13,7 @@ import java.util.Objects;
 @NamedQuery(name = "Keyword.findKeywordListContainingStr", query = "SELECT k FROM Keyword k WHERE LOWER(k.title) LIKE LOWER(:str) ")
 @NamedQuery(name = "Keyword.findRelationBetweenProjAndKeyword", query = "SELECT COUNT(k) FROM Keyword k JOIN k.listProject_Keywords p WHERE k.id = :keywordId AND p.id = :projId")
 @NamedQuery(name = "Keyword.findListOfKeywordsByProjId", query = "SELECT k FROM Keyword k  JOIN k.listProject_Keywords p WHERE p.id = :id")
+@NamedQuery(name = "Keyword.filterProjectsWhoHaveKeywordMatchingStr", query = "SELECT k.listProject_Keywords FROM Keyword k WHERE LOWER(k.title) LIKE LOWER(:str)")
 
 public class Keyword implements Serializable {
 

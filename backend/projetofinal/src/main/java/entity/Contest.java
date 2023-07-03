@@ -10,6 +10,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "Contest")
+@NamedQuery(name = "Contest.findListOfWinnerProjects", query = "SELECT c.winner FROM Contest c WHERE c.winner IS NOT NULL")
+
 public class Contest implements Serializable {
 
     private static final long serialVersionUID = 1L;

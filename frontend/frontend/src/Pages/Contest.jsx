@@ -69,6 +69,7 @@ function Contest() {
       .then((data) => {
         setShowList(data);
         setLoading(false);
+        console.log(data);
       })
       .catch((err) => console.log(err));
   }, [contests]);
@@ -215,7 +216,7 @@ function Contest() {
                     paginator
                     header={header}
                     filters={filters}
-                    filterDisplay="row"
+                    // filterDisplay="menu"
                     loading={loading}
                     globalFilterFields={[
                       "title",
@@ -230,6 +231,7 @@ function Contest() {
                       header="Nome"
                       sortable
                       filter
+                      // showFilterMenu={true}
                       filterPlaceholder="Filtrar: nome"
                       style={{ width: "17rem" /* , maxWidth: "9rem"  */ }}
                     />
@@ -237,7 +239,7 @@ function Contest() {
                       field="status"
                       header="Estado"
                       sortable
-                      showFilterMenu={false}
+                      //  showFilterMenu={true}
                       filterMenuStyle={{ width: "14rem" }}
                       style={{ minWidth: "12rem" }}
                       filter
@@ -258,6 +260,7 @@ function Contest() {
                       filterElement={startDateFilterTemplate}
                       filterClear={filterClearTemplate}
                       filterApply={filterApplyTemplate}
+                      // showFilterMenu={true}
                     />
                     <Column
                       field="finishDate"
@@ -274,6 +277,7 @@ function Contest() {
                       filterElement={finishDateFilterTemplate}
                       filterClear={filterClearTemplate}
                       filterApply={filterApplyTemplate}
+                      // showFilterMenu={true}
                     />
                     <Column body={renderLink} header="#" />
                   </DataTable>

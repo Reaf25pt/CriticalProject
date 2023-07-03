@@ -6,6 +6,10 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BsEyeFill } from "react-icons/bs";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { FilterMatchMode, FilterOperator } from "primereact/api";
+import { Dropdown } from "primereact/dropdown";
+import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
 
 function Projects() {
   const user = userStore((state) => state.user);
@@ -13,6 +17,95 @@ function Projects() {
 
   const [showAllProjects, setAllShowProjects] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [globalFilterValue, setGlobalFilterValue] = useState("");
+  const [queryWinner, setQueryWinner] = useState(false);
+
+  const [filters, setFilters] = useState({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    title: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    status: { value: null, matchMode: FilterMatchMode.EQUALS },
+  });
+  const [projectStatus] = useState([
+    "Planning",
+    "Ready",
+    "Proposed to Contest",
+    "Approved to Contest",
+    "In Progress",
+    "Cancelled",
+    "Finished",
+  ]);
+
+  const statusRowFilterTemplate = (options) => {
+    return (
+      <Dropdown
+        value={options.value}
+        options={projectStatus}
+        onChange={(e) => options.filterApplyCallback(e.value)}
+        // itemTemplate={statusItemTemplate}
+        placeholder="Filtrar: estado"
+        className="p-column-filter"
+        showClear
+        style={{ minWidth: "12rem" }}
+      />
+    );
+  };
+
+  const clearFilter = () => {
+    console.log("clear " + filters);
+    setFilters({
+      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      title: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      status: { value: null, matchMode: FilterMatchMode.EQUALS },
+    });
+    setQueryWinner(false);
+    setGlobalFilterValue("");
+  };
+
+  const renderHeader = () => {
+    return (
+      <div className="flex justify-content-between">
+        {" "}
+        <Button
+          type="button"
+          icon="pi pi-filter-slash"
+          label="Clear"
+          outlined
+          onClick={clearFilter}
+        />
+        <span>
+          {" "}
+          <Button
+            type="button"
+            icon="pi pi-filter-slash"
+            label="Projectos vencedores"
+            outlined
+            onClick={() => setQueryWinner(true)}
+          />
+        </span>{" "}
+        <span className="p-input-icon-left">
+          <i className="pi pi-search" />
+          <InputText
+            value={globalFilterValue}
+            onChange={onGlobalFilterChange}
+            placeholder="Filtrar por palavra-chave / skill "
+          />
+        </span>
+      </div>
+    );
+  };
+
+  const onGlobalFilterChange = (e) => {
+    const value = e.target.value;
+    let _filters = { ...filters };
+
+    _filters["global"].value = value;
+
+    setFilters(_filters);
+    setGlobalFilterValue(value);
+    console.log(globalFilterValue);
+    console.log(filters);
+  };
 
   const renderLink = (rowData) => {
     return (
@@ -36,20 +129,29 @@ function Projects() {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:8080/projetofinal/rest/project/allprojects`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        token: user.token,
-      },
-    })
+    //fetch(`http://localhost:8080/projetofinal/rest/project/allprojects`, {
+    fetch(
+      `http://localhost:8080/projetofinal/rest/project/?queryWinner=${queryWinner}&global=${globalFilterValue}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          token: user.token,
+        },
+      }
+    )
       .then((resp) => resp.json())
       .then((data) => {
         setAllShowProjects(data);
+        setLoading(false);
+
         console.log(data);
       })
       .catch((err) => console.log(err));
-  }, [projects]);
+  }, [projects, queryWinner, globalFilterValue]);
+
+  const header = renderHeader();
+
   return (
     <div>
       <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -96,6 +198,11 @@ function Projects() {
                 rows={10}
                 emptyMessage="Nenhum projecto encontrado"
                 removableSort
+                header={header}
+                filters={filters}
+                // filterDisplay="menu"
+                loading={loading}
+                globalFilterFields={["title", "status", "global"]}
               >
                 <Column
                   field="creationDate"
@@ -111,12 +218,20 @@ function Projects() {
                   header="Nome do Projeto"
                   sortable
                   style={{ width: "25%" }}
+                  filter
+                  filterPlaceholder="Filtrar: nome"
+                  //  style={{ width: "17rem" /* , maxWidth: "9rem"  */ }}
                 ></Column>
                 <Column
                   field="status"
                   header="Estado"
                   sortable
                   style={{ width: "25%" }}
+                  showFilterMenu={true}
+                  filterMenuStyle={{ width: "14rem" }}
+                  // style={{ minWidth: "12rem" }}
+                  filter
+                  filterElement={statusRowFilterTemplate}
                 ></Column>
                 <Column
                   field={"membersNumber"}
