@@ -508,6 +508,8 @@ public class User {
 
         return r;
     }
+
+
     // GET USER PROFILE BY USER ID
     @GET
     @Path("/{id}")
@@ -536,7 +538,6 @@ public class User {
 
         return r;
     }
-
 
 
     // GET LIST OF PROJECTS OF LOGGED USER

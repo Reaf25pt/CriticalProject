@@ -51,50 +51,6 @@ function SearchUser() {
       });
   };
 
-  /*
-  const handleClick = (event) => {
-    event.preventDefault();
-
-    if (
-      credentials.nameInput === undefined ||
-      credentials.nameInput === "undefined"
-    ) {
-      alert("Insira nome ");
-    } else {
-      /*  const userToInvite = {
-          id: credentials.id,
-        }; */
-  /*    fetch("http://localhost:8080/projetofinal/rest/project/newmember", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          token: user.token,
-          userId: credentials.id,
-        },
-      }).then((response) => {
-        if (response.status === 200) {
-          alert("Convite efectuado");
-          //navigate("/home", { replace: true });
-        } else {
-          alert("Algo correu mal. Tente novamente");
-        }
-      });
-
-      document.getElementById("nameInput").value = "";
-      setCredentials({});
-    }
-  };*/
-
-  /* const handleSelection = (user) => {
-    const name = user.firstName + emptyStr + user.lastName;
-    credentials.nameInput = name;
-    credentials.id = user.id;
-
-    document.getElementById("nameInput").value = name;
-
-    setSuggestions([]);
-  };*/
-
   function handleSeeProfile(userId) {
     // event.preventDefault();
   }
@@ -123,7 +79,7 @@ function SearchUser() {
             <option key={item.id}>
               <div className="row d-flex justify-content-around p-2 ">
                 <div className="col-lg-2 ">
-                  {item.photo === null ? (
+                  {item.photo === null || !item.openProfile ? (
                     <img
                       src="https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png"
                       width={30}

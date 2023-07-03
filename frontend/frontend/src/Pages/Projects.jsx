@@ -69,7 +69,7 @@ function Projects() {
         <Button
           type="button"
           icon="pi pi-filter-slash"
-          label="Clear"
+          label="Limpar filtros"
           outlined
           onClick={clearFilter}
         />

@@ -108,8 +108,8 @@ function Chat() {
   }; */
 
   const setUserToChat = (user) => {
-    /*  console.log(user);
-    console.log(user.data); */
+    console.log(user);
+    console.log(user.data);
     setSelectedUser(user);
   };
 
@@ -178,15 +178,24 @@ function Chat() {
                 className="rowEachUserChat"
                 onClick={() => setUserToChat(user)}
               >
-                {user.photo ? (
-                  <Col>{user.photo}</Col>
+                {user.openProfile && user.photo ? (
+                  <Col>
+                    {" "}
+                    <img
+                      src={user.photo}
+                      width={35}
+                      height={35}
+                      className="rounded-5"
+                      alt=""
+                    />
+                  </Col>
                 ) : (
                   <Col>
                     <img
                       id="imageUserToChat"
                       alt=""
                       xs={{ span: 6, offset: 3 }}
-                      src="https://smallbusinessify.com/wp-content/uploads/2018/09/what-can-time-management-skills-help-you-do.jpg"
+                      src="https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png"
                       style={{
                         resizeMode: "contain",
                         /*   maxHeight: 60,
