@@ -68,24 +68,6 @@ function Notifications() {
       .catch((err) => console.log(err));
   }
 
-  /* useEffect(() => {
-    fetch(
-      `http://localhost:8080/projetofinal/rest/communication/notifications`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          token: user.token,
-        },
-      }
-    )
-      .then((resp) => resp.json())
-      .then((data) => {
-        setShowAllNotifications(data);
-      })
-      .catch((err) => console.log(err));
-  }, [notification]);*/
-
   function handleInvitation(status, notifId) {
     // event.preventDefault();
 
@@ -143,79 +125,84 @@ function Notifications() {
           aria-labelledby="home-tab"
         >
           {notifications && notifications.length > 0 ? (
-            <div className="row mx-auto col-10 col-md-8 col-lg-6 mt-5">
-              {notifications.map((item) => (
-                <div class="card bg-light card border-primary mb-3">
-                  <div class="card-body ">
-                    <div class="card-title d-flex justify-content-between">
-                      <h5>{convertTimestampToDate(item.creationTime)}</h5>
-                      <div>
-                        <OverlayTrigger
-                          placement="top"
-                          overlay={<Tooltip>Apagar</Tooltip>}
-                        >
-                          <span
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                          >
-                            {" "}
-                            <BsTrash
-                              onClick={() => handleRemove(item.id)}
-                              size={25}
-                            />
-                          </span>
-                        </OverlayTrigger>
-
-                        {item.seen /*  <BsEnvelopeFill size={25} /> */ ? null : (
+            <div
+              className="notifications-container"
+              style={{ maxHeight: "700px", overflowY: "auto" }}
+            >
+              <div className="row mx-auto col-10 col-md-8 col-lg-6 mt-5">
+                {notifications.map((item) => (
+                  <div class="card bg-light card border-primary mb-3">
+                    <div class="card-body ">
+                      <div class="card-title d-flex justify-content-between">
+                        <h5>{convertTimestampToDate(item.creationTime)}</h5>
+                        <div>
                           <OverlayTrigger
                             placement="top"
-                            overlay={<Tooltip>Marcar como lida</Tooltip>}
+                            overlay={<Tooltip>Apagar</Tooltip>}
                           >
                             <span
                               data-bs-toggle="tooltip"
                               data-bs-placement="top"
                             >
                               {" "}
-                              <BsEnvelopeFill
+                              <BsTrash
+                                onClick={() => handleRemove(item.id)}
                                 size={25}
-                                onClick={() => handleRead(item.id)}
                               />
                             </span>
                           </OverlayTrigger>
 
-                          /*    <Tooltip placement="top" title="Read">
+                          {item.seen /*  <BsEnvelopeFill size={25} /> */ ? null : (
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={<Tooltip>Marcar como lida</Tooltip>}
+                            >
+                              <span
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                              >
+                                {" "}
+                                <BsEnvelopeFill
+                                  size={25}
+                                  onClick={() => handleRead(item.id)}
+                                />
+                              </span>
+                            </OverlayTrigger>
+
+                            /*    <Tooltip placement="top" title="Read">
                             <BsEnvelopeOpenFill
                               size={25}
                               onClick={() => handleRead(item.id)}
                             />
                           </Tooltip> */
-                        )}
-                      </div>
-                    </div>
-
-                    <hr />
-                    <div className="row">
-                      <div className="col-lg-10">
-                        <p class="card-text">{item.message}</p>
-                      </div>
-                      {item.needsInput ? (
-                        <div className="col-lg-2 d-flex justify-content-around">
-                          <BsCheck2Circle
-                            color="green"
-                            size={40}
-                            onClick={() => handleInvitation(1, item.id)}
-                          />
-                          <BsXLg
-                            color="red"
-                            size={40}
-                            onClick={() => handleInvitation(0, item.id)}
-                          />
+                          )}
                         </div>
-                      ) : null}
+                      </div>
+
+                      <hr />
+                      <div className="row">
+                        <div className="col-lg-10">
+                          <p class="card-text">{item.message}</p>
+                        </div>
+                        {item.needsInput ? (
+                          <div className="col-lg-2 d-flex justify-content-around">
+                            <BsCheck2Circle
+                              color="green"
+                              size={40}
+                              onClick={() => handleInvitation(1, item.id)}
+                            />
+                            <BsXLg
+                              color="red"
+                              size={40}
+                              onClick={() => handleInvitation(0, item.id)}
+                            />
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>{" "}
             </div>
           ) : (
             <p class="card-text">Não tem notificações</p>

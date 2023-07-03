@@ -10,7 +10,7 @@ export const notificationStore = create(
       updateNotifications: (notifications) => set({ notifications }),
       addNotification: (newNotification) =>
         set((state) => ({
-          notifications: [...state.notifications, newNotification],
+          notifications: [newNotification, ...state.notifications], // adiciona at the top a última notificação
         })),
       filterNotification: (newNotification) =>
         set((state) => ({

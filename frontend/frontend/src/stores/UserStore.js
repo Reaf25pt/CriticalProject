@@ -12,11 +12,8 @@ export const userStore = create(
         set((state) => ({ user: { ...state.user, [key]: value } })),
       clearLoggedUser: () => set({ user: null }),
 
-      ownProj: null,
+      ownProj: null, // projecto activo caso o user tenha algum
       setOwnProj: (newInfo) => set({ ownProj: newInfo }),
-
-      /*     trigger: {}, // apenas para actualizar a info no activeProject
-      setTrigger: (data) => set({ trigger: data }), */
     }),
 
     {
