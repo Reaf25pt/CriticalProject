@@ -2274,10 +2274,12 @@ List<entity.Project> projSkills= skillDao.filterProjectsWhoHaveSkillMatchingStr(
         List<entity.Project> projKeywords= keywordDao.filterProjectsWhoHaveKeywordMatchingStr(str.toLowerCase());
 
 if(projSkills!=null){
+    System.out.println(projSkills.size());
     mergeSet.addAll(projSkills);
 }
 
 if(projKeywords!=null){
+    System.out.println(projKeywords.size());
     mergeSet.addAll(projKeywords);
 }
 
@@ -2285,8 +2287,10 @@ List<entity.Project> mergeList=new ArrayList<>(mergeSet);
 
 if(mergeList!=null) {
     for (entity.Project p:mergeList){
+        System.out.println(p.getTitle());
         list.add(convertProjEntityToDto(p));
     }
+    System.out.println(list.size());
 }
 
 return list;

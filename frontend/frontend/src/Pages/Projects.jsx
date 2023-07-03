@@ -10,6 +10,7 @@ import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
+import { classNames } from "primereact/utils";
 
 function Projects() {
   const user = userStore((state) => state.user);
@@ -86,9 +87,10 @@ function Projects() {
         <span className="p-input-icon-left">
           <i className="pi pi-search" />
           <InputText
+            filterField="global"
             value={globalFilterValue}
             onChange={onGlobalFilterChange}
-            placeholder="Filtrar por palavra-chave / skill "
+            placeholder="Filtrar: palavra-chave / skill "
           />
         </span>
       </div>
@@ -130,24 +132,29 @@ function Projects() {
 
   useEffect(() => {
     //fetch(`http://localhost:8080/projetofinal/rest/project/allprojects`, {
-    fetch(
-      `http://localhost:8080/projetofinal/rest/project/?queryWinner=${queryWinner}&global=${globalFilterValue}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          token: user.token,
-        },
-      }
-    )
-      .then((resp) => resp.json())
-      .then((data) => {
-        setAllShowProjects(data);
-        setLoading(false);
+    const handleFetchData = async () => {
+      const response = await fetch(
+        `http://localhost:8080/projetofinal/rest/project/?queryWinner=${queryWinner}&global=${globalFilterValue}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            token: user.token,
+          },
+        }
+      );
+      const data = await response.json();
+      //  .then((resp) => resp.json())
+      //  .then((data) => {
+      setAllShowProjects(data);
+      setLoading(false);
 
-        console.log(data);
-      })
-      .catch((err) => console.log(err));
+      console.log(data);
+    };
+
+    handleFetchData();
+    // })
+    // .catch((err) => console.log(err));
   }, [projects, queryWinner, globalFilterValue]);
 
   const header = renderHeader();
@@ -200,7 +207,7 @@ function Projects() {
                 removableSort
                 header={header}
                 filters={filters}
-                // filterDisplay="menu"
+                filterDisplay="menu"
                 loading={loading}
                 globalFilterFields={["title", "status", "global"]}
               >
@@ -219,6 +226,7 @@ function Projects() {
                   sortable
                   style={{ width: "25%" }}
                   filter
+                  filterField="title"
                   filterPlaceholder="Filtrar: nome"
                   //  style={{ width: "17rem" /* , maxWidth: "9rem"  */ }}
                 ></Column>
@@ -227,7 +235,7 @@ function Projects() {
                   header="Estado"
                   sortable
                   style={{ width: "25%" }}
-                  showFilterMenu={true}
+                  //showFilterMenu={true}
                   filterMenuStyle={{ width: "14rem" }}
                   // style={{ minWidth: "12rem" }}
                   filter
