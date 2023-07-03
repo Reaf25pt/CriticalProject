@@ -2,12 +2,15 @@ import TextAreaComponent from "../Components/TextAreaComponent";
 import ButtonComponent from "./ButtonComponent";
 import { contestOpenStore } from "../stores/ContestOpenStore";
 import { userStore } from "../stores/UserStore";
+import ModalConcludeContest from "./ModalConcludeContest";
 
 function ContestComponent({ toggleComponent, answeredProjects }) {
   const contest = contestOpenStore((state) => state.contest);
   const user = userStore((state) => state.user);
   const setContestOpen = contestOpenStore((state) => state.setContestOpen);
   const ownProj = userStore((state) => state.ownProj);
+  const setProjList = contestOpenStore((state) => state.setProjectList);
+  const projList = contestOpenStore((state) => state.projectList);
 
   const convertTimestampToDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -196,11 +199,12 @@ function ContestComponent({ toggleComponent, answeredProjects }) {
                 </div>
               ) : contest.statusInt === 2 && user.contestManager ? (
                 <div className="col-lg-12">
-                  <ButtonComponent
+                  <ModalConcludeContest />
+                  {/*  <ButtonComponent
                     type="button"
                     name="Terminar concurso"
                     onClick={() => handleStatus(3)}
-                  />
+                  /> */}
                 </div>
               ) : null}
               {contest.statusInt === 1 &&

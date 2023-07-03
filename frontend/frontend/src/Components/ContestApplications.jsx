@@ -8,12 +8,16 @@ import { BsStarFill } from "react-icons/bs";
 import { BsEyeFill, BsCheck2, BsXLg } from "react-icons/bs";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
+import { contestOpenStore } from "../stores/ContestOpenStore";
 
-function ContestApplications({ pendingApplications, setProjects }) {
+function ContestApplications({ pendingApplications }) {
   const user = userStore((state) => state.user);
   const navigate = useNavigate();
   const updateUser = userStore((state) => state.updateUser);
   const { id } = useParams();
+
+  const setProjList = contestOpenStore((state) => state.setProjectList);
+  const projList = contestOpenStore((state) => state.projectList);
   //  const [pendingInvites, setPendingInvites] = useState([]);
   // const [showPendingInvites, setShowPendingInvites] = useState([]);
 
@@ -78,16 +82,21 @@ function ContestApplications({ pendingApplications, setProjects }) {
         applicationId: applicationId,
         contestId: id,
       },
-    }).then((response) => {
-      if (response.status === 200) {
-        setProjects([]);
-        alert("candidatura respondida");
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+          alert("candidatura respondida");
 
-        //navigate("/home", { replace: true });
-      } else {
-        alert("Algo correu mal. Tente novamente");
-      }
-    });
+          //navigate("/home", { replace: true });
+        } else {
+          alert("Algo correu mal. Tente novamente");
+        }
+      })
+      .then((data) => {
+        setProjList(data);
+      })
+      .catch((err) => console.log(err));
   }
 
   if (pendingApplications.length === 0 && user.contestManager) {

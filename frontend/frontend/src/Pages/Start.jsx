@@ -111,7 +111,7 @@ function Start() {
             </div>
           )}
 
-          {ownProj.id !== 0 ? (
+          {ownProj !== null && ownProj.id !== 0 ? (
             <div className="col-8 col-sm-10 col-md-7 col-lg-5 mx-auto bg-secondary mt-5 rounded-5 ">
               <div>
                 <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">

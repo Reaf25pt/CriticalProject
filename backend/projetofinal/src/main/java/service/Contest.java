@@ -165,7 +165,8 @@ public class Contest {
                 r = Response.status(404).entity("Not found!").build();
 
             } else {
-                r = Response.status(200).entity("Success").build();
+                List<Application> list = contestBean.getAllApplications(token, contestId);
+                r = Response.status(200).entity(list).build();
             }
         }
         return r;
@@ -191,8 +192,8 @@ public class Contest {
             if (!res) {
                 r = Response.status(404).entity("Something went wrong!").build();
             } else {
-
-                r = Response.status(200).entity("Success!").build();
+                dto.Contest contest = contestBean.editContestStatus(token, contestId, 3); // para terminar o concurso
+                r = Response.status(200).entity(contest).build();
             }
         }
         return r;}

@@ -3,6 +3,7 @@ package bean;
 import ENUM.StatusContest;
 import ENUM.StatusProject;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.Application;
 import dto.Task;
 import entity.ContestApplication;
@@ -549,7 +550,7 @@ public class Contest {
     }
 
     public boolean chooseContestWinner(int contestId, int projId, String token) {
-        // declara o projecto vencedor de um dado concurso
+        // declara o projecto vencedor de um dado concurso e automaticamente termina o concurso
         boolean res = false;
 
         entity.User user = tokenDao.findUserEntByToken(token);

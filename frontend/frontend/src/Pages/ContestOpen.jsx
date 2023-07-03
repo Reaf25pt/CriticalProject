@@ -17,8 +17,11 @@ function ContestOpen() {
   const user = userStore((state) => state.user);
   const setContestOpen = contestOpenStore((state) => state.setContestOpen);
   const contest = contestOpenStore((state) => state.contest);
-  const [projects, setProjects] = useState([]);
-  const [showProjects, setShowProjects] = useState([]);
+  const setProjList = contestOpenStore((state) => state.setProjectList);
+  const projList = contestOpenStore((state) => state.projectList);
+  const showProjList = contestOpenStore((state) => state.projectList);
+  // const [projects, setProjects] = useState([]);
+  //const [showProjects, setShowProjects] = useState([]);
 
   const toggleComponent = () => {
     setShowComponentA(!showComponentA);
@@ -51,15 +54,16 @@ function ContestOpen() {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        setShowProjects(data);
+        setProjList(data);
+        //setShowProjects(data);
         console.log(data);
       })
       .catch((err) => console.log(err));
-  }, [projects]);
+  }, []);
 
-  const answeredProjects = showProjects.filter((item) => item.answered);
+  const answeredProjects = projList.filter((item) => item.answered);
 
-  const pendingApplications = showProjects.filter((item) => !item.answered);
+  const pendingApplications = projList.filter((item) => !item.answered);
 
   if (!contest) {
     return <div>Loading...</div>;
@@ -262,6 +266,7 @@ function ContestOpen() {
                 <ContestComponent
                   toggleComponent={toggleComponent}
                   answeredProjects={answeredProjects}
+                  // projects={projList}
                 />
               ) : (
                 <EditContestComponent toggleComponent={toggleComponent} />
@@ -322,7 +327,7 @@ function ContestOpen() {
 
               <ContestApplications
                 pendingApplications={pendingApplications}
-                setProjects={setProjects}
+                // setProjects={setProjects}
               />
             </div>
           </div>

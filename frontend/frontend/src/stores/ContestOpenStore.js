@@ -11,6 +11,12 @@ export const contestOpenStore = create(
       updateContest: (key, value) =>
         set((state) => ({ contest: { ...state.contest, [key]: value } })),
       clearContest: () => set({ contest: null }),
+
+      projectList: [],
+      setProjectList: (data) => set({ projectList: data }),
+      // updateContest: (key, value) =>
+      //  set((state) => ({ contest: { ...state.contest, [key]: value } })),
+      //clearContest: () => set({ contest: null }),
     }),
     {
       name: "contest-store", // the name to use for the persisted data
