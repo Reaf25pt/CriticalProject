@@ -7,7 +7,7 @@ function ContestComponent({ toggleComponent, answeredProjects }) {
   const contest = contestOpenStore((state) => state.contest);
   const user = userStore((state) => state.user);
   const setContestOpen = contestOpenStore((state) => state.setContestOpen);
-  const activeProject = userStore((state) => state.activeProject);
+  const ownProj = userStore((state) => state.ownProj);
 
   const convertTimestampToDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -15,7 +15,7 @@ function ContestComponent({ toggleComponent, answeredProjects }) {
   };
 
   const renderApplyButton = !answeredProjects.some(
-    (project) => project.id === activeProject.activeProjectId
+    (project) => project.id === ownProj.id
   );
   console.log(renderApplyButton);
 

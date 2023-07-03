@@ -743,7 +743,7 @@ record.setProject(task.getProject());
         if (user != null) {
             List<User> contactsEnt = personalChatDao.findListOfContactsOfGivenUser(user.getUserId());
             List<entity.User> tempList = contactsEnt.stream().filter(userE -> userE.getUserId() != idToChat).collect(Collectors.toList());
-// retira o id do user para garantir que só aparecerá 1x na lista 
+// retira o id do user para garantir que só aparecerá 1x na lista
 
             if (tempList != null) {
                 for (User u : tempList) {

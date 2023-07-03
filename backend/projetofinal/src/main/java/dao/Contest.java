@@ -1,5 +1,7 @@
 package dao;
 
+import ENUM.StatusContest;
+import ENUM.StatusProject;
 import entity.Project;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NamedQuery;
@@ -25,6 +27,20 @@ public class Contest extends Abstract<entity.Contest>{
         }
         return projectList;
     }
+
+    public List<entity.Contest> findActiveContests() {
+
+        List<entity.Contest> list = new ArrayList<>();
+        try {
+            list = (List<entity.Contest>) em.createNamedQuery("Contest.findActiveContests").setParameter("concluded", StatusContest.CONCLUDED).setParameter("planning", StatusContest.PLANNING)
+                    .getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return list;
+    }
+
 
 
 }

@@ -14,7 +14,7 @@ import { classNames } from "primereact/utils";
 
 function Projects() {
   const user = userStore((state) => state.user);
-  const activeProject = userStore((state) => state.activeProject);
+  const ownProj = userStore((state) => state.ownProj);
 
   const [showAllProjects, setAllShowProjects] = useState([]);
   const [projects, setProjects] = useState([]);
@@ -186,7 +186,7 @@ function Projects() {
           aria-labelledby="home-tab"
         >
           <div className="row mt-5 d-flex justify-content-around">
-            {!user.contestManager && !activeProject.hasActiveProject ? (
+            {!user.contestManager && ownProj.id === 0 ? (
               <div className="col-lg-2 ">
                 //{" "}
                 <LinkButton

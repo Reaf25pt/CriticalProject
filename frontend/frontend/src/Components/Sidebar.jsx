@@ -194,7 +194,7 @@ function Sidebar() {
               {" "}
               {user.photo === null ? (
                 <img
-                  src="https://t3.ftcdn.net/jpg/00/36/94/26/360_F_36942622_9SUXpSuE5JlfxLFKB1jHu5Z07eVIWQ2W.jpg"
+                  src="https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png"
                   alt="avatar"
                   width="30"
                   height="30"
@@ -202,7 +202,7 @@ function Sidebar() {
                 />
               ) : user.photo === "" ? (
                 <img
-                  src="https://t3.ftcdn.net/jpg/00/36/94/26/360_F_36942622_9SUXpSuE5JlfxLFKB1jHu5Z07eVIWQ2W.jpg"
+                  src="https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png"
                   alt="avatar"
                   width="30"
                   height="30"

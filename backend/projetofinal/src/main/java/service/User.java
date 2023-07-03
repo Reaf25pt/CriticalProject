@@ -496,13 +496,14 @@ public class User {
         } else {
             userBean.updateSessionTime(token);
 
-            ActiveProjectToken profile = userBean.getActiveProjectInfo(token);
+            Project project = userBean.getActiveProjectInfo(token);
+          //  ActiveProjectToken project = userBean.getActiveProjectInfo(token);
 
-            if (profile == null ) {
-                r = Response.status(404).entity(profile).build();
+            if (project == null ) {
+                r = Response.status(404).entity(project).build();
             } else {
 
-                r = Response.status(200).entity(profile).build();
+                r = Response.status(200).entity(project).build();
             }
         }
 

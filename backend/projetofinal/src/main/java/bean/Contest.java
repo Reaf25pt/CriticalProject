@@ -94,6 +94,18 @@ public class Contest {
         return list;
     }
 
+    public List<dto.Contest> getActiveContests(String token) {
+        // para apresentar na página inicial da app
+        List<dto.Contest> list = new ArrayList<>();
+
+        List<entity.Contest> tempList = contestDao.findActiveContests();
+
+        for (entity.Contest c : tempList) {
+            list.add(convertContestEntToDto(c));
+        }
+        return list;
+    }
+
     private dto.Contest convertContestEntToDto(entity.Contest c) {
         dto.Contest contestDto = new dto.Contest();
         contestDto.setId(c.getId());
@@ -657,6 +669,7 @@ public class Contest {
         return localAll;
 
     }
+
 
 
 }

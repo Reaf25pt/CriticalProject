@@ -1234,7 +1234,7 @@ return listDtos;
 
         return res;
     }
-
+/*
     public ActiveProjectToken getActiveProjectInfo(String token) {
         // permite saber se token / use logado tem projecto activo e qual o seu Id para renderizar botões no frontend em função desta informação
 
@@ -1251,6 +1251,24 @@ return listDtos;
             } else {
                 dto.setHasActiveProject(false);
                 dto.setActiveProjectId(0);
+            }
+        }
+
+        return dto;
+    }
+*/
+    public Project getActiveProjectInfo(String token) {
+        // permite saber se token / use logado tem projecto activo e qual o seu Id para renderizar botões no frontend em função desta informação
+
+        Project dto = new Project();
+
+        entity.User user = tokenDao.findUserEntByToken(token);
+        if(user!=null){
+
+            entity.Project proj = projMemberDao.findActiveProjectByUserId(user.getUserId());
+
+            if(proj!=null){
+               dto=projBean.convertProjEntityToDto(proj);
             }
         }
 

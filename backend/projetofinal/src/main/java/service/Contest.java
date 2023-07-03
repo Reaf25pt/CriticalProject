@@ -224,6 +224,34 @@ public class Contest {
         return r;
     }
 
+    // GET LIST OF ACTIVE CONTESTS IN DB
+    @GET
+    @Path("/activecontests")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getActiveContests(@HeaderParam("token") String token) {
+
+        Response r = null;
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            List<dto.Contest> list = contestBean.getActiveContests(token);
+
+            if (list == null || list.size() == 0) {
+                r = Response.status(404).entity(list).build();
+            } else {
+
+                r = Response.status(200).entity(list).build();
+            }
+        }
+
+        return r;
+    }
+
     // GET CONTEST BY CONTEST ID
     @GET
     @Path("/{id}")

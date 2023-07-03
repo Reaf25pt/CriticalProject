@@ -11,6 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "Contest")
 @NamedQuery(name = "Contest.findListOfWinnerProjects", query = "SELECT c.winner FROM Contest c WHERE c.winner IS NOT NULL")
+@NamedQuery(name = "Contest.findActiveContests", query = "SELECT c FROM Contest c WHERE c.status NOT IN (:concluded, :planning)  ")
 
 public class Contest implements Serializable {
 
