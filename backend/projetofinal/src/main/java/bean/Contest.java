@@ -2,6 +2,7 @@ package bean;
 
 import ENUM.StatusContest;
 import ENUM.StatusProject;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import dto.Application;
 import dto.Task;
 import entity.ContestApplication;
@@ -11,6 +12,7 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -570,15 +572,17 @@ public class Contest {
         return res;
     }
 
-    public HashMap<String, ArrayList<String>> statsContenst(int contestId) {
+    public String statsContenst(int contestId) throws JsonProcessingException {
 
 
         HashMap<String, ArrayList<String>> stats = new HashMap<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
 
         entity.Contest contest = contestDao.find(contestId);
         String title = contest.getTitle();
-        String startDate = String.valueOf(contest.getStartDate());
-        String endDate = String.valueOf(contest.getFinishDate());
+        String startDate = dateFormat.format(contest.getStartDate());
+        String endDate = dateFormat.format(contest.getFinishDate());
 
         ArrayList<String> info = new ArrayList<>();
         info.add(title);
@@ -588,7 +592,7 @@ public class Contest {
         stats.put("info",info);
 
         ArrayList<String> localStatsAll = projectsGivenAllLocalStats(contestId);
-        String[] local = {"lisboaAll","coimbraAll","portoAll","tomarAll","viseuAll","vilarealAll"};
+        String[] local = {"lisboa","coimbra","porto","tomar","viseu","vilareal"};
 
         for (int i = 0; i < localStatsAll.size() - 1; i += 2) {
             String key = local[(i / 2 )];
@@ -598,14 +602,15 @@ public class Contest {
             stats.put(key, pairList);
         }
 
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonData = objectMapper.writeValueAsString(stats);
 
 
-        return stats;
+
+        return jsonData;
 
 
     }
-
-
 
 
 
@@ -669,6 +674,8 @@ public class Contest {
         return localAll;
 
     }
+
+
 
 
 

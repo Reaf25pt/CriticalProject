@@ -1,4 +1,5 @@
 package service;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import dto.*;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -313,14 +314,15 @@ public class Contest {
     @GET
     @Path("stats/{contestId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response statsContests(@PathParam("contestId") int contestId){
+    public Response statsContests(@PathParam("contestId") int contestId) throws JsonProcessingException {
         Response r = null;
-        HashMap<String, ArrayList<String>> list = contestBean.statsContenst(contestId);
+        String list = contestBean.statsContenst(contestId);
         r = Response.status(200).entity(list).build();
 
         return r;
 
     }
+
 
 
 
