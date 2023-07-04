@@ -15,10 +15,31 @@ public class PersonalMessage extends Abstract<entity.PersonalMessage>{
         super(entity.PersonalMessage.class);
     }
 
-    public List<entity.User> findListOfContactsOfGivenUser(int id) {
+/*    public List<entity.PersonalMessage> findListOfContactsOfGivenUser(int id) {
+        List<entity.PersonalMessage> list = new ArrayList<>();
+        try {
+            list = (List<entity.PersonalMessage>) em.createNamedQuery("PersonalMessage.findListOfContactsOfGivenUser").setParameter("id", id).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return list;
+    }*/
+
+    public List<entity.User> findListOfReceiverContactsOfGivenUser(int id) {
         List<entity.User> list = new ArrayList<>();
         try {
-            list = (List<User>) em.createNamedQuery("PersonalMessage.findListOfContactsOfGivenUser").setParameter("id", id).getResultList();
+            list = (List<entity.User>) em.createNamedQuery("PersonalMessage.findListOfReceiverContactsOfGivenUser").setParameter("id", id).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return list;
+    }
+    public List<entity.User> findListOfSenderContactsOfGivenUser(int id) {
+        List<entity.User> list = new ArrayList<>();
+        try {
+            list = (List<entity.User>) em.createNamedQuery("PersonalMessage.findListOfSenderContactsOfGivenUser").setParameter("id", id).getResultList();
         } catch (Exception e) {
             e.printStackTrace();
             return null;

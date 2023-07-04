@@ -19,7 +19,6 @@ function Chat() {
   const [selectedUser, setSelectedUser] = useState(null);
   const prevSelectedUser = useRef(null);
   const messages = messageStore((state) => state.messages);
-
   const user = userStore((state) => state.user);
 
   const location = useLocation();
@@ -172,21 +171,24 @@ function Chat() {
                   {user.firstName} {""}
                   {user.lastName}{" "}
                 </Col>
-
-                <Col xs={1} id="badgeMsgEachUser">
-                  {
-                    messages.filter(
-                      (message) =>
-                        !message.seen && message.userSenderId === user.id
-                    ).length
-                  }
-                </Col>
+                {messages.filter(
+                  (message) => !message.seen && message.userSenderId === user.id
+                ).length > 0 ? (
+                  <Col xs={1} id="badgeMsgEachUser">
+                    {
+                      messages.filter(
+                        (message) =>
+                          !message.seen && message.userSenderId === user.id
+                      ).length
+                    }
+                  </Col>
+                ) : null}
               </Row>
             ))}
           </Container>
         </Container>
         <Container>
-          {selectedUser ? (
+          {selectedUser !== null ? (
             <ContactChat selectedUser={selectedUser} />
           ) : (
             <Container id="messageForUnexistentUser">

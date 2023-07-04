@@ -2,6 +2,7 @@ package service;
 
 import dto.Notification;
 import dto.PersonalMessage;
+import dto.ProjectChat;
 import dto.UserInfo;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Path;
@@ -167,6 +168,36 @@ List<Notification> list = comBean.getOwnNotificationList(token);
         return r;
     }
 
+
+    // SEND NEW PERSONAL MESSAGE TO CONTACT
+    @POST
+    @Path("/message")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addPersonalMessage(@HeaderParam("token") String token, PersonalMessage message) {
+        Response r = null;
+
+        if (userBean.checkStringInfo(token) || message== null ) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        }  else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+
+            PersonalMessage newMessage = comBean.sendMessageToContact(message, token);
+
+            if (newMessage==null) {
+                r = Response.status(404).entity("Something went wrong!").build();
+            } else {
+
+                r = Response.status(200).entity(newMessage).build();
+            }
+
+        }
+
+        return r;
+
+    }
 
     // GET LIST OF CONTACTS LOGGED USER HAS PERSONAL CHAT MESSAGES WITH
     @GET

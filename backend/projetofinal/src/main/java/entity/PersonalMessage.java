@@ -8,7 +8,9 @@ import java.util.Date;
 
 @Entity
 @Table(name="PersonalMessage")
-@NamedQuery(name = "PersonalMessage.findListOfContactsOfGivenUser", query = "SELECT m.messageSender FROM PersonalMessage m WHERE m.messageReceiver.id = :id")
+@NamedQuery(name = "PersonalMessage.findListOfReceiverContactsOfGivenUser", query = "SELECT m.messageSender FROM PersonalMessage m WHERE m.messageReceiver.id = :id ")
+@NamedQuery(name = "PersonalMessage.findListOfSenderContactsOfGivenUser", query = "SELECT m.messageReceiver FROM PersonalMessage m WHERE m.messageSender.id = :id ")
+
 @NamedQuery(name = "PersonalMessage.findListOfMessagesOfGivenUser", query = "SELECT m FROM PersonalMessage m WHERE m.messageReceiver.id = :id OR m.messageSender.id = :id")
 @NamedQuery(name = "PersonalMessage.findListOfReceivedMessagesOfGivenUserSentByContactId", query = "SELECT m FROM PersonalMessage m WHERE m.messageReceiver.id = :userId AND m.messageSender.id = :contactId")
 @NamedQuery(name = "PersonalMessage.findListOfExchangedMessagesBetweenTwoContacts", query = "SELECT m FROM PersonalMessage m WHERE (m.messageReceiver.id = :userId AND m.messageSender.id = :contactId) OR (m.messageSender.id = :userId AND m.messageReceiver.id = :contactId)")

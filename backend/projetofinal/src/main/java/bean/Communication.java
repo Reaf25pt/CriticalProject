@@ -8,6 +8,7 @@ import entity.Project;
 import entity.User;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.jws.soap.SOAPBinding;
 import org.jboss.logging.Logger;
 import websocket.Notifier;
 
@@ -734,15 +735,26 @@ record.setProject(task.getProject());
 
     public List<UserInfo> getContactsList(String token, int idToChat) {
         // obter contactos (lista de utilizadores) com quem o token tem mensagens pessoais trocadas
-        // ir buscar todos os message sender de mensagens cujo message receiver seja o token
+        // ir buscar todos os message sender de mensagens cujo message receiver seja o token, e vice-versa
 // passa valor de query param (geralmente String ?). Se for 0 não faz nada extra. Se for != 0 tem de adicionar a pessoa
         List<UserInfo> contactsList = new ArrayList<>();
         User user = tokenDao.findUserEntByToken(token);
-
+Set<User> mergeSet = new HashSet<>();
 
         if (user != null) {
-            List<User> contactsEnt = personalChatDao.findListOfContactsOfGivenUser(user.getUserId());
-            List<entity.User> tempList = contactsEnt.stream().filter(userE -> userE.getUserId() != idToChat).collect(Collectors.toList());
+            List<User> sendersList = personalChatDao.findListOfSenderContactsOfGivenUser(user.getUserId());
+            List<User> receiversList = personalChatDao.findListOfReceiverContactsOfGivenUser(user.getUserId());
+
+            if(sendersList!=null){
+                mergeSet.addAll(sendersList);
+            }
+
+            if(receiversList!=null){
+                mergeSet.addAll(receiversList);
+            }
+
+            List <User> mergeList = new ArrayList<>(mergeSet);
+            List<entity.User> tempList = mergeList.stream().filter(userE -> userE.getUserId() != idToChat).collect(Collectors.toList());
 // retira o id do user para garantir que só aparecerá 1x na lista
 
             if (tempList != null) {
@@ -885,6 +897,41 @@ if(messagesEnt!=null){
         dto.setUserSenderId(m.getMessageSender().getUserId());
         dto.setUserReceiverId(m.getMessageReceiver().getUserId());
 
+        return dto;
+    }
+
+    public dto.PersonalMessage sendMessageToContact(dto.PersonalMessage message, String token) {
+        // enviar nova mensagem pessoal para contacto. Notificar em real-time por socket o receiver da mensagem, caso tenha alguma sessão activa
+        dto.PersonalMessage dto = new dto.PersonalMessage();
+        User user = tokenDao.findUserEntByToken(token);
+
+        if(user!=null) {
+User receiver=userDao.find(message.getUserReceiverId());
+if(receiver!=null){
+    PersonalMessage messageEnt = new PersonalMessage();
+    messageEnt.setSeen(false);
+    messageEnt.setMessage(message.getMessage());
+    messageEnt.setCreationTime(Date.from(Instant.now()));
+    messageEnt.setMessageSender(user);
+    messageEnt.setMessageReceiver(receiver);
+
+    personalChatDao.persist(messageEnt);
+
+
+
+
+    dto=convertPersonalMessageEntToDto(messageEnt);
+
+    List<String> listTokens = tokenDao.findTokenListByUserId(receiver.getUserId());
+    if (listTokens != null) {
+        for (String t : listTokens) {
+// TODO falta testar socket
+            websocket.PersonalChat.sendNotification(dto, t);
+        }
+    }
+}
+
+        }
         return dto;
     }
 }
