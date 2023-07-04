@@ -185,18 +185,20 @@ function Projects() {
           role="tabpanel"
           aria-labelledby="home-tab"
         >
-          <div className="row mt-5 d-flex justify-content-around">
-            {!user.contestManager && (ownProj === null || ownProj.id === 0) ? (
-              <div className="col-lg-2 ">
+          {" "}
+          {!user.contestManager && (ownProj === null || ownProj.id === 0) ? (
+            <div className="row">
+              <div className="col mt-5">
                 //{" "}
                 <LinkButton
                   name={"Adicionar Projeto"}
                   to={"/home/projectscreate"}
                 />
               </div>
-            ) : null}
-
-            <div className="col-lg-10 bg-secondary p-3 rounded-4">
+            </div>
+          ) : null}
+          <div className="row mx-auto mt-5">
+            <div className="col-lg-10 bg-secondary p-3 rounded-4 mx-auto ">
               <DataTable
                 value={showAllProjects}
                 sortMode="multiple"

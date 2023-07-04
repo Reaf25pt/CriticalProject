@@ -126,7 +126,14 @@ function TimeLine({ project }) {
   };
 
   return (
-    <div class="container-fluid">
+    <div
+      class="container-fluid"
+      /*    style={{
+        maxHeight: "700px",
+        marginTop: "20px",
+        overflowY: "auto",
+      }} */
+    >
       <div className="row mt-5 d-flex justify-content-around">
         {project.statusInt === 4 ? (
           <div className="col-lg-4">
@@ -169,7 +176,14 @@ function TimeLine({ project }) {
         ) : null}
 
         {recordList && recordList.length > 0 ? (
-          <div className="col-lg-8">
+          <div
+            className="col-lg-8"
+            style={{
+              maxHeight: "700px",
+              marginTop: "20px",
+              overflowY: "auto",
+            }}
+          >
             <Timeline
               value={recordList}
               align="alternate"

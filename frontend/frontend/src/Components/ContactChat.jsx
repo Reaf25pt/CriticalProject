@@ -45,7 +45,7 @@ function ContactChat({ selectedUser }) {
 
         /*  const element = document.getElementById("chat");
 
-        element.scrollIntoView({ behavior: "smooth" }); */
+        element.scrollIntoView({ behavior: "smooth" });*/
       });
   }, [selectedUser]);
 
@@ -117,9 +117,16 @@ function ContactChat({ selectedUser }) {
   return (
     <div className="container">
       <div className="row overflow-auto" style={{ maxHeight: "100vh" }}>
-        <div className="col-lg-6 bg-secondary rounded-4 mx-auto p-5 mt-5">
+        <div className="col-lg-12 bg-secondary rounded-4 mx-auto p-5 mt-5">
           {contactMessages.length !== 0 ? (
-            <div>
+            <div
+              id="chat"
+              style={{
+                height: "300px",
+                marginTop: "20px",
+                overflowY: "auto",
+              }}
+            >
               {contactMessages.map((message, index) => (
                 <div key={index}>
                   {message.userSenderId === user.userId ? (
@@ -129,7 +136,7 @@ function ContactChat({ selectedUser }) {
                       date={message.creationTime}
                       text={message.message}
                     />
-                  ) : message.userReceiverId === selectedUser.id ? (
+                  ) : message.userSenderId === selectedUser.id ? (
                     <MessageBox
                       position={"left"}
                       type="text"

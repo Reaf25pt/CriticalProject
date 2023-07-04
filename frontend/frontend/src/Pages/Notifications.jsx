@@ -127,7 +127,11 @@ function Notifications() {
           {notifications && notifications.length > 0 ? (
             <div
               className="notifications-container"
-              style={{ maxHeight: "700px", overflowY: "auto" }}
+              style={{
+                maxHeight: "700px",
+                marginTop: "50px",
+                overflowY: "auto",
+              }}
             >
               <div className="row mx-auto col-10 col-md-8 col-lg-6 mt-5">
                 {notifications.map((item) => (

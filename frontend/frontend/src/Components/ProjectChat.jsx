@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { userStore } from "../stores/UserStore";
 import "react-chat-elements/dist/main.css";
@@ -90,10 +90,16 @@ function ProjectChat({ project }) {
 
   return (
     <div className="container">
-      <div className="row overflow-auto" style={{ maxHeight: "100vh" }}>
+      <div className="row overflow-auto">
         <div className="col-lg-6 bg-secondary rounded-4 mx-auto p-5 mt-5">
           {messages.length !== 0 ? (
-            <div>
+            <div
+              style={{
+                maxHeight: "500px",
+                marginTop: "20px",
+                overflowY: "auto",
+              }}
+            >
               {messages.map((message, index) => (
                 <div key={index}>
                   {message.userSenderId === user.userId ? (

@@ -185,7 +185,7 @@ function Chat() {
             ))}
           </Container>
         </Container>
-        <Container id="rightSide">
+        <Container>
           {selectedUser ? (
             <ContactChat selectedUser={selectedUser} />
           ) : (
