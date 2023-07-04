@@ -78,6 +78,7 @@ public class Project implements Serializable {
 
         projDto.setMembersNumber(p.getMembersNumber());
         projDto.setCreationDate(p.getCreationDate());
+        projDto.setFinishedDate(p.getFinishDate());
 
         if (p.getListKeywords() != null) {
             // converter keyword ENT to DTO
@@ -1265,6 +1266,7 @@ public class Project implements Serializable {
         Long count = taskDao.countNotFinishedTasksFromProjectByProjId(project.getId());
         if (count == 0) {
             project.setStatus(StatusProject.FINISHED);
+            project.setFinishDate(Date.from(Instant.now()));
             projDao.merge(project);
             res = true;
             entity.User user = tokenDao.findUserEntByToken(token);

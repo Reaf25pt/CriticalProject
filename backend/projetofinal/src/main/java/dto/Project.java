@@ -21,6 +21,7 @@ public class Project {
 
     private int availableSpots;
     private Date creationDate;
+    private Date finishedDate;
 
     private List<Keyword> keywords;
 
@@ -147,6 +148,14 @@ public class Project {
 
     public void setOfficeInfo(String officeInfo) {
         this.officeInfo = officeInfo;
+    }
+
+    public Date getFinishedDate() {
+        return finishedDate;
+    }
+
+    public void setFinishedDate(Date finishedDate) {
+        this.finishedDate = finishedDate;
     }
 
     public int getStatusInt() {

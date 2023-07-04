@@ -44,6 +44,10 @@ public class Project implements Serializable {
     @Column(name = "creationDate", nullable = false, unique = false, updatable = false)
     private Date creationDate;
 
+    @Column(name = "finishDate", nullable = true, unique = false, updatable = false)
+    private Date finishDate;
+
+
     @OneToMany(mappedBy = "project")
     private List<ProjectChatMessage> chatMsgList = new ArrayList<>();
 
@@ -195,6 +199,15 @@ public class Project implements Serializable {
     public void setListRecords(List<ProjectHistory> listRecords) {
         this.listRecords = listRecords;
     }
+
+    public Date getFinishDate() {
+        return finishDate;
+    }
+
+    public void setFinishDate(Date finishDate) {
+        this.finishDate = finishDate;
+    }
+
     /*
     public Contest getContest() {
         return contest;
