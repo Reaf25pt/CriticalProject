@@ -4,6 +4,7 @@ import { contestOpenStore } from "../stores/ContestOpenStore";
 import { userStore } from "../stores/UserStore";
 import ModalConcludeContest from "./ModalConcludeContest";
 import ModalChangeContestStatus from "./ModalChangeContestStatus";
+import GeneratePdf from "./GeneratePdf";
 
 function ContestComponent({ toggleComponent }) {
   const contest = contestOpenStore((state) => state.contest);
@@ -59,6 +60,7 @@ function ContestComponent({ toggleComponent }) {
 
   return (
     <div class="container-fluid">
+      <GeneratePdf />
       <div className="row mt-5">
         <div className="col-lg-5 mx-auto bg-secondary rounded-3 p-5 mx-auto">
           <div className="row mb-5">
@@ -125,11 +127,6 @@ function ContestComponent({ toggleComponent }) {
                   {canButtonRender(contest.startOpenCall) ? (
                     <div className="col-lg-12">
                       <ModalChangeContestStatus />
-                      {/*    <ButtonComponent
-                        type="button"
-                        name="Abrir candidaturas: Open"
-                        onClick={() => handleStatus(1)}
-                      /> */}
                     </div>
                   ) : null}
                 </>
@@ -138,22 +135,12 @@ function ContestComponent({ toggleComponent }) {
                 canButtonRender(contest.startDate) ? (
                 <div className="col-lg-12">
                   <ModalChangeContestStatus />
-                  {/*   <ButtonComponent
-                    type="button"
-                    name="Fechar candidaturas: Ongoing"
-                    onClick={() => handleStatus(2)}
-                  /> */}
                 </div>
               ) : contest.statusInt === 2 &&
                 user.contestManager &&
                 canButtonRender(contest.finishDate) ? (
                 <div className="col-lg-12">
                   <ModalConcludeContest />
-                  {/*  <ButtonComponent
-                    type="button"
-                    name="Terminar concurso"
-                    onClick={() => handleStatus(3)}
-                  /> */}
                 </div>
               ) : null}
               {contest.statusInt === 1 &&

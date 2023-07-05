@@ -34,11 +34,12 @@ function GeneratePdf() {
 
     // Primeiro retangulo
     page.drawText(stats.info[0], {
-      x: 50,
+      x: 10,
       y: 800,
+      size: 25,
     });
-    page.drawText("Data de inicio: " + stats.info[1], { x: 450, y: 800 });
-    page.drawText("Data de fim: " + stats.info[2], { x: 450, y: 780 });
+    page.drawText("Data de inicio: " + stats.info[1], { x: 450, y: 820 });
+    page.drawText("Data de fim: " + stats.info[2], { x: 450, y: 800 });
     page.drawLine({
       start: { x: 0, y: 750 },
       end: { x: 800, y: 750 },
@@ -47,8 +48,9 @@ function GeneratePdf() {
     });
     //////////////////////////////////////////////////////////////////////////////////////////////////////
     page.drawText("Projetos submetidos a concurso por localidade", {
-      x: 220,
+      x: 90,
       y: 730,
+      size: 20,
     });
 
     page.drawRectangle({
@@ -150,8 +152,9 @@ function GeneratePdf() {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     page.drawText("Projetos aceites a concurso por localidade", {
-      x: 220,
+      x: 90,
       y: 530,
+      size: 20,
     });
 
     page.drawRectangle({
@@ -252,8 +255,9 @@ function GeneratePdf() {
     });
     ////////////////////////////////////////////////////////////////////////////////////////////////////////
     page.drawText("Projetos terminados por localidade", {
-      x: 220,
+      x: 150,
       y: 330,
+      size: 20,
     });
 
     page.drawRectangle({
@@ -361,6 +365,20 @@ function GeneratePdf() {
       thickness: 1,
       color: rgb(0, 0, 0),
     });
+
+    page.drawText("Número medio elementos por projeto: ", {
+      x: 10,
+      y: 100,
+      size: 20,
+    });
+    page.drawText(stats.averages[0], { x: 400, y: 100, size: 15 });
+
+    page.drawText("Tempo médio de execução dos projetos:  ", {
+      x: 10,
+      y: 50,
+      size: 20,
+    });
+    page.drawText(stats.averages[1], { x: 400, y: 50, size: 15 });
 
     // Serialize the PDF document to a Uint8Array
     const pdfBytes = await pdfDoc.save();

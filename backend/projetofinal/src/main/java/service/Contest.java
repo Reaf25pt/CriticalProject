@@ -29,9 +29,9 @@ public class Contest {
     public Response addContest(dto.Contest contest, @HeaderParam("token") String token) {
         Response r = null;
 
-        if (userBean.checkStringInfo(token) || contest==null) {
+        if (userBean.checkStringInfo(token) || contest == null) {
             r = Response.status(401).entity("Unauthorized!").build();
-        }  else if (!userBean.checkUserPermission(token) || !contestBean.verifyUserProfile(token)) {
+        } else if (!userBean.checkUserPermission(token) || !contestBean.verifyUserProfile(token)) {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
@@ -45,7 +45,8 @@ public class Contest {
                 r = Response.status(200).entity("Success!").build();
             }
         }
-        return r;}
+        return r;
+    }
 
 
     // EDIT CONTEST INFO
@@ -57,7 +58,7 @@ public class Contest {
 
         Response r = null;
 
-        if (userBean.checkStringInfo(token) || editContest==null) {
+        if (userBean.checkStringInfo(token) || editContest == null) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else if (!userBean.checkUserPermission(token) || !contestBean.verifyUserProfile(token) || !contestBean.verifyPermissionToModifyContest(editContest.getId())) {
@@ -68,7 +69,7 @@ public class Contest {
 
             dto.Contest contest = contestBean.editContestInfo(token, editContest);
 
-            if (contest==null) {
+            if (contest == null) {
                 r = Response.status(404).entity("Not found!").build();
 
             } else {
@@ -88,10 +89,10 @@ public class Contest {
 
         Response r = null;
 
-        if (userBean.checkStringInfo(token) ) {
+        if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
-        } else if (!userBean.checkUserPermission(token) || !contestBean.verifyUserProfile(token) ) {
+        } else if (!userBean.checkUserPermission(token) || !contestBean.verifyUserProfile(token)) {
             r = Response.status(403).entity("Forbidden!").build();
 
         } else {
@@ -100,7 +101,7 @@ public class Contest {
 
             dto.Contest contest = contestBean.editContestStatus(token, contestId, status);
 
-            if (contest==null) {
+            if (contest == null) {
                 r = Response.status(404).entity("Not found!").build();
 
             } else {
@@ -120,9 +121,9 @@ public class Contest {
     public Response applyToContest(@HeaderParam("contestId") int contestId, @HeaderParam("token") String token) {
         Response r = null;
 
-        if (userBean.checkStringInfo(token) ) {
+        if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
-        }  else if (!userBean.checkUserPermission(token) || !contestBean.verifyPermissionToApply( contestId)|| !projBean.verifyProjectCanApply(token, contestId)) {
+        } else if (!userBean.checkUserPermission(token) || !contestBean.verifyPermissionToApply(contestId) || !projBean.verifyProjectCanApply(token, contestId)) {
             // TODO verificar se nenhuma tarefa do plano de execução tem datas q saiam do timing do concurso
             r = Response.status(403).entity("Forbidden!").build();
         } else {
@@ -137,7 +138,8 @@ public class Contest {
                 r = Response.status(200).entity("Success!").build();
             }
         }
-        return r;}
+        return r;
+    }
 
 
     // RESPONSE TO PROJECT APPLICATION : accept - 1 ; refuse - 0
@@ -149,10 +151,10 @@ public class Contest {
 
         Response r = null;
 
-        if (userBean.checkStringInfo(token) ) {
+        if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
-        } else if (!userBean.checkUserPermission(token) || !contestBean.verifyUserProfile(token) || !contestBean.verifyPermissionToApply( contestId)|| contestBean.checkApplicationsLimit(contestId) ) {
+        } else if (!userBean.checkUserPermission(token) || !contestBean.verifyUserProfile(token) || !contestBean.verifyPermissionToApply(contestId) || contestBean.checkApplicationsLimit(contestId)) {
             r = Response.status(403).entity("Forbidden!").build();
 // TODO verificar se projecto está cancelado? entretanto pode ter mudado de status
         } else {
@@ -177,16 +179,16 @@ public class Contest {
     @Path("/application")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response chooseWinner(@HeaderParam("contestId") int contestId,@HeaderParam("projId") int projId, @HeaderParam("token") String token) {
+    public Response chooseWinner(@HeaderParam("contestId") int contestId, @HeaderParam("projId") int projId, @HeaderParam("token") String token) {
         Response r = null;
 
-        if (userBean.checkStringInfo(token) ) {
+        if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
-        }  else if (!userBean.checkUserPermission(token) || !contestBean.verifyUserProfile( token)|| !contestBean.verifyPermissionToChooseWinner(contestId) || !contestBean.verifyProjectIsFinished(projId)) {
+        } else if (!userBean.checkUserPermission(token) || !contestBean.verifyUserProfile(token) || !contestBean.verifyPermissionToChooseWinner(contestId) || !contestBean.verifyProjectIsFinished(projId)) {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
-            boolean res = contestBean.chooseContestWinner(contestId,projId, token);
+            boolean res = contestBean.chooseContestWinner(contestId, projId, token);
             if (!res) {
                 r = Response.status(404).entity("Something went wrong!").build();
             } else {
@@ -194,7 +196,8 @@ public class Contest {
                 r = Response.status(200).entity(contest).build();
             }
         }
-        return r;}
+        return r;
+    }
 
     // GET LIST OF ALL CONTESTS IN DB
     @GET
@@ -256,7 +259,7 @@ public class Contest {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getContest(@HeaderParam("token") String token,  @PathParam("id") int id) {
+    public Response getContest(@HeaderParam("token") String token, @PathParam("id") int id) {
 
         Response r = null;
 
@@ -269,7 +272,7 @@ public class Contest {
 
             dto.Contest contest = contestBean.getContest(token, id);
 
-            if (contest == null ) {
+            if (contest == null) {
                 r = Response.status(404).entity(contest).build();
             } else {
 
@@ -309,21 +312,24 @@ public class Contest {
     }
 
 
-
     @GET
     @Path("stats/{contestId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response statsContests(@PathParam("contestId") int contestId) throws JsonProcessingException {
+    public Response statsContests(@PathParam("contestId") int contestId, @HeaderParam("token") String token) throws JsonProcessingException {
         Response r = null;
         String list = contestBean.statsContenst(contestId);
-        r = Response.status(200).entity(list).build();
+
+        if (userBean.checkStringInfo(token)) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token)) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
+            r = Response.status(200).entity(list).build();
+            }
+
+
 
         return r;
-
     }
-
-
-
-
-
 }

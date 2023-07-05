@@ -573,6 +573,7 @@ public class Contest {
         return res;
     }
 
+
     public String statsContenst(int contestId) throws JsonProcessingException {
 
 
@@ -590,30 +591,57 @@ public class Contest {
         info.add(startDate);
         info.add(endDate);
 
-        stats.put("info",info);
+        stats.put("info", info);
+
+        ArrayList<String> averages = new ArrayList<>();
+        averages.add(averageElementsProject(contestId));
+        averages.add(averageExecutionProject(contestId));
+
+        stats.put("averages",averages);
 
         ArrayList<String> localStatsAll = projectsGivenAllLocalStats(contestId);
-        String[] local = {"lisboa","coimbra","porto","tomar","viseu","vilareal"};
+        ArrayList<String> localStatsAccepted = projectsAcceptedLocalStats(contestId);
+        ArrayList<String> localStatsFinished = projectsFinishedLocalStats(contestId);
+
+
+        String[] local = {"lisboa", "coimbra", "porto", "tomar", "viseu", "vilareal"};
+        String[] localAccepted = {"lisboaaccepted", "coimbraaccepted", "portoaccepted", "tomaraccepted", "viseuaccepted", "vilarealaccepted"};
+        String[] localFinished = {"lisboafinished", "coimbrafinished", "portofinished", "tomarfinished", "viseufinished", "vilarealfinished"};
+
 
         for (int i = 0; i < localStatsAll.size() - 1; i += 2) {
-            String key = local[(i / 2 )];
+            String key = local[(i / 2)];
             ArrayList<String> pairList = new ArrayList<>();
             pairList.add(localStatsAll.get(i).toString());
             pairList.add(localStatsAll.get(i + 1).toString());
             stats.put(key, pairList);
         }
 
+
+        for (int j = 0; j < localStatsAccepted.size() - 1; j += 2) {
+            String keyAccepted = localAccepted[(j / 2)];
+            ArrayList<String> accepted = new ArrayList<>();
+            accepted.add(localStatsAccepted.get(j).toString());
+            accepted.add(localStatsAccepted.get(j + 1).toString());
+            stats.put(keyAccepted, accepted);
+        }
+
+        for (int j = 0; j < localStatsFinished.size() - 1; j += 2) {
+            String keyFinished = localFinished[(j / 2)];
+            ArrayList<String> finished = new ArrayList<>();
+            finished.add(localStatsFinished.get(j).toString());
+            finished.add(localStatsFinished.get(j + 1).toString());
+            stats.put(keyFinished, finished);
+        }
+
+
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonData = objectMapper.writeValueAsString(stats);
 
 
-
         return jsonData;
 
-
     }
-
-
 
 
     public ArrayList<String> projectsGivenAllLocalStats(int contestId) {
@@ -676,8 +704,174 @@ public class Contest {
 
     }
 
+    public ArrayList<String> projectsAcceptedLocalStats(int contestId) {
+        double lisboaCount = 0;
+        double coimbraCount = 0;
+        double portoCount = 0;
+        double tomarCount = 0;
+        double viseuCount = 0;
+        double vilarealCount = 0;
+
+        ArrayList<String> projectsAccepted = new ArrayList<>();
 
 
+        List<ContestApplication> projectsGiven = applicationDao.findApplicationsForGivenContestId(contestId);
+        double sizeProjects = applicationDao.findApplicationsForGivenContestId(contestId).size();
+
+        for (ContestApplication contestApplication : projectsGiven) {
+            int office = contestApplication.getProject().getOffice().ordinal();
+
+            if (contestApplication.isAccepted() && contestApplication.isAnswered()) {
+                if (office == 0) {
+                    lisboaCount++;
+                } else if (office == 1) {
+                    coimbraCount++;
+                } else if (office == 2) {
+                    portoCount++;
+                } else if (office == 3) {
+                    tomarCount++;
+                } else if (office == 4) {
+                    viseuCount++;
+                } else if (office == 5) {
+                    vilarealCount++;
+                }
+
+            }
+        }
+        String lisboaPercentage = String.format("%.2f", (lisboaCount / sizeProjects) * 100);
+        String coimbraPercentage = String.format("%.2f", (coimbraCount / sizeProjects) * 100);
+        String portoPercentage = String.format("%.2f", (portoCount / sizeProjects) * 100);
+        String tomarPercentage = String.format("%.2f", (tomarCount / sizeProjects) * 100);
+        String viseuPercentage = String.format("%.2f", (viseuCount / sizeProjects) * 100);
+        String vilarealPercentage = String.format("%.2f", (vilarealCount / sizeProjects) * 100);
+
+
+        projectsAccepted.add(String.valueOf(lisboaCount));
+        projectsAccepted.add(lisboaPercentage);
+
+        projectsAccepted.add(String.valueOf(coimbraCount));
+        projectsAccepted.add(coimbraPercentage);
+
+        projectsAccepted.add(String.valueOf(portoCount));
+        projectsAccepted.add(portoPercentage);
+
+        projectsAccepted.add(String.valueOf(tomarCount));
+        projectsAccepted.add(tomarPercentage);
+
+        projectsAccepted.add(String.valueOf(viseuCount));
+        projectsAccepted.add(viseuPercentage);
+
+        projectsAccepted.add(String.valueOf(vilarealCount));
+        projectsAccepted.add(vilarealPercentage);
+
+
+        return projectsAccepted;
+
+
+    }
+
+    public ArrayList<String> projectsFinishedLocalStats(int contestId) {
+        double lisboaCount = 0;
+        double coimbraCount = 0;
+        double portoCount = 0;
+        double tomarCount = 0;
+        double viseuCount = 0;
+        double vilarealCount = 0;
+
+        ArrayList<String> projectsFinished = new ArrayList<>();
+
+        List<ContestApplication> projectsGiven = applicationDao.findApplicationsForGivenContestId(contestId);
+        double sizeProjects = applicationDao.findApplicationsForGivenContestId(contestId).size();
+
+        for (ContestApplication contestApplication : projectsGiven) {
+            int office = contestApplication.getProject().getOffice().ordinal();
+            boolean valid = contestApplication.isAccepted() && contestApplication.isAnswered() && contestApplication.getProject().getStatus().ordinal() == 6;
+            if (valid) {
+                if (office == 0) {
+                    lisboaCount++;
+                } else if (office == 1) {
+                    coimbraCount++;
+                } else if (office == 2) {
+                    portoCount++;
+                } else if (office == 3) {
+                    tomarCount++;
+                } else if (office == 4) {
+                    viseuCount++;
+                } else if (office == 5) {
+                    vilarealCount++;
+                }
+            }
+        }
+        String lisboaPercentage = String.format("%.2f", (lisboaCount / sizeProjects) * 100);
+        String coimbraPercentage = String.format("%.2f", (coimbraCount / sizeProjects) * 100);
+        String portoPercentage = String.format("%.2f", (portoCount / sizeProjects) * 100);
+        String tomarPercentage = String.format("%.2f", (tomarCount / sizeProjects) * 100);
+        String viseuPercentage = String.format("%.2f", (viseuCount / sizeProjects) * 100);
+        String vilarealPercentage = String.format("%.2f", (vilarealCount / sizeProjects) * 100);
+
+
+        projectsFinished.add(String.valueOf(lisboaCount));
+        projectsFinished.add(lisboaPercentage);
+
+        projectsFinished.add(String.valueOf(coimbraCount));
+        projectsFinished.add(coimbraPercentage);
+
+        projectsFinished.add(String.valueOf(portoCount));
+        projectsFinished.add(portoPercentage);
+
+        projectsFinished.add(String.valueOf(tomarCount));
+        projectsFinished.add(tomarPercentage);
+
+        projectsFinished.add(String.valueOf(viseuCount));
+        projectsFinished.add(viseuPercentage);
+
+        projectsFinished.add(String.valueOf(vilarealCount));
+        projectsFinished.add(vilarealPercentage);
+
+
+        return projectsFinished;
+
+
+    }
+
+    public String averageElementsProject(int contestId) {
+
+        List<ContestApplication> projectsGiven = applicationDao.findApplicationsForGivenContestId(contestId);
+        double sizeProjects = applicationDao.findApplicationsForGivenContestId(contestId).size();
+        double countmembers = 0;
+
+        for (ContestApplication contestApplication : projectsGiven) {
+            countmembers += contestApplication.getProject().getMembersNumber();
+
+        }
+        return String.format("%.2f", countmembers / sizeProjects);
+
+    }
+
+
+    public String averageExecutionProject(int contestId) {
+
+        List<ContestApplication> projectsGiven = applicationDao.findApplicationsForGivenContestId(contestId);
+        double sizeProjects = applicationDao.findAcceptedProjectsForGivenContestId(contestId).size();
+        long countDays = 0;
+
+        for (ContestApplication contestApplication : projectsGiven) {
+            boolean valid = contestApplication.isAnswered() && contestApplication.isAccepted();
+            boolean finished = contestApplication.getProject().getStatus().ordinal() == 6;
+            if (valid && finished) {
+                long startDate = contestApplication.getContest().getStartDate().getTime();
+                long finishedDate = contestApplication.getProject().getFinishDate().getTime();
+                countDays += Math.abs(startDate - finishedDate);
+
+            }
+        }
+        long days = countDays / (1000 * 60 * 60 * 24);
+
+        String result = String.format("%.2f",days/sizeProjects);
+
+
+        return result;
+    }
 
 
 }
