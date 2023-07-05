@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
-
+import styles from "./ButtonComponent.module.css";
 function GeneratePdf() {
   const [stats, setStats] = useState([]);
 
@@ -399,7 +399,9 @@ function GeneratePdf() {
 
   return (
     <div>
-      <button onClick={handleClick}>Create PDF</button>
+      <button className={styles.button} onClick={handleClick}>
+        Exportar PDF
+      </button>
     </div>
   );
 }

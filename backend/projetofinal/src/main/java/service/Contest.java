@@ -1,4 +1,5 @@
 package service;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import dto.*;
 import jakarta.inject.Inject;
@@ -319,15 +320,8 @@ public class Contest {
         Response r = null;
         String list = contestBean.statsContenst(contestId);
 
-        if (userBean.checkStringInfo(token)) {
-            r = Response.status(401).entity("Unauthorized!").build();
-        } else if (!userBean.checkUserPermission(token)) {
-            r = Response.status(403).entity("Forbidden!").build();
-        } else {
-            userBean.updateSessionTime(token);
-            r = Response.status(200).entity(list).build();
-            }
 
+        r = Response.status(200).entity(list).build();
 
 
         return r;

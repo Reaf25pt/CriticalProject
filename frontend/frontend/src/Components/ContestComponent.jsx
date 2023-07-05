@@ -60,8 +60,12 @@ function ContestComponent({ toggleComponent }) {
 
   return (
     <div class="container-fluid">
-      <GeneratePdf />
-      <div className="row mt-5">
+      <div className="row mt-3  p-2">
+        <div className="col-lg-2">
+          <GeneratePdf />
+        </div>
+      </div>
+      <div className="row mt-3">
         <div className="col-lg-5 mx-auto bg-secondary rounded-3 p-5 mx-auto">
           <div className="row mb-5">
             <h2 className="text-center text-white">{contest.title}</h2>
