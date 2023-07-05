@@ -1,6 +1,11 @@
 package ENUM;
 
+/**
+ * Represents the possible values attribute Office can have, for both Project and User entities
+ */
 public enum Office {
+
+
 
     LISBOA("Lisboa"), // 0
     COIMBRA("Coimbra"),  // 1

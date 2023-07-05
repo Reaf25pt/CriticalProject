@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import styles from "./ButtonComponent.module.css";
+import { useParams } from "react-router";
+import { userStore } from "../stores/UserStore";
+import { contestOpenStore } from "../stores/ContestOpenStore";
+
 function GeneratePdf() {
   const [stats, setStats] = useState([]);
+  const { id } = useParams();
+  const user = userStore((state) => state.user);
+  const contest = contestOpenStore((state) => state.contest);
+  console.log(id);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/projetofinal/rest/contest/stats/1`, {
+    fetch(`http://localhost:8080/projetofinal/rest/contest/stats/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        // token: user.token,
+        token: user.token,
       },
     })
       .then((resp) => resp.json())
@@ -38,7 +46,7 @@ function GeneratePdf() {
       y: 800,
       size: 25,
     });
-    page.drawText("Data de inicio: " + stats.info[1], { x: 450, y: 820 });
+    page.drawText("Data de início: " + stats.info[1], { x: 450, y: 820 });
     page.drawText("Data de fim: " + stats.info[2], { x: 450, y: 800 });
     page.drawLine({
       start: { x: 0, y: 750 },
@@ -366,7 +374,7 @@ function GeneratePdf() {
       color: rgb(0, 0, 0),
     });
 
-    page.drawText("Número medio elementos por projeto: ", {
+    page.drawText("Número médio elementos por projeto: ", {
       x: 10,
       y: 100,
       size: 20,
@@ -389,7 +397,7 @@ function GeneratePdf() {
     // Create a download link for the PDF file
     const downloadLink = document.createElement("a");
     downloadLink.href = URL.createObjectURL(pdfBlob);
-    downloadLink.download = "example.pdf";
+    downloadLink.download = `Estatísticas ${contest.title}.pdf`;
 
     // Append the link to the document body and click it programmatically
     document.body.appendChild(downloadLink);

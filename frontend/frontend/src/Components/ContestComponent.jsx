@@ -61,9 +61,11 @@ function ContestComponent({ toggleComponent }) {
   return (
     <div class="container-fluid">
       <div className="row mt-3  p-2">
-        <div className="col-lg-2">
-          <GeneratePdf />
-        </div>
+        {user.contestManager && contest.statusInt === 3 ? (
+          <div className="col-lg-2">
+            <GeneratePdf />
+          </div>
+        ) : null}
       </div>
       <div className="row mt-3">
         <div className="col-lg-5 mx-auto bg-secondary rounded-3 p-5 mx-auto">

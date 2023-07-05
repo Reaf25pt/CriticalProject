@@ -1,5 +1,7 @@
 package ENUM;
-
+/**
+ * Represents the possible values attribute task Status can have
+ */
 public enum StatusTask {
 
     PLANNED("Planned"), //0

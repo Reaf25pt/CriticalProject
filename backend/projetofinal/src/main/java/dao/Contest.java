@@ -5,6 +5,7 @@ import ENUM.StatusProject;
 import entity.Project;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.NoResultException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,17 @@ public class Contest extends Abstract<entity.Contest>{
         return list;
     }
 
+    public Long countPlanningContest() {
+        Long count;
+        try {
+            count = (Long) em.createNamedQuery("Contest.countPlanningContest").setParameter("planning", StatusContest.PLANNING)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            // e.printStackTrace();
+            return null;
+        }
+        return count;
+    }
 
 
 }

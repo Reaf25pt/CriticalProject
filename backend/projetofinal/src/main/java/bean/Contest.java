@@ -47,10 +47,14 @@ public class Contest {
 
 
     public boolean createNewContest(dto.Contest contestInfo, String token) {
-        // datas são verificadas no frontend
+        // datas encadeadas são verificadas no frontend
+        // verificar se datas de openCall não sobrepõem as de outros concursos para garantir que só há 1 openCall de cada x
         boolean res = false;
 
         if (contestInfo != null) {
+
+            if(!verifyOpenCallDates(contestInfo.getStartOpenCall(),contestInfo.getFinishOpenCall() )){
+
             entity.Contest contest = new entity.Contest();
             contest.setTitle(contestInfo.getTitle());
             contest.setStartDate(contestInfo.getStartDate());
@@ -65,7 +69,28 @@ public class Contest {
             contestDao.persist(contest);
             communicationBean.notifyAllContestManagers(0, "");
             res = true;
+        }}
+        return res;
+    }
+
+    private boolean verifyOpenCallDates(Date startOpenCall, Date finishOpenCall) {
+        // verifica se datas se sobrepõe a alguma open call de outro concurso
+        // Confirmar que startOpenCall é posterior a finishOpenCall de concursos já existentes
+        // Confirmar que finishOpenCall é anterior a startOpenCall de concursos já existentes
+        boolean res=false;
+        int count =0;  // contador para número de ocorrências que não permitem validar as datas
+
+        List<entity.Contest> listAllContests = contestDao.findAll();
+        for(entity.Contest c : listAllContests){
+            if (!startOpenCall.after(c.getFinishOpenCall()) || !finishOpenCall.before(c.getStartOpenCall())){
+                count++;
+            }
         }
+
+        if(count!=0){
+            res=true; // datas não permitem que novo concurso seja criado
+        }
+
         return res;
     }
 
@@ -158,13 +183,15 @@ public class Contest {
 
     public dto.Contest editContestInfo(String token, dto.Contest editContest) {
         // edita as informações do concurso e retorna DTO para actualizar no frontend
-
+        // verificar se datas de OpenCall batem certo
         dto.Contest contestDto = new dto.Contest();
 
         entity.Contest contestEnt = contestDao.find(editContest.getId());
 
         if (contestEnt != null) {
-            contestEnt.setTitle(editContest.getTitle());
+            if(!verifyOpenCallDates(editContest.getStartOpenCall(),editContest.getFinishOpenCall() )){
+
+                contestEnt.setTitle(editContest.getTitle());
             contestEnt.setStartOpenCall(editContest.getStartOpenCall());
             contestEnt.setFinishOpenCall(editContest.getFinishOpenCall());
             contestEnt.setStartDate(editContest.getStartDate());
@@ -176,7 +203,7 @@ public class Contest {
             contestDao.merge(contestEnt);
             communicationBean.notifyAllContestManagers(1, contestEnt.getTitle());
             contestDto = convertContestEntToDto(contestEnt);
-        }
+        }}
 
 
         return contestDto;
@@ -874,6 +901,19 @@ public class Contest {
     }
 
 
+    public boolean verifyPermissionToAddNewContest() {
+        // só pode haver 1 concurso PLANNING e 1 concurso OPEN at all times
+
+        boolean res=false;
+
+Long count = contestDao.countPlanningContest();
+if (count==0 ){
+    System.out.println("count planning contest " + count );
+    res=true; // pode criar novo concurso
+}
+
+        return res;
+    }
 }
 
 

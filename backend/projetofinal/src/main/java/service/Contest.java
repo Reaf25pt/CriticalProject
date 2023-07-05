@@ -32,7 +32,7 @@ public class Contest {
 
         if (userBean.checkStringInfo(token) || contest == null) {
             r = Response.status(401).entity("Unauthorized!").build();
-        } else if (!userBean.checkUserPermission(token) || !contestBean.verifyUserProfile(token)) {
+        } else if (!userBean.checkUserPermission(token) || !contestBean.verifyUserProfile(token) || !contestBean.verifyPermissionToAddNewContest()) {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
@@ -318,12 +318,21 @@ public class Contest {
     @Produces(MediaType.APPLICATION_JSON)
     public Response statsContests(@PathParam("contestId") int contestId, @HeaderParam("token") String token) throws JsonProcessingException {
         Response r = null;
-        String list = contestBean.statsContenst(contestId);
 
+        if (userBean.checkStringInfo(token) ) {
+            r = Response.status(401).entity("Unauthorized!").build();
+        } else if (!userBean.checkUserPermission(token) || !contestBean.verifyUserProfile(token) ) {
+            r = Response.status(403).entity("Forbidden!").build();
+        } else {
+            userBean.updateSessionTime(token);
 
-        r = Response.status(200).entity(list).build();
+            String list = contestBean.statsContenst(contestId);
+            if (userBean.checkStringInfo(list)) {
+                r = Response.status(404).entity("Something went wrong").build();
+            } else {
+            r = Response.status(200).entity(list).build();
 
-
+        }}
         return r;
     }
 }

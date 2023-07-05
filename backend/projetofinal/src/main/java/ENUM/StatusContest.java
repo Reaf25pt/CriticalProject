@@ -1,5 +1,8 @@
 package ENUM;
 
+/**
+ * Represents the possible values attribute contest Status can have
+ */
 public enum StatusContest {
     PLANNING("Planning"), //0
     OPEN("Open"), //1

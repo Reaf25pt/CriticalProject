@@ -1,5 +1,7 @@
 package ENUM;
-
+/**
+ * Represents the possible values attribute SkillType can have
+ */
 public enum SkillType {
     KNOWLEDGE("Conhecimento"),
     SOFTWARE("Software"),

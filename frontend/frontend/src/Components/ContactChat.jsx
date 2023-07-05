@@ -111,7 +111,20 @@ function ContactChat({ selectedUser }) {
       <div>
         <Row id="headerChatBox">
           {selectedUser.photo && selectedUser.openProfile ? (
-            <Col>{selectedUser.photo}</Col>
+            <Col>
+              {" "}
+              <img
+                id="imageUserToChat"
+                alt=""
+                xs={{ span: 6, offset: 3 }}
+                src={selectedUser.photo}
+                style={{
+                  resizeMode: "contain",
+                  /*   maxHeight: 60,
+                    maxWidth: 80, */
+                }}
+              />
+            </Col>
           ) : (
             <Col>
               <img

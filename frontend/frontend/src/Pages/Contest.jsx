@@ -72,6 +72,8 @@ function Contest() {
       .catch((err) => console.log(err));
   }, [contests]);
 
+  const canRenderAddButton = showList.filter((item) => item.statusInt === 0);
+
   const convertTimestampToDate = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString(); // Adjust the format as per your requirement
@@ -194,7 +196,7 @@ function Contest() {
           role="tabpanel"
           aria-labelledby="home-tab"
         >
-          {user.contestManager ? (
+          {user.contestManager && canRenderAddButton.length === 0 ? (
             <>
               <div className="row">
                 <div className="col mt-5">
@@ -214,7 +216,7 @@ function Contest() {
                     paginator
                     header={header}
                     filters={filters}
-                    // filterDisplay="menu"
+                    filterDisplay="menu"
                     loading={loading}
                     globalFilterFields={[
                       "title",
