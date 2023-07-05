@@ -1028,7 +1028,6 @@ return projectsList;
                 if (role == 0) {
                     //altera para perfil B - user normal. Não precisa de validar nada, apenas mudar o atributo contestManager
 
-                    // TODO retirar notificações que digam respeito a concursos, ou pelo menos retirar a necessidade de input.
 
                     user.setContestManager(false);
                     userDao.merge(user);

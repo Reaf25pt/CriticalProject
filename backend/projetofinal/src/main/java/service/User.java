@@ -67,7 +67,6 @@ public class User {
                 r = Response.status(400).entity("Failed!").build();
             } else if (value == 403)
                 r = Response.status(403).entity("Forbidden").build();
-            // TODO incluir hipotese de res vir sem info? algo pode correr mal. nesse caso qual o erro apropriado?
         }
         return r;
 
@@ -80,8 +79,6 @@ public class User {
     public Response newAccount(@HeaderParam("email") String email, @HeaderParam("password") String password) {
         Response r = null;
 
-        // TODO  haverá melhor forma de colocar as validações para não repetir o código  checkEmailInDatabase ?!?!
-        // TODO  faz sentido chamar método de createNewAccount dentro do checkEmailInDatabase ???
 
         if (userBean.checkStringInfo(email) || userBean.checkStringInfo(password)) {
             r = Response.status(401).entity("Unauthorized!").build();
@@ -89,11 +86,11 @@ public class User {
         } else {
             int statusCode = userBean.checkEmailInDatabase(email);
 
-            if (statusCode== 400){
+            if (statusCode == 400) {
                 r = Response.status(400).entity("Email is already registered!").build();
-            } else if (statusCode==409){
+            } else if (statusCode == 409) {
                 r = Response.status(409).entity("Account validation is missing!").build();
-            } else if(statusCode==401){
+            } else if (statusCode == 401) {
                 r = Response.status(401).entity("Email is undefined").build();
             } else {
                 boolean newAccount = userBean.createNewAccount(email, password);
@@ -101,7 +98,7 @@ public class User {
                     r = Response.status(404).entity("Not found!").build();
                 } else {
                     r = Response.status(200).entity("Success!").build();
-                    //TODO ask if better to use 200 ou 201 - created
+
                 }
             }
         }
@@ -166,7 +163,7 @@ public class User {
                                    @HeaderParam("password") String password) {
         Response r = null;
 
-        if ( userBean.checkStringInfo(tokenRecoverPassword) || userBean.checkStringInfo(password)) {
+        if (userBean.checkStringInfo(tokenRecoverPassword) || userBean.checkStringInfo(password)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else {
@@ -197,22 +194,19 @@ public class User {
 
         if (userBean.checkStringInfo(token) || userBean.checkStringInfo(newInfo.getFirstName()) || userBean.checkStringInfo(newInfo.getLastName())) {
             r = Response.status(401).entity("Unauthorized!").build();
-            // TODO decidir como verificar se office vem preenchido do frontend e validar em conformidade
 
         } else if (!userBean.checkUserPermission(token)) {
             r = Response.status(403).entity("Forbidden!").build();
-            // TODO permitir apenas se fillInfo for false?
 
         } else {
 
             userBean.updateSessionTime(token);
 
-            // neste ponto o user tem autorização para fazer update da sua info e não é necessário validar se info vem preenchida ou existe na DB pq único campo que tem de ser único não é updated (email)
+            // neste ponto o user tem autorização para fazer update da sua info e não é necessário validar se info vem preenchida ou existe na DB pq único campo que tem de ser único não é actualizado (email)
 
             Profile userUpdated = userBean.addMandatoryInfo(token, newInfo);
             if (userUpdated == null) {
                 r = Response.status(404).entity("Not found!").build();
-                //TODO erro 404 not found  ou  400 bad request?
 
             } else {
                 r = Response.status(200).entity(userUpdated).build();
@@ -224,7 +218,6 @@ public class User {
     }
 
 
-
     // EDIT OWN PROFILE INFORMATION, EXCEPT PASSWORD
     @POST
     @Path("/ownprofile")
@@ -234,22 +227,18 @@ public class User {
 
         Response r = null;
 
-        if (userBean.checkStringInfo(token)|| newInfo == null) {
+        if (userBean.checkStringInfo(token) || newInfo == null) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else if (!userBean.checkUserPermission(token)) {
             r = Response.status(403).entity("Forbidden!").build();
 
         } else {
-            System.out.println(newInfo.isOpenProfile());
             userBean.updateSessionTime(token);
-
-            // neste ponto o user tem autorização para fazer update da sua info e não é necessário validar se info vem preenchida ou existe na DB pq único campo que tem de ser único não é updated (email)
 
             Profile userUpdated = userBean.updateProfile(token, newInfo);
             if (userUpdated == null) {
                 r = Response.status(404).entity("Not found!").build();
-                //TODO erro 404 not found  ou  400 bad request?
 
             } else {
                 r = Response.status(200).entity(userUpdated).build();
@@ -268,7 +257,7 @@ public class User {
                                       @HeaderParam("oldPassword") String oldPassword, @HeaderParam("newPassword") String newPassword) {
         Response r = null;
 
-        if (userBean.checkStringInfo(token)|| userBean.checkStringInfo(oldPassword) || userBean.checkStringInfo(newPassword)) {
+        if (userBean.checkStringInfo(token) || userBean.checkStringInfo(oldPassword) || userBean.checkStringInfo(newPassword)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else {
@@ -285,7 +274,6 @@ public class User {
             } else {
                 r = Response.status(409).entity("Conflict!").build();
 
-                // TODO manter ou simplesmente apagar / alterar erro?
             }
         }
 
@@ -303,7 +291,7 @@ public class User {
 
         Response r = null;
 
-        if (userBean.checkStringInfo(token) ||userBean.checkStringInfo(title)) {
+        if (userBean.checkStringInfo(token) || userBean.checkStringInfo(title)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else if (!userBean.checkUserPermission(token)) {
@@ -316,7 +304,7 @@ public class User {
             Hobby hobby = userBean.addHobby(token, title);
             if (hobby == null) {
                 r = Response.status(404).entity("Not found!").build();
-//TODO melhorar texto de resposta? aqui o not found na verdade significa que a relação já existe ...
+                //TODO melhorar texto de resposta? aqui o not found na verdade significa que a relação já existe ...
             } else {
                 r = Response.status(200).entity(hobby).build();
                 // permite apresentar logo no frontend com id do hobby para poder eventualmente apagar
@@ -368,7 +356,7 @@ public class User {
 
         Response r = null;
 
-        if (userBean.checkStringInfo(token) ) {
+        if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else if (!userBean.checkUserPermission(token)) {
@@ -399,7 +387,7 @@ public class User {
 
         Response r = null;
 
-        if (userBean.checkStringInfo(token) ) {
+        if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else if (!userBean.checkUserPermission(token)) {
@@ -427,8 +415,7 @@ public class User {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllUsers(@HeaderParam("token") String token) {
 
-        // verificar se token tem sessão iniciada e válida, se sim actualizar session time
-        // ir buscar lista de projectos que user id do token logado seja membro (accepted and not removed)
+
         Response r = null;
 
         if (userBean.checkStringInfo(token)) {
@@ -455,7 +442,7 @@ public class User {
     @GET
     @Path("/suggestion")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUsersToSuggest(@QueryParam("name") String name,  @HeaderParam("token") String token) {
+    public Response getUsersToSuggest(@QueryParam("name") String name, @HeaderParam("token") String token) {
 
         Response r = null;
 
@@ -490,16 +477,16 @@ public class User {
 
         if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
-        } else if (!userBean.checkUserPermission(token) ) {
+        } else if (!userBean.checkUserPermission(token)) {
 
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
 
             Project project = userBean.getActiveProjectInfo(token);
-          //  ActiveProjectToken project = userBean.getActiveProjectInfo(token);
+            //  ActiveProjectToken project = userBean.getActiveProjectInfo(token);
 
-            if (project == null ) {
+            if (project == null) {
                 r = Response.status(404).entity(project).build();
             } else {
 
@@ -515,7 +502,7 @@ public class User {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getProject(@HeaderParam("token") String token,  @PathParam("id") int id) {
+    public Response getProject(@HeaderParam("token") String token, @PathParam("id") int id) {
 
         Response r = null;
 
@@ -529,7 +516,7 @@ public class User {
 
             AnotherProfile profile = userBean.getAnotherProfile(token, id);
 
-            if (profile == null ) {
+            if (profile == null) {
                 r = Response.status(404).entity(profile).build();
             } else {
 
@@ -547,7 +534,6 @@ public class User {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getOwnProjects(@HeaderParam("token") String token) {
 
-        // verificar se token tem sessão iniciada e válida, se sim actualizar session time
         // ir buscar lista de projectos que user id do token logado seja membro (accepted and not removed)
         Response r = null;
 
@@ -578,7 +564,6 @@ public class User {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getOwnHobbies(@HeaderParam("token") String token) {
 
-        // verificar se token tem sessão iniciada e válida, se sim actualizar session time
         Response r = null;
 
         if (userBean.checkStringInfo(token)) {
@@ -607,7 +592,6 @@ public class User {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getOwnSkills(@HeaderParam("token") String token) {
 
-        // verificar se token tem sessão iniciada e válida, se sim actualizar session time
         Response r = null;
 
         if (userBean.checkStringInfo(token)) {
@@ -635,7 +619,7 @@ public class User {
     @GET
     @Path("/skills")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSkills(@QueryParam("title") String title,  @HeaderParam("token") String token) {
+    public Response getSkills(@QueryParam("title") String title, @HeaderParam("token") String token) {
 
         Response r = null;
 
@@ -663,7 +647,7 @@ public class User {
     @GET
     @Path("/hobby")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getHobbies(@QueryParam("title") String title,  @HeaderParam("token") String token) {
+    public Response getHobbies(@QueryParam("title") String title, @HeaderParam("token") String token) {
 
         Response r = null;
 
@@ -704,7 +688,7 @@ public class User {
 
             HashMap<Integer, String> list = userBean.getOfficeList();
 
-            if (list == null ) {
+            if (list == null) {
                 r = Response.status(404).entity(list).build();
             } else {
                 r = Response.status(200).entity(list).build();
@@ -731,7 +715,7 @@ public class User {
 
             HashMap<Integer, String> list = userBean.getSkillTypesList();
 
-            if (list == null ) {
+            if (list == null) {
                 r = Response.status(404).entity(list).build();
             } else {
                 r = Response.status(200).entity(list).build();
@@ -743,7 +727,7 @@ public class User {
 
 
     // ALTERA PAPEL DE USER: GESTOR DE CONCURSO OU USER NORMAL
-    // Apenas para usar no postman - método administrativo
+    // Apenas para usar no postman - método administrativo mas que permite garantir que user passa a PERFIL A tratanda de "dependências"
     @PATCH
     @Path("/profile")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -752,13 +736,13 @@ public class User {
 
         Response r = null;
 
-            boolean res = userBean.modifyProfileType(role, userId);
-            if (!res) {
-                r = Response.status(404).entity("Forbidden").build();
-            } else {
-                r = Response.status(200).entity("Success").build();
+        boolean res = userBean.modifyProfileType(role, userId);
+        if (!res) {
+            r = Response.status(404).entity("Forbidden").build();
+        } else {
+            r = Response.status(200).entity("Success").build();
 
-            }
+        }
 
         return r;
 

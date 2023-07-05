@@ -34,10 +34,10 @@ public class Project {
         } else {
             userBean.updateSessionTime(token);
             List<dto.Project> projects = new ArrayList<>();
-            if(queryWinner){
+            if (queryWinner) {
                 projects = projBean.filterWinnerProjects(token);
-            } else if(!userBean.checkStringInfo(global)){
-                 projects = projBean.filterProjectsForSkillsAndKeywords(token, global);
+            } else if (!userBean.checkStringInfo(global)) {
+                projects = projBean.filterProjectsForSkillsAndKeywords(token, global);
             } else {
 
                 projects = projBean.getAllProjectsList(token);
@@ -61,10 +61,9 @@ public class Project {
     @Produces(MediaType.APPLICATION_JSON)
     public Response addProject(dto.Project project, @HeaderParam("token") String token) {
         Response r = null;
-        System.out.println("criar proj service");
-        if (userBean.checkStringInfo(token) || project==null) {
+        if (userBean.checkStringInfo(token) || project == null) {
             r = Response.status(401).entity("Unauthorized!").build();
-        }  else if (!userBean.checkUserPermission(token) || !projBean.verifyIfUserHasActiveProject(token)) {
+        } else if (!userBean.checkUserPermission(token) || !projBean.verifyIfUserHasActiveProject(token)) {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
@@ -78,7 +77,8 @@ public class Project {
                 r = Response.status(200).entity("Success!").build();
             }
         }
-        return r;}
+        return r;
+    }
 
     // EDIT PROJECT INFO
     @PATCH
@@ -89,7 +89,7 @@ public class Project {
 
         Response r = null;
 
-        if (userBean.checkStringInfo(token) || editProj==null) {
+        if (userBean.checkStringInfo(token) || editProj == null) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, editProj.getId()) || projBean.verifyPermisionToEditProjectInfo(editProj.getId())) {
@@ -122,9 +122,9 @@ public class Project {
         // TODO send id de proj e user ou objecto com + info?? SE for ID, como verificar se a info vem nula?
         Response r = null;
 
-        if (userBean.checkStringInfo(token) ) {
+        if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
-        }  else if (!userBean.checkUserPermission(token) || projBean.verifyProjectStatusToModifyTask(projId)|| !projBean.verifyIfProjectHasAvailableSpots(projId) || !projBean.verifyPermissionToAddMember(token, projId, userId)) {
+        } else if (!userBean.checkUserPermission(token) || projBean.verifyProjectStatusToModifyTask(projId) || !projBean.verifyIfProjectHasAvailableSpots(projId) || !projBean.verifyPermissionToAddMember(token, projId, userId)) {
             // só pode adicionar membro a projecto se status for planning ou in progress
             //TODO falta testar verify permission
 
@@ -141,7 +141,8 @@ public class Project {
                 r = Response.status(200).entity("Success!").build();
             }
         }
-        return r;}
+        return r;
+    }
 
     // ADICIONAR TAREFA A PROJECTO
     @POST
@@ -152,9 +153,9 @@ public class Project {
 
         Response r = null;
 
-        if (userBean.checkStringInfo(token) || task== null || projBean.checkTaskInfo(task)) {
+        if (userBean.checkStringInfo(token) || task == null || projBean.checkTaskInfo(task)) {
             r = Response.status(401).entity("Unauthorized!").build();
-        }  else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId) || projBean.verifyProjectStatusToModifyTask(projId)) {
+        } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId) || projBean.verifyProjectStatusToModifyTask(projId)) {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
@@ -168,7 +169,8 @@ public class Project {
                 r = Response.status(200).entity("Success!").build();
             }
         }
-        return r;}
+        return r;
+    }
 
 
     // ADICIONAR PROJECT CHAT MESSAGE
@@ -180,23 +182,24 @@ public class Project {
 
         Response r = null;
 
-        if (userBean.checkStringInfo(token) || message== null ) {
+        if (userBean.checkStringInfo(token) || message == null) {
             r = Response.status(401).entity("Unauthorized!").build();
-        }  else if (!userBean.checkUserPermission(token) || !projBean.isProjMember(projId, token) || projBean.verifyPermissionToChat(projId)) {
+        } else if (!userBean.checkUserPermission(token) || !projBean.isProjMember(projId, token) || projBean.verifyPermissionToChat(projId)) {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
 
             ProjectChat newMessage = projBean.addMessageToProjectChat(projId, message, token);
 
-            if (newMessage==null) {
+            if (newMessage == null) {
                 r = Response.status(404).entity("Something went wrong!").build();
             } else {
 
                 r = Response.status(200).entity(newMessage).build();
             }
         }
-        return r;}
+        return r;
+    }
 
     // ADICIONAR REGISTO HISTÓRICO MANUAL
     @POST
@@ -207,24 +210,24 @@ public class Project {
 
         Response r = null;
 
-        if (userBean.checkStringInfo(token) || record== null ) {
+        if (userBean.checkStringInfo(token) || record == null) {
             r = Response.status(401).entity("Unauthorized!").build();
-        }  else if (!userBean.checkUserPermission(token) || !projBean.isProjMember(projId, token) || !projBean.verifyPermissionToAddManualRecord(projId)) {
+        } else if (!userBean.checkUserPermission(token) || !projBean.isProjMember(projId, token) || !projBean.verifyPermissionToAddManualRecord(projId)) {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
 
             ProjectHistory newRecord = projBean.addManualRecord(projId, record, token);
 
-            if (newRecord==null) {
+            if (newRecord == null) {
                 r = Response.status(404).entity("Something went wrong!").build();
             } else {
 
                 r = Response.status(200).entity(newRecord).build();
             }
         }
-        return r;}
-
+        return r;
+    }
 
 
     // GESTOR DE PROJECTO RESPONDE A PEDIDO PARA PARTICIPAR NO PROJECTO - actualiza info da relação do projMember
@@ -232,8 +235,7 @@ public class Project {
     @Path("/selfinvitation")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response replyToSelfInvitation(@HeaderParam("token") String token, @HeaderParam("projMemberId") int projMemberId,@HeaderParam("projId") int projId ,@HeaderParam("answer") int answer ) {
-        System.out.println("Service");
+    public Response replyToSelfInvitation(@HeaderParam("token") String token, @HeaderParam("projMemberId") int projMemberId, @HeaderParam("projId") int projId, @HeaderParam("answer") int answer) {
         Response r = null;
 
         if (userBean.checkStringInfo(token)) {
@@ -261,14 +263,14 @@ public class Project {
     @PATCH
     @Path("/member")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteMember(@HeaderParam("token") String token, @HeaderParam("userId") int userId,@HeaderParam("projId") int projId ) {
+    public Response deleteMember(@HeaderParam("token") String token, @HeaderParam("userId") int userId, @HeaderParam("projId") int projId) {
 
         Response r = null;
 
         if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
-        } else if (!userBean.checkUserPermission(token) || projBean.verifyProjectStatusToModifyTask(projId) ||!projBean.verifyPermissionToDeleteUser(token, projId, userId)) {
-           // TODO membro pode sair em que fases do proj ? neste momento n pode sair em ready, proposed, approved, nem finished, nem cancelled
+        } else if (!userBean.checkUserPermission(token) || projBean.verifyProjectStatusToModifyTask(projId) || !projBean.verifyPermissionToDeleteUser(token, projId, userId)) {
+            // TODO membro pode sair em que fases do proj ? neste momento n pode sair em ready, proposed, approved, nem finished, nem cancelled
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
@@ -287,11 +289,11 @@ public class Project {
         return r;
     }
 
-     // ALTERA PAPEL DE MEMBRO DE UM PROJECTO: GESTOR OU PARTICIPANTE
+    // ALTERA PAPEL DE MEMBRO DE UM PROJECTO: GESTOR OU PARTICIPANTE
     @PUT
     @Path("/member")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response changeMemberRole(@HeaderParam("token") String token, @HeaderParam("userId") int userId,@HeaderParam("projId") int projId, @HeaderParam("role") int role ) {
+    public Response changeMemberRole(@HeaderParam("token") String token, @HeaderParam("userId") int userId, @HeaderParam("projId") int projId, @HeaderParam("role") int role) {
 
         Response r = null;
 
@@ -324,7 +326,7 @@ public class Project {
 // TODO pode ser necessário alterar info que vem do frontend
         Response r = null;
 
-        if (userBean.checkStringInfo(token) ) {
+        if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId)) {
@@ -354,14 +356,14 @@ public class Project {
     @Path("/task")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteTaskOfProject(@HeaderParam("token") String token, @HeaderParam("projId") int projId,@HeaderParam("taskId") int taskId ) {
+    public Response deleteTaskOfProject(@HeaderParam("token") String token, @HeaderParam("projId") int projId, @HeaderParam("taskId") int taskId) {
 
         Response r = null;
 
-        if (userBean.checkStringInfo(token) ) {
+        if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
-        } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId)|| !projBean.verifyIfTaskBelongsToProject(taskId, projId) || projBean.verifyProjectStatusToModifyTask(projId)) {
+        } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId) || !projBean.verifyIfTaskBelongsToProject(taskId, projId) || projBean.verifyProjectStatusToModifyTask(projId)) {
             r = Response.status(403).entity("Forbidden!").build();
 //TODO alterar metodo para casos em q pode apagar ou n tarefa. se tem precedentes ou n ??
         } else {
@@ -386,18 +388,17 @@ public class Project {
     @Path("/{projId}/task")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response editTask(@HeaderParam("token") String token, @PathParam("projId") int projId,dto.Task editTask) {
+    public Response editTask(@HeaderParam("token") String token, @PathParam("projId") int projId, dto.Task editTask) {
 
         Response r = null;
 
-        if (userBean.checkStringInfo(token) || editTask==null) {
+        if (userBean.checkStringInfo(token) || editTask == null) {
             r = Response.status(401).entity("Unauthorized!").build();
 
-        } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId)|| !projBean.verifyIfTaskBelongsToProject(editTask.getId(), projId) || projBean.verifyProjectStatusToModifyTask(projId)|| projBean.verifyTaskStatusToEditTask(editTask.getId())) {
+        } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId) || !projBean.verifyIfTaskBelongsToProject(editTask.getId(), projId) || projBean.verifyProjectStatusToModifyTask(projId) || projBean.verifyTaskStatusToEditTask(editTask.getId())) {
             r = Response.status(403).entity("Forbidden!").build();
 
         } else {
-
 
 
             userBean.updateSessionTime(token);
@@ -425,15 +426,15 @@ public class Project {
 
         Response r = null;
 
-        if (userBean.checkStringInfo(token) || editTask==null) {
+        if (userBean.checkStringInfo(token) || editTask == null) {
             r = Response.status(401).entity("Unauthorized!").build();
 
-        } else if (!userBean.checkUserPermission(token) ||  !projBean.verifyIfTaskBelongsToProject(editTask.getId(), projId) || !projBean.verifyPermissionToEditTaskStatus(token, editTask.getId()) || projBean.verifyProjectStatusToEditTaskStatus(projId)) {
+        } else if (!userBean.checkUserPermission(token) || !projBean.verifyIfTaskBelongsToProject(editTask.getId(), projId) || !projBean.verifyPermissionToEditTaskStatus(token, editTask.getId()) || projBean.verifyProjectStatusToEditTaskStatus(projId)) {
             r = Response.status(403).entity("Forbidden!").build();
 
         } else {
 
-           userBean.updateSessionTime(token);
+            userBean.updateSessionTime(token);
 
             boolean res = projBean.editTaskStatus(token, editTask);
 
@@ -512,7 +513,7 @@ public class Project {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getProject(@HeaderParam("token") String token,  @PathParam("id") int id) {
+    public Response getProject(@HeaderParam("token") String token, @PathParam("id") int id) {
 
         Response r = null;
 
@@ -525,7 +526,7 @@ public class Project {
 
             dto.Project project = projBean.getProject(token, id);
 
-            if (project == null ) {
+            if (project == null) {
                 r = Response.status(404).entity(project).build();
             } else {
 
@@ -540,7 +541,7 @@ public class Project {
     @GET
     @Path("/{id}/members")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getProjectMembers(@HeaderParam("token") String token,  @PathParam("id") int id) {
+    public Response getProjectMembers(@HeaderParam("token") String token, @PathParam("id") int id) {
 
         Response r = null;
 
@@ -569,7 +570,7 @@ public class Project {
     @GET
     @Path("/{id}/potentialmembers")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPotentialProjectMembers(@HeaderParam("token") String token,  @PathParam("id") int id) {
+    public Response getPotentialProjectMembers(@HeaderParam("token") String token, @PathParam("id") int id) {
 
         Response r = null;
 
@@ -599,7 +600,7 @@ public class Project {
     @GET
     @Path("/{id}/record")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getProjectRecords(@HeaderParam("token") String token,  @PathParam("id") int id) {
+    public Response getProjectRecords(@HeaderParam("token") String token, @PathParam("id") int id) {
 
         Response r = null;
 
@@ -628,7 +629,6 @@ public class Project {
     @Path("/chat/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProjectChatMessages(@HeaderParam("token") String token, @PathParam("id") int projId) {
-        System.out.println("service chat projecto");
         Response r = null;
 
         if (userBean.checkStringInfo(token)) {
@@ -656,7 +656,7 @@ public class Project {
     @GET
     @Path("/skills")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSkills(@QueryParam("title") String title,   @HeaderParam("token") String token) {
+    public Response getSkills(@QueryParam("title") String title, @HeaderParam("token") String token) {
 
         Response r = null;
 
@@ -684,7 +684,7 @@ public class Project {
     @GET
     @Path("/keywords")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getKeywords(@QueryParam("title") String title,  @HeaderParam("token") String token) {
+    public Response getKeywords(@QueryParam("title") String title, @HeaderParam("token") String token) {
 
         Response r = null;
 
@@ -713,7 +713,7 @@ public class Project {
     @GET
     @Path("/possiblemembers")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPossibleMembers(@QueryParam("name") String name,   @HeaderParam("token") String token,   @HeaderParam("projId") int projId) {
+    public Response getPossibleMembers(@QueryParam("name") String name, @HeaderParam("token") String token, @HeaderParam("projId") int projId) {
 
         Response r = null;
 

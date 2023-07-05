@@ -158,7 +158,6 @@ public class Contest {
         } else {
 
             userBean.updateSessionTime(token);
-            System.out.println("endpoint");
             boolean res = contestBean.replyToApplication(token, applicationId, answer);
 
             if (!res) {
@@ -188,7 +187,6 @@ public class Contest {
         } else {
             userBean.updateSessionTime(token);
             boolean res = contestBean.chooseContestWinner(contestId,projId, token);
-// TODO falta testar
             if (!res) {
                 r = Response.status(404).entity("Something went wrong!").build();
             } else {

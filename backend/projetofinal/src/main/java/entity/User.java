@@ -320,7 +320,7 @@ public class User implements Serializable {
     public String createTokenForActivation() {
 
         long newtoken = System.currentTimeMillis();
-        String tokenString = this.firstName + newtoken;
+        String tokenString = this.email + newtoken;
         this.token = tokenString;
         return this.token;
     }

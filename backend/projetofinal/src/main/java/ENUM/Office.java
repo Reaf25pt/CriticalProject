@@ -15,7 +15,6 @@ public enum Office {
         this.city = city;
     }
 
-    // TODO guardar na DB valor numérico, nome da cidade ou outra forma ? trabalhar no frontend ou backend ?
 
 
     public String getCity() {

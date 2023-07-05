@@ -29,7 +29,7 @@ public class Communication {
     public Response getOwnNotificationList(@HeaderParam("token") String token) {
         Response r = null;
 
-        if (userBean.checkStringInfo(token) ) {
+        if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else if (!userBean.checkUserPermission(token)) {
@@ -59,7 +59,7 @@ public class Communication {
     public Response markNotifAsRead(@HeaderParam("token") String token, @PathParam("id") int id) {
         Response r = null;
 
-        if (userBean.checkStringInfo(token) ) {
+        if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else if (!userBean.checkUserPermission(token)) {
@@ -71,7 +71,7 @@ public class Communication {
 
             Notification notif = comBean.markNotifAsRead(token, id);
 
-            if (notif == null ) {
+            if (notif == null) {
                 r = Response.status(404).entity("Not found").build();
             } else {
                 List<Notification> list = comBean.getOwnNotificationList(token);
@@ -88,7 +88,7 @@ public class Communication {
     public Response deleteNotif(@HeaderParam("token") String token, @PathParam("id") int id) {
         Response r = null;
 
-        if (userBean.checkStringInfo(token) ) {
+        if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else if (!userBean.checkUserPermission(token)) {
@@ -97,13 +97,13 @@ public class Communication {
         } else {
             userBean.updateSessionTime(token);
 
-boolean res = comBean.deleteNotif(token, id);
+            boolean res = comBean.deleteNotif(token, id);
 
-            if (!res ) {
+            if (!res) {
                 r = Response.status(404).entity("Not found").build();
             } else {
-List<Notification> list = comBean.getOwnNotificationList(token);
-                // TODO estará correcto?
+                List<Notification> list = comBean.getOwnNotificationList(token);
+
                 r = Response.status(200).entity(list).build();
             }
         }
@@ -114,10 +114,9 @@ List<Notification> list = comBean.getOwnNotificationList(token);
     @POST
     @Path("/invitation/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response answerInvitation(@HeaderParam("token") String token, @PathParam("id") int id, @HeaderParam("answer") int answer ) {
+    public Response answerInvitation(@HeaderParam("token") String token, @PathParam("id") int id, @HeaderParam("answer") int answer) {
         Response r = null;
-        System.out.println("answer endpoint"+answer);
-        if (userBean.checkStringInfo(token) ) {
+        if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else if (!userBean.checkUserPermission(token)) {
@@ -128,7 +127,7 @@ List<Notification> list = comBean.getOwnNotificationList(token);
 
             Notification notif = comBean.answerInvitation(token, id, answer);
 
-            if (notif == null ) {
+            if (notif == null) {
                 r = Response.status(404).entity("Not found").build();
             } else {
                 List<Notification> list = comBean.getOwnNotificationList(token);
@@ -143,10 +142,10 @@ List<Notification> list = comBean.getOwnNotificationList(token);
     @PATCH
     @Path("/messages")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response markMessagesRead(@HeaderParam("token") String token, @HeaderParam("contactId") int contactId ) {
+    public Response markMessagesRead(@HeaderParam("token") String token, @HeaderParam("contactId") int contactId) {
         Response r = null;
 
-        if (userBean.checkStringInfo(token) ) {
+        if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else if (!userBean.checkUserPermission(token)) {
@@ -155,9 +154,9 @@ List<Notification> list = comBean.getOwnNotificationList(token);
         } else {
             userBean.updateSessionTime(token);
 
-            boolean res = comBean.markMessagesRead(token,contactId);
+            boolean res = comBean.markMessagesRead(token, contactId);
 
-            if (!res ) {
+            if (!res) {
                 r = Response.status(404).entity("Not found").build();
             } else {
                 List<PersonalMessage> list = comBean.getAllPersonalMessages(token);
@@ -177,16 +176,16 @@ List<Notification> list = comBean.getOwnNotificationList(token);
     public Response addPersonalMessage(@HeaderParam("token") String token, PersonalMessage message) {
         Response r = null;
 
-        if (userBean.checkStringInfo(token) || message== null ) {
+        if (userBean.checkStringInfo(token) || message == null) {
             r = Response.status(401).entity("Unauthorized!").build();
-        }  else if (!userBean.checkUserPermission(token)) {
+        } else if (!userBean.checkUserPermission(token)) {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
 
             PersonalMessage newMessage = comBean.sendMessageToContact(message, token);
 
-            if (newMessage==null) {
+            if (newMessage == null) {
                 r = Response.status(404).entity("Something went wrong!").build();
             } else {
 
@@ -203,13 +202,12 @@ List<Notification> list = comBean.getOwnNotificationList(token);
     @GET
     @Path("/contacts")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getContactsList(@HeaderParam("token") String token, @QueryParam("idToChat") int  idToChat) {
-        System.out.println("ID to chat query param: " + idToChat);
-        System.out.println("ID to chat query param: " + idToChat+idToChat);
+    public Response getContactsList(@HeaderParam("token") String token, @QueryParam("idToChat") int idToChat) {
+
 
         Response r = null;
 
-        if (userBean.checkStringInfo(token) ) {
+        if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else if (!userBean.checkUserPermission(token)) {
@@ -239,7 +237,7 @@ List<Notification> list = comBean.getOwnNotificationList(token);
     public Response getMessagesList(@HeaderParam("token") String token) {
         Response r = null;
 
-        if (userBean.checkStringInfo(token) ) {
+        if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else if (!userBean.checkUserPermission(token)) {
@@ -269,7 +267,7 @@ List<Notification> list = comBean.getOwnNotificationList(token);
     public Response getMessagesForSpecificContact(@HeaderParam("token") String token, @PathParam("contactId") int contactId) {
         Response r = null;
 
-        if (userBean.checkStringInfo(token) ) {
+        if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
         } else if (!userBean.checkUserPermission(token)) {
@@ -290,9 +288,6 @@ List<Notification> list = comBean.getOwnNotificationList(token);
         }
         return r;
     }
-
-
-
 
 
 }
