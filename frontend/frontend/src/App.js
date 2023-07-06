@@ -59,12 +59,12 @@ function App() {
   };
 
   return (
-    <div className="container-fluid bg-dark ">
+    <div className="container-fluid vh-100 position-relative bg-dark ">
       <div className="row">
         <MainTitle />
       </div>
       <div className="row">
-        <div className="col-xl-6 col-lg-6 d-flex justify-content-around   ">
+        <div className="col-xl-6 col-lg-6 d-flex justify-content-around    ">
           {" "}
           <img className="" src={logo} width={500} height={500} />
         </div>
