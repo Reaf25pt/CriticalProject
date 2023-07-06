@@ -109,51 +109,14 @@ function ContactChat({ selectedUser }) {
   return (
     <div className="container">
       <div>
-        <Row id="headerChatBox">
-          {selectedUser.photo && selectedUser.openProfile ? (
-            <Col>
-              {" "}
-              <img
-                id="imageUserToChat"
-                alt=""
-                xs={{ span: 6, offset: 3 }}
-                src={selectedUser.photo}
-                style={{
-                  resizeMode: "contain",
-                  /*   maxHeight: 60,
-                    maxWidth: 80, */
-                }}
-              />
-            </Col>
-          ) : (
-            <Col>
-              <img
-                id="imageUserToChat"
-                alt=""
-                xs={{ span: 6, offset: 3 }}
-                src="https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png"
-                style={{
-                  resizeMode: "contain",
-                  /*   maxHeight: 60,
-                    maxWidth: 80, */
-                }}
-              />
-            </Col>
-          )}
-
-          <Col>
-            {selectedUser.firstName} {""}
-            {selectedUser.lastName}{" "}
-          </Col>
-        </Row>
+      
       </div>
-      <div className="row overflow-auto" style={{ maxHeight: "100vh" }}>
+      <div className="row overflow-auto" style={{ height: "100vh" }}>
         <div className="col-lg-12 bg-secondary rounded-4 mx-auto p-5 mt-5">
           {contactMessages.length !== 0 ? (
             <div
               id="chat"
               style={{
-                height: "300px",
                 marginTop: "20px",
                 overflowY: "auto",
               }}

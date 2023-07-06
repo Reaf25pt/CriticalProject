@@ -58,6 +58,23 @@ function Start() {
     );
   };
 
+  
+  const renderLinkProj = (rowData) => {
+    return (
+      <Link to={`/home/projects/${rowData.id}`}>
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip>Ver detalhes</Tooltip>}
+        >
+          <span data-bs-toggle="tooltip" data-bs-placement="top">
+            {" "}
+            <BsEyeFill />
+          </span>
+        </OverlayTrigger>
+      </Link>
+    );
+  };
+
   const convertTimestampToDate = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString(); // Adjust the format as per your requirement
@@ -95,9 +112,10 @@ function Start() {
                 <div className="row">
                   <SearchUser />
                 </div>
-                <div className="row">
-                  <h1 className="text-white">
-                    Bemvindo ao Laboratorio de Inovação
+                <div className="row d-flex justify-content-around mt-5">
+                  <h1 className="text-center">
+                    <span className="text-danger" style={{fontSize:"60px",fontWeight:"bolder"}}>Bem-vindo</span> 
+                    <p className="text-white" style={{fontSize:"50px"}}>ao Laboratório de Inovação.</p>
                   </h1>
                 </div>
               </div>
@@ -136,14 +154,14 @@ function Start() {
                     <h5 className="text-white">Não há concursos activos</h5>
                   </div>
                 )}
-                <div class="row mt-5 mb-5 d-flex bg-secondary rounded-5">
+                <div class="row mt-5 mb-5 d-flex  rounded-5">
                   {ownProj !== null && ownProj.id !== 0 ? (
-                    <div>
-                      <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">
+                    <div className="row bg-secondary rounded-5 p-3 ">
+                      <h3 className="bg-white  text-center text-nowrap rounded-5 mb-3 ">
                         Projecto activo
                       </h3>
-                      <DataTable
-                        value={contests}
+                      {/* <DataTable
+                        value={ownProj}
                         selectionMode="single  "
                         emptyMessage="Nenhum projecto encontrado"
                       >
@@ -163,33 +181,13 @@ function Start() {
                             convertTimestampToDate(rowData.finishOpenCall)
                           }
                         />
-                        <Column body={renderLink} header="#" />
-                      </DataTable>
-                      <div className="row bg-white text-black mb-3 rounded-3 w-80 mx-auto align-items-center">
-                        <div className="col-lg-6 ">{ownProj.title}</div>
-                        <div className="col-lg-4 ">{ownProj.status}</div>
-                        <div className="col-lg-2 ">
-                          <Link to={`/home/projects/${ownProj.id}`}>
-                            <OverlayTrigger
-                              placement="top"
-                              overlay={<Tooltip>Ver detalhes</Tooltip>}
-                            >
-                              <span
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="top"
-                              >
-                                {" "}
-                                <BsEyeFill />
-                              </span>
-                            </OverlayTrigger>
-                          </Link>
-                        </div>
-                      </div>
+                        <Column body={renderLinkProj} header="#" />
+                      </DataTable> */}
+                       
+                       
                     </div>
                   ) : (
-                    <div className="row mt-5 ">
-                      <h5 className="text-white">Não tem projecto activo</h5>
-                    </div>
+                      <h5 className="text-white"  style={{fontWeight:"bolder"}}>Não tem projecto activo</h5>
                   )}
                 </div>
               </div>

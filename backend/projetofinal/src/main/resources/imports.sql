@@ -8,6 +8,12 @@ INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, la
 INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo) values (3,8, false, 'jccramalho+8@hotmail.com', true, 'Manuel', 'Joaquim', true, '25D55AD283AA400AF464C76D713C07AD',true, 0,"https://randomuser.me/api/portraits/men/38.jpg");
 INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo) values (2,9, false, 'jccramalho+9@hotmail.com', true, 'Laura', 'Soares', true, '25D55AD283AA400AF464C76D713C07AD',true, 0, null);
 INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo) values (1,10, true,'jccramalho+10@hotmail.com', true, 'Antonia', 'Maria', false, '25D55AD283AA400AF464C76D713C07AD',true, 0,"https://randomuser.me/api/portraits/women/28.jpg");
+INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo) values (1,11, true,'jccramalho+11@hotmail.com', true, 'Di', 'Maria', false, '25D55AD283AA400AF464C76D713C07AD',true, 0,"https://t0.gstatic.com/licensed-image?q=tbn:ANd9GcSYM0psEKOh0imrjb2I-fnr4qY8qdh9zJLAQggpFCPuEJg4EqIiFJKyE7Bz8w_g_au5");
+INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo) values (1,12, true,'jccramalho+12@hotmail.com', true, 'Rafa', 'Silva', false, '25D55AD283AA400AF464C76D713C07AD',true, 0,"https://images.newrr.sapo.pt/rafa_silva_foto_francisco_paraiso_fpf18234578defaultlarge_1024.jpg");
+
+
+
+
 
 INSERT INTO hobby (id, title) value (1, 'viajar');
 INSERT INTO hobby (id, title) value (2, 'passear');
