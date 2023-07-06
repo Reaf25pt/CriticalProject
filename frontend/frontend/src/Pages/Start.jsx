@@ -4,6 +4,8 @@ import { userStore } from "../stores/UserStore";
 import { BsEyeFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 function Start() {
   const user = userStore((state) => state.user);
@@ -22,6 +24,7 @@ function Start() {
       .then((resp) => resp.json())
       .then((data) => {
         setContests(data);
+        console.log(data);
       })
       .catch((err) => console.log(err));
 
@@ -38,6 +41,27 @@ function Start() {
       })
       .catch((err) => console.log(err));
   }, []);
+
+  const renderLink = (rowData) => {
+    return (
+      <Link to={`/home/contests/${rowData.id}`}>
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip>Ver detalhes</Tooltip>}
+        >
+          <span data-bs-toggle="tooltip" data-bs-placement="top">
+            {" "}
+            <BsEyeFill />
+          </span>
+        </OverlayTrigger>
+      </Link>
+    );
+  };
+
+  const convertTimestampToDate = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString(); // Adjust the format as per your requirement
+  };
 
   return (
     <div>
@@ -66,87 +90,110 @@ function Start() {
           aria-labelledby="home-tab"
         >
           <div className="container-fluid">
-            <div className="row  mt-5">
+            <div className="row mt-5 d-flex justify-content-around">
               <div className="col-lg-4">
-                <SearchUser />
+                <div className="row">
+                  <SearchUser />
+                </div>
+                <div className="row">
+                  <h1 className="text-white">
+                    Bemvindo ao Laboratorio de Inovação
+                  </h1>
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="row mt-5 mb-5 d-flex justify-content-start">
-            {contests && contests.length > 0 ? (
-              <div className="col-8 col-sm-10 col-md-7 col-lg-5 mx-auto bg-secondary mt-5 rounded-5 ">
-                <div>
-                  <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">
-                    Concursos activos
-                  </h3>
-                  {contests.map((contest, index) => (
-                    <div
-                      key={index}
-                      className="row bg-white text-black mb-3 rounded-3 w-80 mx-auto align-items-center"
+              <div class="col-lg-6">
+                {contests && contests.length > 0 ? (
+                  <div className="row bg-secondary rounded-5 p-3 ">
+                    <h3 className="bg-white  text-center text-nowrap rounded-5 mb-3 ">
+                      Concursos activos
+                    </h3>
+                    <DataTable
+                      value={contests}
+                      selectionMode="single  "
+                      emptyMessage="Nenhum projecto encontrado"
                     >
-                      <div className="col-lg-6 ">{contest.title}</div>
-                      <div className="col-lg-4 ">{contest.status}</div>
-                      <div className="col-lg-2 ">
-                        <Link to={`/home/contests/${contest.id}`}>
-                          <OverlayTrigger
-                            placement="top"
-                            overlay={<Tooltip>Ver detalhes</Tooltip>}
-                          >
-                            <span
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="top"
+                      <Column field="title" header="Nome do Projeto" />
+                      <Column field="status" header="Estado" />
+                      <Column
+                        field="startOpenCall"
+                        header="Data inicial "
+                        body={(rowData) =>
+                          convertTimestampToDate(rowData.startOpenCall)
+                        }
+                      />
+                      <Column
+                        field="finishOpenCall"
+                        header="Data final"
+                        body={(rowData) =>
+                          convertTimestampToDate(rowData.finishOpenCall)
+                        }
+                      />
+                      <Column body={renderLink} header="#" />
+                    </DataTable>
+                  </div>
+                ) : (
+                  <div className="row mt-5">
+                    <h5 className="text-white">Não há concursos activos</h5>
+                  </div>
+                )}
+                <div class="row mt-5 mb-5 d-flex bg-secondary rounded-5">
+                  {ownProj !== null && ownProj.id !== 0 ? (
+                    <div>
+                      <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">
+                        Projecto activo
+                      </h3>
+                      <DataTable
+                        value={contests}
+                        selectionMode="single  "
+                        emptyMessage="Nenhum projecto encontrado"
+                      >
+                        <Column field="title" header="Nome do Projeto" />
+                        <Column field="status" header="Estado" />
+                        <Column
+                          field="startOpenCall"
+                          header="Data inicial "
+                          body={(rowData) =>
+                            convertTimestampToDate(rowData.startOpenCall)
+                          }
+                        />
+                        <Column
+                          field="finishOpenCall"
+                          header="Data final"
+                          body={(rowData) =>
+                            convertTimestampToDate(rowData.finishOpenCall)
+                          }
+                        />
+                        <Column body={renderLink} header="#" />
+                      </DataTable>
+                      <div className="row bg-white text-black mb-3 rounded-3 w-80 mx-auto align-items-center">
+                        <div className="col-lg-6 ">{ownProj.title}</div>
+                        <div className="col-lg-4 ">{ownProj.status}</div>
+                        <div className="col-lg-2 ">
+                          <Link to={`/home/projects/${ownProj.id}`}>
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={<Tooltip>Ver detalhes</Tooltip>}
                             >
-                              {" "}
-                              <BsEyeFill />
-                            </span>
-                          </OverlayTrigger>
-                        </Link>
+                              <span
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                              >
+                                {" "}
+                                <BsEyeFill />
+                              </span>
+                            </OverlayTrigger>
+                          </Link>
+                        </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="row mt-5">
-                <h5 className="text-white">Não há concursos activos</h5>
-              </div>
-            )}
-          </div>
-
-          <div class="row mt-5 mb-5 d-flex justify-content-start">
-            {ownProj !== null && ownProj.id !== 0 ? (
-              <div className="col-8 col-sm-10 col-md-7 col-lg-5 mx-auto bg-secondary mt-5 rounded-5 ">
-                <div>
-                  <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">
-                    Projecto activo
-                  </h3>
-                  <div className="row bg-white text-black mb-3 rounded-3 w-80 mx-auto align-items-center">
-                    <div className="col-lg-6 ">{ownProj.title}</div>
-                    <div className="col-lg-4 ">{ownProj.status}</div>
-                    <div className="col-lg-2 ">
-                      <Link to={`/home/projects/${ownProj.id}`}>
-                        <OverlayTrigger
-                          placement="top"
-                          overlay={<Tooltip>Ver detalhes</Tooltip>}
-                        >
-                          <span
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                          >
-                            {" "}
-                            <BsEyeFill />
-                          </span>
-                        </OverlayTrigger>
-                      </Link>
+                  ) : (
+                    <div className="row mt-5 ">
+                      <h5 className="text-white">Não tem projecto activo</h5>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
-            ) : (
-              <div className="row mt-5 ">
-                <h5 className="text-white">Não tem projecto activo</h5>
-              </div>
-            )}
+            </div>
           </div>
         </div>
       </div>

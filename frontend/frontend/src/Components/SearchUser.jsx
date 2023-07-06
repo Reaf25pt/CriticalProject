@@ -69,11 +69,11 @@ function SearchUser() {
         defaultValue={""}
         onChange={handleChange}
       />
-      <div className="dropdown bg-white">
+      <div className="dropdown bg-white w-25" style={{ position: "absolute" }}>
         {suggestions &&
           suggestions.map((item) => (
             <option key={item.id}>
-              <div className="row d-flex justify-content-around p-2 ">
+              <div className="row d-flex justify-content-around p-2">
                 <div className="col-lg-2 ">
                   {item.photo === null || !item.openProfile ? (
                     <img
