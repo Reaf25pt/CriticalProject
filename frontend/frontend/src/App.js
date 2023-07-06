@@ -59,14 +59,14 @@ function App() {
   };
 
   return (
-    <div className="container-fluid vh-100 position-fixed bg-dark ">
+    <div className="container-fluid vh-100 position-fixed  bg-dark ">
       <div className="row">
         <MainTitle />
       </div>
       <div className="row mt-5">
         <div className="col-xl-6 col-lg-6 d-flex justify-content-around    ">
           {" "}
-          <img className="" src={logo} width={500} height={500} />
+          <img className="" src={logo} width={400} height={400} />
         </div>
 
         <div className="col-xl-6 col-lg-6 d-flex justify-content-around">
@@ -111,9 +111,9 @@ function App() {
           </form>
         </div>
       </div>
-      <div className="row">
+      {/* <div className="row">
         <Footer />
-      </div>
+      </div> */}
     </div>
   );
 }
