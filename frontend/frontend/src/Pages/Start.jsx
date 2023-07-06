@@ -38,6 +38,8 @@ function Start() {
       .then((resp) => resp.json())
       .then((data) => {
         setOwnProj(data);
+        console.log("ownproj");
+        console.log(ownProj);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -58,7 +60,6 @@ function Start() {
     );
   };
 
-  
   const renderLinkProj = (rowData) => {
     return (
       <Link to={`/home/projects/${rowData.id}`}>
@@ -114,8 +115,15 @@ function Start() {
                 </div>
                 <div className="row d-flex justify-content-around mt-5">
                   <h1 className="text-center">
-                    <span className="text-danger" style={{fontSize:"60px",fontWeight:"bolder"}}>Bem-vindo</span> 
-                    <p className="text-white" style={{fontSize:"50px"}}>ao Laboratório de Inovação.</p>
+                    <span
+                      className="text-danger"
+                      style={{ fontSize: "60px", fontWeight: "bolder" }}
+                    >
+                      Bem-vindo
+                    </span>
+                    <p className="text-white" style={{ fontSize: "50px" }}>
+                      ao Laboratório de Inovação.
+                    </p>
                   </h1>
                 </div>
               </div>
@@ -154,8 +162,8 @@ function Start() {
                     <h5 className="text-white">Não há concursos activos</h5>
                   </div>
                 )}
-                <div class="row mt-5 mb-5 d-flex  rounded-5">
-                  {ownProj !== null && ownProj.id !== 0 ? (
+                {ownProj !== null && ownProj.id !== 0 ? (
+                  <div class="row mt-5 mb-5 d-flex  rounded-5">
                     <div className="row bg-secondary rounded-5 p-3 ">
                       <h3 className="bg-white  text-center text-nowrap rounded-5 mb-3 ">
                         Projecto activo
@@ -183,13 +191,15 @@ function Start() {
                         />
                         <Column body={renderLinkProj} header="#" />
                       </DataTable> */}
-                       
-                       
                     </div>
-                  ) : (
-                      <h5 className="text-white"  style={{fontWeight:"bolder"}}>Não tem projecto activo</h5>
-                  )}
-                </div>
+                  </div>
+                ) : (
+                  <div className="row mt-5">
+                    <h5 className="text-white" style={{ fontWeight: "bolder" }}>
+                      Não tem projecto activo.
+                    </h5>
+                  </div>
+                )}
               </div>
             </div>
           </div>
