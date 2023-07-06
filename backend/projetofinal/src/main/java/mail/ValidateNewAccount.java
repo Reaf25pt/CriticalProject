@@ -16,6 +16,13 @@ public class ValidateNewAccount {
      * Outgoing Mail (SMTP) Server requires TLS or SSL: smtp.gmail.com (use
      * authentication) Use Authentication: Yes Port for TLS/STARTTLS: 587
      */
+
+    /**
+     * Utility method to define authentication and details of email message to be sent to validate a new account recently created
+     *
+     * @param recipientEmail represents recipient email
+     * @param tokenForActivaction represents a unique token that will identify the link and user when validating its new account
+     */
     public static void main(String recipientEmail, String tokenForActivaction) {
 
         final String fromEmail = "reaf25pt@gmail.com"; // requires valid gmail id

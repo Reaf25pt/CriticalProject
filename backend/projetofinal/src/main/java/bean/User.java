@@ -50,7 +50,12 @@ public class User implements Serializable {
     public User() {
     }
 
-
+    /**
+     * Verifies if email and password used to login have some valid information
+     * @param email represents email inserted when attempting login
+     * @param password represents password inserted when attempting login
+     * @return true if both parameters have indeed valid information
+     */
     public boolean validateLoginInfo(String email, String password) {
         // validates info that is sent from frontend
         boolean res;
@@ -64,8 +69,13 @@ public class User implements Serializable {
         return res;
     }
 
+    /**
+     * Verifies if there is a validated account that matches email and password inserted when attempting login. If so creates session identified by a unique token
+     * @param email represents email inserted when attempting login
+     * @param password represents password inserted when attempting login
+     * @return Profile information, including token that identifies unique session in subsequent requests
+     */
     public Profile validateLogin(String email, String password) {
-        // creates session for respective email if data matches some regist in User table
 
         Profile user = null;
 
@@ -154,6 +164,11 @@ public class User implements Serializable {
         return DigestUtils.md5Hex(token).toUpperCase();
     }
 
+    /**
+     * Verifies if given string has some valid information
+     * @param str represents string to be evaluated
+     * @return true if string has no valid information
+     */
     public boolean checkStringInfo(String str) {
         // check if a string info is null or blank
         boolean res = false;
@@ -166,6 +181,11 @@ public class User implements Serializable {
         return res;
     }
 
+    /**
+     * Removes token that identifies unique session from database, when user logs out of its account
+     * @param token represents token that identifies unique session
+     * @return status code 200 when token is removed from database, status code 400 if no session is found for given token and status code 403 when session exists but no user is associated with it
+     */
     public int validateLogout(String token) {
         // remove token from DB when logout
         int res;
@@ -178,7 +198,6 @@ public class User implements Serializable {
             if (userEnt != null) {
 
                 tokenDao.remove(tokenEnt);
-                //               logger.info("UserId " + userEnt.getUserId() + " logs out of its account");
                 LOGGER.info("User whose user ID is " + userEnt.getUserId() + " has logged out of its account. IP Address of request is " + getIPAddress());
 
 
@@ -204,13 +223,17 @@ public class User implements Serializable {
         return res;
     }
 
-
+    /**
+     * Verifies if email inserted when creating a new account already exists in database, given that email must be a unique attribute
+     * Only if email does not exist proceeds to create a new account
+     * @param email represents email inserted to create new account
+     * @return status code 400 if there is a validated account using given email, 409 if there is an account waiting for validation (a new email requesting to validate account is sent)
+     */
     public int checkEmailInDatabase(String email) {
-        // check if email used to create new account is already in Database - Email must be unique
         // if it is in Database, check if account is validated (could be that user forgot previous regist and never validated account
         int res = 100;
 
-        if (email != null || !email.isBlank()) {
+
             entity.User user = userDao.findUserByEmail(email);
 
             if (user != null) {
@@ -224,22 +247,22 @@ public class User implements Serializable {
                     res = 409;
                 }
             }
-        } else {
-            res = 401;
-        }
+
         return res;
     }
 
+    /**
+     * Creates a new account, persisted in table USER for given email. Password is persisted in dabatase masked and not directly for security reasons
+     * If successful, an email to validate account is sent to email used to regist
+     * @param email represents email associated with new account
+     * @param password represents password associated with new account
+     * @return true if account is successfully created and persisted in database (table USER)
+     */
     public boolean createNewAccount(String email, String password) {
-        //Create new account and send email to ask for account validation
         boolean res = false;
         entity.User newUser = new entity.User();
         newUser.setEmail(email);
         newUser.setPassword(passMask(password));
-        /*newUser.setFirstName("nd");
-        newUser.setLastName("nd");
-        newUser.setOffice(Office.COIMBRA);
-        // TODO  colocar assim para nomes e office ou permitir q seja nulo*/
         newUser.setContestManager(false);
         newUser.setOpenProfile(false);
         newUser.setValidated(false);
@@ -252,55 +275,16 @@ public class User implements Serializable {
         res = true;
         LOGGER.info("A new account is created for email " + newUser.getEmail() + " User ID is " + newUser.getUserId() + " . IP Address of request is " + getIPAddress());
 
-
         return res;
     }
 
-/*
-    public boolean createNewAccount(NewAccount account, String password) {
-        //Create new account and send email to ask for account validation
-
-        boolean res = false;
-
-        if (account != null) {
-            entity.User newUser = convertToUserEntity(account);
-            newUser.setPassword(passMask(password));
-            newUser.setContestManager(false);
-            newUser.setOpenProfile(false);
-            newUser.setValidated(false);
-            newUser.setToken(newUser.createTokenForActivation());
-            newUser.setTimestampForToken(newUser.createTimeoutTimeStamp());
-
-            userDao.persist(newUser);
-            ValidateNewAccount.main(newUser.getEmail(), newUser.getToken());
-            res = true;
-            LOGGER.info("A new account is created for email " + newUser.getEmail() + " User ID is " + newUser.getUserId() + " . IP Address of request is " + getIPAddress());
-
-        }
-        return res;
-    }
-*/
- /*   private entity.User convertToUserEntity(NewAccount account) {
-        entity.User newUser = new entity.User();
-
-        newUser.setEmail(account.getEmail());
-        newUser.setFirstName(account.getFirstName());
-        newUser.setLastName(account.getLastName());
-        newUser.setOffice(account.getOffice());
-        //TODO pode ser necessário mudar para ficar registo de nome de cidade e não de valor numérico
-        if (account.getNickname() != null) {
-            newUser.setNickname(account.getNickname());
-        }
-        if (account.getPhoto() != null) {
-            newUser.setPhoto(account.getPhoto());
-        }
-
-        return newUser;
-    }*/
-
+    /**
+     * Validates an account identified by given param if it is still valid, given that link to validate account is valid for a limited time
+     * In case link is no longer valid, a new link to validate account is sent to email
+     * @param tokenForValidation is a unique token that represents account that is being validated
+     * @return status code 200 if account is successfully validated, 400 if link is no longer valid, 404 if no account is found for param
+     */
     public int validateNewAccount(String tokenForValidation) {
-        // user clicks in button to confirm / validate email used for new regist
-        // needs to check if token exists for a given user and if link is still valid  (assuming 1hr)
 
         int res;
 
@@ -317,8 +301,6 @@ public class User implements Serializable {
                 userEnt.setTimestampForToken(OL);
 
                 userDao.merge(userEnt);
-                // logger.info("Account of userId " + uEnt.getUserId() + " is activated");
-//TODO use 200 ou 202 - accepted
                 res = 200;
                 LOGGER.info("Account of user ID " + userEnt.getUserId() + " is validated. IP Address of request is " + getIPAddress());
 
@@ -337,9 +319,15 @@ public class User implements Serializable {
 
     }
 
+    /**
+     * Sends a new email requesting to validate an account
+     * Method is called in case there is an attempt to register in the app using email that already exists in database but account is not validated
+     * Method is called in case user attempts to validate account through email received but token is no longer valid
+     * @param user represents user for given email
+     */
+    private void reNewTokenToValidateAccount(entity.User user) {
+       // could be that user forgot previous regist and never validated account
 
-    public void reNewTokenToValidateAccount(entity.User user) {
-        // token is no longer valid. Send a new email with a new token to validate account
         String newToken = user.createTokenForActivation();
         user.setToken(newToken);
         user.setTimestampForToken(user.createTimeoutTimeStamp());
@@ -369,10 +357,15 @@ public class User implements Serializable {
         return res;
     }
 
-
+    /**
+     * Sends an email with a link, valid for limited time, with a unique token that identifies validated account to recover password
+     * If account is not validated, it will not allow to recover password
+     * @param email represents email that identifies account
+     * @return true if a link to recover password is sent to given email
+     */
     public boolean askToRecoverPassword(String email) {
         // Ask to recover password and send result to email if it exists in DB and account is valid
-//TODO should we try to retrieve from DB user with given email AND validated=true ?
+
         boolean res = false;
 
         entity.User userEnt = userDao.findUserByEmail(email);
@@ -385,7 +378,6 @@ public class User implements Serializable {
                 AskRecoverPassword.main(userEnt.getEmail(), token);
 
                 userDao.merge(userEnt);
-                //logger.info("Email to recover password of userId " + uEnt.getUserId() + " is sent to email " + email);
 
                 res = true;
                 LOGGER.info("User ID " + userEnt.getUserId() + " ask to recover password. IP Address of request is " + getIPAddress());
@@ -397,9 +389,14 @@ public class User implements Serializable {
 
     }
 
+    /**
+     * Modifies password of account identified by TokenToRecoverPass if link is still valid,  given that link is valid for a limited time
+     * In case link is no longer valid, a new link to recover password is sent to email
+     * @param tokenToRecoverPass is a unique token that represents account that asked to recover password
+     * @param newPassword represents the new password that should be persisted in database, after being masked
+     * @return status code 200 if password is modified successfully, 400 if link is no longer valid, 404 if no account is found for TokenToRecoverPass
+     */
     public int newPasswordViaLink(String tokenToRecoverPass, String newPassword) {
-        // change password through link. If token is no longer valid send a new link by email
-
         int res;
 
         entity.User userEnt = userDao.findUserByTokenForActivationOrRecoverPass(tokenToRecoverPass);
@@ -415,7 +412,6 @@ public class User implements Serializable {
                 userEnt.setTimestampForToken(OL);
 
                 userDao.merge(userEnt);
-                // logger.info("Password of userId " + uEnt.getUserId() + " is modified through recover password email");
 
                 res = 200;
                 LOGGER.info("User ID " + userEnt.getUserId() + " recovers its password. IP Address of request is " + getIPAddress());
@@ -440,10 +436,12 @@ public class User implements Serializable {
         return res;
     }
 
-
+    /**
+     * Verifies if token that makes request has a valid session and a valid account (in another method)
+     * @param token identifies session that makes the request
+     * @return true if account is valid and token has a valid session
+     */
     public boolean checkUserPermission(String token) {
-        // check if token has a valid session and user account is valid (check in another method)
-
         boolean res = false;
 
         Token tokenEnt = tokenDao.findTokenEntByToken(token);
@@ -457,8 +455,12 @@ public class User implements Serializable {
         return res;
     }
 
+    /**
+     * Checks if user has a validated account
+     * @param user represents user of given token
+     * @return true if account is validated
+     */
     private boolean checkUserAccount(entity.User user) {
-        // check if user has a valid account
         boolean res = false;
 
         if (user != null) {
@@ -470,6 +472,10 @@ public class User implements Serializable {
         return res;
     }
 
+    /**
+     * Extends session time for given token
+     * @param token identifies session that makes the request
+     */
     public void updateSessionTime(String token) {
         // updates session time for given token
 
@@ -482,8 +488,14 @@ public class User implements Serializable {
         }
     }
 
+    /**
+     * Edits token profile by adding mandatory information (first and last name, office) in the first time user logs in its account
+     * User can also associate a nickname and a photo to its profile
+     * @param token identifies session that makes the request
+     * @param newInfo stores information (format: dto) that is sent from frontend
+     * @return Profile information updated. Format is DTO
+     */
     public Profile addMandatoryInfo(String token, Profile newInfo) {
-        // adicionar dados obrigatórios sem a qual n pode avançar na app
         Profile updatedUser = null;
 
         if (newInfo != null) {
@@ -500,43 +512,15 @@ public class User implements Serializable {
                 if (newInfo.getPhoto() != null) {
                     user.setPhoto(newInfo.getPhoto());
                 }
-                // TODO add bio
-                // TODO verify if link is image
-
 
                 user.setOffice(projBean.setOffice(newInfo.getOfficeInfo()));
-
-            /*    int office = newInfo.getOfficeInfo();
-                //TODO is it correct?
-
-                switch (office) {
-                    case 0:
-                        user.setOffice(Office.LISBOA);
-                        break;
-                    case 1:
-                        user.setOffice(Office.COIMBRA);
-                        break;
-                    case 2:
-                        user.setOffice(Office.PORTO);
-                        break;
-                    case 3:
-                        user.setOffice(Office.TOMAR);
-                        break;
-                    case 4:
-                        user.setOffice(Office.VISEU);
-                        break;
-                    case 5:
-                        user.setOffice(Office.VILAREAL);
-                        break;
-                }*/
 
                 user.setFillInfo(true);
             }
 
             userDao.merge(user);
-            //TODO faz sentido ir buscar novamente à DB o user ou converter directamente o userEnt?
 
-            LOGGER.info("User ID " + user.getUserId() + " updates its profile. IP Address of request is " + getIPAddress());
+            LOGGER.info("User ID " + user.getUserId() + " fills in profile mandatory information in its first login. IP Address of request is " + getIPAddress());
 
             updatedUser = convertToProfileDto(user, token);
         }
@@ -544,17 +528,19 @@ public class User implements Serializable {
         return updatedUser;
     }
 
-
+    /**
+     * Edits token profile information by choice
+     * @param token identifies session that makes the request
+     * @param newInfo stores information (format: dto) that is sent from frontend
+     * @return Profile information updated. Format is DTO
+     */
     public Profile updateProfile(String token, Profile newInfo) {
         // update profile of logged user
 
         Profile updatedUser = null;
 
-        if (newInfo != null) {   // TODO ainda que esta verificação tenha sido feita anteriormente, no endpoint, é preciso repetir?
-           /* Token tokenEnt = tokenDao.findTokenEntByToken(token);
+        if (newInfo != null) {
 
-            if (tokenEnt != null) {
-                entity.User userEnt = tokenEnt.getTokenOwner();*/
 
             entity.User userEnt = tokenDao.findUserEntByToken(token);
 
@@ -588,37 +574,12 @@ public class User implements Serializable {
                     userEnt.setOpenProfile(newInfo.isOpenProfile());
                 }
 
-
                 userEnt.setOffice(projBean.setOffice(newInfo.getOfficeInfo()));
 
-             /*   int office = newInfo.getOfficeInfo();
-                //TODO is it correct?
-
-                switch (office) {
-                    case 0:
-                        userEnt.setOffice(Office.LISBOA);
-                        break;
-                    case 1:
-                        userEnt.setOffice(Office.COIMBRA);
-                        break;
-                    case 2:
-                        userEnt.setOffice(Office.PORTO);
-                        break;
-                    case 3:
-                        userEnt.setOffice(Office.TOMAR);
-                        break;
-                    case 4:
-                        userEnt.setOffice(Office.VISEU);
-                        break;
-                    case 5:
-                        userEnt.setOffice(Office.VILAREAL);
-                        break;
-                }*/
             }
             userDao.merge(userEnt);
-            //TODO faz sentido ir buscar novamente à DB o user ou converter directamente o userEnt?
 
-            LOGGER.info("User ID " + userEnt.getUserId() + " updates its profile. IP Address of request is " + getIPAddress());
+            LOGGER.info("User ID " + userEnt.getUserId() + " updates its profile information. IP Address of request is " + getIPAddress());
 
             updatedUser = convertToProfileDto(userEnt, token);
         }
@@ -653,11 +614,18 @@ public class User implements Serializable {
         return userDto;
     }
 
+    /**
+     * Modifies password of authenticated user if old password inserted matches password associated with account (saved) in table USER
+     * Password is masked before being saved in database, for security reasons
+     * @param token represents session of logged user that makes the request
+     * @param oldPassword represents the password persisted in database for account (user) identified by token
+     * @param newPassword represents the new password that logged user attempts to associate with its account
+     * @return status code 200 if password is modified successfully, 400 if old password inserted does not match password saved in database, 404 if no account is found for token
+     */
     public int changeOwnPassword(String token, String oldPassword, String newPassword) {
         // change own password (logged user)
 
         int res;
-// TODO validar no frontend apenas a força da password ou no backend tb?
         entity.User user = tokenDao.findUserEntByToken(token);
 
         if (user != null) {
@@ -679,30 +647,6 @@ public class User implements Serializable {
         return res;
     }
 
-
- /*   public List<Project> getOwnProjectsList(String token) {
-        // get list of projects where user of given token participates or participated (not removed!)
-
-        List<Project> projectsList = new ArrayList<Project>();
-
-        List<ProjectMember> allProjectMembersInfo = projMemberDao.findAll();
-
-        if (allProjectMembersInfo!= null){
-            entity.User user = tokenDao.findUserEntByToken(token);
-
-            if (user!=null){
-                for (ProjectMember p : allProjectMembersInfo){
-                    if(p.getUserInvited().getUserId() == user.getUserId()){
-                        if (p.isAccepted() && !p.isRemoved()){
-                            projectsList.add( projBean.convertProjEntityToDto(p.getProjectToParticipate()));
-                        }
-                    }
-                }
-            }
-        }
-
-return projectsList;
-    }*/
 
     public List<Project> getOwnProjectsList(String token) {
 
@@ -737,6 +681,15 @@ return projectsList;
         return hobbiesList;
     }
 
+    /**
+     * Associates a hobby with user identified by token
+     * Starts by checking if hobby's name is already persisted in database (meaning it is a pre-existing hobby). If that is the case, checks if user already is associated with hobby
+     * In case there is no association between hobby and user, it adds such relationship, merging entities with new association. If association already exists, nothing is changed (it means user tried to add hobby that already is in its list of hobbies)
+     * If hobby title is a new one, it persists new hobby in database (table HOBBY) and then associates hobby with user.
+     * @param token identifies session that makes the request
+     * @param title represents name of hobby to be associated with user
+     * @return Hobby Dto
+     */
     public Hobby addHobby(String token, String title) {
         // adicionar hobby a DB, se não existir, e à lista de hobbies do token
 
@@ -746,7 +699,7 @@ return projectsList;
         if (user != null) {
             entity.Hobby hobby = hobbyDao.findHobbyByTitle(title.trim());
             if (hobby != null) {
-                // significa que hobby já está na DB, 1º verificar se já existe relação hobby-user para, n havendo, adicionar a lista de user
+                // significa que hobby já está na DB -> verificar se já existe relação hobby-user para, n havendo, adicionar a lista de user
 
                 Long res = hobbyDao.findRelationBetweenUserAndHobby(hobby.getHobbyId(), user.getUserId());
                 System.out.println(res);
@@ -760,12 +713,11 @@ return projectsList;
                     hobbyDto = convertToHobbyDto(hobby);
                     LOGGER.info("Hobby " + hobby.getHobbyId() + " is associated with user, user ID: " + user.getUserId() + ". IP Address of request is " + getIPAddress());
                 } else {
-                    // TODO n faz nada, mas deveria avisar ou passa assim ?!
+                    //  já existe relação user-hobby
                     hobbyDto = null;
                 }
             } else {
                 // hobby n está na DB, precisa de ser persisted
-
                 entity.Hobby newHobby = new entity.Hobby();
                 newHobby.setHobbyTitle(title.trim());
                 newHobby.getListUsers_Hobbies().add(user);
@@ -812,8 +764,16 @@ return projectsList;
         return skillTypesList;
     }
 
+    /**
+     * Associates a skill with user identified by token
+     * Starts by checking if skill's name is already persisted in database (meaning it is a pre-existing skill). If that is the case, checks if user already is associated with skill
+     * In case there is no association between skill and user, it adds such relationship, merging entities with new association. If association already exists, nothing is changed (it means user tried to add skill that already is in its list of skills)
+     * If skill title is a new one, it persists new skill in database (table SKILL), including skill type and then associates skill with user.
+     * @param token identifies session that makes the request
+     * @param skill represents skill information (DTO) to be associated with user
+     * @return Skill Dto
+     */
     public Skill addSkillToOwnProfile(String token, Skill skill) {
-        // adicionar skill ao perfil do token,se n houver já relação user-skill. Se n existir deve-se 1º persistir na DB
 
         Skill skillDto = new Skill();
 
@@ -821,11 +781,9 @@ return projectsList;
         if (user != null) {
             entity.Skill skillInDB = skillDao.findSkillByTitle(skill.getTitle().trim());
             if (skillInDB != null) {
-                // significa que skill já está na DB, 1º verificar se já existe relação skill-user para, n havendo, adicionar a lista de user
+                // significa que skill já está na DB -> verificar se já existe relação skill-user para, n havendo, adicionar a lista de user
 
                 Long res = skillDao.findRelationBetweenUserAndSkill(skillInDB.getSkillId(), user.getUserId());
-
-                // TODO verificar situação do enum que vem do frontend ou assumir q será o q ja está na DB ?
 
                 if (res == 0) {
 
@@ -838,7 +796,6 @@ return projectsList;
                     skillDto = convertToSkillDto(skillInDB);
                     LOGGER.info("Skill " + skillInDB.getTitle() + " is associated with user, user ID: " + user.getUserId() + ". IP Address of request is " + getIPAddress());
                 } else {
-                    // TODO n faz nada, mas deveria avisar ou passa assim ?!
                     skillDto = null;
                 }
             } else {
@@ -891,6 +848,11 @@ return projectsList;
         }
     }
 
+    /**
+     * Verifies if skill DTO has mandatory information when token tries to associate a new skill with its profile
+     * @param skill represents skill information to be associated with given token
+     * @return true if mandatory information is not available
+     */
     public boolean checkSkillInfo(Skill skill) {
         // verifica se info obrigatória vem do frontend
         boolean res = false;
@@ -899,12 +861,10 @@ return projectsList;
             res = true;
         } else {
             if (checkStringInfo(skill.getTitle())) {
-                // TODO falta validar info do skillType ENUM que tem de vir preenchido
-                // falta info obrigatória
+
                 res = true;
             }
         }
-
         return res;
     }
 
@@ -924,9 +884,13 @@ return projectsList;
         return skillsList;
     }
 
-
+    /**
+     * Removes association between hobby and user if such relationship exists
+     * @param token identifies session (and user) that makes the request
+     * @param id identifies hobby to be removed from list of hobbies of user
+     * @return true if hobby is removed from user's list of hobbies
+     */
     public boolean deleteHobby(String token, int id) {
-        // apaga hobby da lista de hobbies do user se existir na sua lista
         boolean res = false;
 
         entity.User user = tokenDao.findUserEntByToken(token);
@@ -943,13 +907,19 @@ return projectsList;
                 hobbyDao.merge(hobby);
 
                 res = true;
+                LOGGER.info("Hobby " + hobby.getHobbyTitle() + " is removed from user's hobbies list, user ID: " + user.getUserId() + ". IP Address of request is " + getIPAddress());
+
             }
         }
         return res;
     }
-
+    /**
+     * Removes association between skill and user if such relationship exists
+     * @param token identifies session (and user) that makes the request
+     * @param id identifies skill to be removed from list of skills of user
+     * @return true if skill is removed from user's list of skills
+     */
     public boolean deleteSkill(String token, int id) {
-        // apaga skill da lista de skills do user se existir na sua lista
         boolean res = false;
 
         entity.User user = tokenDao.findUserEntByToken(token);
@@ -966,6 +936,8 @@ return projectsList;
                 skillDao.merge(skill);
 
                 res = true;
+                LOGGER.info("Skill " + skill.getTitle() + " is removed from user's skills list, user ID: " + user.getUserId() + ". IP Address of request is " + getIPAddress());
+
             }
         }
         return res;
@@ -1092,6 +1064,11 @@ return projectsList;
             }}
     }
 
+    /**
+     * Get list of all users that have a validated account
+     * @param token identifies session that makes the request
+     * @return list of UserInfo - a DTO that displays minimum necessary information to display in frontend
+     */
     public List<UserInfo> getAllUsers(String token) {
         // lista de todos os users com conta válida na app
 
@@ -1120,8 +1097,14 @@ user.setOpenProfile(u.isOpenProfile());
         return user;
     }
 
+    /**
+     * Get list of users to suggest when searching app users
+     * Users must have a validated account and name or nickname must contain input inserted by user in frontend
+     * Removes from list of suggestions token's own account
+     * @param token identifies session that makes the request
+     * @return list of UserInfo - a DTO that displays minimum necessary information to display in frontend
+     */
     public List<UserInfo> getUsersToSuggest(String str, String token) {
-        // lista de users cujo nome ou alcunha fazem match com string inserida na pesquisa
 
         List<UserInfo> list = new ArrayList<>();
 
@@ -1132,10 +1115,10 @@ user.setOpenProfile(u.isOpenProfile());
             if (listEnt != null) {
                 List<entity.User> tempList = listEnt.stream().filter(userE -> userE.getUserId() != user.getUserId()).collect(Collectors.toList());
 // remove o pp user que faz a pesquisa
-if (tempList!=null){
+                if (tempList != null) {
 
 
-                for (entity.User u : tempList) {
+                    for (entity.User u : tempList) {
                         list.add(convertUserEntToMinimalDto(u));
                     }
                 }
@@ -1144,8 +1127,14 @@ if (tempList!=null){
 return list;
     }
 
+    /**
+     * Gets profile information of another app user, so that it can be visited by token that makes the request
+     * @param token identifies session that makes the request
+     * @param userId identifies the user, whose profile information is being requested to be displayed in frontend
+     * @return AnotherProfile DTO, that contains information of users profile, its skills and hobbies and minimum necessary information of its projects
+     */
     public AnotherProfile getAnotherProfile(String token, int userId) {
-        // obter a informação de um perfil ID se o seu perfil for aberto
+
         AnotherProfile profile = new AnotherProfile();
         entity.User user = userDao.findUserById(userId);
         if(user!=null) {
@@ -1155,7 +1144,7 @@ return list;
             profile.setLastName(user.getLastName());
             profile.setOffice(user.getOffice().getCity());
             profile.setOfficeInfo(user.getOffice().ordinal());
-            // TODO testar q nulos não partem o programa
+            // TODO testar q nulos não partem o programa - n permitir que projecto tenha office nulo
             profile.setNickname(user.getNickname());
             profile.setPhoto(user.getPhoto());
             profile.setBio(user.getBio());
@@ -1171,12 +1160,9 @@ return list;
 
             if(getListOfProjectsOfGivenUser(userId)){
                 // user tem projectos associados ao seu perfil
-profile.setProjects(getUserProjects(userId));
+            profile.setProjects(getUserProjects(userId));
             }
-
-
         }
-
     return profile;
     }
 
@@ -1220,7 +1206,11 @@ for (entity.Hobby h : listHobbies){
 return listDtos;
     }
 
-
+    /**
+     * Verifies if user has open profile, so that its profile can be visited by other app users
+     * @param id identifies the user, whose profile information is being requested to be displayed in frontend
+     * @return true if profile can be viewed by other app users
+     */
     public boolean checkUserHasOpenProfile(int id) {
         //verifica se userId tem perfil aberto e a sua conta está validada, para que possa ser visitado por outros users
 
@@ -1256,8 +1246,13 @@ return listDtos;
         return dto;
     }
 */
+
+    /**
+     * Gets information on current active project token might have
+     * @param token identifies session that makes the request
+     * @return Project DTO with complete information of project and user relationship with given project (if it is a manager and/ or member)
+     */
     public Project getActiveProjectInfo(String token) {
-        // permite saber se token / use logado tem projecto activo e qual o seu Id para renderizar botões no frontend em função desta informação
 
         Project dto = new Project();
 

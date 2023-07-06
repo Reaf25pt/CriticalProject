@@ -14,6 +14,12 @@ import jakarta.websocket.OnOpen;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 
+/**
+ * Defines websocket to send notifications in real time if and when appropriate for open sessions
+ * OnOpen 'creates' the socket
+ * sendNotification acts as OnMessage, sending the object to session identified as recipientToken
+ * OnClose closes the socket
+ */
 @ServerEndpoint("/websocket/notifier/{token}")
 public class Notifier {
 

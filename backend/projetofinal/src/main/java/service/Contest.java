@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
+/**
+ * Includes all endpoints that manage contest data: add and edit contests, manage applications, choose project winner and obtain contest statistics
+ */
 @Path("/contest")
 public class Contest {
     @Inject

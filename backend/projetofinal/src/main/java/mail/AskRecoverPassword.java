@@ -7,6 +7,12 @@ package mail;
         import jakarta.mail.PasswordAuthentication;
         import jakarta.mail.Session;
 
+    /**
+    * Utility method to define authentication and details of email message to be sent when user asks to recover its password
+    *
+    * @param recipientEmail represents recipient email
+    * @param tokenRecoverPassword represents a unique token that will identify the link and user when trying to recover its password
+    */
 public class AskRecoverPassword {
 
     /**

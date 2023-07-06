@@ -13,7 +13,9 @@ import jakarta.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.List;
 
-
+/**
+ * Includes all endpoints that manage user / profile data: login, logout, create new account, validate new account, recover password, edit own profile, manage user skills and hobbies and modify userProfile (this one is to be used in postman only )
+ */
 @Path("/user")
 public class User {
 
@@ -55,7 +57,7 @@ public class User {
         Response r = null;
         HttpSession session = request.getSession();
 
-        if (token == null || token.isBlank() || token.isEmpty()) {
+        if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
         } else {
             int value = userBean.validateLogout(token);
@@ -90,8 +92,6 @@ public class User {
                 r = Response.status(400).entity("Email is already registered!").build();
             } else if (statusCode == 409) {
                 r = Response.status(409).entity("Account validation is missing!").build();
-            } else if (statusCode == 401) {
-                r = Response.status(401).entity("Email is undefined").build();
             } else {
                 boolean newAccount = userBean.createNewAccount(email, password);
                 if (!newAccount) {
@@ -303,11 +303,9 @@ public class User {
 
             Hobby hobby = userBean.addHobby(token, title);
             if (hobby == null) {
-                r = Response.status(404).entity("Not found!").build();
-                //TODO melhorar texto de resposta? aqui o not found na verdade significa que a relação já existe ...
+                r = Response.status(404).entity("Relation between user and hobby already exists!").build();
             } else {
                 r = Response.status(200).entity(hobby).build();
-                // permite apresentar logo no frontend com id do hobby para poder eventualmente apagar
             }
         }
         return r;
@@ -336,10 +334,9 @@ public class User {
 
             Skill newSkill = userBean.addSkillToOwnProfile(token, skill);
             if (newSkill == null) {
-                r = Response.status(404).entity("Not found!").build();
+                r = Response.status(404).entity("Relation between user and skill already exists!").build();
             } else {
                 r = Response.status(200).entity(newSkill).build();
-                // permite apresentar logo no frontend com id da skill para poder eventualmente apagar
             }
         }
         return r;
@@ -727,7 +724,7 @@ public class User {
 
 
     // ALTERA PAPEL DE USER: GESTOR DE CONCURSO OU USER NORMAL
-    // Apenas para usar no postman - método administrativo mas que permite garantir que user passa a PERFIL A tratanda de "dependências"
+    // Apenas para usar no postman - método administrativo que permite garantir que user passa a PERFIL B ou PERFIL A tratando de "dependências"
     @PATCH
     @Path("/profile")
     @Consumes(MediaType.APPLICATION_JSON)

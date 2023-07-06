@@ -10,6 +10,9 @@ import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Includes all endpoints that manage project data, including its tasks: add, edit and delete when appropriate projects, tasks and project members and manage project skills and keywords. Includes project chat
+ */
 @Path("/project")
 public class Project {
 

@@ -14,6 +14,9 @@ import jakarta.ws.rs.core.Response;
 import javax.crypto.spec.PSource;
 import java.util.List;
 
+/**
+ * Includes all endpoints that manage communication: system notifications and personal chat. Includes response to participate in project when asked by project manager, since invite is sent by notification
+ */
 @Path("/communication")
 public class Communication {
 

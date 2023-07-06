@@ -23,10 +23,10 @@ public class EmailUtil {
     /**
      * Utility method to send simple HTML email
      *
-     * @param session
-     * @param toEmail
-     * @param subject
-     * @param body
+     * @param session represents mail session
+     * @param toEmail represents recipient email
+     * @param subject represents subject of email to be sent
+     * @param body represents body message of email to be sent
      */
     public static void sendEmail(Session session, String toEmail, String subject, String body) {
         try {
