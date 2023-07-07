@@ -81,11 +81,11 @@ function ContactChat({ selectedUser }) {
     <div className="container-fluid ">
       <div
         className="row overflow-auto d-flex flex-column-reverse m-0  "
-        style={{ height: "85vh" }}
+        style={{ height: "80vh" }}
       >
         <div
           className="col-lg-12 bg-secondary rounded-4  p-5 "
-          style={{ minHeight: "85vh" }}
+          style={{ minHeight: "80vh" }}
         >
           {contactMessages.length !== 0 ? (
             <div>
@@ -121,7 +121,7 @@ function ContactChat({ selectedUser }) {
         <hr />
         <Input
           placeholder="Escreva a sua mensagem"
-          className="bg-secondary  p-4 rounded-5 "
+          className="bg-secondary  p-2 rounded-5 "
           value={inputValue}
           onChange={(event) => setInputValue(event.target.value)}
           rightButtons={

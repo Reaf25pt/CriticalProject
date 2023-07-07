@@ -80,7 +80,7 @@ function Chat() {
       <div className="row d-flex ">
         <div
           className="col-lg-3 bg-secondary rounded-3 overflow-auto  m-0"
-          style={{ height: "96vh" }}
+          style={{ height: "100vh" }}
         >
           <div className="row">
             <h3 className="text-center  text-white mt-3 mb-3">Contactos</h3>
