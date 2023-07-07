@@ -49,7 +49,6 @@ function Chat() {
       .then((response) => {
         setContacts(response);
         console.log(response);
-        // console.log(messages);
       });
   }, []);
 
@@ -66,7 +65,6 @@ function Chat() {
     const value = event.target.value;
 
     setCredentials((values) => {
-      // console.log({ ...values });   // spread notation - faz spread ao objecto
       return { ...values, [name]: value };
     });
   };
@@ -113,18 +111,10 @@ function Chat() {
                 ) : (
                   <div className="col-2">
                     <img
-                      /*                     id="imageUserToChat"
-                       */ alt=""
-                      /*                     xs={{ span: 6, offset: 3 }}
-                       */ src="https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png"
+                      alt=""
+                      src="https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png"
                       width={35}
                       height={35}
-                      /*  style={{
-                      resizeMode: "contain",
-                      maxHeight: 60,
-                      maxWidth: 80,
-                      
-                    }} */
                     />
                   </div>
                 )}
@@ -138,7 +128,7 @@ function Chat() {
                 ).length > 0 ? (
                   <span
                     className="col-lg-2 text-danger "
-                    style={{ fontSize: "20px" }} /* id="badgeMsgEachUser" */
+                    style={{ fontSize: "20px" }}
                   >
                     {
                       messages.filter(
@@ -156,12 +146,8 @@ function Chat() {
           {selectedUser !== null ? (
             <ContactChat selectedUser={selectedUser} />
           ) : (
-            <Container /* id="messageForUnexistentUser" */>
+            <Container>
               <div> Seleccione uma caixa de mensagens</div>
-              {/*  <FormattedMessage
-                id="noChatSelected.text"
-                defaultMessage="  Seleccione uma caixa de mensagens"
-              /> */}
             </Container>
           )}
         </div>

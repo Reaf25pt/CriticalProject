@@ -30,34 +30,8 @@ function ContactChat({ selectedUser }) {
       message.userSenderId === selectedUser.id ||
       message.userReceiverId === selectedUser.id
   );
-  console.log(contactMessages);
 
-  /* useEffect(() => {
-    fetch(
-      `http://localhost:8080/projetofinal/rest/communication/messages/${selectedUser.id}`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "**",
-          "Content-Type": "application/json",
-          token: user.token,
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then((response) => {
-        // setlistChatUsers(response);
-        setContactMessages(response);
-        console.log(response);
-        markMessagesAsRead();
-
-        /*  const element = document.getElementById("chat");
-
-        element.scrollIntoView({ behavior: "smooth" });*/
-  /*     });
-  }, [selectedUser]);*/
   useEffect(() => {
-    //  const markMessagesAsRead = () => {
     fetch("http://localhost:8080/projetofinal/rest/communication/messages", {
       method: "PATCH",
       headers: {
@@ -71,9 +45,7 @@ function ContactChat({ selectedUser }) {
       .then((response) => {
         updateMessages(response);
         console.log(response);
-        // console.log(messages);
       });
-    // };
   }, [selectedUser]);
 
   const handleSendMessage = (event) => {
@@ -99,7 +71,6 @@ function ContactChat({ selectedUser }) {
           }
         })
         .then((response) => {
-          // addMessage(response);
           addMessages(response);
           setInputValue("");
         });
@@ -112,15 +83,12 @@ function ContactChat({ selectedUser }) {
         className="row overflow-auto d-flex flex-column-reverse m-0  "
         style={{ height: "85vh" }}
       >
-        <div className="col-lg-12 bg-secondary rounded-4  p-5 ">
+        <div
+          className="col-lg-12 bg-secondary rounded-4  p-5 "
+          style={{ minHeight: "85vh" }}
+        >
           {contactMessages.length !== 0 ? (
-            <div
-            // id="chat"
-            // style={{
-            //   marginTop: "20px",
-            //   overflowY: "auto",
-            // }}
-            >
+            <div>
               {contactMessages
                 .sort((a, b) => a.id - b.id)
                 .map((message) => (
