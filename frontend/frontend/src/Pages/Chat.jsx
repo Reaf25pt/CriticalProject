@@ -82,7 +82,7 @@ function Chat() {
       <div className="row d-flex ">
         <div
           className="col-lg-3 bg-secondary rounded-3 overflow-auto  m-0"
-          style={{ height: "95vh" }}
+          style={{ height: "96vh" }}
         >
           <div className="row">
             <h3 className="text-center  text-white mt-3 mb-3">Contactos</h3>
@@ -95,9 +95,9 @@ function Chat() {
                 className="row d-flex justify-content-between mb-3 p-2 rounded-5 align-items-center  mx-auto"
                 key={user.id}
                 onClick={() => setUserToChat(user)}
-                style={{
+                /* style={{
                   background: selectedUser.id === user.id ? "gray" : "white",
-                }}
+                }} */
               >
                 {user.openProfile && user.photo ? (
                   <div className="col-lg-2">
