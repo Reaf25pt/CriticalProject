@@ -925,6 +925,35 @@ if (count==0 ){
        }
 return list;
     }
+
+    public List<dto.Contest> filterContestsByStartDate(String startDate) {
+        // filters contests whose startDate is equal or after startDate inserted - considers starOpenCall
+        List<dto.Contest> list = new ArrayList<>();
+        long timestamp=Long.parseLong(startDate);
+        Date date = new Date(timestamp);
+        List<entity.Contest> contestList = contestDao.findContestListWhoseStartOpenCallDateEqualOrAfterGivenDate(date);
+        if(contestList!=null){
+            for (entity.Contest c : contestList){
+                list.add(convertContestEntToDto(c));
+            }
+        }
+        return list;
+    }
+
+    public List<dto.Contest> filterContestsByFinishDate(String finishDate) {
+        // filter contests whose finishDate is equal or before finishDate inserted - considers finishDate of contest
+
+        List<dto.Contest> list = new ArrayList<>();
+        long timestamp=Long.parseLong(finishDate);
+        Date date = new Date(timestamp);
+        List<entity.Contest> contestList = contestDao.findContestListWhoseFinishDateEqualOrBeforeGivenDate(date);
+        if(contestList!=null){
+            for (entity.Contest c : contestList){
+                list.add(convertContestEntToDto(c));
+            }
+        }
+        return list;
+    }
 }
 
 

@@ -8,6 +8,7 @@ import jakarta.persistence.NamedQuery;
 import jakarta.persistence.NoResultException;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Stateless
@@ -65,6 +66,26 @@ public class Contest extends Abstract<entity.Contest>{
         return list;
     }
 
+    public List<entity.Contest> findContestListWhoseStartOpenCallDateEqualOrAfterGivenDate(Date date) {
+        List<entity.Contest> list = new ArrayList<>();
+        try {
+            list = (List<entity.Contest>) em.createNamedQuery("Contest.findContestListWhoseStartOpenCallDateEqualOrAfterGivenDate").setParameter("date", date).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return list;
+    }
+    public List<entity.Contest> findContestListWhoseFinishDateEqualOrBeforeGivenDate(Date date) {
+        List<entity.Contest> list = new ArrayList<>();
+        try {
+            list = (List<entity.Contest>) em.createNamedQuery("Contest.findContestListWhoseFinishDateEqualOrBeforeGivenDate").setParameter("date", date).getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return list;
+    }
 
 
 

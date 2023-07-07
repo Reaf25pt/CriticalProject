@@ -7,7 +7,11 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import javax.xml.crypto.Data;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -206,8 +210,8 @@ public class Contest {
     @GET
     @Path("/allcontests")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllContests(@HeaderParam("token") String token, @QueryParam("title") String title  ) {
-        System.out.println(title);
+    public Response getAllContests(@HeaderParam("token") String token, @QueryParam("title") String title, @QueryParam("startDate") String startDate, @QueryParam("finishDate") String finishDate) {
+
         Response r = null;
 
         if (userBean.checkStringInfo(token)) {
@@ -219,10 +223,13 @@ public class Contest {
             List<dto.Contest> list = new ArrayList<>();
             if(!userBean.checkStringInfo(title)){
                 list = contestBean.filterContestsByName(token, title);
-            } else {
+            } else if(!userBean.checkStringInfo(startDate)) {
+                list=contestBean.filterContestsByStartDate(startDate);
+            } else if(!userBean.checkStringInfo(finishDate)) {
+                list=contestBean.filterContestsByFinishDate(finishDate);
+            }else{
                list =  contestBean.getAllContests(token);
             }
-
 
             if (list == null || list.size() == 0) {
                 r = Response.status(404).entity(list).build();

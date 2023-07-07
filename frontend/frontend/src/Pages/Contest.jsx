@@ -14,6 +14,8 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { classNames } from "primereact/utils";
 import { FaSearch } from "react-icons/fa";
+import InputComponent from "../Components/InputComponent";
+import { start } from "@popperjs/core";
 
 function Contest() {
   const user = userStore((state) => state.user);
@@ -28,6 +30,9 @@ function Contest() {
     // finishDate: { value: null, matchMode: FilterMatchMode.DATE_BEFORE },
   });
   const [title, setTitle] = useState("");
+  const [startDate, setStartDate] = useState("");
+  //  const [startDateFilter, setStartDateFilter] = useState("");
+  const [finishDate, setFinishDate] = useState("");
 
   const [contestStatus] = useState([
     "Planning",
@@ -58,11 +63,28 @@ function Contest() {
       // finishDate: { value: null, matchMode: FilterMatchMode.DATE_BEFORE },
     });
     setTitle("");
+    setStartDate("");
+    setFinishDate("");
+    // setStartDateFilter("");
   };
 
   useEffect(() => {
+    var startDateFilter;
+    if (startDate) {
+      startDateFilter = startDate.getTime();
+    } else {
+      startDateFilter = "";
+    }
+
+    var finishDateFilter;
+    if (finishDate) {
+      finishDateFilter = finishDate.getTime();
+    } else {
+      finishDateFilter = "";
+    }
+
     fetch(
-      `http://localhost:8080/projetofinal/rest/contest/allcontests/?title=${title}`,
+      `http://localhost:8080/projetofinal/rest/contest/allcontests/?title=${title}&startDate=${startDateFilter}&finishDate=${finishDateFilter}`,
       {
         method: "GET",
         headers: {
@@ -77,7 +99,7 @@ function Contest() {
         setLoading(false);
       })
       .catch((err) => console.log(err));
-  }, [contests, title]);
+  }, [contests, title, startDate, finishDate]);
 
   const canRenderAddButton = showList.filter((item) => item.statusInt === 0);
 
@@ -117,7 +139,6 @@ function Contest() {
         />{" "}
         <span className="p-input-icon-left">
           <i className="pi pi-search" />
-
           <FaSearch />
           <InputText
             filterField="global"
@@ -125,6 +146,56 @@ function Contest() {
             onChange={onTitleChange}
             placeholder="nome"
             title="Filtrar: nome "
+          />
+        </span>{" "}
+        <span className="p-input-icon-left">
+          <i className="pi pi-search" />
+          {/*   <Calendar
+            value={options.value}
+            onChange={(e) => options.filterCallback(e.value, options.index)}
+            dateFormat="mm/dd/yy"
+            placeholder="mm/dd/yyyy"
+            mask="99/99/9999"
+          /> */}
+          <Calendar
+            value={startDate}
+            onChange={(e) => setStartDate(e.value)}
+            showIcon
+            dateFormat="dd/mm/yy"
+            placeholder="Data de início"
+          />
+          {/*        <span className="p-float-label">
+            <Calendar
+              inputId="birth_date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.value)}
+              showIcon
+            />
+            <label htmlFor="birth_date">Data de início</label>
+          </span> */}
+          {/*     <InputComponent
+            title={"Filtrar: data de início"}
+            id="startDate"
+            name="startDate"
+            type="date"
+            onChange={(e) => setStartDate(e.value)}
+          /> */}
+          {/*  <Button
+            type="button"
+            icon="pi pi-times"
+            onClick={(e) => setStartDate(e.value)}
+            severity="secondary"
+          ></Button> */}
+        </span>{" "}
+        <span className="p-input-icon-left">
+          <i className="pi pi-search" />
+
+          <Calendar
+            value={finishDate}
+            onChange={(e) => setFinishDate(e.value)}
+            showIcon
+            dateFormat="dd/mm/yy"
+            placeholder="Data de fim"
           />
         </span>
       </div>
