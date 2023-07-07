@@ -35,7 +35,10 @@ function Skill() {
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-
+    if (value === "") {
+      setSuggestions(null);
+      return;
+    }
     if (name === "skillInput") {
       // setSearch(event.target.value);
       handleSearch(event.target.value);
@@ -143,6 +146,7 @@ function Skill() {
             name="skillInput"
             defaultValue={""}
             onChange={handleChange}
+            onBlur={() => setSuggestions(null)}
           />{" "}
           <div className="dropdownz ">
             {suggestions &&

@@ -34,6 +34,11 @@ function Hobby() {
     const name = event.target.name;
     const value = event.target.value;
 
+    if (value === "") {
+      setSuggestions(null);
+      return;
+    }
+
     if (name === "hobbyInput") {
       // setSearch(event.target.value);
       handleSearch(event.target.value);
@@ -129,6 +134,7 @@ function Hobby() {
               name="hobbyInput"
               defaultValue={""}
               onChange={handleChange}
+              onBlur={() => setSuggestions(null)}
               /*    onKeyDown={(event) => {
                 if (event.key === "Enter") {
                   handleClick(event);

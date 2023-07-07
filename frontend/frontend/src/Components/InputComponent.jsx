@@ -7,6 +7,7 @@ function InputComponent(props) {
         type={props.type}
         name={props.name}
         onChange={props.onChange}
+        onBlur={props.onBlur}
         placeholder={props.placeholder}
         minLength={props.minLength}
         pattern={props.pattern}

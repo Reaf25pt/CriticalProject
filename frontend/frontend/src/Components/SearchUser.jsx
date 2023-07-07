@@ -19,6 +19,11 @@ function SearchUser() {
     const name = event.target.name;
     const value = event.target.value;
 
+    if (value === "") {
+      setSuggestions(null);
+      return;
+    }
+
     if (name === "nameInput") {
       // setSearch(event.target.value);
       handleSearch(event.target.value);
@@ -68,6 +73,7 @@ function SearchUser() {
         name="nameInput"
         defaultValue={""}
         onChange={handleChange}
+        onBlur={() => setSuggestions(null)}
       />
       <div className="dropdown bg-white w-25" style={{ position: "absolute" }}>
         {suggestions &&

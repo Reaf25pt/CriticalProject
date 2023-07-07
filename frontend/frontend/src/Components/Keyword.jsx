@@ -21,7 +21,10 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-
+    if (value === "") {
+      setSuggestions(null);
+      return;
+    }
     if (name === "keywordInput") {
       // setSearch(event.target.value);
       handleSearch(event.target.value);
@@ -121,6 +124,7 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
               aria-describedby="search-addon"
               defaultValue={""}
               onChange={handleChange}
+              onBlur={() => setSuggestions(null)}
               /*    onKeyDown={(event) => {
                 if (event.key === "Enter") {
                   handleClick(event);

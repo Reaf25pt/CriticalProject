@@ -20,11 +20,13 @@ function Projects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
+  const [title, setTitle] = useState("");
+
   const [queryWinner, setQueryWinner] = useState(false);
 
   const [filters, setFilters] = useState({
-    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    title: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    // global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    // title: { value: null, matchMode: FilterMatchMode.CONTAINS },
     status: { value: null, matchMode: FilterMatchMode.EQUALS },
   });
   const [projectStatus] = useState([
@@ -55,12 +57,13 @@ function Projects() {
   const clearFilter = () => {
     console.log("clear " + filters);
     setFilters({
-      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      title: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      //  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      // title: { value: null, matchMode: FilterMatchMode.CONTAINS },
       status: { value: null, matchMode: FilterMatchMode.EQUALS },
     });
     setQueryWinner(false);
     setGlobalFilterValue("");
+    setTitle("");
   };
 
   const renderHeader = () => {
@@ -99,13 +102,26 @@ function Projects() {
 
   const onGlobalFilterChange = (e) => {
     const value = e.target.value;
-    let _filters = { ...filters };
+    // let _filters = { ...filters };
 
-    _filters["global"].value = value;
+    // _filters["global"].value = value;
 
-    setFilters(_filters);
+    // setFilters(_filters);
     setGlobalFilterValue(value);
     console.log(globalFilterValue);
+    console.log(filters);
+  };
+
+  const onTitleChange = (e) => {
+    const value = e.target.value;
+
+    // let _filters = { ...filters };
+
+    // _filters["global"].value = value;
+
+    // setFilters(_filters);
+    setTitle(value);
+    console.log(title);
     console.log(filters);
   };
 
@@ -134,7 +150,7 @@ function Projects() {
     //fetch(`http://localhost:8080/projetofinal/rest/project/allprojects`, {
     const handleFetchData = async () => {
       const response = await fetch(
-        `http://localhost:8080/projetofinal/rest/project/?queryWinner=${queryWinner}&global=${globalFilterValue}`,
+        `http://localhost:8080/projetofinal/rest/project/?queryWinner=${queryWinner}&global=${globalFilterValue}&title=${title}`,
         {
           method: "GET",
           headers: {
@@ -208,10 +224,10 @@ function Projects() {
                 emptyMessage="Nenhum projecto encontrado"
                 removableSort
                 header={header}
-                filters={filters}
+                // filters={filters}
                 filterDisplay="menu"
                 loading={loading}
-                globalFilterFields={["title", "status", "global"]}
+                // globalFilterFields={["title", "status", "global"]}
               >
                 <Column
                   field="creationDate"
@@ -230,6 +246,8 @@ function Projects() {
                   filter
                   filterField="title"
                   filterPlaceholder="Filtrar: nome"
+                  // value={title}
+                  // onChange={onTitleChange}
                   //  style={{ width: "17rem" /* , maxWidth: "9rem"  */ }}
                 ></Column>
                 <Column
@@ -245,12 +263,20 @@ function Projects() {
                 ></Column>
                 <Column
                   field={"membersNumber"}
-                  header="Vagas disponíveis"
+                  header="Membros participantes"
                   sortable
                   style={{ width: "15%" }}
-                  body={(showAllProjects) =>
-                    `${showAllProjects.availableSpots} / ${showAllProjects.membersNumber}`
-                  }
+                  body={(showAllProjects) => {
+                    const calculateMembers =
+                      showAllProjects.membersNumber -
+                      showAllProjects.availableSpots;
+                    return `${showAllProjects.membersNumber} / ${calculateMembers}`;
+
+                    /* (showAllProjects) =>
+                                         ` ${showAllProjects.availableSpots} / ${showAllProjects.membersNumber}` / (${showAllProjects.membersNumber}-${showAllProjects.availableSpots})
+                     
+                  */
+                  }}
                 ></Column>
                 <Column body={renderLink} header="#" />
               </DataTable>

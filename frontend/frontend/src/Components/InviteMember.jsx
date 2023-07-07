@@ -16,7 +16,10 @@ function InviteMember({ projId }) {
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-
+    if (value === "") {
+      setSuggestions(null);
+      return;
+    }
     if (name === "nameInput") {
       // setSearch(event.target.value);
       handleSearch(event.target.value);
@@ -111,6 +114,7 @@ function InviteMember({ projId }) {
                 name="nameInput"
                 defaultValue={""}
                 onChange={handleChange}
+                onBlur={() => setSuggestions(null)}
               />
               <div className="dropdown bg-white">
                 {suggestions &&

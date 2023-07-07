@@ -23,6 +23,10 @@ function SkillsProject({ skills, setSkills, addSkills }) {
     const name = event.target.name;
     const value = event.target.value;
 
+    if (value === "") {
+      setSuggestions(null);
+      return;
+    }
     if (name === "skillProjInput") {
       // setSearch(event.target.value);
       handleSearch(event.target.value);
@@ -138,6 +142,7 @@ function SkillsProject({ skills, setSkills, addSkills }) {
               aria-describedby="search-addon"
               defaultValue={""}
               onChange={handleChange}
+              onBlur={() => setSuggestions(null)}
               /*    onKeyDown={(event) => {
                 if (event.key === "Enter") {
                   handleClick(event);
