@@ -107,12 +107,12 @@ function ContactChat({ selectedUser }) {
   };
 
   return (
-    <div className="container">
-      <div>
-      
-      </div>
-      <div className="row overflow-auto" style={{ height: "100vh" }}>
-        <div className="col-lg-12 bg-secondary rounded-4 mx-auto p-5 mt-5">
+    <div className="container-fluid ">
+      <div
+        className="row overflow-auto d-flex justify-content-around"
+        style={{ height: "95vh" }}
+      >
+        <div className="col-lg-12 bg-secondary rounded-4 mx-auto p-5">
           {contactMessages.length !== 0 ? (
             <div
               id="chat"
@@ -146,7 +146,7 @@ function ContactChat({ selectedUser }) {
           ) : (
             <p>Inicie conversa com {selectedUser.firstName}</p>
           )}
-          <div>
+          <div className="row ">
             <hr />
             <Input
               placeholder="Escreva a sua mensagem"

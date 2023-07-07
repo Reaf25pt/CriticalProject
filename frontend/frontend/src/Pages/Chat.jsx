@@ -21,6 +21,8 @@ function Chat() {
   const messages = messageStore((state) => state.messages);
   const user = userStore((state) => state.user);
 
+  const [selectedContact, setSelectedContact] = useState(null);
+
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const userId = queryParams.get("userId");
@@ -70,78 +72,32 @@ function Chat() {
   };
 
   const setUserToChat = (user) => {
-    console.log(user);
-    console.log(user.data);
     setSelectedUser(user);
+    console.log("selectuser");
+    console.log(selectedUser);
   };
 
-  /*   const handleClick = (event) => {
-    event.preventDefault();
-
-    console.log(credentials.message);
-    //   console.log(user.userId);
-
-    const messageObj = {
-      message: credentials.message,
-      messageReceiverId: selectedUser.userId,
-      /* message: "Olá",
-      messageReceiverId: "2",*/
-  /*    };
-
-    fetch("http://localhost:8080/joana-proj4/rest/todo_app/newmessage", {
-      method: "POST",
-      headers: {
-        Accept: "**",
-        "Content-Type": "application/json",
-        token: token,
-      },
-      body: JSON.stringify(messageObj),
-    }).then((response) => {
-      if (response.status === 200) {
-        alert("Mensagem enviada");
-
-        //  return response.json();
-        /*   } else if (response.status === 403) {
-          alert("Não tem autorização para efectuar este pedido");
-        } else if (response.status === 404) {
-          alert("Categoria não encontrada"); */
-  /*  } else {
-        alert("Algo correu mal");
-      }
-      document.getElementById("messageInput").value = "";
-    }); */
-  /*    .then((response) => {
-        set((values) => [...values, response]);
-
-        handleClose();
-      }); */
-
-  // console.log(selectedUser);
-
-  /*   if (userToChat == null) {
-    return <Container>Seleccione uma caixa de mensagens</Container>;
-  } */
-
   return (
-    <>
-      <Container id="outerBoxMessage">
-        <Container id="leftSide">
-          <Container>
-            <Row id="headerListChat">
-              {/* <FormattedMessage
-                id="chatContacts.label"
-                defaultMessage="Contactos"
-              /> */}
-              Contactos
-            </Row>
+    <div className="container-fluid ">
+      <div className="row d-flex ">
+        <div className="col-lg-3 bg-secondary rounded-3 h-100">
+          <div className="row ">
+            <h3 className="text-center  text-white mt-3 mb-3">Contactos</h3>
+            <hr />
+          </div>
 
+          <div>
             {contacts.map((user) => (
-              <Row
-                className="rowEachUserChat"
+              <div
+                className="row d-flex justify-content-between mb-3 p-2 rounded-5 align-items-center w-75 mx-auto"
+                key={user.id}
                 onClick={() => setUserToChat(user)}
+                style={{
+                  background: selectedUser.id === user.id ? "gray" : "white",
+                }}
               >
                 {user.openProfile && user.photo ? (
-                  <Col>
+                  <div className="col-lg-2">
                     {" "}
                     <img
                       src={user.photo}
@@ -150,48 +106,54 @@ function Chat() {
                       className="rounded-5"
                       alt=""
                     />
-                  </Col>
+                  </div>
                 ) : (
-                  <Col>
+                  <div className="col-2">
                     <img
-                      id="imageUserToChat"
-                      alt=""
-                      xs={{ span: 6, offset: 3 }}
-                      src="https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png"
-                      style={{
-                        resizeMode: "contain",
-                        /*   maxHeight: 60,
-                    maxWidth: 80, */
-                      }}
+                      /*                     id="imageUserToChat"
+                       */ alt=""
+                      /*                     xs={{ span: 6, offset: 3 }}
+                       */ src="https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png"
+                      width={35}
+                      height={35}
+                      /*  style={{
+                      resizeMode: "contain",
+                      maxHeight: 60,
+                      maxWidth: 80,
+                      
+                    }} */
                     />
-                  </Col>
+                  </div>
                 )}
 
-                <Col>
+                <div className="col-lg-8 text-black">
                   {user.firstName} {""}
                   {user.lastName}{" "}
-                </Col>
+                </div>
                 {messages.filter(
                   (message) => !message.seen && message.userSenderId === user.id
                 ).length > 0 ? (
-                  <Col xs={1} id="badgeMsgEachUser">
+                  <span
+                    className="col-lg-2 text-danger "
+                    style={{ fontSize: "20px" }} /* id="badgeMsgEachUser" */
+                  >
                     {
                       messages.filter(
                         (message) =>
                           !message.seen && message.userSenderId === user.id
                       ).length
                     }
-                  </Col>
+                  </span>
                 ) : null}
-              </Row>
+              </div>
             ))}
-          </Container>
-        </Container>
-        <Container>
+          </div>
+        </div>
+        <div className="col-lg-6">
           {selectedUser !== null ? (
             <ContactChat selectedUser={selectedUser} />
           ) : (
-            <Container id="messageForUnexistentUser">
+            <Container /* id="messageForUnexistentUser" */>
               <div> Seleccione uma caixa de mensagens</div>
               {/*  <FormattedMessage
                 id="noChatSelected.text"
@@ -199,9 +161,9 @@ function Chat() {
               /> */}
             </Container>
           )}
-        </Container>
-      </Container>
-    </>
+        </div>
+      </div>
+    </div>
   );
 }
 
