@@ -13,6 +13,7 @@ import { Calendar } from "primereact/calendar";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { classNames } from "primereact/utils";
+import { FaSearch } from "react-icons/fa";
 
 function Contest() {
   const user = userStore((state) => state.user);
@@ -21,11 +22,13 @@ function Contest() {
   const [loading, setLoading] = useState(true);
   const activeContestList = showList.filter((item) => item.statusInt !== 0);
   const [filters, setFilters] = useState({
-    title: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    //  title: { value: null, matchMode: FilterMatchMode.CONTAINS },
     status: { value: null, matchMode: FilterMatchMode.EQUALS },
-    startOpenCall: { value: null, matchMode: FilterMatchMode.DATE_AFTER },
-    finishDate: { value: null, matchMode: FilterMatchMode.DATE_BEFORE },
+    //  startOpenCall: { value: null, matchMode: FilterMatchMode.DATE_AFTER },
+    // finishDate: { value: null, matchMode: FilterMatchMode.DATE_BEFORE },
   });
+  const [title, setTitle] = useState("");
+
   const [contestStatus] = useState([
     "Planning",
     "Open",
@@ -49,28 +52,32 @@ function Contest() {
 
   const clearFilter = () => {
     setFilters({
-      title: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      //title: { value: null, matchMode: FilterMatchMode.CONTAINS },
       status: { value: null, matchMode: FilterMatchMode.EQUALS },
-      startOpenCall: { value: null, matchMode: FilterMatchMode.DATE_AFTER },
-      finishDate: { value: null, matchMode: FilterMatchMode.DATE_BEFORE },
+      // startOpenCall: { value: null, matchMode: FilterMatchMode.DATE_AFTER },
+      // finishDate: { value: null, matchMode: FilterMatchMode.DATE_BEFORE },
     });
+    setTitle("");
   };
 
   useEffect(() => {
-    fetch(`http://localhost:8080/projetofinal/rest/contest/allcontests`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        token: user.token,
-      },
-    })
+    fetch(
+      `http://localhost:8080/projetofinal/rest/contest/allcontests/?title=${title}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          token: user.token,
+        },
+      }
+    )
       .then((resp) => resp.json())
       .then((data) => {
         setShowList(data);
         setLoading(false);
       })
       .catch((err) => console.log(err));
-  }, [contests]);
+  }, [contests, title]);
 
   const canRenderAddButton = showList.filter((item) => item.statusInt === 0);
 
@@ -80,33 +87,61 @@ function Contest() {
   };
 
   const renderLink = (rowData) => {
-    return (
-      <Link to={`/home/contests/${rowData.id}`}>
-        <OverlayTrigger
-          placement="top"
-          overlay={<Tooltip>Ver detalhes</Tooltip>}
-        >
-          <span data-bs-toggle="tooltip" data-bs-placement="top">
-            {" "}
-            <BsEyeFill />
-          </span>
-        </OverlayTrigger>
-      </Link>
-    );
+    if (user.contestManager || rowData.statusInt !== 0) {
+      return (
+        <Link to={`/home/contests/${rowData.id}`}>
+          <OverlayTrigger
+            placement="top"
+            overlay={<Tooltip>Ver detalhes</Tooltip>}
+          >
+            <span data-bs-toggle="tooltip" data-bs-placement="top">
+              {" "}
+              <BsEyeFill />
+            </span>
+          </OverlayTrigger>
+        </Link>
+      );
+    }
   };
 
   const renderHeader = () => {
     return (
       <div className="flex justify-content-between">
+        {" "}
         <Button
           type="button"
           icon="pi pi-filter-slash"
           label="Limpar filtros"
           outlined
           onClick={clearFilter}
-        />
+        />{" "}
+        <span className="p-input-icon-left">
+          <i className="pi pi-search" />
+
+          <FaSearch />
+          <InputText
+            filterField="global"
+            value={title}
+            onChange={onTitleChange}
+            placeholder="nome"
+            title="Filtrar: nome "
+          />
+        </span>
       </div>
     );
+  };
+
+  const onTitleChange = (e) => {
+    const value = e.target.value;
+
+    // let _filters = { ...filters };
+
+    // _filters["global"].value = value;
+
+    // setFilters(_filters);
+    setTitle(value);
+    console.log(title);
+    console.log(filters);
   };
 
   const filterClearTemplate = (options) => {
@@ -206,84 +241,85 @@ function Contest() {
                     to={"/home/contestcreate"}
                   />
                 </div>
-              </div>
-              <div className="row mx-auto mt-5">
-                <div className="col-lg-9 bg-secondary p-3 rounded-4 mx-auto ">
-                  <DataTable
-                    removableSort
-                    value={showList}
-                    rows={10}
-                    paginator
-                    header={header}
-                    filters={filters}
-                    filterDisplay="menu"
-                    loading={loading}
-                    globalFilterFields={[
+              </div>{" "}
+            </>
+          ) : null}
+
+          <div className="row mx-auto mt-5">
+            <div className="col-lg-9 bg-secondary p-3 rounded-4 mx-auto ">
+              <DataTable
+                removableSort
+                value={showList}
+                rows={10}
+                paginator
+                header={header}
+                // filters={filters}
+                filterDisplay="menu"
+                loading={loading}
+                /*  globalFilterFields={[
                       "title",
                       "status",
                       "startOpenCall",
                       "finishDate",
-                    ]}
-                    emptyMessage="Nenhum concurso encontrado"
-                  >
-                    <Column
-                      field="title"
-                      header="Nome"
-                      sortable
-                      filter
-                      // showFilterMenu={true}
-                      filterPlaceholder="Filtrar: nome"
-                      style={{ width: "17rem" /* , maxWidth: "9rem"  */ }}
-                    />
-                    <Column
-                      field="status"
-                      header="Estado"
-                      sortable
-                      //  showFilterMenu={true}
-                      filterMenuStyle={{ width: "14rem" }}
-                      style={{ minWidth: "12rem" }}
-                      filter
-                      filterElement={statusRowFilterTemplate}
-                    />
-                    <Column
-                      field="startOpenCall"
-                      header="Data de Início"
-                      sortable
-                      body={(rowData) =>
-                        convertTimestampToDate(rowData.startOpenCall)
-                      }
-                      filterField="startOpenCall"
-                      dataType="date"
-                      style={{ minWidth: "12rem" }}
-                      // body={dateStartBodyTemplate}
-                      filter
-                      filterElement={startDateFilterTemplate}
-                      filterClear={filterClearTemplate}
-                      filterApply={filterApplyTemplate}
-                      // showFilterMenu={true}
-                    />
-                    <Column
-                      field="finishDate"
-                      header="Data de Fim"
-                      sortable
-                      body={(rowData) =>
-                        convertTimestampToDate(rowData.finishDate)
-                      }
-                      filterField="finishDate"
-                      dataType="date"
-                      style={{ minWidth: "12rem" }}
-                      // body={dateFinishBodyTemplate}
-                      filter
-                      filterElement={finishDateFilterTemplate}
-                      filterClear={filterClearTemplate}
-                      filterApply={filterApplyTemplate}
-                      // showFilterMenu={true}
-                    />
-                    <Column body={renderLink} header="#" />
-                  </DataTable>
-                </div>
-              </div>
-            </>
+                    ]}*/
+                emptyMessage="Nenhum concurso encontrado"
+              >
+                <Column
+                  field="title"
+                  header="Nome"
+                  sortable
+                  //filter
+                  //showFilterMenu={true}
+                  //filterPlaceholder="Filtrar: nome"
+                  style={{ width: "17rem" /* , maxWidth: "9rem"  */ }}
+                />
+                <Column
+                  field="status"
+                  header="Estado"
+                  sortable
+                  showFilterMenu={true}
+                  filterMenuStyle={{ width: "14rem" }}
+                  style={{ minWidth: "12rem" }}
+                  filter
+                  filterElement={statusRowFilterTemplate}
+                />
+                <Column
+                  field="startOpenCall"
+                  header="Data de Início"
+                  sortable
+                  body={(rowData) =>
+                    convertTimestampToDate(rowData.startOpenCall)
+                  }
+                  // filterField="startOpenCall"
+                  dataType="date"
+                  style={{ minWidth: "12rem" }}
+                  // body={dateStartBodyTemplate}
+                  //filter
+                  // filterElement={startDateFilterTemplate}
+                  // filterClear={filterClearTemplate}
+                  //  filterApply={filterApplyTemplate}
+                  // showFilterMenu={true}
+                />
+                <Column
+                  field="finishDate"
+                  header="Data de Fim"
+                  sortable
+                  body={(rowData) => convertTimestampToDate(rowData.finishDate)}
+                  //  filterField="finishDate"
+                  dataType="date"
+                  style={{ minWidth: "12rem" }}
+                  // body={dateFinishBodyTemplate}
+                  // filter
+                  //  filterElement={finishDateFilterTemplate}
+                  //  filterClear={filterClearTemplate}
+                  // filterApply={filterApplyTemplate}
+                  // showFilterMenu={true}
+                />
+                <Column body={renderLink} header="#" />
+              </DataTable>
+            </div>
+          </div>
+          {/*  {      </>
           ) : (
             <div className="row mx-auto mt-5">
               <div className="col-lg-9 bg-secondary p-3 rounded-4 mx-auto ">
@@ -310,7 +346,8 @@ function Contest() {
                     sortable
                     filter
                     filterPlaceholder="Filtrar: nome"
-                    style={{ width: "17rem" /* , maxWidth: "9rem"  */ }}
+                    style={{ width: "17rem" /* , maxWidth: "9rem"  */}
+          {/* }
                   />
                   <Column
                     field="status"
@@ -358,7 +395,7 @@ function Contest() {
                 </DataTable>
               </div>
             </div>
-          )}
+          )}} */}
         </div>
       </div>
     </div>

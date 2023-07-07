@@ -13,6 +13,7 @@ import java.util.List;
 @NamedQuery(name = "Contest.findListOfWinnerProjects", query = "SELECT c.winner FROM Contest c WHERE c.winner IS NOT NULL")
 @NamedQuery(name = "Contest.findActiveContests", query = "SELECT c FROM Contest c WHERE c.status NOT IN (:concluded, :planning)  ")
 @NamedQuery(name = "Contest.countPlanningContest", query = "SELECT COUNT(c) FROM Contest c WHERE c.status IN (:planning)")
+@NamedQuery(name = "Contest.findContestListContainingStr", query = "SELECT c FROM Contest c WHERE LOWER(c.title) LIKE LOWER(:str) ")
 
 public class Contest implements Serializable {
 

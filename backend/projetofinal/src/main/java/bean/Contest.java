@@ -15,10 +15,7 @@ import org.jboss.logging.Logger;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @RequestScoped
 public class Contest {
@@ -913,6 +910,20 @@ if (count==0 ){
 }
 
         return res;
+    }
+
+    public List<dto.Contest> filterContestsByName(String token, String str) {
+        // filtrar contests que tenham nome que faça match com str
+        List < dto.Contest> list = new ArrayList<>();
+       // Set<entity.Contest> mergeSet = new HashSet<>();
+        List <entity.Contest> contestList = contestDao.findContestListContainingStr(str.toLowerCase());
+
+       if(contestList!=null){
+           for (entity.Contest c : contestList){
+               list.add(convertContestEntToDto(c));
+           }
+       }
+return list;
     }
 }
 

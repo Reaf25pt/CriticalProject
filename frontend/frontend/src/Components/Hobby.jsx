@@ -134,7 +134,7 @@ function Hobby() {
               name="hobbyInput"
               defaultValue={""}
               onChange={handleChange}
-              onBlur={() => setSuggestions(null)}
+              //onBlur={() => setSuggestions(null)}
               /*    onKeyDown={(event) => {
                 if (event.key === "Enter") {
                   handleClick(event);

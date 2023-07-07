@@ -142,7 +142,7 @@ function SkillsProject({ skills, setSkills, addSkills }) {
               aria-describedby="search-addon"
               defaultValue={""}
               onChange={handleChange}
-              onBlur={() => setSuggestions(null)}
+              //  onBlur={() => setSuggestions(null)}
               /*    onKeyDown={(event) => {
                 if (event.key === "Enter") {
                   handleClick(event);

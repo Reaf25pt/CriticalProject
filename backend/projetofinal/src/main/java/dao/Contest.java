@@ -54,5 +54,19 @@ public class Contest extends Abstract<entity.Contest>{
         return count;
     }
 
+    public List<entity.Contest> findContestListContainingStr(String str) {
+        List<entity.Contest> list = new ArrayList<>();
+        try {
+            list = (List<entity.Contest>) em.createNamedQuery("Contest.findContestListContainingStr").setParameter("str", "%"+ str.toLowerCase()+"%").getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return list;
+    }
+
+
+
+
 
 }

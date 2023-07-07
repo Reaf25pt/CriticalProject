@@ -2268,12 +2268,13 @@ for (entity.Project p:list){
 return projects;
     }
 
-    public List<dto.Project> filterProjectsForSkillsAndKeywords(String token, String str) {
-        // filtrar projectos que tenham alguma keyword/ skill que faça match com str
+    public List<dto.Project> filterProjectsByNameSkillsAndKeywords(String token, String str) {
+        // filtrar projectos que tenham nome ou alguma keyword/ skill que faça match com str
 List<dto.Project> list = new ArrayList<>();
 Set<entity.Project> mergeSet = new HashSet<>();
 List<entity.Project> projSkills= skillDao.filterProjectsWhoHaveSkillMatchingStr(str.toLowerCase());
-        List<entity.Project> projKeywords= keywordDao.filterProjectsWhoHaveKeywordMatchingStr(str.toLowerCase());
+List<entity.Project> projKeywords= keywordDao.filterProjectsWhoHaveKeywordMatchingStr(str.toLowerCase());
+List<entity.Project> projTitle = projDao.findProjectListContainingStr((str.toLowerCase()));
 
 if(projSkills!=null){
     System.out.println(projSkills.size());
@@ -2283,6 +2284,12 @@ if(projSkills!=null){
 if(projKeywords!=null){
     System.out.println(projKeywords.size());
     mergeSet.addAll(projKeywords);
+}
+
+if(projTitle!=null){
+    System.out.println(projTitle.size());
+    mergeSet.addAll(projTitle);
+
 }
 
 List<entity.Project> mergeList=new ArrayList<>(mergeSet);

@@ -25,10 +25,10 @@ public class Project {
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getALl(/*@DefaultValue("ola")*/ @QueryParam("queryWinner") boolean queryWinner, @QueryParam("global") String global,  @QueryParam("title") String title,@HeaderParam("token") String token) {
+    public Response getALl(/*@DefaultValue("ola")*/ @QueryParam("queryWinner") boolean queryWinner, @QueryParam("global") String global,  @HeaderParam("token") String token) {
         System.out.println(queryWinner);
         System.out.println(global);
-        System.out.println(title);
+
         Response r = null;
 
         if (userBean.checkStringInfo(token)) {
@@ -41,10 +41,8 @@ public class Project {
             if (queryWinner) {
                 projects = projBean.filterWinnerProjects(token);
             } else if (!userBean.checkStringInfo(global)) {
-                projects = projBean.filterProjectsForSkillsAndKeywords(token, global);
-            } /*else if(!userBean.checkStringInfo(title)){
-                projects = projBean.filterProjectsForTitle(token, title);
-            }*/ else {
+                projects = projBean.filterProjectsByNameSkillsAndKeywords(token, global);
+            }  else {
 
                 projects = projBean.getAllProjectsList(token);
             }

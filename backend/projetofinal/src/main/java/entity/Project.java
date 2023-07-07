@@ -14,6 +14,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "Project")
 @NamedQuery(name = "Project.findProjectById", query = "SELECT p FROM Project p WHERE p.id = :id")
+@NamedQuery(name = "Project.findProjectListContainingStr", query = "SELECT p FROM Project p WHERE LOWER(p.title) LIKE LOWER(:str) ")
 
 public class Project implements Serializable {
     private static final long serialVersionUID = 1L;

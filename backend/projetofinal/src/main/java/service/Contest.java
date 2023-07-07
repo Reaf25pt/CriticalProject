@@ -206,8 +206,8 @@ public class Contest {
     @GET
     @Path("/allcontests")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllContests(@HeaderParam("token") String token) {
-
+    public Response getAllContests(@HeaderParam("token") String token, @QueryParam("title") String title  ) {
+        System.out.println(title);
         Response r = null;
 
         if (userBean.checkStringInfo(token)) {
@@ -216,8 +216,13 @@ public class Contest {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
+            List<dto.Contest> list = new ArrayList<>();
+            if(!userBean.checkStringInfo(title)){
+                list = contestBean.filterContestsByName(token, title);
+            } else {
+               list =  contestBean.getAllContests(token);
+            }
 
-            List<dto.Contest> list = contestBean.getAllContests(token);
 
             if (list == null || list.size() == 0) {
                 r = Response.status(404).entity(list).build();

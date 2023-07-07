@@ -13,7 +13,7 @@ public class TimerBean {
     @Inject
 
 
-    @Schedule(second = "*/30", minute = "*", hour = "*")
+    @Schedule(second = "0", minute = "0", hour = "*")
     public void automaticTimeout() {
         System.out.println("Timer ");
 

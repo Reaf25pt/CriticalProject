@@ -146,7 +146,7 @@ function Skill() {
             name="skillInput"
             defaultValue={""}
             onChange={handleChange}
-            onBlur={() => setSuggestions(null)}
+            // onBlur={() => setSuggestions(null)}
           />{" "}
           <div className="dropdownz ">
             {suggestions &&

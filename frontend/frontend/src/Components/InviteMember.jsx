@@ -114,7 +114,7 @@ function InviteMember({ projId }) {
                 name="nameInput"
                 defaultValue={""}
                 onChange={handleChange}
-                onBlur={() => setSuggestions(null)}
+                // onBlur={() => setSuggestions(null)}
               />
               <div className="dropdown bg-white">
                 {suggestions &&

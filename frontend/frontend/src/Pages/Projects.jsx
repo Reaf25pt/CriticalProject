@@ -11,6 +11,7 @@ import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { classNames } from "primereact/utils";
+import { FaSearch } from "react-icons/fa";
 
 function Projects() {
   const user = userStore((state) => state.user);
@@ -20,7 +21,7 @@ function Projects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
-  const [title, setTitle] = useState("");
+  // const [title, setTitle] = useState("");
 
   const [queryWinner, setQueryWinner] = useState(false);
 
@@ -63,7 +64,7 @@ function Projects() {
     });
     setQueryWinner(false);
     setGlobalFilterValue("");
-    setTitle("");
+    //setTitle("");
   };
 
   const renderHeader = () => {
@@ -89,11 +90,13 @@ function Projects() {
         </span>{" "}
         <span className="p-input-icon-left">
           <i className="pi pi-search" />
+          <FaSearch />
           <InputText
             filterField="global"
             value={globalFilterValue}
             onChange={onGlobalFilterChange}
-            placeholder="Filtrar: palavra-chave / skill "
+            placeholder="nome / palavra-chave / skill "
+            title="Filtrar: nome / palavra-chave / skill "
           />
         </span>
       </div>
@@ -112,7 +115,7 @@ function Projects() {
     console.log(filters);
   };
 
-  const onTitleChange = (e) => {
+  /*   const onTitleChange = (e) => {
     const value = e.target.value;
 
     // let _filters = { ...filters };
@@ -123,7 +126,7 @@ function Projects() {
     setTitle(value);
     console.log(title);
     console.log(filters);
-  };
+  }; */
 
   const renderLink = (rowData) => {
     return (
@@ -150,7 +153,7 @@ function Projects() {
     //fetch(`http://localhost:8080/projetofinal/rest/project/allprojects`, {
     const handleFetchData = async () => {
       const response = await fetch(
-        `http://localhost:8080/projetofinal/rest/project/?queryWinner=${queryWinner}&global=${globalFilterValue}&title=${title}`,
+        `http://localhost:8080/projetofinal/rest/project/?queryWinner=${queryWinner}&global=${globalFilterValue}`,
         {
           method: "GET",
           headers: {
@@ -243,9 +246,9 @@ function Projects() {
                   header="Nome do Projeto"
                   sortable
                   style={{ width: "25%" }}
-                  filter
-                  filterField="title"
-                  filterPlaceholder="Filtrar: nome"
+                  // filter
+                  // filterField="title"
+                  // filterPlaceholder="Filtrar: nome"
                   // value={title}
                   // onChange={onTitleChange}
                   //  style={{ width: "17rem" /* , maxWidth: "9rem"  */ }}
@@ -270,7 +273,7 @@ function Projects() {
                     const calculateMembers =
                       showAllProjects.membersNumber -
                       showAllProjects.availableSpots;
-                    return `${showAllProjects.membersNumber} / ${calculateMembers}`;
+                    return ` ${calculateMembers} / ${showAllProjects.membersNumber}`;
 
                     /* (showAllProjects) =>
                                          ` ${showAllProjects.availableSpots} / ${showAllProjects.membersNumber}` / (${showAllProjects.membersNumber}-${showAllProjects.availableSpots})
