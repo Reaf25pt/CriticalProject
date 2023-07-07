@@ -109,17 +109,17 @@ function ContactChat({ selectedUser }) {
   return (
     <div className="container-fluid ">
       <div
-        className="row overflow-auto d-flex justify-content-around"
-        style={{ height: "95vh" }}
+        className="row overflow-auto d-flex flex-column-reverse m-0  "
+        style={{ height: "85vh" }}
       >
-        <div className="col-lg-12 bg-secondary rounded-4 mx-auto p-5">
+        <div className="col-lg-12 bg-secondary rounded-4  p-5 ">
           {contactMessages.length !== 0 ? (
             <div
-              id="chat"
-              style={{
-                marginTop: "20px",
-                overflowY: "auto",
-              }}
+            // id="chat"
+            // style={{
+            //   marginTop: "20px",
+            //   overflowY: "auto",
+            // }}
             >
               {contactMessages
                 .sort((a, b) => a.id - b.id)
@@ -146,24 +146,25 @@ function ContactChat({ selectedUser }) {
           ) : (
             <p>Inicie conversa com {selectedUser.firstName}</p>
           )}
-          <div className="row ">
-            <hr />
-            <Input
-              placeholder="Escreva a sua mensagem"
-              className="bg-dark  p-4 rounded-5 "
-              value={inputValue}
-              onChange={(event) => setInputValue(event.target.value)}
-              rightButtons={
-                <Button
-                  text="Enviar"
-                  className="bg-secondary text-white"
-                  onClick={handleSendMessage}
-                  defaultValue={""}
-                />
-              }
-            />
-          </div>
         </div>
+      </div>
+
+      <div className="row m-0">
+        <hr />
+        <Input
+          placeholder="Escreva a sua mensagem"
+          className="bg-secondary  p-4 rounded-5 "
+          value={inputValue}
+          onChange={(event) => setInputValue(event.target.value)}
+          rightButtons={
+            <Button
+              text="Enviar"
+              className="bg-black text-white"
+              onClick={handleSendMessage}
+              defaultValue={""}
+            />
+          }
+        />
       </div>
     </div>
   );

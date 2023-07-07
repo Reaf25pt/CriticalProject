@@ -80,8 +80,11 @@ function Chat() {
   return (
     <div className="container-fluid ">
       <div className="row d-flex ">
-        <div className="col-lg-3 bg-secondary rounded-3 h-100">
-          <div className="row ">
+        <div
+          className="col-lg-3 bg-secondary rounded-3 overflow-auto  m-0"
+          style={{ height: "95vh" }}
+        >
+          <div className="row">
             <h3 className="text-center  text-white mt-3 mb-3">Contactos</h3>
             <hr />
           </div>
@@ -91,10 +94,10 @@ function Chat() {
               <div
                 className="row d-flex justify-content-between mb-3 p-2 rounded-5 align-items-center  mx-auto"
                 key={user.id}
-               onClick={() => setUserToChat(user)}
-               /*   style={{
+                onClick={() => setUserToChat(user)}
+                style={{
                   background: selectedUser.id === user.id ? "gray" : "white",
-                }}    */
+                }}
               >
                 {user.openProfile && user.photo ? (
                   <div className="col-lg-2">
