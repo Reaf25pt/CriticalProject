@@ -89,12 +89,12 @@ function Chat() {
           <div>
             {contacts.map((user) => (
               <div
-                className="row d-flex justify-content-between mb-3 p-2 rounded-5 align-items-center w-75 mx-auto"
+                className="row d-flex justify-content-between mb-3 p-2 rounded-5 align-items-center  mx-auto"
                 key={user.id}
-                onClick={() => setUserToChat(user)}
-                style={{
+               onClick={() => setUserToChat(user)}
+               /*   style={{
                   background: selectedUser.id === user.id ? "gray" : "white",
-                }}
+                }}    */
               >
                 {user.openProfile && user.photo ? (
                   <div className="col-lg-2">
@@ -126,7 +126,7 @@ function Chat() {
                   </div>
                 )}
 
-                <div className="col-lg-8 text-black">
+                <div className="col-lg-6 text-black">
                   {user.firstName} {""}
                   {user.lastName}{" "}
                 </div>

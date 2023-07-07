@@ -144,8 +144,12 @@ function Sidebar() {
                   className="nav-link align-middle px-0"
                 >
                   <BsWechat color="white" />
+                  <span className="ms-1 d-none d-sm-inline text-white">
+                    Mensagens
+                  </span>
+                  
                   {messages.length > 0 ? (
-                    <span class="badge badge-dark">
+                    <span className="badge badge-dark">
                       {
                         messages.filter(
                           (message) =>
@@ -155,9 +159,6 @@ function Sidebar() {
                       }
                     </span>
                   ) : null}
-                  <span className="ms-1 d-none d-sm-inline text-white">
-                    Mensagens
-                  </span>
                 </Link>
                 <Link
                   to={"/home/notifications"}
