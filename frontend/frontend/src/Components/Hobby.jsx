@@ -143,7 +143,10 @@ function Hobby() {
                 }
               }} */
             />
-            <div className="dropdown bg-white">
+            <div
+              className="dropdown bg-white "
+              style={{ position: "absolute" }}
+            >
               {suggestions &&
                 suggestions.slice(0, 10).map((item) => (
                   <option key={item.id} onClick={() => handleSelection(item)}>

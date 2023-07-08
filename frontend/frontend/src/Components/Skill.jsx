@@ -148,7 +148,7 @@ function Skill() {
             onChange={handleChange}
             // onBlur={() => setSuggestions(null)}
           />{" "}
-          <div className="dropdownz ">
+          <div className="dropdownz " style={{ position: "absolute" }}>
             {suggestions &&
               suggestions
                 .filter((item) => {

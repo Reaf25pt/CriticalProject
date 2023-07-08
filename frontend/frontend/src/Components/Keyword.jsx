@@ -97,17 +97,6 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
       updateKeywords.splice(position, 1);
       return updateKeywords;
     });
-    /*   setKeywords((prevKeywords) => {
-      const updateKeywords = [...prevKeywords];
-      updateKeywords.splice(position, 1);
-      return updateKeywords;
-
-
-
-        const removeKeywords = (position) => {
-   
-  };
-    }); */
   };
 
   return (
@@ -136,7 +125,7 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
             {/* <div className="col-lg-2 input-group-text border-0 ">
               <BsSearch />
             </div> */}
-            <div className="dropdownz">
+            <div className="dropdownz" style={{ position: "absolute" }}>
               {suggestions &&
                 suggestions
                   .filter((item) => {
@@ -172,29 +161,25 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
         </div>
       </div>
       {keywords && keywords.length > 0 ? (
-        <div className="row bg-white  p-2 mx-auto rounded-2 mt-3 mb-3 ">
-          <div className="form-outline  ">
-            <div className="d-flex ">
-              {keywords.map((item, position) => (
-                <>
-                  <div className="bg-secondary text-white rounded-3 p-2 m-1 d-flex justify-content-between">
-                    {item.title}{" "}
-                    <div className="">
-                      <OverlayTrigger
-                        placement="top"
-                        overlay={<Tooltip>Apagar</Tooltip>}
-                      >
-                        <span data-bs-toggle="tooltip" data-bs-placement="top">
-                          {" "}
-                          <BsXLg onClick={() => removeKeywords(position)} />
-                        </span>
-                      </OverlayTrigger>
-                    </div>
-                  </div>
-                </>
-              ))}
-            </div>
-          </div>
+        <div className="row p-2 mx-auto rounded-2 mt-3 mb-3 ">
+          {keywords.map((item, position) => (
+            <>
+              <div className=" col-lg-7 mx-auto text-white bg-black rounded-3 p-2 m-1 d-flex justify-content-between">
+                {item.title}{" "}
+                <div className="">
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={<Tooltip>Apagar</Tooltip>}
+                  >
+                    <span data-bs-toggle="tooltip" data-bs-placement="top">
+                      {" "}
+                      <BsXLg onClick={() => removeKeywords(position)} />
+                    </span>
+                  </OverlayTrigger>
+                </div>
+              </div>
+            </>
+          ))}
         </div>
       ) : null}
     </>

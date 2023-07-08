@@ -155,7 +155,7 @@ function SkillsProject({ skills, setSkills, addSkills }) {
               <BsSearch />
             </div> */}
           </div>
-          <div className="dropdownz">
+          <div className="dropdownz" style={{ position: "absolute" }}>
             {suggestions &&
               suggestions
                 .filter((item) => {
@@ -204,102 +204,101 @@ function SkillsProject({ skills, setSkills, addSkills }) {
       </div>
       {skills.length > 0 ? (
         <div className="row bg-white  p-2 mx-auto rounded-2 mt-3 mb-3 ">
-          <div className="form-outline  ">
-            <div className="d-flex ">
-              {skills &&
-                skills.map(
-                  (item, position) =>
-                    item.skillType == 0 ? (
-                      <div className="bg-danger text-white rounded-3 p-2 m-1 d-flex justify-content-between">
-                        {item.title}{" "}
-                        <div className="">
-                          <OverlayTrigger
-                            placement="top"
-                            overlay={<Tooltip>Apagar</Tooltip>}
+          <div className="d-flex ">
+            {skills &&
+              skills.map(
+                (item, position) =>
+                  item.skillType == 0 ? (
+                    <div className="bg-danger text-white rounded-3 p-2 m-1 d-flex justify-content-between">
+                      {item.title}{" "}
+                      <div className="">
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={<Tooltip>Apagar</Tooltip>}
+                        >
+                          <span
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
                           >
-                            <span
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="top"
-                            >
-                              {" "}
-                              <BsXLg onClick={() => removeSkills(position)} />
-                            </span>
-                          </OverlayTrigger>
-                        </div>
+                            {" "}
+                            <BsXLg onClick={() => removeSkills(position)} />
+                          </span>
+                        </OverlayTrigger>
                       </div>
-                    ) : item.skillType == 1 ? (
-                      <div className="bg-success text-white rounded-3 p-2 m-1 d-flex justify-content-between">
-                        {item.title}{" "}
-                        <div className="">
-                          <OverlayTrigger
-                            placement="top"
-                            overlay={<Tooltip>Apagar</Tooltip>}
+                    </div>
+                  ) : item.skillType == 1 ? (
+                    <div className="bg-success text-white rounded-3 p-2 m-1 d-flex justify-content-between">
+                      {item.title}{" "}
+                      <div className="">
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={<Tooltip>Apagar</Tooltip>}
+                        >
+                          <span
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
                           >
-                            <span
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="top"
-                            >
-                              {" "}
-                              <BsXLg onClick={() => removeSkills(position)} />
-                            </span>
-                          </OverlayTrigger>
-                        </div>
+                            {" "}
+                            <BsXLg onClick={() => removeSkills(position)} />
+                          </span>
+                        </OverlayTrigger>
                       </div>
-                    ) : item.skillType == 2 ? (
-                      <div className="bg-primary text-white rounded-3 p-2 m-1 d-flex justify-content-between">
-                        {item.title}{" "}
-                        <div className="">
-                          <OverlayTrigger
-                            placement="top"
-                            overlay={<Tooltip>Apagar</Tooltip>}
+                    </div>
+                  ) : item.skillType == 2 ? (
+                    <div className="bg-primary text-white rounded-3 p-2 m-1 d-flex justify-content-between">
+                      {item.title}{" "}
+                      <div className="">
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={<Tooltip>Apagar</Tooltip>}
+                        >
+                          <span
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
                           >
-                            <span
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="top"
-                            >
-                              {" "}
-                              <BsXLg onClick={() => removeSkills(position)} />
-                            </span>
-                          </OverlayTrigger>
-                        </div>
+                            {" "}
+                            <BsXLg onClick={() => removeSkills(position)} />
+                          </span>
+                        </OverlayTrigger>
                       </div>
-                    ) : item.skillType == 3 ? (
-                      <div className="bg-warning text-white rounded-3 p-2 m-1 d-flex justify-content-between">
-                        {item.title}{" "}
-                        <div className="">
-                          <OverlayTrigger
-                            placement="top"
-                            overlay={<Tooltip>Apagar</Tooltip>}
+                    </div>
+                  ) : item.skillType == 3 ? (
+                    <div className="bg-warning text-white rounded-3 p-2 m-1 d-flex justify-content-between">
+                      {item.title}{" "}
+                      <div className="">
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={<Tooltip>Apagar</Tooltip>}
+                        >
+                          <span
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
                           >
-                            <span
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="top"
-                            >
-                              {" "}
-                              <BsXLg onClick={() => removeSkills(position)} />
-                            </span>
-                          </OverlayTrigger>
-                        </div>
+                            {" "}
+                            <BsXLg onClick={() => removeSkills(position)} />
+                          </span>
+                        </OverlayTrigger>
                       </div>
-                    ) : (
-                      <div className="bg-info text-white rounded-3 p-2 m-1 d-flex justify-content-between">
-                        {item.title}{" "}
-                        <div className="">
-                          <OverlayTrigger
-                            placement="top"
-                            overlay={<Tooltip>Apagar</Tooltip>}
+                    </div>
+                  ) : (
+                    <div className="bg-info text-white rounded-3 p-2 m-1 d-flex justify-content-between">
+                      {item.title}{" "}
+                      <div className="">
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={<Tooltip>Apagar</Tooltip>}
+                        >
+                          <span
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
                           >
-                            <span
-                              data-bs-toggle="tooltip"
-                              data-bs-placement="top"
-                            >
-                              {" "}
-                              <BsXLg onClick={() => removeSkills(position)} />
-                            </span>
-                          </OverlayTrigger>
-                        </div>
+                            {" "}
+                            <BsXLg onClick={() => removeSkills(position)} />
+                          </span>
+                        </OverlayTrigger>
                       </div>
-                    ) /* (
+                    </div>
+                  ) /* (
                       <>
                         <div className="bg-secondary text-white rounded-3 p-2 m-1 d-flex justify-content-between">
                           {item.title}{" "}
@@ -309,8 +308,7 @@ function SkillsProject({ skills, setSkills, addSkills }) {
                         </div>
                       </>
                     ) */
-                )}
-            </div>
+              )}
           </div>
         </div>
       ) : null}

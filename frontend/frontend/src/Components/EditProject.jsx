@@ -81,26 +81,6 @@ function EditProject({ toggleComponent, project, set }) {
     }
   };
 
-  /*  const removeSkills = (position) => {
-    console.log(position);
-
-    setSkills((skills) => {
-      const updateSkills = [...skills];
-      updateSkills.splice(position, 1);
-      console.log(updateSkills);
-      return updateSkills;
-    });
-  };
-  const removeKeywords = (position) => {
-    console.log(position);
-
-    setKeywords((keywords) => {
-      const updateSkills = [...keywords];
-      updateSkills.splice(position, 1);
-      console.log(updateSkills);
-      return updateSkills;
-    });
-  }; */
   return (
     <>
       <div className="container-fluid">
@@ -197,31 +177,6 @@ function EditProject({ toggleComponent, project, set }) {
               setKeywords={setKeywords}
               addKeywords={addKeywords}
             />
-            {/*   <div className="row mt-3 mx-auto">
-              {project.keywords.length > 0 ? (
-                <div className="row bg-white  p-2 mx-auto rounded-2 mt-3 mb-3 ">
-                  <div className="form-outline  ">
-                    <div className="d-flex ">
-                      {project.keywords &&
-                        project.keywords.map((item, position) => (
-                          <>
-                            <div className="bg-secondary text-white rounded-3 p-2 m-1 d-flex justify-content-between">
-                              {item.title}{" "}
-                              <div className="">
-                                <BsXLg
-                                  onClick={() => removeKeywords(position)}
-                                />
-                              </div>
-                            </div>
-                          </>
-                        ))}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                "O projecto não tem palavras-chave associadas"
-              )}
-            </div> */}
           </div>
         </div>
         <div className="col-lg-6">
@@ -234,27 +189,6 @@ function EditProject({ toggleComponent, project, set }) {
               setSkills={setSkills}
               addSkills={addSkills}
             />
-            {/*   {project.skills.length > 0 ? (
-              <div className="row bg-white  p-2 mx-auto rounded-2 mt-3 mb-3 ">
-                <div className="form-outline  ">
-                  <div className="d-flex ">
-                    {project.skills &&
-                      project.skills.map((item, position) => (
-                        <>
-                          <div className="bg-secondary text-white rounded-3 p-2 m-1 d-flex justify-content-between">
-                            {item.title}{" "}
-                            <div className="">
-                              <BsXLg onClick={() => removeSkills(position)} />
-                            </div>
-                          </div>
-                        </>
-                      ))}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              "O projecto não tem skills associadas"
-            )} */}
           </div>
         </div>
       </div>
