@@ -41,6 +41,8 @@ function ProjectOpen() {
     })
       .then((resp) => resp.json())
       .then((data) => {
+        console.log("projects");
+        console.log(data);
         setShowProjects(data);
       })
       .catch((err) => console.log(err));
@@ -56,6 +58,8 @@ function ProjectOpen() {
     })
       .then((resp) => resp.json())
       .then((data) => {
+        console.log("members");
+        console.log(data);
         setShowMembers(data);
       })
       .catch((err) => console.log(err));
@@ -197,16 +201,19 @@ function ProjectOpen() {
           role="tabpanel"
           aria-labelledby="tab2"
         >
-          <div className="row">
-            {showProjects.manager ? (
-              <InviteMember projId={showProjects.id} />
-            ) : null}
-
-            <ProjectMembersList
-              showMembers={showMembers}
-              showProjects={showProjects}
-              setMembers={setMembers}
-            />
+          <div className="row d-flex justify-content-around">
+            <div className="col-lg-5">
+              {showProjects.manager ? (
+                <InviteMember projId={showProjects.id} />
+              ) : null}
+            </div>
+            <div className="col-lg-4">
+              <ProjectMembersList
+                showMembers={showMembers}
+                showProjects={showProjects}
+                setMembers={setMembers}
+              />
+            </div>
             <div className="row">
               {showProjects.manager ? (
                 <ProjectMembersInvited

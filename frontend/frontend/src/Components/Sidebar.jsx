@@ -147,9 +147,9 @@ function Sidebar() {
                   <span className="ms-1 d-none d-sm-inline text-white">
                     Mensagens
                   </span>
-                  
+
                   {messages.length > 0 ? (
-                    <span className="badge badge-dark">
+                    <span className="badge badge bg-dark">
                       {
                         messages.filter(
                           (message) =>
@@ -165,11 +165,6 @@ function Sidebar() {
                   className="nav-link align-middle px-0"
                 >
                   <BsEnvelopeFill color="white" />
-                  {notifications.length > 0 ? (
-                    <span class="badge badge-dark">
-                      {notifications.filter((notif) => !notif.seen).length}
-                    </span>
-                  ) : null}
 
                   {/*    {notifications.length > 0 ? (
                     <span class="badge badge-dark">{unreadNotif.length}</span>
@@ -179,6 +174,11 @@ function Sidebar() {
                     Notificações
                     {/*  <span class="badge badge-light">5</span> */}
                   </span>
+                  {notifications.length > 0 ? (
+                    <span class="badge badge bg-dark">
+                      {notifications.filter((notif) => !notif.seen).length}
+                    </span>
+                  ) : null}
                 </Link>
               </li>
             </ul>

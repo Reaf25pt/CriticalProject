@@ -75,168 +75,171 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
   };
 
   return (
-    <div className="col-8 col-sm-10 col-md-7 col-lg-5 mx-auto bg-secondary mt-5 rounded-5 ">
+    <div className="container">
       <div>
-        <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">
+        <h3 className="bg-white mt-5 text-center rounded-5 mb-3 ">
           Membros do Projetos
         </h3>
-        {showMembers.map((member, index) => (
-          <div
-            key={index}
-            className="row bg-white text-black mb-3 rounded-3  mx-auto align-items-center p-2"
-          >
-            <div className="col-lg-2 ">
-              {member.userInvitedPhoto === null ? (
-                <img
-                  src="https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png"
-                  class="rounded-circle img-responsive"
-                  width={"40px"}
-                  height={"40px"}
-                  alt="avatar"
-                />
-              ) : (
-                <img
-                  src={member.userInvitedPhoto}
-                  class="rounded-circle img-responsive"
-                  width={"40px"}
-                  height={"40px"}
-                  alt=""
-                />
-              )}
-            </div>
-            <div className="col-lg-6 ">
-              {member.userInvitedFirstName} {member.userInvitedLastName}
-            </div>
-            {showProjects.manager &&
-            (showProjects.statusInt === 0 || showProjects.statusInt === 4) ? (
-              <>
-                <div className="col-lg-1">
-                  <ModalDeleteProjMember
-                    member={member}
-                    set={setMembers}
-                    projId={showProjects.id}
+        <div className="row overflow-auto" style={{ maxHeight: "70vh" }}>
+          {showMembers.map((member, index) => (
+            <div
+              key={index}
+              className="row bg-white text-black mb-3 rounded-3  mx-auto align-items-center p-2"
+            >
+              <div className="col-lg-2 ">
+                {member.userInvitedPhoto === null ? (
+                  <img
+                    src="https://static-00.iconduck.com/assets.00/user-avatar-icon-512x512-vufpcmdn.png"
+                    class="rounded-circle img-responsive"
+                    width={"40px"}
+                    height={"40px"}
+                    alt="avatar"
                   />
-                </div>
-                <div className="col-lg-1">
-                  {member.manager ? (
-                    <>
-                      <div class="form-check form-switch">
-                        <OverlayTrigger
-                          placement="top"
-                          overlay={
-                            <Tooltip>Retirar permissão de gestor</Tooltip>
-                          }
-                        >
-                          <span
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                          >
-                            {" "}
-                            <input
-                              class="form-check-input bg-secondary"
-                              type="checkbox"
-                              //role="switch"
-                              id="flexSwitchCheckChecked"
-                              //checked
-                              defaultChecked
-                              onClick={(event) =>
-                                handleRole(
-                                  event.target.checked,
-                                  member.userInvitedId
-                                )
-                              }
-                            />{" "}
-                          </span>
-                        </OverlayTrigger>
-
-                        <label
-                          class="form-check-label"
-                          for="flexSwitchCheckChecked"
-                        >
+                ) : (
+                  <img
+                    src={member.userInvitedPhoto}
+                    class="rounded-circle img-responsive"
+                    width={"40px"}
+                    height={"40px"}
+                    alt=""
+                  />
+                )}
+              </div>
+              <div className="col-lg-6 ">
+                {member.userInvitedFirstName} {member.userInvitedLastName}
+              </div>
+              {showProjects.manager &&
+              (showProjects.statusInt === 0 || showProjects.statusInt === 4) ? (
+                <>
+                  {user.userId !== member.id ? (
+                    <div className="col-lg-1">
+                      <ModalDeleteProjMember
+                        member={member}
+                        set={setMembers}
+                        projId={showProjects.id}
+                      />
+                    </div>
+                  ) : null}
+                  <div className="col-lg-1">
+                    {member.manager ? (
+                      <>
+                        <div class="form-check form-switch">
                           <OverlayTrigger
                             placement="top"
-                            overlay={<Tooltip>Gestor</Tooltip>}
+                            overlay={
+                              <Tooltip>Retirar permissão de gestor</Tooltip>
+                            }
                           >
                             <span
                               data-bs-toggle="tooltip"
                               data-bs-placement="top"
                             >
                               {" "}
-                              <BsStarFill color="#C01722" size={20} />
+                              <input
+                                class="form-check-input bg-secondary"
+                                type="checkbox"
+                                //role="switch"
+                                id="flexSwitchCheckChecked"
+                                //checked
+                                defaultChecked
+                                onClick={(event) =>
+                                  handleRole(
+                                    event.target.checked,
+                                    member.userInvitedId
+                                  )
+                                }
+                              />{" "}
                             </span>
                           </OverlayTrigger>
-                        </label>
-                      </div>
-                      {/*    <div class="form-check form-switch">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="flexSwitchCheckDefault"
-                        />
-                        <label
-                          class="form-check-label"
-                          for="flexSwitchCheckDefault"
-                        >
-                          Default switch
-                        </label>
-                      </div> */}
-                    </>
-                  ) : (
-                    <>
-                      {/*   <div class="form-check form-switch">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="flexSwitchCheckDefault"
-                        />
-                        <label
-                          class="form-check-label"
-                          for="flexSwitchCheckDefault"
-                        >
-                          Default switch
-                        </label>
-                      </div> */}
-                      <div class="form-check form-switch">
-                        <OverlayTrigger
-                          placement="top"
-                          overlay={<Tooltip>Tornar gestor</Tooltip>}
-                        >
-                          <span
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                          >
-                            {" "}
-                            <input
-                              class="form-check-input "
-                              type="checkbox"
-                              //  role="switch"
-                              id="flexSwitchCheckDefault"
-                              onClick={(event) =>
-                                handleRole(
-                                  event.target.checked,
-                                  member.userInvitedId
-                                )
-                              }
-                            />
-                          </span>
-                        </OverlayTrigger>
 
+                          <label
+                            class="form-check-label"
+                            for="flexSwitchCheckChecked"
+                          >
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={<Tooltip>Gestor</Tooltip>}
+                            >
+                              <span
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                              >
+                                {" "}
+                                <BsStarFill color="#c09617" size={20} />
+                              </span>
+                            </OverlayTrigger>
+                          </label>
+                        </div>
+                        {/*    <div class="form-check form-switch">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="flexSwitchCheckDefault"
+                        />
                         <label
                           class="form-check-label"
                           for="flexSwitchCheckDefault"
-                        ></label>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </>
-            ) : null}
-            {/* {member.manager ? (
+                        >
+                          Default switch
+                        </label>
+                      </div> */}
+                      </>
+                    ) : (
+                      <>
+                        {/*   <div class="form-check form-switch">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="flexSwitchCheckDefault"
+                        />
+                        <label
+                          class="form-check-label"
+                          for="flexSwitchCheckDefault"
+                        >
+                          Default switch
+                        </label>
+                      </div> */}
+                        <div class="form-check form-switch">
+                          <OverlayTrigger
+                            placement="top"
+                            overlay={<Tooltip>Tornar gestor</Tooltip>}
+                          >
+                            <span
+                              data-bs-toggle="tooltip"
+                              data-bs-placement="top"
+                            >
+                              {" "}
+                              <input
+                                class="form-check-input "
+                                type="checkbox"
+                                //  role="switch"
+                                id="flexSwitchCheckDefault"
+                                onClick={(event) =>
+                                  handleRole(
+                                    event.target.checked,
+                                    member.userInvitedId
+                                  )
+                                }
+                              />
+                            </span>
+                          </OverlayTrigger>
+
+                          <label
+                            class="form-check-label"
+                            for="flexSwitchCheckDefault"
+                          ></label>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </>
+              ) : null}
+              {/* {member.manager ? (
               <div className="col-lg-8 d-flex align-items-center">Gestor</div>
             ) : (
               <div className="col-lg-8 d-flex align-items-center">Membro</div>
             )} */}
-            {/* {showProjects.manager ? (
+              {/* {showProjects.manager ? (
               <>
                 <div className="col-lg-1">
                   <span class="material-icons-outlined"></span>
@@ -250,8 +253,9 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
                 </div>
               </>
             ) : null} */}
-          </div>
-        ))}
+            </div>
+          ))}
+        </div>
       </div>
 
       {showProjects.member &&
