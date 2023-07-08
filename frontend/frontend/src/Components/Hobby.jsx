@@ -173,9 +173,11 @@ function Hobby() {
               {showHobbies.map((hobby) => (
                 <div
                   key={hobby.id}
-                  className="col-8 bg-dark mx-auto m-1 p-2 rounded-2 d-flex align-items-center text-white border border-white mb-1"
+                  className="col-8 bg-dark mx-auto m-1 p-1 rounded-2 d-flex align-items-center text-white border border-white mb-1"
                 >
-                  <div className="col-lg-10">{hobby.title} </div>
+                  <div className="col-lg-10">
+                    <h4>{hobby.title}</h4>{" "}
+                  </div>
                   <div className="col-lg-2">
                     <ModalDeleteHobby
                       hobby={hobby}

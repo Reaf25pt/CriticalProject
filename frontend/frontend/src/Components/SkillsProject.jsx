@@ -132,29 +132,17 @@ function SkillsProject({ skills, setSkills, addSkills }) {
     <div className="cointaner-fluid">
       <div className="row mt-3">
         <div className="col-lg-6">
-          <div className="search-select-container ">
-            <InputComponent
-              placeholder={"Adicionar skill "}
-              id="skillProjInput"
-              name="skillProjInput"
-              type="search"
-              aria-label="Search"
-              aria-describedby="search-addon"
-              defaultValue={""}
-              onChange={handleChange}
-              //  onBlur={() => setSuggestions(null)}
-              /*    onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  handleClick(event);
-                } else {
-                  handleSearch(search);
-                }
-              }} */
-            />
-            {/* <div className="col-lg-2 input-group-text border-0 ">
-              <BsSearch />
-            </div> */}
-          </div>
+          <InputComponent
+            placeholder={"Adicionar skill "}
+            id="skillProjInput"
+            name="skillProjInput"
+            type="search"
+            aria-label="Search"
+            aria-describedby="search-addon"
+            defaultValue={""}
+            onChange={handleChange}
+          />
+
           <div className="dropdownz" style={{ position: "absolute" }}>
             {suggestions &&
               suggestions
@@ -176,7 +164,7 @@ function SkillsProject({ skills, setSkills, addSkills }) {
                 ))}
           </div>
         </div>
-        <div class="form-group col-lg-4">
+        <div class="col-lg-4">
           <div class="input-group rounded">
             <SelectSkillType
               name="skillType"
@@ -185,9 +173,6 @@ function SkillsProject({ skills, setSkills, addSkills }) {
               placeholder={"Categoria"}
               defaultValue={selectedValue}
             />
-            {/* <span class="input-group-text border-0" id="search-addon">
-              <BsArrowDown />
-            </span> */}
           </div>
         </div>
         <div className="col-lg-2">
@@ -203,102 +188,89 @@ function SkillsProject({ skills, setSkills, addSkills }) {
         </div>
       </div>
       {skills.length > 0 ? (
-        <div className="row bg-white  p-2 mx-auto rounded-2 mt-3 mb-3 ">
-          <div className="d-flex ">
-            {skills &&
-              skills.map(
-                (item, position) =>
-                  item.skillType == 0 ? (
-                    <div className="bg-danger text-white rounded-3 p-2 m-1 d-flex justify-content-between">
-                      {item.title}{" "}
-                      <div className="">
-                        <OverlayTrigger
-                          placement="top"
-                          overlay={<Tooltip>Apagar</Tooltip>}
-                        >
-                          <span
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                          >
-                            {" "}
-                            <BsXLg onClick={() => removeSkills(position)} />
-                          </span>
-                        </OverlayTrigger>
-                      </div>
+        <div
+          className="row  p-2 mx-auto rounded-2 mt-3 mb-3 overflow-auto "
+          style={{ maxHeight: "200px" }}
+        >
+          {skills &&
+            skills.map(
+              (item, position) =>
+                item.skillType == 0 ? (
+                  <div className="col-lg-7 mx-auto bg-danger text-white rounded-3 p-2 m-1 d-flex justify-content-between">
+                    <h4>{item.title} </h4>
+                    <div className="">
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={<Tooltip>Apagar</Tooltip>}
+                      >
+                        <span data-bs-toggle="tooltip" data-bs-placement="top">
+                          {" "}
+                          <BsXLg onClick={() => removeSkills(position)} />
+                        </span>
+                      </OverlayTrigger>
                     </div>
-                  ) : item.skillType == 1 ? (
-                    <div className="bg-success text-white rounded-3 p-2 m-1 d-flex justify-content-between">
-                      {item.title}{" "}
-                      <div className="">
-                        <OverlayTrigger
-                          placement="top"
-                          overlay={<Tooltip>Apagar</Tooltip>}
-                        >
-                          <span
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                          >
-                            {" "}
-                            <BsXLg onClick={() => removeSkills(position)} />
-                          </span>
-                        </OverlayTrigger>
-                      </div>
+                  </div>
+                ) : item.skillType == 1 ? (
+                  <div className="col-lg-7 mx-auto bg-success text-white rounded-3 p-2 m-1 d-flex justify-content-between">
+                    <h4>{item.title} </h4>
+                    <div className="">
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={<Tooltip>Apagar</Tooltip>}
+                      >
+                        <span data-bs-toggle="tooltip" data-bs-placement="top">
+                          {" "}
+                          <BsXLg onClick={() => removeSkills(position)} />
+                        </span>
+                      </OverlayTrigger>
                     </div>
-                  ) : item.skillType == 2 ? (
-                    <div className="bg-primary text-white rounded-3 p-2 m-1 d-flex justify-content-between">
-                      {item.title}{" "}
-                      <div className="">
-                        <OverlayTrigger
-                          placement="top"
-                          overlay={<Tooltip>Apagar</Tooltip>}
-                        >
-                          <span
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                          >
-                            {" "}
-                            <BsXLg onClick={() => removeSkills(position)} />
-                          </span>
-                        </OverlayTrigger>
-                      </div>
+                  </div>
+                ) : item.skillType == 2 ? (
+                  <div className="col-lg-7 mx-auto bg-primary text-white rounded-3 p-2 m-1 d-flex justify-content-between">
+                    <h4>{item.title} </h4>
+                    <div className="">
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={<Tooltip>Apagar</Tooltip>}
+                      >
+                        <span data-bs-toggle="tooltip" data-bs-placement="top">
+                          {" "}
+                          <BsXLg onClick={() => removeSkills(position)} />
+                        </span>
+                      </OverlayTrigger>
                     </div>
-                  ) : item.skillType == 3 ? (
-                    <div className="bg-warning text-white rounded-3 p-2 m-1 d-flex justify-content-between">
-                      {item.title}{" "}
-                      <div className="">
-                        <OverlayTrigger
-                          placement="top"
-                          overlay={<Tooltip>Apagar</Tooltip>}
-                        >
-                          <span
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                          >
-                            {" "}
-                            <BsXLg onClick={() => removeSkills(position)} />
-                          </span>
-                        </OverlayTrigger>
-                      </div>
+                  </div>
+                ) : item.skillType == 3 ? (
+                  <div className="col-lg-7 mx-auto bg-warning text-white rounded-3 p-2 m-1 d-flex justify-content-between">
+                    <h4>{item.title} </h4>
+                    <div className="">
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={<Tooltip>Apagar</Tooltip>}
+                      >
+                        <span data-bs-toggle="tooltip" data-bs-placement="top">
+                          {" "}
+                          <BsXLg onClick={() => removeSkills(position)} />
+                        </span>
+                      </OverlayTrigger>
                     </div>
-                  ) : (
-                    <div className="bg-info text-white rounded-3 p-2 m-1 d-flex justify-content-between">
-                      {item.title}{" "}
-                      <div className="">
-                        <OverlayTrigger
-                          placement="top"
-                          overlay={<Tooltip>Apagar</Tooltip>}
-                        >
-                          <span
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                          >
-                            {" "}
-                            <BsXLg onClick={() => removeSkills(position)} />
-                          </span>
-                        </OverlayTrigger>
-                      </div>
+                  </div>
+                ) : (
+                  <div className="col-lg-7 mx-auto bg-info text-white rounded-3 p-2 m-1 d-flex justify-content-between">
+                    {item.title}{" "}
+                    <div className="">
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={<Tooltip>Apagar</Tooltip>}
+                      >
+                        <span data-bs-toggle="tooltip" data-bs-placement="top">
+                          {" "}
+                          <BsXLg onClick={() => removeSkills(position)} />
+                        </span>
+                      </OverlayTrigger>
                     </div>
-                  ) /* (
+                  </div>
+                ) /* (
                       <>
                         <div className="bg-secondary text-white rounded-3 p-2 m-1 d-flex justify-content-between">
                           {item.title}{" "}
@@ -308,8 +280,7 @@ function SkillsProject({ skills, setSkills, addSkills }) {
                         </div>
                       </>
                     ) */
-              )}
-          </div>
+            )}
         </div>
       ) : null}
     </div>

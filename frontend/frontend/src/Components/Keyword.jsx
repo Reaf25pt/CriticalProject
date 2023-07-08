@@ -161,11 +161,14 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
         </div>
       </div>
       {keywords && keywords.length > 0 ? (
-        <div className="row p-2 mx-auto rounded-2 mt-3 mb-3 ">
+        <div
+          className="row p-2 mx-auto rounded-2 mt-3 mb-3 overflow-auto"
+          style={{ maxHeight: "200px" }}
+        >
           {keywords.map((item, position) => (
             <>
               <div className=" col-lg-7 mx-auto text-white bg-black rounded-3 p-2 m-1 d-flex justify-content-between">
-                {item.title}{" "}
+                <h4>{item.title} </h4>
                 <div className="">
                   <OverlayTrigger
                     placement="top"
