@@ -99,6 +99,26 @@ INSERT INTO project (id, title, details, creationDate, membersNumber, status,off
 INSERT INTO project (id, title, details, creationDate, membersNumber, status,office) value (14, 'Proj14', 'tbd', '2023-04-02', 5, 1,1 );
 
 
+INSERT INTO skills_projects(skill_Id,project_Id) VALUE(1,1);
+INSERT INTO skills_projects(skill_Id,project_Id) VALUE(2,1);
+INSERT INTO skills_projects(skill_Id,project_Id) VALUE(3,1);
+INSERT INTO skills_projects(skill_Id,project_Id) VALUE(4,1);
+INSERT INTO skills_projects(skill_Id,project_Id) VALUE(5,1);
+INSERT INTO skills_projects(skill_Id,project_Id) VALUE(6,1);
+INSERT INTO skills_projects(skill_Id,project_Id) VALUE(7,1);
+INSERT INTO skills_projects(skill_Id,project_Id) VALUE(8,1);
+
+INSERT INTO keywords(keyword_Id, project_Id) VALUE(1,1);
+INSERT INTO keywords(keyword_Id, project_Id) VALUE(2,1);
+INSERT INTO keywords(keyword_Id, project_Id) VALUE(3,1);
+INSERT INTO keywords(keyword_Id, project_Id) VALUE(4,1);
+INSERT INTO keywords(keyword_Id, project_Id) VALUE(5,1);
+INSERT INTO keywords(keyword_Id, project_Id) VALUE(6,1);
+
+
+
+
+
 
 
 

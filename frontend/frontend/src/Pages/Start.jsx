@@ -159,7 +159,9 @@ function Start() {
                   </div>
                 ) : (
                   <div className="row mt-5">
-                    <h5 className="text-white">Não há concursos activos</h5>
+                    <h5 className="text-white" style={{ fontWeight: "bolder" }}>
+                      Não há concursos activos
+                    </h5>
                   </div>
                 )}
                 {ownProj !== null && ownProj.id !== 0 ? (

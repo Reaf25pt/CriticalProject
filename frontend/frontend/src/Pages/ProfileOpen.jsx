@@ -211,9 +211,9 @@ function ProfileOpen() {
                     )}
                   </div>
                 ) : (
-                  <h3 class="text-white">
+                  <h4 class="text-white" style={{ fontWeight: "bolder" }}>
                     {fullName} não tem skills associadas ao seu perfil
-                  </h3>
+                  </h4>
                 )}
               </div>
 
@@ -239,9 +239,9 @@ function ProfileOpen() {
                       ))}
                     </div>
                   ) : (
-                    <h3 class="text-white">
+                    <h4 class="text-white" style={{ fontWeight: "bolder" }}>
                       {fullName} não tem interesses associados ao seu perfil
-                    </h3>
+                    </h4>
                   )}
                 </div>
               </div>
@@ -251,26 +251,32 @@ function ProfileOpen() {
                     <h3 className="bg-white text-center text-nowrap rounded-5 p-0  ">
                       Projectos:
                     </h3>
-                    <div  className="row d-flex  overflow-auto "
-                      style={{ maxHeight: "200px" }}>
-                    <DataTable
-                      value={userProfile.projects}
-                      selectionMode="single "
-                      removableSort
+                    <div
+                      className="row d-flex  overflow-auto "
+                      style={{ maxHeight: "200px" }}
                     >
-                      <Column field="title" header="Nome do Projeto" sortable />
-                      <Column field="status" header="Estado" sortable />
-                      <Column
-                        field="creationDate"
-                        header="Data de Registo"
-                        sortable
-                        body={(rowData) =>
-                          convertTimestampToDate(rowData.creationDate)
-                        }
-                      />
+                      <DataTable
+                        value={userProfile.projects}
+                        selectionMode="single "
+                        removableSort
+                      >
+                        <Column
+                          field="title"
+                          header="Nome do Projeto"
+                          sortable
+                        />
+                        <Column field="status" header="Estado" sortable />
+                        <Column
+                          field="creationDate"
+                          header="Data de Registo"
+                          sortable
+                          body={(rowData) =>
+                            convertTimestampToDate(rowData.creationDate)
+                          }
+                        />
 
-                      <Column body={renderLink} header="#" />
-                    </DataTable>
+                        <Column body={renderLink} header="#" />
+                      </DataTable>
                     </div>
                   </div>
                 </div>

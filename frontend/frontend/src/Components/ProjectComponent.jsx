@@ -37,8 +37,6 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
         if (response.status === 200) {
           setProjects([]);
           toast.success("Estado alterado");
-
-          //navigate("/home", { replace: true });
         } else {
           throw new Error("Pedido não satisfeito");
         }
@@ -64,7 +62,6 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
         if (response.status === 200) {
           toast.success("Pedido efectuado");
           setProjects([]);
-          //navigate("/home", { replace: true });
         } else {
           throw new Error("Pedido não satisfeito");
         }
@@ -84,6 +81,7 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
               <div className="row mb-3">
                 <h2 className="text-center text-white">{project.title}</h2>
               </div>
+              <hr />
               <div class="row mt-3 mb-3  rounded-4 p-2 ext-white ">
                 {project.officeInfo ? (
                   <h4 className="text-center text-white">
@@ -98,11 +96,9 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
               <div className="row mt-3 mb-3 rounded-4 p-2 bg-danger  text-white  ">
                 <h5 className="text-center">{project.status}</h5>
               </div>
-              <div class=" text-center text-white mb-1">
-                <h2>
-                  {members.length}/{project.membersNumber}
-                </h2>
-              </div>
+              <h2 className=" text-center text-white mb-1">
+                {members.length}/{project.membersNumber}
+              </h2>
 
               {project.manager ? (
                 <div className="row">
@@ -121,16 +117,7 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
 
                     {project.statusInt === 0 ? (
                       <ModalFinalTask setProjects={setProjects} />
-                    ) : /*  <div className="row mx-auto justify-content-around mt-5">
-                      <div className="col-lg-12">
-                        <ButtonComponent
-                          type="button"
-                          name="Mudar status: ready"
-                          onClick={() => handleProjectStatus(1)}
-                        />
-                      </div>
-                    </div> */
-                    project.statusInt === 1 ? (
+                    ) : project.statusInt === 1 ? (
                       <div className="row mx-auto justify-content-around mt-5">
                         <div className="col-lg-12">
                           <ButtonComponent
@@ -190,8 +177,7 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
               ) : !user.contestManager &&
                 !project.member &&
                 user.noActiveProject &&
-                project.availableSpots !==
-                  0 /* members.length < project.membersNumber */ ? (
+                project.availableSpots !== 0 ? (
                 <div className="row mx-auto justify-content-around mt-5">
                   <div className="col-lg-12">
                     <ButtonComponent
@@ -230,72 +216,64 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
           ) : null}
         </div>
       </div>
-      <div className="row mx-auto justify-content-around mt-5">
+      <div className="row justify-content-around mt-5">
         <div className="col-lg-4">
-          <div className="row bg-secondary rounded-5 p-4 mb-4">
-            <div className="col-lg-12 bg-white rounded-5">
-              <h4 className="text-center">Palavras-Chave</h4>
-            </div>
-            <div className="row mt-3 mx-auto">
-              {project.keywords.length > 0 ? (
-                <div className="row bg-white  p-2 mx-auto rounded-2 mt-3 mb-3 ">
-                  <div className="form-outline  ">
-                    <div className="d-flex ">
-                      {project.keywords &&
-                        project.keywords.map((item) => (
-                          <>
-                            <div className="bg-secondary text-white rounded-3 p-2 m-1 d-flex justify-content-between">
-                              {item.title}{" "}
-                            </div>
-                          </>
-                        ))}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                "O projecto não tem palavras-chave associadas"
-              )}
-            </div>
+          <div className="row rounded-5 p-1 mb-1 bg-white">
+            <h4 className="text-center ">Palavras-Chave</h4>
           </div>
+          {project.keywords.length > 0 ? (
+            <div
+              className="row mt-3 overflow-auto"
+              style={{ maxHeight: "200px" }}
+            >
+              {project.keywords &&
+                project.keywords.map((item) => (
+                  <div className="col-lg-7 bg-secondary mt-2 rounded-2 mx-auto">
+                    <h4 className="text-white text-center ">{item.title} </h4>
+                  </div>
+                ))}
+            </div>
+          ) : (
+            <h4 class="text-white" style={{ fontWeight: "bolder" }}>
+              O projecto não tem palavras-chave associadas
+            </h4>
+          )}
         </div>
         <div className="col-lg-4">
-          <div className="row bg-secondary rounded-5 p-4">
-            <div className="col-lg-12 bg-white rounded-5">
-              <h4 className="text-center">Skills</h4>
-            </div>
-            <div className="row mt-3 mx-auto">
-              {project.skills.length > 0 ? (
-                <div className="row bg-white  p-2 mx-auto rounded-2 mt-3 mb-3 ">
-                  <div className="form-outline  ">
-                    <div className="d-flex ">
-                      {project.skills &&
-                        project.skills.map((item) =>
-                          item.skillType === 0 ? (
-                            <div className="bg-danger text-white rounded-3 p-2 m-1 d-flex justify-content-between">
-                              {item.title}{" "}
-                            </div>
-                          ) : item.skillType === 1 ? (
-                            <div className="bg-success text-white rounded-3 p-2 m-1 d-flex justify-content-between">
-                              {item.title}{" "}
-                            </div>
-                          ) : item.skillType === 2 ? (
-                            <div className="bg-primary text-white rounded-3 p-2 m-1 d-flex justify-content-between">
-                              {item.title}{" "}
-                            </div>
-                          ) : (
-                            <div className="bg-warning text-white rounded-3 p-2 m-1 d-flex justify-content-between">
-                              {item.title}{" "}
-                            </div>
-                          )
-                        )}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                "O projecto não tem skills associadas"
-              )}
-            </div>
+          <div className="row p-1 m-1  bg-white rounded-5">
+            <h4 className="text-center">Skills</h4>
           </div>
+          {project.skills.length > 0 ? (
+            <div
+              className="row mt-3 overflow-auto"
+              style={{ maxHeight: "200px" }}
+            >
+              {project.skills &&
+                project.skills.map((item) =>
+                  item.skillType === 0 ? (
+                    <div className=" col-lg-7 bg-danger text-white rounded-3 p-1 m-1 mx-auto">
+                      <h4 className="text-center"> {item.title} </h4>
+                    </div>
+                  ) : item.skillType === 1 ? (
+                    <div className="col-lg-7 bg-success text-white rounded-3 p-1 m-1 mx-auto ">
+                      <h4 className="text-center">{item.title} </h4>
+                    </div>
+                  ) : item.skillType === 2 ? (
+                    <div className="col-lg-7 bg-primary text-white rounded-3 p-1 m-1 mx-auto">
+                      <h4 className="text-center">{item.title} </h4>
+                    </div>
+                  ) : (
+                    <div className=" col-lg-7 bg-warning text-white rounded-3 p-1 m-1 mx-auto">
+                      <h4 className="text-center"> {item.title} </h4>
+                    </div>
+                  )
+                )}
+            </div>
+          ) : (
+            <h4 class="text-white" style={{ fontWeight: "bolder" }}>
+              O projecto não tem skills associadas
+            </h4>
+          )}
         </div>
       </div>
     </>

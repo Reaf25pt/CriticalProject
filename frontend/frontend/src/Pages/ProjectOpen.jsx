@@ -164,36 +164,6 @@ function ProjectOpen() {
             </button>
           </li>
         ) : null}
-        {/* <li class="nav-item" role="presentation">
-          <button
-            class="nav-link"
-            id="tab4"
-            data-bs-toggle="tab"
-            data-bs-target="#content4"
-            type="button"
-            role="tab"
-            aria-controls="content4"
-            aria-selected="false"
-            style={{ background: "#C01722", color: "white" }}
-          >
-            Chat{" "}
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button
-            class="nav-link"
-            id="tab5"
-            data-bs-toggle="tab"
-            data-bs-target="#content5"
-            type="button"
-            role="tab"
-            aria-controls="content4"
-            aria-selected="false"
-            style={{ background: "#C01722", color: "white" }}
-          >
-            Histórico{" "}
-          </button>
-        </li> */}
       </ul>
       <div class="tab-content mt-2">
         <div
@@ -208,7 +178,6 @@ function ProjectOpen() {
               <ProjectComponent
                 toggleComponent={toggleComponent}
                 project={showProjects}
-                /*   local={local} */
                 members={showMembers}
                 setProjects={setProjects}
               />
@@ -217,30 +186,9 @@ function ProjectOpen() {
                 project={showProjects}
                 toggleComponent={toggleComponent}
                 set={setProjects}
-                /*   local={local} */
               />
             )}
           </div>
-          {/*   <div className="row mx-auto justify-content-around mt-5">
-            <div className="col-lg-4">
-              <div className="row bg-secondary rounded-5 p-4 mb-4">
-                <div className="col-lg-12 bg-white rounded-5">
-                  <h4 className="text-center">Palavras-Chave</h4>
-                </div>
-                <div className="row mt-3 mx-auto">
-                  <>Falta criar um map para o array das palavras chaves</>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4">
-              <div className="row bg-secondary rounded-5 p-4">
-                <div className="col-lg-12 bg-white rounded-5">
-                  <h4 className="text-center">Skills</h4>
-                </div>
-                <div>Falta criar um map para o array das palavras chaves</div>
-              </div>
-            </div>
-          </div> */}
         </div>
 
         <div
@@ -252,21 +200,7 @@ function ProjectOpen() {
           <div className="row">
             {showProjects.manager ? (
               <InviteMember projId={showProjects.id} />
-            ) : /*  <div className="mx-auto col-10 col-md-8 col-lg-6">
-                <form className="mt-5 p-5 bg-secondary rounded-5 ">
-                  <div className="row mb-3 ">
-                    <div className="col ">
-                      <div className="form-outline">
-                        <InputComponent type="text" placeholder="Nome" />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-lg-6 mx-auto">
-                    <ButtonComponent name={"Convidar"} />
-                  </div>
-                </form>
-              </div> */
-            null}
+            ) : null}
 
             <ProjectMembersList
               showMembers={showMembers}
@@ -281,64 +215,6 @@ function ProjectOpen() {
                 />
               ) : null}
             </div>
-            {/* <div className="col-8 col-sm-10 col-md-7 col-lg-5 mx-auto bg-secondary mt-5 rounded-5 ">
-              <div>
-                <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">
-                  Membros do Projetos
-                </h3>
-                <div className="bg-white text-black  m-1 rounded-3 w-50  mx-auto  ">
-                  {showMembers.map((member, index) => (
-                    <div
-                      key={index}
-                      className="row d-flex justify-content-center"
-                    >
-                      <div className="col-lg-4 ">
-                        {member.userInvitedPhoto === null ? (
-                          <img
-                            src={
-                              "https://t3.ftcdn.net/jpg/00/36/94/26/360_F_36942622_9SUXpSuE5JlfxLFKB1jHu5Z07eVIWQ2W.jpg"
-                            }
-                            class="rounded-circle img-responsive"
-                            width={"40px"}
-                            height={"40px"}
-                            alt="avatar"
-                          />
-                        ) : (
-                          <img
-                            src={member.userInvitedPhoto}
-                            class="rounded-circle img-responsive"
-                            width={"40px"}
-                            height={"40px"}
-                            alt=""
-                          />
-                        )}
-                      </div>
-                      <div className="col-lg-8 d-flex align-items-center">
-                        {member.userInvitedFirstName}{" "}
-                        {member.userInvitedLastName}
-                      </div>
-                      {member.manager ? (
-                        <div className="col-lg-8 d-flex align-items-center">
-                          Gestor
-                        </div>
-                      ) : (
-                        <div className="col-lg-8 d-flex align-items-center">
-                          Membro
-                        </div>
-                      )}
-                      {showProjects.manager ? (
-                        <div className="col-lg-2">
-                          <ModalDeleteProjMember
-                            member={member}
-                            set={setMembers}
-                          />
-                        </div>
-                      ) : null}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div> */}
           </div>{" "}
         </div>
         <div
