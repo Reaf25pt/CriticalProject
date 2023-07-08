@@ -123,14 +123,14 @@ INSERT INTO keywords(keyword_Id, project_Id) VALUE(6,1);
 
 
 INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (1, true, true, true, false, true, 1, 1);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (2, true, true, true, false, true, 2, 1);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (3, true, true, true, false, true, 3, 1);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (4, true, true, true, false, true, 4, 1);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (5, true, true, true, false, true, 5, 1);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (6, true, true, true, false, true, 6, 1);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (7, true, true, true, false, true, 7, 1);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (8, true, true, true, false, true, 8, 1);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (9, true, true, true, false, true, 9, 1);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (2, true, true, false, false, true, 1, 2);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (3, true, true, false, false, true, 1, 3);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (4, true, true, false, false, true, 1, 4);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (5, true, true, true, false, true, 1, 5);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (6, true, true, false, false, true, 1, 6);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (7, true, true, false, false, true, 1, 7);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (8, true, true, false, false, true, 1, 8);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (9, true, true, false, false, true, 1, 9);
 
 
 INSERT INTO contest (id, title, details, maxNumberProjects, rules, startDate, finishDate, startOpenCall,finishOpenCall,status) VALUE (1, "Teste", "Teste", 200,"regras", '2023-07-10', '2023-07-30', '2023-07-01', '2023-07-09',1);

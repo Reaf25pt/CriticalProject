@@ -25,6 +25,9 @@ function Notifications() {
   // const [showAllNotifications, setShowAllNotifications] = useState([]);
   // const [notification, setNotification] = useState([]);
 
+  console.log("notificaçoes");
+  console.log(notifications);
+
   const convertTimestampToDate = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString(); // Adjust the format as per your requirement
@@ -186,7 +189,16 @@ function Notifications() {
                       <hr />
                       <div className="row">
                         <div className="col-lg-10">
-                          <p class="card-text">{item.message}</p>
+                          {item.seen ? (
+                            <p class="card-text">{item.message}</p>
+                          ) : (
+                            <p
+                              class="card-text"
+                              style={{ fontWeight: "bolder" }}
+                            >
+                              {item.message}
+                            </p>
+                          )}
                         </div>
                         {item.needsInput ? (
                           <div className="col-lg-2 d-flex justify-content-around">

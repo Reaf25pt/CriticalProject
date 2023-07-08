@@ -80,7 +80,7 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
         <h3 className="bg-white mt-5 text-center rounded-5 mb-3 ">
           Membros do Projetos
         </h3>
-        <div className="row overflow-auto" style={{ maxHeight: "70vh" }}>
+        <div className="row overflow-auto" style={{ maxHeight: "65vh" }}>
           {showMembers.map((member, index) => (
             <div
               key={index}
@@ -256,17 +256,19 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
             </div>
           ))}
         </div>
-      </div>
 
-      {showProjects.member &&
-      (showProjects.statusInt === 0 || showProjects.statusInt === 4) ? (
-        <div className="col-lg-6 mx-auto mb-4">
-          <ButtonComponent
-            onClick={handleRemove}
-            name={"Sair do projecto"}
-          ></ButtonComponent>
+        <div className="row mt-4">
+          {showProjects.member &&
+          (showProjects.statusInt === 0 || showProjects.statusInt === 4) ? (
+            <div className="col-lg-6 mx-auto mb-4">
+              <ButtonComponent
+                onClick={handleRemove}
+                name={"Sair do projecto"}
+              ></ButtonComponent>
+            </div>
+          ) : null}
         </div>
-      ) : null}
+      </div>
     </div>
   );
 }
