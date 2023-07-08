@@ -1,17 +1,15 @@
-INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo) values (1,1, false, 'jccramalho@hotmail.com', true, 'Joana', 'Ramalho', false, '25D55AD283AA400AF464C76D713C07AD', true, 0,"https://randomuser.me/api/portraits/women/5.jpg");
-INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo) values (2,2, false, 'jccramalho+1@hotmail.com', true, 'João', 'Ramalho', false, '25D55AD283AA400AF464C76D713C07AD', true, 0,"https://randomuser.me/api/portraits/men/9.jpg");
-INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo) values (3,3, false, 'jccramalho+2@hotmail.com', true, 'Rodrigo', 'Ferreira', false, '25D55AD283AA400AF464C76D713C07AD',true, 0,"https://randomuser.me/api/portraits/men/42.jpg");
-INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo) values (4,4, false, 'jccramalho+4@hotmail.com', true, 'Raquel', 'Soares', false, '25D55AD283AA400AF464C76D713C07AD',true, 0, "https://randomuser.me/api/portraits/women/18.jpg");
-INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo) values (5,5, false, 'jccramalho+5@hotmail.com', true, 'Jose', 'Figueiro', false, '25D55AD283AA400AF464C76D713C07AD',true, 0,"https://randomuser.me/api/portraits/men/48.jpg");
-INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo) values (5,6, false, 'jccramalho+6@hotmail.com', true, 'Maria', 'Ferreia', true, '25D55AD283AA400AF464C76D713C07AD',true, 0, null);
-INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo) values (4,7, false, 'jccramalho+7@hotmail.com', true, 'Sofia', 'Ribeiro', true, '25D55AD283AA400AF464C76D713C07AD',true, 0, null);
-INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo) values (3,8, false, 'jccramalho+8@hotmail.com', true, 'Manuel', 'Joaquim', true, '25D55AD283AA400AF464C76D713C07AD',true, 0,"https://randomuser.me/api/portraits/men/38.jpg");
-INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo) values (2,9, false, 'jccramalho+9@hotmail.com', true, 'Laura', 'Soares', true, '25D55AD283AA400AF464C76D713C07AD',true, 0, null);
-INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo) values (1,10, true,'jccramalho+10@hotmail.com', true, 'Antonia', 'Maria', false, '25D55AD283AA400AF464C76D713C07AD',true, 0,"https://randomuser.me/api/portraits/women/28.jpg");
-INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo) values (1,11, true,'jccramalho+11@hotmail.com', true, 'Di', 'Maria', false, '25D55AD283AA400AF464C76D713C07AD',true, 0,"https://t0.gstatic.com/licensed-image?q=tbn:ANd9GcSYM0psEKOh0imrjb2I-fnr4qY8qdh9zJLAQggpFCPuEJg4EqIiFJKyE7Bz8w_g_au5");
-INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo) values (1,12, true,'jccramalho+12@hotmail.com', true, 'Rafa', 'Silva', false, '25D55AD283AA400AF464C76D713C07AD',true, 0,"https://images.newrr.sapo.pt/rafa_silva_foto_francisco_paraiso_fpf18234578defaultlarge_1024.jpg");
-
-
+INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo,bio) values (1,1, false, 'jccramalho@hotmail.com', true, 'Joana', 'Ramalho', false, '25D55AD283AA400AF464C76D713C07AD', true, 0,"https://randomuser.me/api/portraits/women/5.jpg","Biografia");
+INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo,bio) values (2,2, false, 'jccramalho+1@hotmail.com', true, 'João', 'Ramalho', false, '25D55AD283AA400AF464C76D713C07AD', true, 0,"https://randomuser.me/api/portraits/men/9.jpg","Lorem Ipsum is simply dummy text of the printing and ");
+INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo,bio) values (3,3, false, 'jccramalho+2@hotmail.com', true, 'Rodrigo', 'Ferreira', false, '25D55AD283AA400AF464C76D713C07AD',true, 0,"https://randomuser.me/api/portraits/men/42.jpg","Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s");
+INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo,bio) values (4,4, false, 'jccramalho+4@hotmail.com', true, 'Raquel', 'Soares', false, '25D55AD283AA400AF464C76D713C07AD',true, 0, "https://randomuser.me/api/portraits/women/18.jpg","Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of e ");
+INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo,bio) values (5,5, false, 'jccramalho+5@hotmail.com', true, 'Jose', 'Figueiro', false, '25D55AD283AA400AF464C76D713C07AD',true, 0,"https://randomuser.me/api/portraits/men/48.jpg",null);
+INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo,bio) values (5,6, false, 'jccramalho+6@hotmail.com', true, 'Maria', 'Ferreia', true, '25D55AD283AA400AF464C76D713C07AD',true, 0, null,null);
+INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo,bio) values (4,7, false, 'jccramalho+7@hotmail.com', true, 'Sofia', 'Ribeiro', true, '25D55AD283AA400AF464C76D713C07AD',true, 0, null,null);
+INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo,bio) values (3,8, false, 'jccramalho+8@hotmail.com', true, 'Manuel', 'Joaquim', true, '25D55AD283AA400AF464C76D713C07AD',true, 0,"https://randomuser.me/api/portraits/men/38.jpg","Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It ha");
+INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo,bio) values (2,9, false, 'jccramalho+9@hotmail.com', true, 'Laura', 'Soares', true, '25D55AD283AA400AF464C76D713C07AD',true, 0, null,null);
+INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo,bio) values (1,10, true,'jccramalho+10@hotmail.com', true, 'Antonia', 'Maria', false, '25D55AD283AA400AF464C76D713C07AD',true, 0,"https://randomuser.me/api/portraits/women/28.jpg",null);
+INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo,bio) values (1,11, true,'jccramalho+11@hotmail.com', true, 'Di', 'Maria', false, '25D55AD283AA400AF464C76D713C07AD',true, 0,"https://t0.gstatic.com/licensed-image?q=tbn:ANd9GcSYM0psEKOh0imrjb2I-fnr4qY8qdh9zJLAQggpFCPuEJg4EqIiFJKyE7Bz8w_g_au5",null);
+INSERT INTO user (office, userId, contestManager, email, fillInfo, firstName, lastName, openProfile, password, validated,timestampForToken,photo,bio) values (1,12, true,'jccramalho+12@hotmail.com', true, 'Rafa', 'Silva', false, '25D55AD283AA400AF464C76D713C07AD',true, 0,"https://images.newrr.sapo.pt/rafa_silva_foto_francisco_paraiso_fpf18234578defaultlarge_1024.jpg",null);
 
 
 
@@ -51,6 +49,27 @@ INSERT INTO skill (skillId, title, skillType) value (13, 'Osciloscópio', 3);
 INSERT INTO skill (skillId, title, skillType) value (14, 'Machine Learning', 0);
 INSERT INTO skill (skillId, title, skillType) value (15, 'Data Science', 0);
 
+
+INSERT iNTO hobbies(user_Id,hobby_Id) values(1,1);
+INSERT iNTO hobbies(user_Id,hobby_Id) values(1,2);
+INSERT iNTO hobbies(user_Id,hobby_Id) values(1,3);
+INSERT iNTO hobbies(user_Id,hobby_Id) values(1,4);
+INSERT iNTO hobbies(user_Id,hobby_Id) values(1,5);
+INSERT iNTO hobbies(user_Id,hobby_Id) values(1,6);
+INSERT iNTO hobbies(user_Id,hobby_Id) values(1,7);
+
+
+INSERT INTO  skills_users(user_Id,skill_Id) values(1,1);
+INSERT iNTO skills_users(user_Id,skill_Id) values(1,2);
+INSERT iNTO skills_users(user_Id,skill_Id) values(1,3);
+INSERT iNTO skills_users(user_Id,skill_Id) values(1,4);
+INSERT iNTO skills_users(user_Id,skill_Id) values(1,5);
+INSERT iNTO skills_users(user_Id,skill_Id) values(1,6);
+INSERT iNTO skills_users(user_Id,skill_Id) values(1,13);
+INSERT iNTO skills_users(user_Id,skill_Id) values(1,14);
+INSERT iNTO skills_users(user_Id,skill_Id) values(1,15);
+
+
 INSERT INTO keyword (id, title) value (1, 'Programação');
 INSERT INTO keyword (id, title) value (2, 'Backend');
 INSERT INTO keyword (id, title) value (3, 'Testes');
@@ -84,14 +103,14 @@ INSERT INTO project (id, title, details, creationDate, membersNumber, status,off
 
 
 INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (1, true, true, true, false, true, 1, 1);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (2, true, true, true, false, true, 2, 2);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (3, true, true, true, false, true, 3, 3);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (4, true, true, true, false, true, 4, 4);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (5, true, true, true, false, true, 5, 5);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (6, true, true, true, false, true, 6, 6);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (7, true, true, true, false, true, 7, 7);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (8, true, true, true, false, true, 8, 8);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (9, true, true, true, false, true, 9, 9);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (2, true, true, true, false, true, 2, 1);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (3, true, true, true, false, true, 3, 1);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (4, true, true, true, false, true, 4, 1);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (5, true, true, true, false, true, 5, 1);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (6, true, true, true, false, true, 6, 1);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (7, true, true, true, false, true, 7, 1);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (8, true, true, true, false, true, 8, 1);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (9, true, true, true, false, true, 9, 1);
 
 
 INSERT INTO contest (id, title, details, maxNumberProjects, rules, startDate, finishDate, startOpenCall,finishOpenCall,status) VALUE (1, "Teste", "Teste", 200,"regras", '2023-07-10', '2023-07-30', '2023-07-01', '2023-07-09',1);
