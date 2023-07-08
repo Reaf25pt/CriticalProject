@@ -99,7 +99,7 @@ function InviteMember({ projId }) {
 
   return (
     <div className="container-fluid">
-      <div className="mt-5 p-5 bg-secondary rounded-5 ">
+      <div className="mt-2 p-5 bg-secondary rounded-5 ">
         <div className="row mb-3 ">
           <div className="col ">
             <div className="form-outline">

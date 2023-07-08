@@ -201,20 +201,22 @@ function ProjectOpen() {
           role="tabpanel"
           aria-labelledby="tab2"
         >
-          <div className="row d-flex justify-content-around">
-            <div className="col-lg-5">
+          <div className="row mx-auto d-flex justify-content-around">
+            <div className="col-lg-7">
               {showProjects.manager ? (
                 <InviteMember projId={showProjects.id} />
               ) : null}
-            </div>
-            <div className="col-lg-4">
+            </div>{" "}
+          </div>
+          <div className="row d-flex justify-content-around">
+            <div className="col-lg-5">
               <ProjectMembersList
                 showMembers={showMembers}
                 showProjects={showProjects}
                 setMembers={setMembers}
               />
             </div>
-            <div className="row">
+            <div className="col-lg-5">
               {showProjects.manager ? (
                 <ProjectMembersInvited
                   showProjects={showProjects}
@@ -222,7 +224,7 @@ function ProjectOpen() {
                 />
               ) : null}
             </div>
-          </div>{" "}
+          </div>
         </div>
         <div
           class="tab-pane fade"

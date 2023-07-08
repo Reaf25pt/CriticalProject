@@ -30,7 +30,7 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
       if (response.status === 200) {
         updateUser("noActiveProject", true);
 
-        navigate("/home", { replace: true });
+        navigate("/home/start", { replace: true });
       } else if (response.status === 403) {
         alert("Não tem autorização para efectuar este pedido");
         /*  } else if (response.status === 404) {
@@ -80,11 +80,11 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
         <h3 className="bg-white mt-5 text-center rounded-5 mb-3 ">
           Membros do Projetos
         </h3>
-        <div className="row overflow-auto" style={{ maxHeight: "65vh" }}>
+        <div className="row overflow-auto" style={{ maxHeight: "50vh" }}>
           {showMembers.map((member, index) => (
             <div
               key={index}
-              className="row bg-white text-black mb-3 rounded-3  mx-auto align-items-center p-2"
+              className="row w-75 bg-white text-black mb-3 rounded-3  mx-auto align-items-center p-2"
             >
               <div className="col-lg-2 ">
                 {member.userInvitedPhoto === null ? (
@@ -119,7 +119,9 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
                         projId={showProjects.id}
                       />
                     </div>
-                  ) : null}
+                  ) : (
+                    <div className="col-lg-1"></div>
+                  )}
                   <div className="col-lg-1">
                     {member.manager ? (
                       <>
