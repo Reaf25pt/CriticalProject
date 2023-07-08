@@ -232,7 +232,7 @@ function ProfileOpen() {
                       {userProfile.hobbies.map((hobby) => (
                         <div
                           key={hobby.id}
-                          className=" bg-dark mx-auto m-1 p-2 rounded-2 text-white border border-white mb-1"
+                          className=" col-10 col-lg-10 bg-dark mx-auto m-1 p-2 rounded-2 text-white border border-white mb-1"
                         >
                           <h5 className="text-center">{hobby.title} </h5>
                         </div>
@@ -251,6 +251,8 @@ function ProfileOpen() {
                     <h3 className="bg-white text-center text-nowrap rounded-5 p-0  ">
                       Projectos:
                     </h3>
+                    <div  className="row d-flex  overflow-auto "
+                      style={{ maxHeight: "200px" }}>
                     <DataTable
                       value={userProfile.projects}
                       selectionMode="single "
@@ -269,6 +271,7 @@ function ProfileOpen() {
 
                       <Column body={renderLink} header="#" />
                     </DataTable>
+                    </div>
                   </div>
                 </div>
               </div>
