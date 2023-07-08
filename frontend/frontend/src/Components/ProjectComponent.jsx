@@ -3,10 +3,10 @@ import { userStore } from "../stores/UserStore";
 import { useParams } from "react-router-dom";
 import ButtonComponent from "./ButtonComponent";
 import ModalFinalTask from "./ModalFinalTask";
+import { toast, Toaster } from "react-hot-toast";
 
 function ProjectComponent({ toggleComponent, project, members, setProjects }) {
   const user = userStore((state) => state.user);
-
   const handleProjectStatus = (event) => {
     var status;
 
@@ -32,16 +32,20 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
         status: status,
         projId: project.id,
       },
-    }).then((response) => {
-      if (response.status === 200) {
-        setProjects([]);
-        alert("Status alterado");
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          setProjects([]);
+          toast.success("Estado alterado");
 
-        //navigate("/home", { replace: true });
-      } else {
-        alert("Algo correu mal. Tente novamente");
-      }
-    });
+          //navigate("/home", { replace: true });
+        } else {
+          throw new Error("Pedido não satisfeito");
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
 
   const handleParticipation = (event) => {
@@ -55,20 +59,25 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
         userId: user.userId,
         projId: project.id,
       },
-    }).then((response) => {
-      if (response.status === 200) {
-        alert("Pedido efectuado");
-        setProjects([]);
-        //navigate("/home", { replace: true });
-      } else {
-        alert("Algo correu mal. Tente novamente");
-      }
-    });
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          toast.success("Pedido efectuado");
+          setProjects([]);
+          //navigate("/home", { replace: true });
+        } else {
+          throw new Error("Pedido não satisfeito");
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
 
   return (
     <>
       <div className="container-fluid">
+        <Toaster position="top-right" />
         <div className="row mt-5 justify-content-around">
           <div className="col-lg-3">
             <div className="row bg-secondary rounded-5 p-4 mb-3 d-flex">

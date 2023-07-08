@@ -15,6 +15,7 @@ import Footer from "./Components/Footer";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { userStore } from "./stores/UserStore";
+import { toast, Toaster } from "react-hot-toast";
 
 function App() {
   const [credentials, setCredentials] = useState({});
@@ -45,21 +46,23 @@ function App() {
         if (response.status === 200) {
           return response.json();
         } else {
-          alert("Dados inválidos");
           document.getElementById("emailInput").value = "";
           document.getElementById("passwordInput").value = "";
+          throw new Error("Pedido não satisfeito");
         }
       })
       .then((loggedUser) => {
         user(loggedUser);
         navigate("/home/start", { replace: true });
       })
-      .catch(console.error);
-    // TODO confirmar que está certo?
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
 
   return (
     <div className="container-fluid vh-100 position-fixed  bg-dark ">
+      <Toaster position="top-right" />
       <div className="row">
         <MainTitle />
       </div>

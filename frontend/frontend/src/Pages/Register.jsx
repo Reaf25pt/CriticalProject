@@ -7,6 +7,7 @@ import Footer from "../Components/Footer";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LinkButton from "../Components/LinkButton";
+import { toast, Toaster } from "react-hot-toast";
 
 function Register() {
   const [credentials, setCredentials] = useState({});
@@ -34,19 +35,19 @@ function Register() {
         },
       }).then((response) => {
         if (response.status === 200) {
-          alert(
+          /*  toast.success(
             "Conta criada com sucesso. Active a conta através do link enviado para o email registado"
-          );
+          ); */
           navigate("/", { replace: true });
         } else {
-          alert("Algo correu mal. Tente novamente");
+          toast.error("Pedido não satisfeito");
         }
         document.getElementById("emailInput").value = "";
         document.getElementById("passwordInput").value = "";
         document.getElementById("passwordInput2").value = "";
       });
     } else {
-      alert(
+      toast.error(
         "Verifique os dados inseridos"
         //"As passwords inseridas não são iguais. Escreva a mesma password nos 2 campos"
       );
@@ -55,6 +56,7 @@ function Register() {
 
   return (
     <div className="container-fluid bg-dark vh-100">
+      <Toaster position="top-right" />
       <div className="row">
         <MainTitle />
       </div>

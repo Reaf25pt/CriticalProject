@@ -7,6 +7,7 @@ import { BsArrowDown } from "react-icons/bs";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { userStore } from "../stores/UserStore";
+import { toast, Toaster } from "react-hot-toast";
 
 function RegisterIn() {
   const [credentials, setCredentials] = useState({});
@@ -57,18 +58,22 @@ function RegisterIn() {
             return response.json();
             //navigate("/home", { replace: true });
           } else {
-            alert("Algo correu mal. Tente novamente");
+            throw new Error("Pedido não satisfeito");
           }
         })
         .then((loggedUser) => {
           userUpdate(loggedUser);
           // navigate("/home", { replace: true });
+        })
+        .catch((error) => {
+          toast.error(error.message);
         });
     }
   };
 
   return (
     <div className="container-fluid vh-100 position-relative">
+      <Toaster position="top-right" />
       <div className="row h-50">
         <div className="col-12" style={{ background: "#C01722" }}></div>
       </div>

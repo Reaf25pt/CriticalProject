@@ -24,7 +24,6 @@ function Start() {
       .then((resp) => resp.json())
       .then((data) => {
         setContests(data);
-        console.log(data);
       })
       .catch((err) => console.log(err));
 
@@ -38,11 +37,12 @@ function Start() {
       .then((resp) => resp.json())
       .then((data) => {
         setOwnProj(data);
-        console.log("ownproj");
-        console.log(ownProj);
       })
       .catch((err) => console.log(err));
   }, []);
+
+  const array = [ownProj];
+  console.log(array);
 
   const renderLink = (rowData) => {
     return (
@@ -168,14 +168,14 @@ function Start() {
                       <h3 className="bg-white  text-center text-nowrap rounded-5 mb-3 ">
                         Projecto activo
                       </h3>
-                      {/* <DataTable
-                        value={ownProj}
+                      <DataTable
+                        value={array}
                         selectionMode="single  "
                         emptyMessage="Nenhum projecto encontrado"
                       >
                         <Column field="title" header="Nome do Projeto" />
                         <Column field="status" header="Estado" />
-                        <Column
+                        {/* <Column
                           field="startOpenCall"
                           header="Data inicial "
                           body={(rowData) =>
@@ -188,9 +188,9 @@ function Start() {
                           body={(rowData) =>
                             convertTimestampToDate(rowData.finishOpenCall)
                           }
-                        />
+                        /> */}
                         <Column body={renderLinkProj} header="#" />
-                      </DataTable> */}
+                      </DataTable>
                     </div>
                   </div>
                 ) : (
