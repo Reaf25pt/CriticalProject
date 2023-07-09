@@ -88,7 +88,13 @@ function ContactChat({ selectedUser }) {
           style={{ minHeight: "80vh" }}
         >
           {contactMessages.length !== 0 ? (
-            <div>
+            <div
+              style={{
+                maxHeight: "500px",
+                marginTop: "20px",
+                overflowY: "auto",
+              }}
+            >
               {contactMessages
                 .sort((a, b) => a.id - b.id)
                 .map((message) => (

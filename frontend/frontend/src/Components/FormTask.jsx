@@ -7,6 +7,7 @@ import { userStore } from "../stores/UserStore";
 import { useParams } from "react-router-dom";
 import { Chart } from "react-google-charts";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { BsFillArrowRightSquareFill } from "react-icons/bs";
 
 import ProjectMembersSelect from "./ProjectMembersSelect";
 import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
@@ -25,6 +26,9 @@ function FormTask(listMembers) {
   const addPreReqTask = (task) => {
     setPreReqTasks((state) => [...state, task]);
   };
+
+  const [selectedTask, setSelectedTask] = useState(null);
+
   // const [input, setInput] = useState("-1");
   const [triggerList, setTriggerList] = useState("-1");
 
@@ -32,11 +36,21 @@ function FormTask(listMembers) {
     setActiveId(id === activeId ? null : id);
   };
 
+  console.log("user");
+  console.log(user);
+
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "numeric", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
+  const handleClicked = (taskId) => {
+    if (selectedTask === taskId) {
+      setSelectedTask(null);
+    } else {
+      setSelectedTask(taskId);
+    }
+  };
   useEffect(() => {
     fetch(`http://localhost:8080/projetofinal/rest/project/tasks/${id}`, {
       method: "GET",
@@ -48,6 +62,8 @@ function FormTask(listMembers) {
       .then((resp) => resp.json())
       .then((data) => {
         setShowTasks(data);
+        console.log("tasks");
+        console.log(data);
       })
       .catch((err) => console.log(err));
   }, [task]);
@@ -373,8 +389,158 @@ function FormTask(listMembers) {
           </div>
         </div>
       ) : null}
-      <div className="row mt-4">
-        <div className="col-lg-6 bg-secondary rounded-5 p-3">
+      <div className="row mt-4 ">
+        {showTasks.map((task) => (
+          <div key={task.id}>
+            <div className="row m-0">
+              <div className="col-lg-5">
+                <div
+                  className={
+                    task.taskOwnerId === user.userId
+                      ? "row bg-white border border-5 border border-danger mb-3  mx-auto rounded-3 p-2 d-flex justify-content-around"
+                      : "row bg-white mb-3  mx-auto rounded-3 p-2 d-flex justify-content-around"
+                  }
+                >
+                  <div className="col-lg-7 m-0">
+                    <h6> {task.title}</h6>
+                  </div>
+                  <div className="col-lg-3 bg-dark p-1 rounded-5">
+                    <h6 className="text-white text-center">
+                      {convertWord(task.status)}
+                    </h6>
+                  </div>
+                  <div className="col-lg-1">
+                    <BsFillArrowRightSquareFill
+                      size={30}
+                      color="#A50D13"
+                      onClick={() => handleClicked(task.id)}
+                      cursor={"pointer"}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="col-lg-7 ">
+                {selectedTask === task.id && (
+                  <div className="bg-secondary rounded-3 p-2 card">
+                    <div
+                      className="row d-flex justify-content-around mb-2 p-2"
+                      style={{ background: "#A50D13" }}
+                    >
+                      <div className="col-lg-5">
+                        <h4 className="text-white">{task.title}</h4>
+                      </div>
+                      <div className="col-lg-3">
+                        {!user.contestManager &&
+                        task.statusInfo !== 2 &&
+                        (projInfo.statusInt === 0 ||
+                          projInfo.statusInt === 4) ? (
+                          <ModalEditTask
+                            task={task}
+                            set={setTask}
+                            formatDate={formatDate}
+                            setTriggerList={setTriggerList}
+                          />
+                        ) : null}
+                        {!user.contestManager &&
+                        task.statusInfo !== 2 &&
+                        projInfo.statusInt === 0 ? (
+                          <ModalDeleteTask
+                            task={task}
+                            set={setTask}
+                            setTriggerList={setTriggerList}
+                          />
+                        ) : null}
+
+                        {!user.contestManager &&
+                        projInfo.statusInt === 4 &&
+                        task.statusInfo === 0 ? (
+                          <button
+                            name={"statusInProgress"}
+                            onClick={handleClick}
+                          >
+                            Iniciar execução
+                          </button>
+                        ) : task.statusInfo === 1 ? (
+                          <button name={"statusFinished"} onClick={handleClick}>
+                            Tarefa concluída
+                          </button>
+                        ) : null}
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-lg-3 bg-dark">
+                        <h4 className="text-white text-center">
+                          Data de Inicio:
+                        </h4>
+                      </div>
+                      <div className="col-lg-6">
+                        <h5 className="text-white">
+                          {formatDate(task.startDate)}
+                        </h5>
+                      </div>
+                      <hr />
+                    </div>
+                    <div className="row">
+                      <div className="col-lg-3 bg-dark">
+                        <h4 className="text-white text-center">Data de Fim:</h4>
+                      </div>
+                      <div className="col-lg-6">
+                        <h5 className="text-white">
+                          {formatDate(task.finishDate)}
+                        </h5>
+                      </div>
+
+                      <hr />
+                    </div>
+                    <div className="row">
+                      <div className="col-lg-3 bg-dark">
+                        <h4 className="text-white text-center">Descritivo:</h4>
+                      </div>
+                      <div className="col-lg-9 ">
+                        <div className="row">
+                          <h5 className="text-white ">{task.details}</h5>
+                        </div>
+                      </div>
+
+                      <hr />
+                    </div>
+                    <div
+                      className="row"
+                      style={{ minHeight: "100px", maxHeight: "40px" }}
+                    >
+                      <div className="col-lg-3 bg-dark">
+                        <h4 className="text-white text-center">
+                          Executores Adicionais:
+                        </h4>
+                      </div>
+                      <div className="col-lg-9">
+                        <h5 className="text-white">
+                          {task.additionalExecutors}
+                        </h5>
+                      </div>
+
+                      <hr />
+                    </div>
+                    <div className="row">
+                      <div className="col-lg-4 bg-dark">
+                        <h4 className="text-white text-center">Responsavel:</h4>
+                      </div>
+                      <div className="col-lg-8">
+                        <h5 className="text-white">
+                          {task.taskOwnerFirstName} {task.taskOwnerLastName}{" "}
+                        </h5>
+                      </div>
+
+                      <hr />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      {/* <div className="col-lg-6 bg-secondary rounded-5 p-3">
           <div className="">
             <h3 className="bg-white rounded-5 text-center">Lista de Tarefas</h3>
             <div>
@@ -422,8 +588,6 @@ function FormTask(listMembers) {
                               task.statusInfo !== 2 &&
                               (projInfo.statusInt === 0 ||
                                 projInfo.statusInt === 4) ? (
-                                /*  <button>Editar</button> */
-
                                 <ModalEditTask
                                   task={task}
                                   set={setTask}
@@ -476,18 +640,6 @@ function FormTask(listMembers) {
                               </div>
                             ) : null}
 
-                            {/* {task.preRequiredTasks.length > 0 ? (
-                              <div className="row">
-                                {" "}
-                                Tarefas precedentes:
-                                {task.preRequiredTasks.map((item) => (
-                                  <div key={item.id} className="p-0">
-                                    {item.title} {item.status}
-                                  </div>
-                                ))}
-                              </div>
-                            ) : null} */}
-
                             <h4 className="row d-flex justify-content-end">
                               Responsável: {task.taskOwnerFirstName}{" "}
                               {task.taskOwnerLastName}
@@ -503,18 +655,18 @@ function FormTask(listMembers) {
               )}
             </div>
           </div>
-        </div>
-        <div className="row mt-4 w-75 bg-secondary p-3 rounded-4 mx-auto">
-          {showTasks && showTasks.length > 0 && (
-            <Chart
-              chartType="Gantt"
-              data={data2}
-              options={options}
-              width="100%"
-              height="50%"
-            />
-          )}
-        </div>
+        </div> */}
+
+      <div className="row mt-4 w-75  p-3 rounded-4 mx-auto">
+        {showTasks && showTasks.length > 0 && (
+          <Chart
+            chartType="Gantt"
+            data={data2}
+            options={options}
+            width="100%"
+            height="50%"
+          />
+        )}
       </div>
     </div>
   );

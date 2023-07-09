@@ -165,19 +165,18 @@ function Start() {
                   </div>
                 )}
                 {ownProj !== null && ownProj.id !== 0 ? (
-                  <div class="row mt-5 mb-5 d-flex  rounded-5">
-                    <div className="row bg-secondary rounded-5 p-3 ">
-                      <h3 className="bg-white  text-center text-nowrap rounded-5 mb-3 ">
-                        Projecto activo
-                      </h3>
-                      <DataTable
-                        value={array}
-                        selectionMode="single  "
-                        emptyMessage="Nenhum projecto encontrado"
-                      >
-                        <Column field="title" header="Nome do Projeto" />
-                        <Column field="status" header="Estado" />
-                        {/* <Column
+                  <div className="row bg-secondary rounded-5 p-3 mt-5 ">
+                    <h3 className="bg-white  text-center text-nowrap rounded-5 mb-3 ">
+                      Projecto activo
+                    </h3>
+                    <DataTable
+                      value={array}
+                      selectionMode="single  "
+                      emptyMessage="Nenhum projecto encontrado"
+                    >
+                      <Column field="title" header="Nome do Projeto" />
+                      <Column field="status" header="Estado" />
+                      {/* <Column
                           field="startOpenCall"
                           header="Data inicial "
                           body={(rowData) =>
@@ -191,9 +190,8 @@ function Start() {
                             convertTimestampToDate(rowData.finishOpenCall)
                           }
                         /> */}
-                        <Column body={renderLinkProj} header="#" />
-                      </DataTable>
-                    </div>
+                      <Column body={renderLinkProj} header="#" />
+                    </DataTable>
                   </div>
                 ) : (
                   <div className="row mt-5">

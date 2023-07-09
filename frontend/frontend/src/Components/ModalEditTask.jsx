@@ -72,7 +72,7 @@ function ModalEditTask({ task, set, formatDate, setTriggerList }) {
       <OverlayTrigger placement="top" overlay={<Tooltip>Editar</Tooltip>}>
         <span data-bs-toggle="tooltip" data-bs-placement="top">
           {" "}
-          <BsFillPencilFill onClick={handleShow} size={40} color="green" />
+          <BsFillPencilFill onClick={handleShow} size={30} color="white" />
         </span>
       </OverlayTrigger>
 

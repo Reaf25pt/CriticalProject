@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { userStore } from "../stores/UserStore";
 import Keyword from "../Components/Keyword";
 import SkillsProject from "../Components/SkillsProject";
+import SkillProjectCreate from "./SkillProjectCreate";
+import KeywordProjectCreate from "./KeywordProjectCreate";
 
 function ProjectsCreate() {
   const [credentials, setCredentials] = useState({});
@@ -137,7 +139,12 @@ function ProjectsCreate() {
                   </div>
                 </div>
               </div>
-              <Keyword
+              {/*  <Keyword
+                keywords={keywords}
+                setKeywords={setKeywords}
+                addKeywords={addKeywords}
+              /> */}
+              <KeywordProjectCreate
                 keywords={keywords}
                 setKeywords={setKeywords}
                 addKeywords={addKeywords}
@@ -154,14 +161,19 @@ function ProjectsCreate() {
                 />
               </div>
 
-              <SkillsProject
+              {/*   <SkillsProject
+                skills={skills}
+                setSkills={setSkills}
+                addSkills={addSkills}
+              /> */}
+              <SkillProjectCreate
                 skills={skills}
                 setSkills={setSkills}
                 addSkills={addSkills}
               />
 
-              <div class="form-group mt-3 mb-3">
-                <div class="input-group rounded">
+              <div class="row mt-3 mb-3 d-flex justify-content-around">
+                <div class=" col-lg-6 mx-auto">
                   <SelectComponent
                     name="office"
                     id="officeInput"
