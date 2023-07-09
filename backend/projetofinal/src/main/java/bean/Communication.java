@@ -80,9 +80,12 @@ public class Communication implements Serializable {
         // System.out.println("Current Date: "+date);
     }
 
+    /**
+     * Sends notification in real-time, through websocket, to sessions that might be available. Sessions are identified by token
+     * @param notif contains notification information
+     * @param user identifies user that should be notified in real-time
+     */
     private void notifyRealTime(Notification notif, User user) {
-        // envia notificação em tempo-real por socket a todos os tokens cujo user seja igual ao parâmetro user
-
         List<String> listTokens = tokenDao.findTokenListByUserId(user.getUserId());
 
         if (listTokens != null) {
@@ -321,9 +324,12 @@ public class Communication implements Serializable {
 
     }
 
-
+    /**
+     * Notifies user that it is responsible for given task
+     * @param user identifies user responsible for task
+     * @param taskTitle is the name of the task
+     */
     public void notifyNewOwnerOfTask(User user, String taskTitle) {
-        // notifica user que tem nova tarefa à sua responsabilidade
 
         Notification notif = new Notification();
         notif.setCreationTime(Date.from(Instant.now()));
@@ -392,8 +398,8 @@ public class Communication implements Serializable {
                 // notif.setProjectMember(projMember);
 if (value==0){
     // novo concurso criado
-    notif.setMessage("Um novo concurso foi criado");
-    notif.setMessageEng("A new contest has been created ");
+    notif.setMessage("Um novo concurso foi criado: "+ contestTitle);
+    notif.setMessageEng("A new contest has been created: " + contestTitle);
 } else if (value==1){
     // info de concurso foi editada
     notif.setMessage("Informação do concurso " + contestTitle + " foi editada");

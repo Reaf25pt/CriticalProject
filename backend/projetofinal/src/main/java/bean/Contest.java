@@ -21,7 +21,7 @@ import java.util.*;
 public class Contest {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger LOGGER = Logger.getLogger(User.class);
+    private static final Logger LOGGER = Logger.getLogger(Contest.class);
     @EJB
     dao.User userDao;
     @EJB
@@ -42,14 +42,20 @@ public class Contest {
     public Contest() {
     }
 
-
+    /**
+     * Creates a new contest and persists it in database (table Contest)
+     * Dates must be sequential (startOpenCall before finishOpenCall before startDate before FinishDate) and this is verified in frontend
+     * Verifies if openCall dates overlap any existing openCalls period of any other contest, to make sure that only 1 OPEN contest exists
+     * @param contestInfo contains contest information inserted in frontend
+     * @param token identifies session that makes the request
+     * @return true if a new contest is created and persisted in database
+     */
     public boolean createNewContest(dto.Contest contestInfo, String token) {
-        // datas encadeadas são verificadas no frontend
-        // verificar se datas de openCall não sobrepõem as de outros concursos para garantir que só há 1 openCall de cada x
         boolean res = false;
 
         if (contestInfo != null) {
-
+            entity.User user = tokenDao.findUserEntByToken(token);
+            if (user!=null){
             if(!verifyOpenCallDates(contestInfo.getStartOpenCall(),contestInfo.getFinishOpenCall() )){
 
             entity.Contest contest = new entity.Contest();
@@ -64,9 +70,10 @@ public class Contest {
             contest.setStatus(StatusContest.PLANNING);
 
             contestDao.persist(contest);
-            communicationBean.notifyAllContestManagers(0, "");
+            communicationBean.notifyAllContestManagers(0, contestInfo.getTitle());
             res = true;
-        }}
+
+        }}}
         return res;
     }
 
@@ -91,9 +98,12 @@ public class Contest {
         return res;
     }
 
-
+    /**
+     * Verifies if token that makes the request has permission of Profile A - contest manager
+     * @param token identifies session that makes the request
+     * @return true if token is indeed contest manager, therefore being allowed to make the request
+     */
     public boolean verifyUserProfile(String token) {
-        // verifica se user profile é do tipo PERFIL A - gestor de concursos
         boolean res = false;
 
         entity.User user = tokenDao.findUserEntByToken(token);
@@ -897,17 +907,18 @@ public class Contest {
         return result;
     }
 
-
+    /**
+     * Verifies if a new contest can be created, because there can only be 1 PLANNING and 1 OPEN at all times
+     * @return true if a new contest can be created
+     */
     public boolean verifyPermissionToAddNewContest() {
-        // só pode haver 1 concurso PLANNING e 1 concurso OPEN at all times
 
-        boolean res=false;
+        boolean res = false;
 
-Long count = contestDao.countPlanningContest();
-if (count==0 ){
-    System.out.println("count planning contest " + count );
-    res=true; // pode criar novo concurso
-}
+        Long count = contestDao.countPlanningContest();
+        if (count == 0) {
+            res = true; // pode criar novo concurso
+        }
 
         return res;
     }

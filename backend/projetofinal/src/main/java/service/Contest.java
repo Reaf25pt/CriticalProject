@@ -220,6 +220,7 @@ public class Contest {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
+
             List<dto.Contest> list = new ArrayList<>();
             if(!userBean.checkStringInfo(title)){
                 list = contestBean.filterContestsByName(token, title);

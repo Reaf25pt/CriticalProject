@@ -525,13 +525,12 @@ public class User {
     }
 
 
-    // GET LIST OF PROJECTS OF LOGGED USER
+    // GET LIST OF PROJECTS OF LOGGED USER: meaning being accepted and not removed
     @GET
     @Path("/ownprojects")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getOwnProjects(@HeaderParam("token") String token) {
 
-        // ir buscar lista de projectos que user id do token logado seja membro (accepted and not removed)
         Response r = null;
 
         if (userBean.checkStringInfo(token)) {
@@ -723,8 +722,8 @@ public class User {
     }
 
 
-    // ALTERA PAPEL DE USER: GESTOR DE CONCURSO OU USER NORMAL
-    // Apenas para usar no postman - método administrativo que permite garantir que user passa a PERFIL B ou PERFIL A tratando de "dependências"
+    // CHANGE USER ROLE: CONTEST MANAGER (PROFILE A) OR NORMAL USER (PROFILE B)
+    // Apenas para usar no postman - método administrativo que permite garantir que user passa a PERFIL B ou PERFIL A tratando de "dependências" necessárias para o correcto funcionamento da aplicação
     @PATCH
     @Path("/profile")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -738,9 +737,7 @@ public class User {
             r = Response.status(404).entity("Forbidden").build();
         } else {
             r = Response.status(200).entity("Success").build();
-
         }
-
         return r;
 
     }

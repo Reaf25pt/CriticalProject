@@ -1046,20 +1046,25 @@ public class Project implements Serializable {
         return delete;
     }
 
+    /**
+     * Verifies if given project has enough managers to ensure that it will always have a project manager regardless of changes in members role
+     * Method is called before changing user's profile to contest manager, before project member role is changed from project manager to 'normal' member, and before project member leaving project
+     * If there is only 1 project manager, it need to be verified if userId is not a project manager, in which case it will not be possible to complete request
+     * @param projId identifies project
+     * @param userId identifies user whose project role/ participation might be altered
+     * @return true if project has at least 2 project managers or in case project has 1 manager whose ID is not the same has userID whose role will be changed
+     */
     public boolean hasEnoughManagers(int projId, int userId) {
-        // verifica numero de gestores do projecto. se for 2 ou maior é ok. Se for 1 tem de verificar se userId a remover é igual a userID de gestor
         boolean res = false;
 
         List<entity.User> managersList = projMemberDao.findListOfManagersByProjectId(projId);
         if (managersList != null && managersList.size() != 0) {
             if (managersList.size() >= 2) {
-                // pode remover à vontade
                 res = true;
             } else {
-                // só tem 1 gestor. É preciso garantir que id do gestor não é o mesmo do user a remover
                 for (entity.User u : managersList) {
                     if (u.getUserId() != userId) {
-                        // gestor é outro user. pode remover à vontade
+                        // gestor é outro user. pode alterar à vontade
                         res = true;
                     }
                 }
@@ -1413,15 +1418,20 @@ public class Project implements Serializable {
         }
     }
 
+    /**
+     * Verifies if userId is task owner of any project task whose status is NOT finished. If so, a new task owner must be assigned
+     * A new task owner is assigned from list of project managers (minu userId if it is project manager) - because they are the only ones that can modify project plan, they can easily change that if they want to
+     * Assigning directly to normal project member meant that they would have to wait for a project manager to change in case they could not complete task
+     * Method is called before changing user's profile to contest manager, and before project member leaving project
+     * @param userId identifies user whose participation in project will end
+     * @param project identifies project
+     * @return true if user has no tasks to be dealt with or if all tasks where dealt with successfully (new task owner assigned)
+     */
     public boolean dealWithTasksBeforeLeavingProject(int userId, entity.Project project) {
-        // método que verifica se user tem tarefas à sua responsabilidade que não estejam finished antes de poder sair / ser retirado do projecto.
-        // se tiver, terá de ser escolhido outro membro para ser responsável ou, n havendo mais nenhum membro, n pode sair
         boolean res = false;
         List<entity.Task> taskList = taskDao.findListOfTasksFromProjectByProjIdWhoseTaskOwnerIsGivenUserId(project.getId(), userId);
-// se lista for nula não precisa de fazer nada
-        System.out.println("metodo deal with tasks before leave project ");
+
         if (taskList != null) {
-            // precisa de ser atribuido um membro activo do projecto a cada uma das tarefas. Gestor, porque poderá alterar e não ficar à espera de outros para alterar essa nova info, se quiser
 
             List<entity.User> managersList = projMemberDao.findListOfManagersByProjectId(project.getId());
             if (managersList != null) {
@@ -1432,7 +1442,6 @@ public class Project implements Serializable {
                     entity.User randomManager = selectRandomUserFromList(tempList);
                     if (randomManager != null) {
                         t.setTaskOwner(randomManager);
-                        // TODO Será preciso remover da lista do user que será removido?
                         // TODO adicionar registo no historico do projecto e notificação para novo owner. talvez mais avisos ?!
                         randomManager.getListTasks().add(t);
                         userDao.merge(randomManager);
@@ -1443,43 +1452,28 @@ public class Project implements Serializable {
                     }
                 }
                 if (count == taskList.size()) {
-                    System.out.println("all tasks dealt with");
                     // significa que todas as tarefas foram tratadas
                     res = true;
                 }
-
             }
 
-
         } else {
-            System.out.println("lista de tarefas nula");
             // lista nula, n tem de fazer nada
             res = true;
         }
-
         return res;
     }
 
+    /**
+     * Allows to choose random user from users list, when assigning a new task owner
+     * @param tempList represents list of users (specifically list of managers of given project)
+     * @return User randomly choosen
+     */
     private entity.User selectRandomUserFromList(List<entity.User> tempList) {
-// permite atribuir um user random da lista
         Random value = new Random();
         int index = value.nextInt(tempList.size());
         return tempList.get(index);
     }
-
-/*    public boolean verifyProjectStatusToChangeTask(int projId) {
-        // impedir caso projecto tenha status finished, cancelled, proposed, approved pq nestes casos o plano de execução não pode ser alterado
-boolean res = false;
-        entity.Project project = projDao.findProjectById(projId);
-        if(project!=null){
-            if (project.getStatus()==StatusProject.PROPOSED || project.getStatus()==StatusProject.APPROVED|| project.getStatus()==StatusProject.CANCELLED|| project.getStatus()==StatusProject.FINISHED){
-                res = true;
-                // tarefas do plano de execução não poderão ser alteradas
-            }
-
-        }
-        return res;
-    }*/
 
     public boolean verifyProjectStatusToModifyTask(int projId) {
         // impedir caso projecto tenha status finished, cancelled, proposed, approved, ready pq nestes casos o plano de execução não pode ser alterado
