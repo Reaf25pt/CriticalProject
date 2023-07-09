@@ -4,17 +4,20 @@ import { useParams } from "react-router-dom";
 import ButtonComponent from "../Components/ButtonComponent";
 import { BsXLg, BsSearch } from "react-icons/bs";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { projOpenStore } from "../stores/projOpenStore";
+import { toast, Toaster } from "react-hot-toast";
 
 function ProjectAllTasksSelect({
   preReqTasks,
   setPreReqTasks,
   addPreReqTask,
   editTaskId,
-  triggerList,
+  // triggerList,
   // resetInput,
 }) {
   const user = userStore((state) => state.user);
-  const [projTasks, setProjTasks] = useState([]);
+  const tasks = projOpenStore((state) => state.tasks);
+  const setTasks = projOpenStore((state) => state.setTasks);
   const [credentials, setCredentials] = useState({});
   const [task, setTask] = useState({});
   const { id } = useParams();
@@ -22,7 +25,7 @@ function ProjectAllTasksSelect({
   const clearInputFields = () => {
     document.getElementById("preRequiredTasks").value = "-1";
   };
-
+  /*
   useEffect(() => {
     fetch(`http://localhost:8080/projetofinal/rest/project/tasks/${id}`, {
       method: "GET",
@@ -36,7 +39,7 @@ function ProjectAllTasksSelect({
         setProjTasks(data);
       })
       .catch((err) => console.log(err));
-  }, [triggerList]);
+  }, [triggerList]);*/
 
   const handleChange = (event) => {
     const selectedTask = event.target.options[event.target.selectedIndex];
@@ -92,7 +95,7 @@ function ProjectAllTasksSelect({
           >
             <option value={"-1"}>{"Tarefas precedentes "} </option>
             {/*   {Object.entries(projTasks).map(([key, task]) => ( */}
-            {projTasks
+            {tasks
               .filter((task) => {
                 return task.id !== editTaskId;
               })

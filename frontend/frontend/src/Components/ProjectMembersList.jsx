@@ -6,11 +6,17 @@ import InputComponent from "../Components/InputComponent";
 import { useNavigate } from "react-router-dom";
 import { BsStarFill } from "react-icons/bs";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { projOpenStore } from "../stores/projOpenStore";
+import { toast, Toaster } from "react-hot-toast";
 
-function ProjectMembersList({ showMembers, showProjects, setMembers }) {
+function ProjectMembersList() {
   const user = userStore((state) => state.user);
   const navigate = useNavigate();
   const updateUser = userStore((state) => state.updateUser);
+  const project = projOpenStore((state) => state.project);
+  const clearProject = projOpenStore((state) => state.clearProject);
+  const members = projOpenStore((state) => state.members);
+  const setMembers = projOpenStore((state) => state.setMembers);
 
   const handleRemove = (event) => {
     event.preventDefault();
@@ -24,21 +30,21 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
         "Content-Type": "application/json",
         token: user.token,
         userId: user.userId,
-        projId: showProjects.id,
+        projId: project.id,
       },
-    }).then((response) => {
-      if (response.status === 200) {
-        updateUser("noActiveProject", true);
-
-        navigate("/home/start", { replace: true });
-      } else if (response.status === 403) {
-        alert("Não tem autorização para efectuar este pedido");
-        /*  } else if (response.status === 404) {
-        alert("Actividade não encontrada"); */
-      } else {
-        alert("Algo correu mal");
-      }
-    });
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          updateUser("noActiveProject", true);
+          navigate("/home/start", { replace: true });
+          clearProject();
+        } else {
+          throw new Error("Pedido não satisfeito");
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
 
   const handleRole = (event, id) => {
@@ -58,30 +64,36 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
         "Content-Type": "application/json",
         token: user.token,
         userId: id,
-        projId: showProjects.id,
+        projId: project.id,
         role: role,
       },
-    }).then((response) => {
-      if (response.status === 200) {
-      } else if (response.status === 403) {
-        alert("Não tem autorização para efectuar este pedido");
-        /*  } else if (response.status === 404) {
-        alert("Actividade não encontrada"); */
-      } /*  else {
-        alert("Algo correu mal");
-      } */
-      setMembers([]);
-    });
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          throw new Error("Pedido não satisfeito");
+        }
+      })
+      .then((data) => {
+        setMembers(data);
+        // toast.success("Papel alterado");
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
 
   return (
     <div className="container">
+      <Toaster position="top-right" />
+
       <div>
         <h3 className="bg-white mt-5 text-center rounded-5 mb-3 ">
           Membros do Projetos
         </h3>
         <div className="row overflow-auto" style={{ maxHeight: "50vh" }}>
-          {showMembers.map((member, index) => (
+          {members.map((member, index) => (
             <div
               key={index}
               className="row w-75 bg-white text-black mb-3 rounded-3  mx-auto align-items-center p-2"
@@ -108,16 +120,12 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
               <div className="col-lg-6 ">
                 {member.userInvitedFirstName} {member.userInvitedLastName}
               </div>
-              {showProjects.manager &&
-              (showProjects.statusInt === 0 || showProjects.statusInt === 4) ? (
+              {project.manager &&
+              (project.statusInt === 0 || project.statusInt === 4) ? (
                 <>
-                  {user.userId !== member.id ? (
+                  {user.userId !== member.userInvitedId ? (
                     <div className="col-lg-1">
-                      <ModalDeleteProjMember
-                        member={member}
-                        set={setMembers}
-                        projId={showProjects.id}
-                      />
+                      <ModalDeleteProjMember member={member} />
                     </div>
                   ) : (
                     <div className="col-lg-1"></div>
@@ -260,8 +268,8 @@ function ProjectMembersList({ showMembers, showProjects, setMembers }) {
         </div>
 
         <div className="row mt-4">
-          {showProjects.member &&
-          (showProjects.statusInt === 0 || showProjects.statusInt === 4) ? (
+          {project.member &&
+          (project.statusInt === 0 || project.statusInt === 4) ? (
             <div className="col-lg-6 mx-auto mb-4">
               <ButtonComponent
                 onClick={handleRemove}

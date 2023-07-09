@@ -13,6 +13,7 @@ import TextAreaComponent from "./TextAreaComponent";
 import ProjectMembersSelect from "./ProjectMembersSelect";
 import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
 import { BsFillPencilFill } from "react-icons/bs";
+import { projOpenStore } from "../stores/projOpenStore";
 
 import { userStore } from "../stores/UserStore";
 import Modal from "react-bootstrap/Modal";
@@ -24,6 +25,7 @@ function ModalFinalTask({ setProjects }) {
   const handleShow = () => setShow(true);
   const [credentials, setCredentials] = useState();
   const { id } = useParams();
+  const setProject = projOpenStore((state) => state.setProjOpen);
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -59,7 +61,7 @@ function ModalFinalTask({ setProjects }) {
         body: JSON.stringify(finalTask),
       }).then((response) => {
         if (response.status === 200) {
-          setProjects([]);
+          setProject([]);
           alert("Status alterado");
 
           //navigate("/home", { replace: true });

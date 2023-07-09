@@ -9,9 +9,12 @@ import { Button, MessageBox } from "react-chat-elements";
 
 import { Input } from "react-chat-elements";
 import InputComponent from "./InputComponent";
+import { projOpenStore } from "../stores/projOpenStore";
+import { toast, Toaster } from "react-hot-toast";
 
-function ProjectChat({ project }) {
+function ProjectChat() {
   const [inputValue, setInputValue] = useState("");
+  const project = projOpenStore((state) => state.project);
 
   const [messages, setMessages] = useState([]);
   // const [showMessages, setShowMessages] = useState([]);

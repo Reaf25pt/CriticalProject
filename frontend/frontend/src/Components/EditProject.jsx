@@ -7,8 +7,12 @@ import { BsXLg, BsSearch } from "react-icons/bs";
 import Keyword from "./Keyword";
 import SkillsProject from "./SkillsProject";
 import { userStore } from "../stores/UserStore";
+import { projOpenStore } from "../stores/projOpenStore";
+import { toast, Toaster } from "react-hot-toast";
 
-function EditProject({ toggleComponent, project, set }) {
+function EditProject({ toggleComponent }) {
+  const project = projOpenStore((state) => state.project);
+  const setProject = projOpenStore((state) => state.setProjOpen);
   const [credentials, setCredentials] = useState(project);
   const user = userStore((state) => state.user);
   const [keywords, setKeywords] = useState(project.keywords);
@@ -69,21 +73,29 @@ function EditProject({ toggleComponent, project, set }) {
           token: user.token,
         },
         body: JSON.stringify(project),
-      }).then((response) => {
-        if (response.status === 200) {
-          alert("Projecto editado com sucesso");
-          toggleComponent();
-          set({});
-        } else {
-          alert("Algo correu mal");
-        }
-      });
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            toggleComponent();
+            return response.json();
+          } else {
+            throw new Error("Pedido não satisfeito");
+          }
+        })
+        .then((data) => {
+          setProject(data);
+          toast.success("Projecto editado");
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
     }
   };
 
   return (
     <>
       <div className="container-fluid">
+        <Toaster position="top-right" />
         <div className="row mt-5 justify-content-around">
           <div className="col-lg-3 ">
             <div className="row bg-secondary justify-content-center rounded-5 p-4 mb-3">

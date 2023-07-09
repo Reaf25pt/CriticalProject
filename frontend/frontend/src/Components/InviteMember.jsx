@@ -3,10 +3,15 @@ import { userStore } from "../stores/UserStore";
 
 import ButtonComponent from "./ButtonComponent";
 import InputComponent from "../Components/InputComponent";
+import { toast, Toaster } from "react-hot-toast";
+import { projOpenStore } from "../stores/projOpenStore";
 
-function InviteMember({ projId }) {
+function InviteMember() {
   const [credentials, setCredentials] = useState({});
   const user = userStore((state) => state.user);
+  const setPendingInvites = projOpenStore((state) => state.setPendingInvites);
+  const project = projOpenStore((state) => state.project);
+
   /*    const [hobbies, setHobbies] = useState([]);
      const [showHobbies, setShowHobbies] = useState([]); */
   const [search, setSearch] = useState("");
@@ -38,7 +43,7 @@ function InviteMember({ projId }) {
         headers: {
           "Content-Type": "application/json",
           token: user.token,
-          projId: projId,
+          projId: project.id,
         },
       }
     )
@@ -71,16 +76,24 @@ function InviteMember({ projId }) {
           "Content-Type": "application/json",
           token: user.token,
           userId: credentials.id,
-          projId: projId,
+          projId: project.id,
         },
-      }).then((response) => {
-        if (response.status === 200) {
-          alert("Convite efectuado");
-          //navigate("/home", { replace: true });
-        } else {
-          alert("Algo correu mal. Tente novamente");
-        }
-      });
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            toast.success("Convite enviado");
+
+            return response.json();
+          } else {
+            throw new Error("Pedido não satisfeito");
+          }
+        })
+        .then((data) => {
+          setPendingInvites(data);
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
 
       document.getElementById("nameInput").value = "";
       setCredentials({});
@@ -99,6 +112,8 @@ function InviteMember({ projId }) {
 
   return (
     <div className="container-fluid">
+      <Toaster position="top-right" />
+
       <div className="mt-2 p-5 bg-secondary rounded-5 ">
         <div className="row mb-3 ">
           <div className="col ">

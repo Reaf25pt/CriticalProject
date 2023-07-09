@@ -13,14 +13,18 @@ import ProjectMembersSelect from "./ProjectMembersSelect";
 import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
 import ModalEditTask from "./ModalEditTask";
 import ModalDeleteTask from "./ModalDeleteTask";
+import { projOpenStore } from "../stores/projOpenStore";
+import { toast, Toaster } from "react-hot-toast";
 
-function FormTask(listMembers) {
+function FormTask() {
   const user = userStore((state) => state.user);
   const [activeId, setActiveId] = useState(null);
   const [credentials, setCredentials] = useState([]);
-  const [projInfo, setProjInfo] = useState([]);
-  const [showTasks, setShowTasks] = useState([]);
-  const [task, setTask] = useState([]);
+  const project = projOpenStore((state) => state.project);
+  const tasks = projOpenStore((state) => state.tasks);
+  const setTasks = projOpenStore((state) => state.setTasks);
+  const members = projOpenStore((state) => state.members);
+
   const { id } = useParams();
   const [preReqTasks, setPreReqTasks] = useState([]); // lista para enviar para backend
   const addPreReqTask = (task) => {
@@ -30,7 +34,7 @@ function FormTask(listMembers) {
   const [selectedTask, setSelectedTask] = useState(null);
 
   // const [input, setInput] = useState("-1");
-  const [triggerList, setTriggerList] = useState("-1");
+  // const [triggerList, setTriggerList] = useState("-1");
 
   const toggleAccordion = (id) => {
     setActiveId(id === activeId ? null : id);
@@ -61,12 +65,10 @@ function FormTask(listMembers) {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        setShowTasks(data);
-        console.log("tasks");
-        console.log(data);
+        setTasks(data);
       })
       .catch((err) => console.log(err));
-  }, [task]);
+  }, []);
 
   function arrayToString(arr) {
     return arr.join(",");
@@ -117,7 +119,7 @@ function FormTask(listMembers) {
   }
 
   const rows = [
-    ...showTasks.map((task) => [
+    ...tasks.map((task) => [
       task.id.toString(),
       task.title,
       task.taskOwnerFirstName,
@@ -150,7 +152,7 @@ function FormTask(listMembers) {
 
   var data2 = [columns, ...rows];
 
-  useEffect(() => {
+  /*useEffect(() => {
     fetch(`http://localhost:8080/projetofinal/rest/project/${id}`, {
       method: "GET",
       headers: {
@@ -163,7 +165,7 @@ function FormTask(listMembers) {
         setProjInfo(data);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, []);*/
 
   function convertWord(word) {
     // Convert the word to lowercase first
@@ -209,7 +211,7 @@ function FormTask(listMembers) {
       credentials.taskOwnerId === "-1"
     ) {
       alert("Insira os dados assinalados como obrigatórios");
-    } else if (credentials.startDate >= credentials.finishDate) {
+    } else if (credentials.startDate > credentials.finishDate) {
       alert("Insira uma data de fim posterior à data de início indicada");
     } else {
       var newTask = credentials;
@@ -225,23 +227,24 @@ function FormTask(listMembers) {
       })
         .then((response) => {
           if (response.status === 200) {
-            setTask([]);
-            setPreReqTasks([]);
-            setCredentials([]);
-            alert(
+            toast.success(
               "Atenção, a(s) tarefa(s) precedentes só serão admitidas se a data final for anterior à data de início da tarefa adicionada"
             );
+
             return response.json();
             //navigate("/home", { replace: true });
           } else {
-            alert("Algo correu mal. Tente novamente");
+            throw new Error("Pedido não satisfeito");
           }
+        })
+        .then((data) => {
+          setTasks(data);
         })
         .catch((err) => console.log(err));
       clearInputFields();
       setPreReqTasks([]);
       setCredentials([]);
-      setTriggerList("");
+      //setTriggerList("");
     }
   };
 
@@ -268,19 +271,25 @@ function FormTask(listMembers) {
     })
       .then((response) => {
         if (response.status === 200) {
-          setTask([]);
-          alert("Status alterado");
+          toast.success("Estado da tarefa alterado");
+
           return response.json();
-          //navigate("/home", { replace: true });
         } else {
-          alert("Algo correu mal. Tente novamente");
+          throw new Error("Pedido não satisfeito");
         }
       })
-      .catch((err) => console.log(err));
+      .then((data) => {
+        setTasks(data);
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
 
   return (
     <div className="container-fluid mt-5">
+      <Toaster position="top-right" />
+
       {!user.contestManager ? (
         <div
           className="row d-flex justify-content-around bg-secondary 
@@ -308,7 +317,7 @@ function FormTask(listMembers) {
                       onChange={handleChange}
                       placeholder={"Membro responsável *"}
                       local={"Membro responsável *"}
-                      listMembers={listMembers}
+                      listMembers={members}
                       projId={id}
                     />
                   </div>
@@ -353,7 +362,7 @@ function FormTask(listMembers) {
                       preReqTasks={preReqTasks}
                       setPreReqTasks={setPreReqTasks}
                       addPreReqTask={addPreReqTask}
-                      triggerList={triggerList}
+                      // triggerList={triggerList}
                       //  resetInput={input}
                       /* name="preRequiredTasks"
                     id="preRequiredTasks"
@@ -390,7 +399,7 @@ function FormTask(listMembers) {
         </div>
       ) : null}
       <div className="row mt-4 ">
-        {showTasks.map((task) => (
+        {tasks.map((task) => (
           <div key={task.id}>
             <div className="row m-0">
               <div className="col-lg-5">
@@ -432,27 +441,26 @@ function FormTask(listMembers) {
                       <div className="col-lg-3">
                         {!user.contestManager &&
                         task.statusInfo !== 2 &&
-                        (projInfo.statusInt === 0 ||
-                          projInfo.statusInt === 4) ? (
+                        (project.statusInt === 0 || project.statusInt === 4) ? (
                           <ModalEditTask
                             task={task}
-                            set={setTask}
+                            //set={setTask}
                             formatDate={formatDate}
-                            setTriggerList={setTriggerList}
+                            // setTriggerList={setTriggerList}
                           />
                         ) : null}
                         {!user.contestManager &&
                         task.statusInfo !== 2 &&
-                        projInfo.statusInt === 0 ? (
+                        project.statusInt === 0 ? (
                           <ModalDeleteTask
                             task={task}
-                            set={setTask}
-                            setTriggerList={setTriggerList}
+                            // set={setTask}
+                            // setTriggerList={setTriggerList}
                           />
                         ) : null}
 
                         {!user.contestManager &&
-                        projInfo.statusInt === 4 &&
+                        project.statusInt === 4 &&
                         task.statusInfo === 0 ? (
                           <button
                             name={"statusInProgress"}
@@ -470,7 +478,7 @@ function FormTask(listMembers) {
                     <div className="row">
                       <div className="col-lg-3 bg-dark">
                         <h4 className="text-white text-center">
-                          Data de Inicio:
+                          Data de início:
                         </h4>
                       </div>
                       <div className="col-lg-6">
@@ -482,7 +490,7 @@ function FormTask(listMembers) {
                     </div>
                     <div className="row">
                       <div className="col-lg-3 bg-dark">
-                        <h4 className="text-white text-center">Data de Fim:</h4>
+                        <h4 className="text-white text-center">Data de fim:</h4>
                       </div>
                       <div className="col-lg-6">
                         <h5 className="text-white">
@@ -523,7 +531,7 @@ function FormTask(listMembers) {
                     </div>
                     <div className="row">
                       <div className="col-lg-4 bg-dark">
-                        <h4 className="text-white text-center">Responsavel:</h4>
+                        <h4 className="text-white text-center">Responsável:</h4>
                       </div>
                       <div className="col-lg-8">
                         <h5 className="text-white">
@@ -658,7 +666,7 @@ function FormTask(listMembers) {
         </div> */}
 
       <div className="row mt-4 w-75  p-3 rounded-4 mx-auto">
-        {showTasks && showTasks.length > 0 && (
+        {tasks && tasks.length > 0 && (
           <Chart
             chartType="Gantt"
             data={data2}

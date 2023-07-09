@@ -5,15 +5,19 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { BsArrowDown, BsSearch, BsXLg } from "react-icons/bs";
+import { projOpenStore } from "../stores/projOpenStore";
+import { toast, Toaster } from "react-hot-toast";
 
 import { userStore } from "../stores/UserStore";
 import Modal from "react-bootstrap/Modal";
 
-function ModalDeleteProjMember({ member, set, projId }) {
+function ModalDeleteProjMember({ member }) {
   const [show, setShow] = useState(false);
   const user = userStore((state) => state.user);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const project = projOpenStore((state) => state.project);
+  const setMembers = projOpenStore((state) => state.setMembers);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -27,21 +31,25 @@ function ModalDeleteProjMember({ member, set, projId }) {
         "Content-Type": "application/json",
         token: user.token,
         userId: member.userInvitedId,
-        projId: projId,
+        projId: project.id,
       },
-    }).then((response) => {
-      if (response.status === 200) {
-        set([]); // reset a lista da pagina de members para actualizar
-        handleClose();
-      } else if (response.status === 403) {
-        alert("Não tem autorização para efectuar este pedido");
-        /*  } else if (response.status === 404) {
-        alert("Actividade não encontrada"); */
-      } else {
-        alert("Algo correu mal");
-      }
-      handleClose();
-    });
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          toast.success("Pedido efectuado");
+
+          return response.json();
+        } else {
+          throw new Error("Pedido não satisfeito");
+        }
+      })
+      .then((data) => {
+        setMembers(data);
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
+    handleClose();
   };
 
   return (
@@ -60,6 +68,8 @@ function ModalDeleteProjMember({ member, set, projId }) {
         keyboard={false}
       >
         <Modal.Header closeButton>
+          <Toaster position="top-right" />
+
           <Modal.Title>
             Remover membro do projecto
             {/* <FormattedMessage

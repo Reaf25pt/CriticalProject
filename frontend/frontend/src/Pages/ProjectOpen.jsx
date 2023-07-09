@@ -7,7 +7,7 @@ import SelectComponent from "../Components/SelectComponent";
 import FormTask from "../Components/FormTask";
 import TimeLine from "../Components/TimeLine";
 import ProjectComponent from "../Components/ProjectComponent";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import EditProject from "../Components/EditProject";
 import { useParams } from "react-router-dom";
 import { userStore } from "../stores/UserStore";
@@ -16,14 +16,16 @@ import InviteMember from "../Components/InviteMember";
 import ProjectMembersList from "../Components/ProjectMembersList";
 import ProjectMembersInvited from "../Components/ProjectMembersInvited";
 import ProjectChat from "../Components/ProjectChat";
+import { projOpenStore } from "../stores/projOpenStore";
+import { toast, Toaster } from "react-hot-toast";
 
 function ProjectOpen() {
   const [showComponentA, setShowComponentA] = useState(true);
   const user = userStore((state) => state.user);
-  const [showProjects, setShowProjects] = useState(null);
-  const [projects, setProjects] = useState([]);
-  const [showMembers, setShowMembers] = useState([]);
-  const [members, setMembers] = useState([]);
+  const project = projOpenStore((state) => state.project);
+  const setProject = projOpenStore((state) => state.setProjOpen);
+  const members = projOpenStore((state) => state.members);
+  const setMembers = projOpenStore((state) => state.setMembers);
 
   const toggleComponent = () => {
     setShowComponentA(!showComponentA);
@@ -41,12 +43,10 @@ function ProjectOpen() {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log("projects");
-        console.log(data);
-        setShowProjects(data);
+        setProject(data);
       })
       .catch((err) => console.log(err));
-  }, [projects]);
+  }, []);
 
   useEffect(() => {
     fetch(`http://localhost:8080/projetofinal/rest/project/${id}/members`, {
@@ -58,19 +58,19 @@ function ProjectOpen() {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log("members");
-        console.log(data);
-        setShowMembers(data);
+        setMembers(data);
       })
       .catch((err) => console.log(err));
-  }, [members]);
+  }, []);
 
-  if (!showProjects) {
+  if (project === null) {
     return <div>Loading...</div>;
   }
 
   return (
     <div class="container-fluid">
+      <Toaster position="top-right" />
+
       <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item" role="presentation">
           <button
@@ -102,7 +102,7 @@ function ProjectOpen() {
             Membros{" "}
           </button>
         </li>
-        {showProjects.member ? (
+        {project.member ? (
           <>
             <li class="nav-item" role="presentation">
               <button
@@ -179,18 +179,9 @@ function ProjectOpen() {
           {" "}
           <div>
             {showComponentA ? (
-              <ProjectComponent
-                toggleComponent={toggleComponent}
-                project={showProjects}
-                members={showMembers}
-                setProjects={setProjects}
-              />
+              <ProjectComponent toggleComponent={toggleComponent} />
             ) : (
-              <EditProject
-                project={showProjects}
-                toggleComponent={toggleComponent}
-                set={setProjects}
-              />
+              <EditProject toggleComponent={toggleComponent} />
             )}
           </div>
         </div>
@@ -203,26 +194,15 @@ function ProjectOpen() {
         >
           <div className="row mx-auto d-flex justify-content-around">
             <div className="col-lg-7">
-              {showProjects.manager ? (
-                <InviteMember projId={showProjects.id} />
-              ) : null}
+              {project.manager ? <InviteMember /> : null}
             </div>{" "}
           </div>
           <div className="row d-flex justify-content-around">
             <div className="col-lg-5">
-              <ProjectMembersList
-                showMembers={showMembers}
-                showProjects={showProjects}
-                setMembers={setMembers}
-              />
+              <ProjectMembersList />
             </div>
             <div className="col-lg-5">
-              {showProjects.manager ? (
-                <ProjectMembersInvited
-                  showProjects={showProjects}
-                  setMembers={setMembers}
-                />
-              ) : null}
+              {project.manager ? <ProjectMembersInvited /> : null}
             </div>
           </div>
         </div>
@@ -232,7 +212,7 @@ function ProjectOpen() {
           role="tabpanel"
           aria-labelledby="tab3"
         >
-          <FormTask project={showProjects} listMembers={showMembers} />
+          <FormTask />
         </div>
         <div
           class="tab-pane fade"
@@ -241,7 +221,7 @@ function ProjectOpen() {
           aria-labelledby="tab4"
         >
           {/*  <h3>Tab 4 Content</h3> */}
-          <ProjectChat project={showProjects} />
+          <ProjectChat />
           {/*  <p>This is the content for Tab 4.</p> */}
         </div>
         <div
@@ -250,7 +230,7 @@ function ProjectOpen() {
           role="tabpanel"
           aria-labelledby="tab5"
         >
-          <TimeLine project={showProjects} />
+          <TimeLine />
         </div>
       </div>
     </div>

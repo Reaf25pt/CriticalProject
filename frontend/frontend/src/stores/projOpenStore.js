@@ -18,6 +18,15 @@ export const projOpenStore = create(
         set((state) => ({
           chatMessages: [...state.chatMessages, newChatMessage],
         })),
+
+      members: [],
+      setMembers: (membersList) => set({ members: membersList }),
+
+      pendingInvites: [],
+      setPendingInvites: (pendingList) => set({ pendingInvites: pendingList }),
+
+      tasks: [],
+      setTasks: (tasksList) => set({ tasks: tasksList }),
     }),
 
     {

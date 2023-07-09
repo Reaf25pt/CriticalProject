@@ -13,13 +13,15 @@ import TextAreaComponent from "./TextAreaComponent";
 import ProjectMembersSelect from "./ProjectMembersSelect";
 import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
 import { BsFillPencilFill } from "react-icons/bs";
-
+import { toast, Toaster } from "react-hot-toast";
+import { projOpenStore } from "../stores/projOpenStore";
 import { userStore } from "../stores/UserStore";
 import Modal from "react-bootstrap/Modal";
 
-function ModalEditTask({ task, set, formatDate, setTriggerList }) {
+function ModalEditTask({ task, formatDate }) {
   const [show, setShow] = useState(false);
   const user = userStore((state) => state.user);
+  const setTasks = projOpenStore((state) => state.setTasks);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const [credentials, setCredentials] = useState(task);
@@ -52,19 +54,23 @@ function ModalEditTask({ task, set, formatDate, setTriggerList }) {
         token: user.token,
       },
       body: JSON.stringify(editedTask),
-    }).then((response) => {
-      if (response.status === 200) {
-        set([]); // reset a lista da pagina de tasks para actualizar
-        setTriggerList(""); // para actualizar lista de tarefas a apresentar no adicionar tarefa
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          toast.success("Tarefa editada");
+
+          return response.json();
+        } else {
+          throw new Error("Pedido não satisfeito");
+        }
+      })
+      .then((data) => {
+        setTasks(data);
         handleClose();
-      } else if (response.status === 403) {
-        alert("Não tem autorização para efectuar este pedido");
-        /*  } else if (response.status === 404) {
-        alert("Actividade não encontrada"); */
-      } else {
-        alert("Algo correu mal");
-      }
-    });
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
 
   return (
@@ -84,6 +90,8 @@ function ModalEditTask({ task, set, formatDate, setTriggerList }) {
         size="xl"
       >
         <Modal.Header closeButton>
+          <Toaster position="top-right" />
+
           <Modal.Title>
             Editar tarefa
             {/* <FormattedMessage

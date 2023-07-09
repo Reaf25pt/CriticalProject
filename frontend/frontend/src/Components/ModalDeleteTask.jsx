@@ -13,16 +13,18 @@ import TextAreaComponent from "./TextAreaComponent";
 import ProjectMembersSelect from "./ProjectMembersSelect";
 import { BsFillTrashFill } from "react-icons/bs";
 import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
-
+import { toast, Toaster } from "react-hot-toast";
+import { projOpenStore } from "../stores/projOpenStore";
 import { userStore } from "../stores/UserStore";
 import Modal from "react-bootstrap/Modal";
 import ModalEditTask from "./ModalEditTask";
 
-function ModalDeleteTask({ task, set, setTriggerList }) {
+function ModalDeleteTask({ task }) {
   const [show, setShow] = useState(false);
   const user = userStore((state) => state.user);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const setTasks = projOpenStore((state) => state.setTasks);
 
   const { id } = useParams();
 
@@ -38,20 +40,23 @@ function ModalDeleteTask({ task, set, setTriggerList }) {
         projId: id,
         taskId: task.id,
       },
-    }).then((response) => {
-      if (response.status === 200) {
-        set([]); // reset a lista da pagina de tasks para actualizar
-        setTriggerList(""); // para actualizar lista de tarefas a apresentar no adicionar tarefa
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          toast.success("Tarefa apagada");
+
+          return response.json();
+        } else {
+          throw new Error("Pedido não satisfeito");
+        }
+      })
+      .then((data) => {
+        setTasks(data);
         handleClose();
-      } else if (response.status === 403) {
-        alert("Não tem autorização para efectuar este pedido");
-        /*  } else if (response.status === 404) {
-        alert("Actividade não encontrada"); */
-      } else {
-        alert("Algo correu mal");
-      }
-    });
-    handleClose();
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
 
   return (

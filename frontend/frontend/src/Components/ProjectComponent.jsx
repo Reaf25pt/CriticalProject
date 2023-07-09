@@ -4,9 +4,16 @@ import { useParams } from "react-router-dom";
 import ButtonComponent from "./ButtonComponent";
 import ModalFinalTask from "./ModalFinalTask";
 import { toast, Toaster } from "react-hot-toast";
+import { projOpenStore } from "../stores/projOpenStore";
 
-function ProjectComponent({ toggleComponent, project, members, setProjects }) {
+function ProjectComponent({ toggleComponent }) {
   const user = userStore((state) => state.user);
+  const project = projOpenStore((state) => state.project);
+  const setProject = projOpenStore((state) => state.setProjOpen);
+  const members = projOpenStore((state) => state.members);
+  const pendingInvites = projOpenStore((state) => state.pendingInvites);
+  const setPendingInvites = projOpenStore((state) => state.setPendingInvites);
+
   const handleProjectStatus = (event) => {
     var status;
 
@@ -35,11 +42,14 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
     })
       .then((response) => {
         if (response.status === 200) {
-          setProjects([]);
-          toast.success("Estado alterado");
+          return response.json();
         } else {
           throw new Error("Pedido não satisfeito");
         }
+      })
+      .then((data) => {
+        setProject(data);
+        toast.success("Estado alterado");
       })
       .catch((error) => {
         toast.error(error.message);
@@ -61,10 +71,14 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
       .then((response) => {
         if (response.status === 200) {
           toast.success("Pedido efectuado");
-          setProjects([]);
+
+          return response.json();
         } else {
           throw new Error("Pedido não satisfeito");
         }
+      })
+      .then((data) => {
+        setPendingInvites(data);
       })
       .catch((error) => {
         toast.error(error.message);
@@ -116,7 +130,7 @@ function ProjectComponent({ toggleComponent, project, members, setProjects }) {
                     ) : null}
 
                     {project.statusInt === 0 ? (
-                      <ModalFinalTask setProjects={setProjects} />
+                      <ModalFinalTask />
                     ) : project.statusInt === 1 ? (
                       <div className="row mx-auto justify-content-around mt-5">
                         <div className="col-lg-12">

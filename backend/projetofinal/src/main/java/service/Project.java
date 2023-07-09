@@ -109,7 +109,8 @@ public class Project {
                 r = Response.status(404).entity("Not found!").build();
 
             } else {
-                r = Response.status(200).entity("Success").build();
+                dto.Project project = projBean.getProject(token, editProj.getId());
+                r = Response.status(200).entity(project).build();
             }
         }
         return r;
@@ -117,7 +118,7 @@ public class Project {
     }
 
 
-    // ADICIONAR MEMBRO A PROJECTO (convite)
+    // ADICIONAR MEMBRO A PROJECTO (convite ou self-invite)
     @POST
     @Path("/newmember")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -141,8 +142,8 @@ public class Project {
             if (!res) {
                 r = Response.status(404).entity("Something went wrong!").build();
             } else {
-
-                r = Response.status(200).entity("Success!").build();
+                List<dto.PotentialProjMember> list = projBean.getPotentialProjectMembers(projId);
+                r = Response.status(200).entity(list).build();
             }
         }
         return r;
@@ -169,8 +170,8 @@ public class Project {
             if (!res) {
                 r = Response.status(404).entity("Something went wrong!").build();
             } else {
-
-                r = Response.status(200).entity("Success!").build();
+                List<Task> tasks = projBean.getTasksList(projId);
+                r = Response.status(200).entity(tasks).build();
             }
         }
         return r;
@@ -254,8 +255,9 @@ public class Project {
             if (!res) {
                 r = Response.status(404).entity("Not found").build();
             } else {
+                List<dto.PotentialProjMember> list = projBean.getPotentialProjectMembers(projId);
 
-                r = Response.status(200).entity("Success").build();
+                r = Response.status(200).entity(list).build();
             }
         }
 
@@ -285,8 +287,8 @@ public class Project {
             if (!res) {
                 r = Response.status(404).entity("Not found").build();
             } else {
-
-                r = Response.status(200).entity("Success").build();
+                List<dto.ProjectMember> projMembers = projBean.getProjectMembers(projId);
+                r = Response.status(200).entity(projMembers).build();
             }
         }
 
@@ -313,8 +315,8 @@ public class Project {
             if (!res) {
                 r = Response.status(404).entity("Not found").build();
             } else {
-
-                r = Response.status(200).entity("Success").build();
+                List<dto.ProjectMember> projMembers = projBean.getProjectMembers(projId);
+                r = Response.status(200).entity(projMembers).build();
             }
         }
 
@@ -347,7 +349,8 @@ public class Project {
                 r = Response.status(404).entity("Not found!").build();
 
             } else {
-                r = Response.status(200).entity("Success").build();
+                dto.Project project = projBean.getProject(token, projId);
+                r = Response.status(200).entity(project).build();
             }
         }
         return r;
@@ -446,6 +449,8 @@ public class Project {
                 r = Response.status(404).entity("Not found!").build();
 
             } else {
+                List<Task> tasks = projBean.getTasksList(projId);
+
                 r = Response.status(200).entity("Success").build();
             }
         }

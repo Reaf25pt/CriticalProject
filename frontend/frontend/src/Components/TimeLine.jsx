@@ -5,15 +5,18 @@ import { useParams } from "react-router-dom";
 import { userStore } from "../stores/UserStore";
 import TextAreaComponent from "./TextAreaComponent";
 import { Timeline } from "primereact/timeline";
+import { projOpenStore } from "../stores/projOpenStore";
+import { toast, Toaster } from "react-hot-toast";
 
-function TimeLine({ project }) {
+function TimeLine() {
   const user = userStore((state) => state.user);
   const [recordList, setRecordList] = useState([]);
-  const [showTasks, setShowTasks] = useState([]);
-  const [task, setTask] = useState([]);
+
   const { id } = useParams();
   const [credentials, setCredentials] = useState({});
   const [newRecord, setNewRecord] = useState([]);
+  const project = projOpenStore((state) => state.project);
+  const tasks = projOpenStore((state) => state.tasks);
 
   useEffect(() => {
     fetch(`http://localhost:8080/projetofinal/rest/project/${id}/record`, {
@@ -74,7 +77,7 @@ function TimeLine({ project }) {
       return { ...values, [name]: value };
     });
   };
-
+  /*
   useEffect(() => {
     fetch(`http://localhost:8080/projetofinal/rest/project/tasks/${id}`, {
       method: "GET",
@@ -88,7 +91,7 @@ function TimeLine({ project }) {
         setShowTasks(data);
       })
       .catch((err) => console.log(err));
-  }, [task]);
+  }, [task]);*/
 
   const addRecord = (event) => {
     event.preventDefault();
@@ -147,7 +150,7 @@ function TimeLine({ project }) {
                 onChange={handleChange}
               >
                 <option value="0">Tarefa</option>
-                {showTasks.map((task) => (
+                {tasks.map((task) => (
                   <option key={task.id} value={task.id}>
                     {task.title}
                   </option>
