@@ -36,6 +36,9 @@ function FormTask(listMembers) {
     setActiveId(id === activeId ? null : id);
   };
 
+  console.log("user");
+  console.log(user);
+
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "numeric", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
@@ -59,6 +62,8 @@ function FormTask(listMembers) {
       .then((resp) => resp.json())
       .then((data) => {
         setShowTasks(data);
+        console.log("tasks");
+        console.log(data);
       })
       .catch((err) => console.log(err));
   }, [task]);
@@ -389,7 +394,13 @@ function FormTask(listMembers) {
           <div key={task.id}>
             <div className="row">
               <div className="col-lg-6">
-                <div className="row bg-white mb-3 w-75 mx-auto rounded-3 p-2 d-flex justify-content-around">
+                <div
+                  className={
+                    task.taskOwnerId === user.userId
+                      ? "row bg-white border border-5 border border-danger mb-3 w-75 mx-auto rounded-3 p-2 d-flex justify-content-around"
+                      : "row bg-white mb-3 w-75 mx-auto rounded-3 p-2 d-flex justify-content-around"
+                  }
+                >
                   <div className="col-lg-4">
                     <h4> {task.title}</h4>
                   </div>
