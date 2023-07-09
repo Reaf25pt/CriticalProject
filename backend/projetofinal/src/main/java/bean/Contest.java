@@ -8,6 +8,7 @@ import dto.Application;
 import dto.Task;
 import entity.ContestApplication;
 import entity.Project;
+import entity.User;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -38,6 +39,8 @@ public class Contest {
     Communication communicationBean;
     @EJB
     dao.Task taskDao;
+    @Inject
+    bean.User userBean;
 
     public Contest() {
     }
@@ -45,9 +48,10 @@ public class Contest {
     /**
      * Creates a new contest and persists it in database (table Contest)
      * Dates must be sequential (startOpenCall before finishOpenCall before startDate before FinishDate) and this is verified in frontend
-     * Verifies if openCall dates overlap any existing openCalls period of any other contest, to make sure that only 1 OPEN contest exists
+     * Verifies if openCall dates overlap any existing openCall periods of any other contest, to make sure that only 1 OPEN contest exists
+     *
      * @param contestInfo contains contest information inserted in frontend
-     * @param token identifies session that makes the request
+     * @param token       identifies session that makes the request
      * @return true if a new contest is created and persisted in database
      */
     public boolean createNewContest(dto.Contest contestInfo, String token) {
@@ -55,44 +59,57 @@ public class Contest {
 
         if (contestInfo != null) {
             entity.User user = tokenDao.findUserEntByToken(token);
-            if (user!=null){
-            if(!verifyOpenCallDates(contestInfo.getStartOpenCall(),contestInfo.getFinishOpenCall() )){
+            if (user != null) {
+                if (!verifyOpenCallDates(contestInfo.getStartOpenCall(), contestInfo.getFinishOpenCall())) {
 
-            entity.Contest contest = new entity.Contest();
-            contest.setTitle(contestInfo.getTitle());
-            contest.setStartDate(contestInfo.getStartDate());
-            contest.setFinishDate(contestInfo.getFinishDate());
-            contest.setStartOpenCall(contestInfo.getStartOpenCall());
-            contest.setFinishOpenCall(contestInfo.getFinishOpenCall());
-            contest.setDetails(contestInfo.getDetails());
-            contest.setRules(contestInfo.getRules());
-            contest.setMaxNumberProjects(contestInfo.getMaxNumberProjects());
-            contest.setStatus(StatusContest.PLANNING);
+                    entity.Contest contest = new entity.Contest();
+                    contest.setTitle(contestInfo.getTitle());
+                    contest.setStartDate(contestInfo.getStartDate());
+                    contest.setFinishDate(contestInfo.getFinishDate());
+                    contest.setStartOpenCall(contestInfo.getStartOpenCall());
+                    contest.setFinishOpenCall(contestInfo.getFinishOpenCall());
+                    contest.setDetails(contestInfo.getDetails());
+                    contest.setRules(contestInfo.getRules());
+                    contest.setMaxNumberProjects(contestInfo.getMaxNumberProjects());
+                    contest.setStatus(StatusContest.PLANNING);
 
-            contestDao.persist(contest);
-            communicationBean.notifyAllContestManagers(0, contestInfo.getTitle());
-            res = true;
+                    contestDao.persist(contest);
+                    communicationBean.notifyAllContestManagers(0, contestInfo.getTitle());
+                    res = true;
+                    LOGGER.info("A new contest: " + contestInfo.getTitle() + " is persisted in database by user " + user.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
 
-        }}}
+
+                }
+            }
+        }
         return res;
     }
 
+
+    /**
+     * Verifies if openCall dates of given contest overlap any existing openCall periods of any other contest, to make sure that only 1 OPEN contest exists
+     * Checks if startOpenCall is after any contests' finishOpenCall date
+     * Checks if finishOpenCall is before any contests' startOpenCall date
+     * Together these verifications prevent openCall period to overlap any other contests' openCall periods
+     *
+     * @param startOpenCall  refers to starting day of open call of given contest
+     * @param finishOpenCall refers to finishing day of open call of given contest
+     * @return true if dates overlap any other existing contest's open call (therefore, not allowing creating or editing contest)
+     */
     private boolean verifyOpenCallDates(Date startOpenCall, Date finishOpenCall) {
-        // verifica se datas se sobrepõe a alguma open call de outro concurso
-        // Confirmar que startOpenCall é posterior a finishOpenCall de concursos já existentes
-        // Confirmar que finishOpenCall é anterior a startOpenCall de concursos já existentes
-        boolean res=false;
-        int count =0;  // contador para número de ocorrências que não permitem validar as datas
+
+        boolean res = false;
+        int count = 0;  // contador para número de ocorrências que não permitem validar as datas
 
         List<entity.Contest> listAllContests = contestDao.findAll();
-        for(entity.Contest c : listAllContests){
-            if (!startOpenCall.after(c.getFinishOpenCall()) || !finishOpenCall.before(c.getStartOpenCall())){
+        for (entity.Contest c : listAllContests) {
+            if (!startOpenCall.after(c.getFinishOpenCall()) || !finishOpenCall.before(c.getStartOpenCall())) {
                 count++;
             }
         }
 
-        if(count!=0){
-            res=true; // datas não permitem que novo concurso seja criado
+        if (count != 0) {
+            res = true; // datas não permitem que novo concurso seja criado
         }
 
         return res;
@@ -100,6 +117,7 @@ public class Contest {
 
     /**
      * Verifies if token that makes the request has permission of Profile A - contest manager
+     *
      * @param token identifies session that makes the request
      * @return true if token is indeed contest manager, therefore being allowed to make the request
      */
@@ -116,9 +134,11 @@ public class Contest {
         return res;
     }
 
-    public List<dto.Contest> getAllContests(String token) {
-        // obter a lista de todos os concursos na DB
-
+    /**
+     * Get list of all contests in database
+     * @return list of Contest DTO that contains information of contest
+     */
+    public List<dto.Contest> getAllContests() {
         List<dto.Contest> list = new ArrayList<>();
 
         List<entity.Contest> tempList = contestDao.findAll();
@@ -128,9 +148,11 @@ public class Contest {
         }
         return list;
     }
-
-    public List<dto.Contest> getActiveContests(String token) {
-        // para apresentar na página inicial da app
+    /**
+     * Get list of active contests in database: whose status is OPEN or ONGOING
+     * @return list of Contest DTO that contains information of contest
+     */
+    public List<dto.Contest> getActiveContests() {
         List<dto.Contest> list = new ArrayList<>();
 
         List<entity.Contest> tempList = contestDao.findActiveContests();
@@ -141,6 +163,12 @@ public class Contest {
         return list;
     }
 
+    /**
+     * Converts Contest Entity to Contest DTO so that information can be sent as HTTP response
+     *
+     * @param c contains information of contest entity
+     * @return Contest information. Format is DTO
+     */
     private dto.Contest convertContestEntToDto(entity.Contest c) {
         dto.Contest contestDto = new dto.Contest();
         contestDto.setId(c.getId());
@@ -161,8 +189,12 @@ public class Contest {
         return contestDto;
     }
 
-    public dto.Contest getContest(String token, int id) {
-        //obter info de um concurso, pelo seu ID
+    /**
+     * Gets details of given contest
+     * @param id identifies given contest
+     * @return Contest DTO with contest information
+     */
+    public dto.Contest getContest( int id) {
         dto.Contest contest = new dto.Contest();
         entity.Contest contestEnt = contestDao.find(id);
 
@@ -172,8 +204,13 @@ public class Contest {
         return contest;
     }
 
+    /**
+     * Verifies if given contest status is PLANNING, because it can only be edited if that is the case
+     *
+     * @param id identifies contest
+     * @return true if contest information can be edited
+     */
     public boolean verifyPermissionToModifyContest(int id) {
-        // verifica se status do concurso é planning, pois só poderá ser editado / apagado neste caso
         boolean res = false;
 
         entity.Contest contest = contestDao.find(id);
@@ -181,120 +218,155 @@ public class Contest {
         if (contest != null) {
             if (contest.getStatus() == StatusContest.PLANNING) {
                 res = true;
-                // concurso pode ser editado/ apagado
             }
         }
 
         return res;
     }
 
+    /**
+     * Edits contest information
+     * Dates must be sequential (startOpenCall before finishOpenCall before startDate before FinishDate) and this is verified in frontend
+     * Verifies if openCall dates overlap any existing openCall periods of any other contest, to make sure that only 1 OPEN contest exists
+     *
+     * @param token       identifies session that makes the request
+     * @param editContest contains information to edit given contest
+     * @return Contest DTO
+     */
     public dto.Contest editContestInfo(String token, dto.Contest editContest) {
-        // edita as informações do concurso e retorna DTO para actualizar no frontend
-        // verificar se datas de OpenCall batem certo
+
         dto.Contest contestDto = new dto.Contest();
+        User user = tokenDao.findUserEntByToken(token);
+        if (user != null) {
+            entity.Contest contestEnt = contestDao.find(editContest.getId());
 
-        entity.Contest contestEnt = contestDao.find(editContest.getId());
+            if (contestEnt != null) {
+                if (!verifyOpenCallDates(editContest.getStartOpenCall(), editContest.getFinishOpenCall())) {
 
-        if (contestEnt != null) {
-            if(!verifyOpenCallDates(editContest.getStartOpenCall(),editContest.getFinishOpenCall() )){
+                    contestEnt.setTitle(editContest.getTitle());
+                    contestEnt.setStartOpenCall(editContest.getStartOpenCall());
+                    contestEnt.setFinishOpenCall(editContest.getFinishOpenCall());
+                    contestEnt.setStartDate(editContest.getStartDate());
+                    contestEnt.setFinishDate(editContest.getFinishDate());
+                    contestEnt.setDetails(editContest.getDetails());
+                    contestEnt.setRules(editContest.getRules());
+                    contestEnt.setMaxNumberProjects(editContest.getMaxNumberProjects());
 
-                contestEnt.setTitle(editContest.getTitle());
-            contestEnt.setStartOpenCall(editContest.getStartOpenCall());
-            contestEnt.setFinishOpenCall(editContest.getFinishOpenCall());
-            contestEnt.setStartDate(editContest.getStartDate());
-            contestEnt.setFinishDate(editContest.getFinishDate());
-            contestEnt.setDetails(editContest.getDetails());
-            contestEnt.setRules(editContest.getRules());
-            contestEnt.setMaxNumberProjects(editContest.getMaxNumberProjects());
+                    contestDao.merge(contestEnt);
+                    communicationBean.notifyAllContestManagers(1, contestEnt.getTitle());
+                    contestDto = convertContestEntToDto(contestEnt);
+                    LOGGER.info("Contest: " + editContest.getTitle() + " information is edited by user " + user.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
 
-            contestDao.merge(contestEnt);
-            communicationBean.notifyAllContestManagers(1, contestEnt.getTitle());
-            contestDto = convertContestEntToDto(contestEnt);
-        }}
-
+                }
+            }
+        }
 
         return contestDto;
     }
 
+    /**
+     * Edits contest status, according to status value sent from frontend
+     * It will not allow to go back to a previous status
+     * Contest status is edited after human intervention, not automatically, therefore date of interest must be validated
+     * Edit to OPEN: contest startOpenCall date must be equal or before current date. All app users are notified
+     * Edit to ONGOING: contest startDate date must be equal or before current date. Refuses any pending project applications and notifies members of accepted projects
+     * Edit to CONCLUDED: contest finishDate date must be equal or before current date and contest must have a winner project attributed. Notifies contest participants
+     *
+     * @param token     identifies session that makes the request
+     * @param contestId identifies contest whose status is to be modified
+     * @param status:   int value that identifies corresponding Contest Status ENUM: 1 for OPEN, 2 for ONGOING, 3 for CONCLUDED
+     * @return Contest information DTO
+     */
     public dto.Contest editContestStatus(String token, int contestId, int status) {
-        // edita o status do concurso: n permite voltar a status Planning
         boolean res = false;
         dto.Contest contestDto = null;
-        entity.Contest contest = contestDao.find(contestId);
 
-        if (contest != null) {
+        User user = tokenDao.findUserEntByToken(token);
+        if (user != null) {
+            entity.Contest contest = contestDao.find(contestId);
 
-            switch (status) {
-                case 1:
-                    // mudar para open: data de openCall tem de ser igual ou anterior a date.now()
+            if (contest != null) {
 
-                    if (validateDate(contest.getStartOpenCall())) {
-                        contest.setStatus(StatusContest.OPEN);
-                        contestDao.merge(contest);
-                        contestDto = convertContestEntToDto(contest);
-                        communicationBean.notifyAllUsers(contest);
-                        res = true;
-                    }
-
-                    break;
-                case 2:
-                    // mudar para ongoing: data de startDate tem de ser igual ou anterior a date.now()
-                    if (validateDate(contest.getStartDate())) {
-                        contest.setStatus(StatusContest.ONGOING);
-                        contestDao.merge(contest);
-                        contestDto = convertContestEntToDto(contest);
-                        communicationBean.notifyProjectMembersExecutionHasStarted(contest);
-                        refuseUnansweredApplications(contest);
-
-                        res = true;
-                    }
-                    break;
-                case 3:
-                    // mudar para concluded: data de finishDate tem de ser igual ou anterior a date.now()
-
-                    if (validateDate(contest.getFinishDate()) && checkWinner(contest)) {
-                        contest.setStatus(StatusContest.CONCLUDED);
-                        contestDao.merge(contest);
-                        contestDto = convertContestEntToDto(contest);
-                        communicationBean.notifyContestHasFinished(contest);
-                        res = true;
-                    }
-                    break;
+                switch (status) {
+                    case 1:
+                        if (validateDate(contest.getStartOpenCall())) {
+                            contest.setStatus(StatusContest.OPEN);
+                            contestDao.merge(contest);
+                            contestDto = convertContestEntToDto(contest);
+                            communicationBean.notifyAllUsers(contest);
+                            res = true;
+                            LOGGER.info("Status of contest: " + contest.getTitle() + " is edited by user " + user.getUserId() + " to OPEN. IP Address of request is " + userBean.getIPAddress());
+                        }
+                        break;
+                    case 2:
+                        if (validateDate(contest.getStartDate())) {
+                            contest.setStatus(StatusContest.ONGOING);
+                            contestDao.merge(contest);
+                            contestDto = convertContestEntToDto(contest);
+                            communicationBean.notifyProjectMembersExecutionHasStarted(contest);
+                            refuseUnansweredApplications(contest);
+                            res = true;
+                            LOGGER.info("Status of contest: " + contest.getTitle() + " is edited by user " + user.getUserId() + " to ONGOING. IP Address of request is " + userBean.getIPAddress());
+                        }
+                        break;
+                    case 3:
+                        if (validateDate(contest.getFinishDate()) && checkWinner(contest)) {
+                            contest.setStatus(StatusContest.CONCLUDED);
+                            contestDao.merge(contest);
+                            contestDto = convertContestEntToDto(contest);
+                            communicationBean.notifyContestHasFinished(contest);
+                            res = true;
+                            LOGGER.info("Status of contest: " + contest.getTitle() + " is edited by user " + user.getUserId() + " to CONCLUDED. IP Address of request is " + userBean.getIPAddress());
+                        }
+                        break;
+                }
             }
-
-
         }
         return contestDto;
     }
 
+    /**
+     * Verifies if contest has a project declared as winner
+     * Mandatory before changing contest status to CONCLUDED
+     *
+     * @param contest represents contest
+     * @return true if a project winner has been declared
+     */
     private boolean checkWinner(entity.Contest contest) {
-        // verifica se concurso tem projecto vencedor atribuido
         boolean res = false;
 
         if (contest.getWinner() != null) {
-            System.out.println(contest.getWinner());
             res = true;
         }
 
         return res;
     }
 
+    /**
+     * Verifies if given contest date is equal or before current date
+     * Necessary to allow contest status editing
+     *
+     * @param date represents contest date being validated
+     * @return true if date is valid and status cant therefore be modified
+     */
     private boolean validateDate(Date date) {
-        // valida se data é igual ou anterior a today
         boolean res = false;
 
         Date today = Date.from(Instant.now());
 
         if (date.equals(today) || date.before(today)) {
             res = true;
-            System.out.println("Data ok para mudar status");
         }
         return res;
     }
 
+    /**
+     * Verifies if contest status is OPEN, since it can only receive project applications or answer to project applications if that is the case
+     *
+     * @param contestId identifies contest
+     * @return true if contest status is OPEN
+     */
     public boolean verifyPermissionToApply(int contestId) {
-        // verifica se status do concurso é OPEN pois só pode receber / responder a candidaturas neste caso
-
         boolean res = false;
 
         entity.Contest contest = contestDao.find(contestId);
@@ -302,18 +374,24 @@ public class Contest {
         if (contest != null) {
             if (contest.getStatus() == StatusContest.OPEN) {
                 res = true;
-                // pode receber candidaturas
             }
         }
-
-        System.out.println("result verify contest is open: " + res);
         return res;
     }
 
+    /**
+     * Finds active project of user that makes the request and defines ContestApplication for given project and given contest
+     * If it is first application of given project to given contest, a new ContestApplication is persisted in database
+     * If there is already a ContestApplication for same project and same contest extra validations must occur
+     * If project is accepted or waiting for response, nothing is changed - could happen if member of project didn't realize its active project has been accepted to participate in contest or proposed to contest already
+     * If project has been rejected before, ContestApplication attributes are updated so that it displays new nature of relationship between project and contest
+     *
+     * @param contestId identifies contest
+     * @param token     identifies session that makes the request and therefore active project to apply to contest
+     * @return true if project application is concluded successfully
+     */
     public boolean applyToContest(int contestId, String token) {
-        // projecto activo do token concorre a concurso
         boolean res = false;
-
 
         entity.Contest contest = contestDao.find(contestId);
 
@@ -325,8 +403,6 @@ public class Contest {
 
                 if (project != null) {
 
-                    // verifica se projecto tem relação com contest: se for aceite não faz nada, se em espera não faz nada, se recusado tem de permitir actualizar a relação
-                    // projecto pode ter sido recusado, melhorar os dados e voltar a concorrer
                     ContestApplication applicationEnt = applicationDao.findApplicationForGivenContestIdAndProjectId(contest.getId(), project.getId());
 
                     if (applicationEnt != null) {
@@ -339,11 +415,14 @@ public class Contest {
                             applicationEnt.setAnswered(false);
                             applicationEnt.setAccepted(false);
                             applicationDao.merge(applicationEnt);
-                            // alterar status de projecto para proposed
                             project.setStatus(StatusProject.PROPOSED);
                             projDao.merge(project);
                             communicationBean.notifyAllContestManagers(2, contest.getTitle());
-                            res = true; // nova candidatura - precisa de actualizar os atributos que definem a relação concurso - projecto
+                            communicationBean.recordProjectStatusChange(project, null, 2);
+                            res = true;
+                            LOGGER.info("Project ID " + project.getId()+": " + project.getTitle() + " has applied to contest " + contestId+ ". IP Address of request is " + userBean.getIPAddress());
+
+
                         }
                     } else {
                         // não há relação, é a 1ª candidatura
@@ -353,16 +432,14 @@ public class Contest {
                         application.setProject(project);
                         application.setAnswered(false);
                         application.setAccepted(false);
-
-                        applicationDao.persist(application);
-                        communicationBean.notifyAllContestManagers(2, contest.getTitle());
-
-
-// alterar status de projecto para proposed
-                        //TODO registar no historico do projecto
                         project.setStatus(StatusProject.PROPOSED);
                         projDao.merge(project);
+                        applicationDao.persist(application);
+                        communicationBean.notifyAllContestManagers(2, contest.getTitle());
+                        communicationBean.recordProjectStatusChange(project, null, 2);
                         res = true;
+                        LOGGER.info("Project ID " + project.getId()+": " + project.getTitle() + " has applied to contest " + contestId+ ". IP Address of request is " + userBean.getIPAddress());
+
                     }
                 }
             }
@@ -371,10 +448,11 @@ public class Contest {
         return res;
     }
 
-
-    public List<Application> getAllApplications(String token, int contestId) {
-        // get all projects that applied for given contest: approved, refused and waiting for response
-
+    /**
+     * Get list of all projects associated with given contest: accepted, rejected and waiting for an answer
+     * @return list of Application DTO that contains minimum required information of project and its relationship with contest
+     */
+    public List<Application> getAllApplications(int contestId) {
         List<Application> list = new ArrayList<>();
 
         List<ContestApplication> applications = applicationDao.findApplicationsForGivenContestId(contestId);
@@ -388,6 +466,12 @@ public class Contest {
         return list;
     }
 
+    /**
+     * Converts Application Entity to Application DTO so that information can be sent as HTTP response
+     *
+     * @param a contains information of application entity
+     * @return Application information. Format is DTO
+     */
     private Application convertApplicationToDto(ContestApplication a) {
 
         Application application = new Application();
@@ -403,9 +487,19 @@ public class Contest {
         return application;
     }
 
+    /**
+     * Answers to project application to participate in contest
+     * If project is rejected, its status will be READY
+     * Before a project application is accepted, it must be checked if project status is not cancelled
+     * If it's cancelled, it will not be accepted because it would be a dead end: project cancelled participating in a contest cannot be revived
+     * If a project applications is accepted, it must verify if contest limit of participants has been reached and, if so, waiting applications must be refused
+     *
+     * @param token         identifies session that makes the request
+     * @param applicationId identifies ContestApplication
+     * @param answer:       int value that defines if project is rejected(0) or accepted (1)
+     * @return
+     */
     public boolean replyToApplication(String token, int applicationId, int answer) {
-        // Perfil A responde a candidatura de projecto aceitando (answer = 1) ou rejeitando (answer =0)
-        System.out.println("metodo " + applicationId);
         boolean res = false;
 
         entity.User user = tokenDao.findUserEntByToken(token);
@@ -414,34 +508,30 @@ public class Contest {
             ContestApplication applicationEnt = applicationDao.find(applicationId);
 
             if (applicationEnt != null) {
-                System.out.println("encontrou applicaion");
                 if (answer == 1) {
-                    // TODO verificar se entretanto foi cancelado ?! pode ser aprovado e isso dar ânimo a membros de projecto e o re-activem ?
-                    applicationEnt.setAnswered(true);
-                    applicationEnt.setAccepted(true);
-                    applicationDao.merge(applicationEnt);
-                    // Alterar status do projecto para approved
-                    applicationEnt.getProject().setStatus(StatusProject.APPROVED);
-                    projDao.merge(applicationEnt.getProject());
-                    System.out.println("record application call");
+                    if (!verifyProjectIsReady(applicationEnt.getProject())) {
+                        applicationEnt.setAnswered(true);
+                        applicationEnt.setAccepted(true);
+                        applicationDao.merge(applicationEnt);
+                        applicationEnt.getProject().setStatus(StatusProject.APPROVED);
+                        projDao.merge(applicationEnt.getProject());
 
-                    communicationBean.recordProjectApplicationResult(user, applicationEnt.getProject(), answer);
-                    //TODO testar notificacoes
+                        communicationBean.recordProjectApplicationResult(null, applicationEnt.getProject(), answer);
+                        //TODO testar notificacoes
+                        verifyLimitApplicationsToContestHasBeanReached(applicationEnt.getContest());
+                        res = true;
+                        LOGGER.info("Project ID " + applicationEnt.getProject().getId()+": " + applicationEnt.getProject().getTitle() + " application to contest " + applicationEnt.getContest().getId()+ " has been accepted. IP Address of request is " + userBean.getIPAddress());
 
-                    // sempre que aceita algum projecto tem de verificar se limite de projectos a concurso foi atingido. Se for, terá de automaticamente recusar os restantes projectos
-                    verifyLimitApplicationsToContestHasBeanReached(applicationEnt.getContest());
-                    res = true;
+                    }
                 } else if (answer == 0) {
                     applicationEnt.setAnswered(true);
                     applicationEnt.setAccepted(false);
                     applicationDao.merge(applicationEnt);
-
                     applicationEnt.getProject().setStatus(StatusProject.READY);
                     projDao.merge(applicationEnt.getProject());
                     res = true;
-                    System.out.println("record application call");
-
-                    communicationBean.recordProjectApplicationResult(user, applicationEnt.getProject(), answer);
+                    communicationBean.recordProjectApplicationResult(null, applicationEnt.getProject(), answer);
+                    LOGGER.info("Project ID " + applicationEnt.getProject().getId()+": " + applicationEnt.getProject().getTitle() + " application to contest " + applicationEnt.getContest().getId()+ " has been rejected. IP Address of request is " + userBean.getIPAddress());
 
                 }
                 communicationBean.notifyProjectMembersOfApplicationResponse(applicationEnt.getProject(), answer);
@@ -451,9 +541,12 @@ public class Contest {
         return res;
     }
 
+    /**
+     * Checks if accepted projects in given contest has reached limit of participating projects
+     * If so, waiting applications must be refused
+     * @param contest represents given contest
+     */
     private void verifyLimitApplicationsToContestHasBeanReached(entity.Contest contest) {
-        // verifica se limite de projectos aceites a um concurso foi atingido. Se sim, terá de recusar todos os projectos à espera de resposta
-        System.out.println("verifica limite vagas atingido");
 
         boolean res = checkApplicationsLimit(contest.getId());
 
@@ -464,6 +557,12 @@ public class Contest {
 
     }
 
+    /**
+     * Refuses any pending project applications to given contest
+     * Useful when contest status is edited to ONGOING or when limit of participating projects of given contest has been reached
+     *
+     * @param contest represents contest
+     */
     private void refuseUnansweredApplications(entity.Contest contest) {
         List<ContestApplication> applicationsWaitingForResponse = applicationDao.findApplicationsNotAnsweredForGivenContestId(contest.getId());
 
@@ -472,16 +571,21 @@ public class Contest {
                 a.setAnswered(true);
                 a.setAccepted(false);
                 applicationDao.merge(a);
-                //TODO Registar no historico do proj
-
+                // TODO testar
+                communicationBean.recordProjectApplicationResult(null, a.getProject(), 0);
+                LOGGER.info("Application of project: " + a.getProject().getTitle() + " to contest:  " + contest.getTitle() + " has been rejected. IP Address of request is " + userBean.getIPAddress());
 
             }
         }
     }
 
-
+    /**
+     * Checks if given contest reached limit of participating projects in contest
+     *
+     * @param contestId identifies contest
+     * @return true if limit has been reached - no more projects can be accepted to participate in contest
+     */
     public boolean checkApplicationsLimit(int contestId) {
-        // verifica se concurso já atingiu limite de projectos que pode aceitar
         boolean res = false;
 
         entity.Contest contest = contestDao.find(contestId);
@@ -499,6 +603,7 @@ public class Contest {
     }
 
     public boolean newDatesAreWithinContestPeriod(entity.Task taskEnt, Task editTask) {
+        // TODO falta java doc
         // verifica se datas de uma tarefa editada estão dentro do periodo de execução do concurso
         // startDate da task igual ou after startDate do concurso
         // finishDate da task igual ou anterior a finishDate do concurso
@@ -519,13 +624,14 @@ public class Contest {
         return res;
     }
 
-
+    /**
+     * Verifies if it is appropriate to choose project winner for given contest: contest status must be ONGOING
+     * Current date (Date.now()) must be after each final task date of each project participating in contest
+     * @param contestId identifies given contest
+     * @return true if a contest winner can be declared
+     */
     public boolean verifyPermissionToChooseWinner(int contestId) {
 
-
-        // verifica se data .now() é posterior a data de task final de todos os projectos aceites
-        // poderia verificar se todos os prjectos estão finished e task final finished mas isso poderia significar que o concurso nunca poderia ficar concluído por algum gestor de projecto não marcar o projecto / task final como finished
-        // verifica tb se concurso status é ongoing
         boolean res = false;
         entity.Contest contest = contestDao.find(contestId);
         if (contest != null) {
@@ -538,14 +644,19 @@ public class Contest {
         return res;
     }
 
+    /**
+     * Verifies if final task date of projects participating in contest are before current date (Date.now())
+     * This way, all projects have a chance to complete execution plan
+     * It is not verified if final task status or project status is finished because that could prevent contest from being concluded
+     * @param contestId identifies given contest
+     * @return true if all final tasks dates have passed - a winner can be declared
+     */
     private boolean checkProjectsAcceptedFinalTaskDates(int contestId) {
-        // verifica se data .now() é posterior a data de task final de todos os projectos aceites
-        // poderia verificar se todos os prjectos estão finished e task final finished mas isso poderia significar que o concurso nunca poderia ficar concluído por algum gestor de projecto não marcar o projecto / task final como finished
+        // TODO poderia verificar se todos os prjectos estão finished e task final finished mas isso poderia significar que o concurso nunca poderia ficar concluído por algum gestor de projecto não marcar o projecto / task final como finished
         boolean res = false;
 
         List<Project> projectsAccepted = applicationDao.findAcceptedProjectsForGivenContestId(contestId);
         if (projectsAccepted != null) {
-            // verificar se data de final task é anterior a data.now(). Dá-se hipótese a todos os projectos para cumprirem o seu calendário
             Date today = Date.from(Instant.now());
             int count = 0; // conta ocorrências em que data não é válida. Basta que uma data n seja válida para n permitir que se escolha vencedor
 
@@ -558,20 +669,19 @@ public class Contest {
                     }
                 }
             }
-
             if (count == 0) {
                 res = true; // pode escolher vencedor
             }
-
-
         }
-
-
         return res;
     }
 
+    /**
+     * Verifies if project to be declared contest winner has a FINISHED status
+     * @param projId identifies project
+     * @return true if project status is FINISHED
+     */
     public boolean verifyProjectIsFinished(int projId) {
-        // verifica se status do projecto (a declarar vencedor) é finished. Só estes projectos poderão ser declarados vencedores
         boolean res = false;
         Project project = projDao.findProjectById(projId);
 
@@ -583,8 +693,14 @@ public class Contest {
         return res;
     }
 
+    /**
+     * A project is declared winner of given contest
+     * @param contestId identifies contest
+     * @param projId identifies project
+     * @param token identifies session that makes the request
+     * @return true if project is declared contest winner successfully
+     */
     public boolean chooseContestWinner(int contestId, int projId, String token) {
-        // declara o projecto vencedor de um dado concurso e automaticamente termina o concurso
         boolean res = false;
 
         entity.User user = tokenDao.findUserEntByToken(token);
@@ -600,6 +716,7 @@ public class Contest {
 
                     communicationBean.notifyContestHasWinner(contest);
                     communicationBean.recordProjectDeclaredWinner(user, project, contest);
+                    LOGGER.info("Project ID " + project.getId()+": " + project.getTitle() + " has been declared winner of contest " + contestId+ ". IP Address of request is " + userBean.getIPAddress());
 
                 }
             }
@@ -607,7 +724,13 @@ public class Contest {
         return res;
     }
 
-
+    /**
+     * Gets statistics of given contest: duration of contest; number and % of projects that applied, by office; average of members per project;
+     * Number and % of accepted projects, by office; Number and % of finished projects, by office; average time for projects' execution
+     * @param contestId identifies given contest
+     * @return a string containing all statistics details for given contest
+     * @throws JsonProcessingException
+     */
     public String statsContenst(int contestId) throws JsonProcessingException {
 
 
@@ -631,7 +754,7 @@ public class Contest {
         averages.add(averageElementsProject(contestId));
         averages.add(averageExecutionProject(contestId));
 
-        stats.put("averages",averages);
+        stats.put("averages", averages);
 
         ArrayList<String> localStatsAll = projectsGivenAllLocalStats(contestId);
         ArrayList<String> localStatsAccepted = projectsAcceptedLocalStats(contestId);
@@ -677,7 +800,11 @@ public class Contest {
 
     }
 
-
+    /**
+     * Gets statistics of given contest: number and % of projects that applied, by office
+     * @param contestId identifies given contest
+     * @return list of string containing relevant information
+     */
     public ArrayList<String> projectsGivenAllLocalStats(int contestId) {
         double lisboaCount = 0;
         double coimbraCount = 0;
@@ -737,7 +864,11 @@ public class Contest {
         return localAll;
 
     }
-
+    /**
+     * Gets statistics of given contest: number and % of accepted projects, by office
+     * @param contestId identifies given contest
+     * @return list of string containing relevant information
+     */
     public ArrayList<String> projectsAcceptedLocalStats(int contestId) {
         double lisboaCount = 0;
         double coimbraCount = 0;
@@ -803,7 +934,11 @@ public class Contest {
 
 
     }
-
+    /**
+     * Gets statistics of given contest: number and % of finished projects, by office
+     * @param contestId identifies given contest
+     * @return list of string containing relevant information
+     */
     public ArrayList<String> projectsFinishedLocalStats(int contestId) {
         double lisboaCount = 0;
         double coimbraCount = 0;
@@ -867,7 +1002,11 @@ public class Contest {
 
 
     }
-
+    /**
+     * Gets statistics of given contest: average of members per project;
+     * @param contestId identifies given contest
+     * @return string containing relevant information
+     */
     public String averageElementsProject(int contestId) {
 
         List<ContestApplication> projectsGiven = applicationDao.findApplicationsForGivenContestId(contestId);
@@ -882,7 +1021,11 @@ public class Contest {
 
     }
 
-
+    /**
+     * Gets statistics of given contest: average time for projects' execution
+     * @param contestId identifies given contest
+     * @return string containing relevant information
+     */
     public String averageExecutionProject(int contestId) {
 
         List<ContestApplication> projectsGiven = applicationDao.findApplicationsForGivenContestId(contestId);
@@ -901,7 +1044,7 @@ public class Contest {
         }
         long days = countDays / (1000 * 60 * 60 * 24);
 
-        String result = String.format("%.2f",days/sizeProjects);
+        String result = String.format("%.2f", days / sizeProjects);
 
 
         return result;
@@ -909,61 +1052,88 @@ public class Contest {
 
     /**
      * Verifies if a new contest can be created, because there can only be 1 PLANNING and 1 OPEN at all times
+     *
      * @return true if a new contest can be created
      */
     public boolean verifyPermissionToAddNewContest() {
-
         boolean res = false;
 
         Long count = contestDao.countPlanningContest();
         if (count == 0) {
-            res = true; // pode criar novo concurso
+            res = true;
         }
-
         return res;
     }
 
+    /**
+     * Get list of contests whose title contains given input (str)
+     * @param token identifies session that makes the request
+     * @param str represents input that is written by user in frontend
+     * @return list of Contest DTO that contains information of contest
+     */
     public List<dto.Contest> filterContestsByName(String token, String str) {
-        // filtrar contests que tenham nome que faça match com str
-        List < dto.Contest> list = new ArrayList<>();
-       // Set<entity.Contest> mergeSet = new HashSet<>();
-        List <entity.Contest> contestList = contestDao.findContestListContainingStr(str.toLowerCase());
-
-       if(contestList!=null){
-           for (entity.Contest c : contestList){
-               list.add(convertContestEntToDto(c));
-           }
-       }
-return list;
-    }
-
-    public List<dto.Contest> filterContestsByStartDate(String startDate) {
-        // filters contests whose startDate is equal or after startDate inserted - considers starOpenCall
         List<dto.Contest> list = new ArrayList<>();
-        long timestamp=Long.parseLong(startDate);
+        List<entity.Contest> contestList = contestDao.findContestListContainingStr(str.toLowerCase());
+
+        if (contestList != null) {
+            for (entity.Contest c : contestList) {
+                list.add(convertContestEntToDto(c));
+            }
+        }
+        return list;
+    }
+    /**
+     * Get list of contests whose startOpenCall date is equal or after given input (startDate)
+     * Shows list of contests whose open call is now open or will open in the future
+     * startDate needs to be converted to Date()
+     * @param startDate represents date input that is selected by user in frontend
+     * @return list of Contest DTO that contains information of contest
+     */
+    public List<dto.Contest> filterContestsByStartDate(String startDate) {
+        List<dto.Contest> list = new ArrayList<>();
+        long timestamp = Long.parseLong(startDate);
         Date date = new Date(timestamp);
         List<entity.Contest> contestList = contestDao.findContestListWhoseStartOpenCallDateEqualOrAfterGivenDate(date);
-        if(contestList!=null){
-            for (entity.Contest c : contestList){
+        if (contestList != null) {
+            for (entity.Contest c : contestList) {
+                list.add(convertContestEntToDto(c));
+            }
+        }
+        return list;
+    }
+    /**
+     * Get list of contests whose finishDate date is equal or before given input (finishDate)
+     * Shows list of contests whose finishDate is now or already happened
+     * finishDate needs to be converted to Date()
+     * @param finishDate represents date input that is selected by user in frontend
+     * @return list of Contest DTO that contains information of contest
+     */
+    public List<dto.Contest> filterContestsByFinishDate(String finishDate) {
+        List<dto.Contest> list = new ArrayList<>();
+        long timestamp = Long.parseLong(finishDate);
+        Date date = new Date(timestamp);
+        List<entity.Contest> contestList = contestDao.findContestListWhoseFinishDateEqualOrBeforeGivenDate(date);
+        if (contestList != null) {
+            for (entity.Contest c : contestList) {
                 list.add(convertContestEntToDto(c));
             }
         }
         return list;
     }
 
-    public List<dto.Contest> filterContestsByFinishDate(String finishDate) {
-        // filter contests whose finishDate is equal or before finishDate inserted - considers finishDate of contest
+    /**
+     * Checks if project status, whose application response will be accepted by contest manager is CANCELLED
+     *
+     * @param project represents project
+     * @return true if project status is CANCELLED, therefore its application cannot be accepted
+     */
+    public boolean verifyProjectIsReady(Project project) {
+        boolean res = false;
 
-        List<dto.Contest> list = new ArrayList<>();
-        long timestamp=Long.parseLong(finishDate);
-        Date date = new Date(timestamp);
-        List<entity.Contest> contestList = contestDao.findContestListWhoseFinishDateEqualOrBeforeGivenDate(date);
-        if(contestList!=null){
-            for (entity.Contest c : contestList){
-                list.add(convertContestEntToDto(c));
-            }
+        if (project.getStatus() == StatusProject.CANCELLED) {
+            res = true;
         }
-        return list;
+        return res;
     }
 }
 

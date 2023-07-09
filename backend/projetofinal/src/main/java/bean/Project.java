@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class Project implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger LOGGER = Logger.getLogger(User.class);
+    private static final Logger LOGGER = Logger.getLogger(Project.class);
     @EJB
     dao.User userDao;
     @EJB
@@ -1923,10 +1923,16 @@ public class Project implements Serializable {
         return res;
     }
 
-
+    /**
+     * Verifies if token, representing logged user that makes request, has an active project whose status is READY
+     * Verifies if project has a final task defined whose date is compatible with contest's final days
+     * Verifies if all tasks defined in project execution plan are within contest ONGOING period
+     * These are mandatory validations to apply to given contest
+     * @param token identifies session that makes the request
+     * @param contestId identifies contest
+     * @return true if project checks all validations: status is READY, all tasks, including final task defined within contest ONGOING period
+     */
     public boolean verifyProjectCanApply(String token, int contestId) {
-        // verifica se token tem projecto activo, se o seu status é READY e tem tarefa final com data compatível com final do concurso para poder de facto concorrer ao concurso
-        // verifica tb se todas as tarefas do plano de execução estão dentro do timing de execução do concurso
         boolean res = false;
 
         entity.User user = tokenDao.findUserEntByToken(token);
@@ -1934,61 +1940,82 @@ public class Project implements Serializable {
         if (user != null) {
             entity.Project project = projMemberDao.findActiveProjectByUserId(user.getUserId());
 
-
             if (project != null) {
 
-                if (verifyProjectStatusIsReady(project, contestId)) ;
-                {
+                if (verifyProjectStatusIsReady(project, contestId) && !verifyProjectTasksDates(project, contestId)) {
                     res = true;
                 }
-
             }
-
-            System.out.println("result verify project can apply: " + res);
         }
         return res;
     }
 
+    /**
+     * Verifies if all tasks defined in project execution plan are within contest ONGOING period
+     * @param project represents project
+     * @param contestId identifies contest
+     * @return true if there is any task where start date or finish date is not within contest ONGOING period
+     */
+    private boolean verifyProjectTasksDates(entity.Project project, int contestId) {
+        boolean res = false;
+        int count = 0; // conta número de ocorrências em que task dates are not within contest ongoing period
+        List<entity.Task> tasksList = taskDao.findTasksFromProjectByProjId(project.getId());
+
+        if (tasksList != null) {
+            Contest contest = contestDao.find(contestId);
+            if (contest != null) {
+                for (entity.Task t : tasksList) {
+                    if (t.getStartDate().before(contest.getStartDate()) || t.getFinishDate().after(contest.getFinishDate())) {
+                        count++;
+                    }
+                }
+                if (count != 0) {
+                    res = true; // alguma tarefa tem datas não compatíveis com ongoing period
+                }
+            }
+        }
+        return res;
+    }
+
+
+    /**
+     * Verifies if project status is READY and has a final task defined whose date is compatible with contest's final days
+     * @param project represents active project
+     * @param contestId identifies contest
+     * @return true if project can apply to contest: status is READY and final task is within contest ONGOING period
+     */
     private boolean verifyProjectStatusIsReady(entity.Project project, int contestId) {
-        // verifica se projecto status is READY e se finalTask é compatível com data final de concurso
         boolean res = false;
 
         if (project.getStatus() == StatusProject.READY) {
-            // verificar se projecto tem final task definida
 
             entity.Task finalTask = taskDao.findFinalTaskByProjectId(project.getId());
 
             if (finalTask != null) {
                 if (verifyFinalTaskDate(finalTask, contestId)) {
                     res = true;
-                    // proj pode concorrer
                 }
             }
-
-
         }
-
-        System.out.println("result verify project status is ready: " + res);
-
         return res;
     }
 
+    /**
+     * Verifies if final task date is compatible with contest's final days
+     * @param finalTask represents final task of active project
+     * @param contestId identifies contest
+     * @return true if final task date is within contest ONGOING period
+     */
     private boolean verifyFinalTaskDate(entity.Task finalTask, int contestId) {
-        // verifica se data da tarefa final está compreendida no período de execução do concurso
         boolean res = false;
         Contest contest = contestDao.find(contestId);
 
         if (contest != null) {
-            System.out.println(contest.getStartDate() + " " + contest.getFinishDate());
             if (finalTask.getStartDate().after(contest.getStartDate()) && finalTask.getStartDate().before(contest.getFinishDate())) {
-                System.out.println(finalTask.getStartDate() + " " + finalTask.getFinishDate());
 
                 res = true;
-                // data é OK
             }
         }
-
-        System.out.println("result final task date: " + res);
         return res;
     }
 

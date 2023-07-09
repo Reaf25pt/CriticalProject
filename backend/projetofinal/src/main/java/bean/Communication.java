@@ -407,7 +407,7 @@ if (value==0){
 } else if(value==2){
     // projecto concorreu a concurso
     notif.setMessage("Nova candidatura recebida para o concurso " + contestTitle);
-    notif.setMessageEng("New application for contest " + contestTitle );
+    notif.setMessageEng("There is a new application for contest " + contestTitle );
 }
 
 
@@ -567,7 +567,8 @@ record.setProject(newProjEnt);
 
         ProjectHistory record = new ProjectHistory();
         record.setCreationTime(Date.from(Instant.now()));
-        record.setAuthor(user);
+        if(user!=null){
+        record.setAuthor(user);}
         record.setProject(project);
 
         switch (status){
@@ -707,7 +708,8 @@ record.setProject(task.getProject());
         System.out.println("record application response");
         ProjectHistory record = new ProjectHistory();
         record.setCreationTime(Date.from(Instant.now()));
-        record.setAuthor(user);
+        if(user!=null){
+        record.setAuthor(user);}
         record.setProject(project);
 
         if(answer == 0){

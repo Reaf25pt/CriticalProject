@@ -151,7 +151,6 @@ public class User implements Serializable {
      * @return true if string has no valid information
      */
     public boolean checkStringInfo(String str) {
-        // check if a string info is null or blank
         boolean res = false;
 
         if (str == null || str.isBlank() || str.isEmpty()) {
@@ -168,7 +167,6 @@ public class User implements Serializable {
      * @return status code 200 when token is removed from database, status code 400 if no session is found for given token and status code 403 when session exists but no user is associated with it
      */
     public int validateLogout(String token) {
-        // remove token from DB when logout
         int res;
 
         Token tokenEnt = tokenDao.findTokenEntByToken(token);

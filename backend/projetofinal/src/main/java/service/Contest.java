@@ -131,7 +131,7 @@ public class Contest {
         if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
         } else if (!userBean.checkUserPermission(token) || !contestBean.verifyPermissionToApply(contestId) || !projBean.verifyProjectCanApply(token, contestId)) {
-            // TODO verificar se nenhuma tarefa do plano de execução tem datas q saiam do timing do concurso
+            // TODO testar tarefas fora ongoing period do contest
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
@@ -161,9 +161,8 @@ public class Contest {
         if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
-        } else if (!userBean.checkUserPermission(token) || !contestBean.verifyUserProfile(token) || !contestBean.verifyPermissionToApply(contestId) || contestBean.checkApplicationsLimit(contestId)) {
+        } else if (!userBean.checkUserPermission(token) || !contestBean.verifyUserProfile(token)|| !contestBean.verifyPermissionToApply(contestId) || contestBean.checkApplicationsLimit(contestId)) {
             r = Response.status(403).entity("Forbidden!").build();
-// TODO verificar se projecto está cancelado? entretanto pode ter mudado de status
         } else {
 
             userBean.updateSessionTime(token);
@@ -173,7 +172,7 @@ public class Contest {
                 r = Response.status(404).entity("Not found!").build();
 
             } else {
-                List<Application> list = contestBean.getAllApplications(token, contestId);
+                List<Application> list = contestBean.getAllApplications( contestId);
                 r = Response.status(200).entity(list).build();
             }
         }
@@ -229,7 +228,7 @@ public class Contest {
             } else if(!userBean.checkStringInfo(finishDate)) {
                 list=contestBean.filterContestsByFinishDate(finishDate);
             }else{
-               list =  contestBean.getAllContests(token);
+               list =  contestBean.getAllContests();
             }
 
             if (list == null || list.size() == 0) {
@@ -258,7 +257,7 @@ public class Contest {
         } else {
             userBean.updateSessionTime(token);
 
-            List<dto.Contest> list = contestBean.getActiveContests(token);
+            List<dto.Contest> list = contestBean.getActiveContests();
 
             if (list == null || list.size() == 0) {
                 r = Response.status(404).entity(list).build();
@@ -286,7 +285,7 @@ public class Contest {
         } else {
             userBean.updateSessionTime(token);
 
-            dto.Contest contest = contestBean.getContest(token, id);
+            dto.Contest contest = contestBean.getContest(id);
 
             if (contest == null) {
                 r = Response.status(404).entity(contest).build();
@@ -314,7 +313,7 @@ public class Contest {
         } else {
             userBean.updateSessionTime(token);
 
-            List<Application> list = contestBean.getAllApplications(token, contestId);
+            List<Application> list = contestBean.getAllApplications( contestId);
 
             if (list == null || list.size() == 0) {
                 r = Response.status(404).entity(list).build();
