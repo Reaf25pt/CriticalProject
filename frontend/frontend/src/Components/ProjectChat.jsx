@@ -95,14 +95,14 @@ function ProjectChat({ project }) {
         style={{ height: "80vh" }}
       >
         <div
-          className="col-lg-6 bg-secondary rounded-4 mx-auto p-5 mt-5"
+          className="col-lg-6 bg-secondary rounded-4 mx-auto p-1 mt-5"
           style={{ minHeight: "80vh" }}
         >
           {messages.length !== 0 ? (
             <div
               style={{
                 maxHeight: "500px",
-                marginTop: "20px",
+                marginTop: "0px",
                 overflowY: "auto",
               }}
             >

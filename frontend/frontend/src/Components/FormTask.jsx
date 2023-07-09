@@ -389,20 +389,20 @@ function FormTask(listMembers) {
           </div>
         </div>
       ) : null}
-      <div className="row mt-4">
+      <div className="row mt-4 ">
         {showTasks.map((task) => (
           <div key={task.id}>
-            <div className="row">
-              <div className="col-lg-6">
+            <div className="row m-0">
+              <div className="col-lg-5">
                 <div
                   className={
                     task.taskOwnerId === user.userId
-                      ? "row bg-white border border-5 border border-danger mb-3 w-75 mx-auto rounded-3 p-2 d-flex justify-content-around"
-                      : "row bg-white mb-3 w-75 mx-auto rounded-3 p-2 d-flex justify-content-around"
+                      ? "row bg-white border border-5 border border-danger mb-3  mx-auto rounded-3 p-2 d-flex justify-content-around"
+                      : "row bg-white mb-3  mx-auto rounded-3 p-2 d-flex justify-content-around"
                   }
                 >
-                  <div className="col-lg-4">
-                    <h4> {task.title}</h4>
+                  <div className="col-lg-7 m-0">
+                    <h6> {task.title}</h6>
                   </div>
                   <div className="col-lg-3 bg-dark p-1 rounded-5">
                     <h6 className="text-white text-center">
@@ -419,7 +419,7 @@ function FormTask(listMembers) {
                   </div>
                 </div>
               </div>
-              <div className="col-lg-5 ">
+              <div className="col-lg-7 ">
                 {selectedTask === task.id && (
                   <div className="bg-secondary rounded-3 p-2 card">
                     <div
@@ -468,7 +468,7 @@ function FormTask(listMembers) {
                       </div>
                     </div>
                     <div className="row">
-                      <div className="col-lg-6">
+                      <div className="col-lg-3 bg-dark">
                         <h4 className="text-white text-center">
                           Data de Inicio:
                         </h4>
@@ -481,7 +481,7 @@ function FormTask(listMembers) {
                       <hr />
                     </div>
                     <div className="row">
-                      <div className="col-lg-6">
+                      <div className="col-lg-3 bg-dark">
                         <h4 className="text-white text-center">Data de Fim:</h4>
                       </div>
                       <div className="col-lg-6">
@@ -493,7 +493,7 @@ function FormTask(listMembers) {
                       <hr />
                     </div>
                     <div className="row">
-                      <div className="col-lg-3">
+                      <div className="col-lg-3 bg-dark">
                         <h4 className="text-white text-center">Descritivo:</h4>
                       </div>
                       <div className="col-lg-9 ">
@@ -508,7 +508,7 @@ function FormTask(listMembers) {
                       className="row"
                       style={{ minHeight: "100px", maxHeight: "40px" }}
                     >
-                      <div className="col-lg-3">
+                      <div className="col-lg-3 bg-dark">
                         <h4 className="text-white text-center">
                           Executores Adicionais:
                         </h4>
@@ -522,7 +522,7 @@ function FormTask(listMembers) {
                       <hr />
                     </div>
                     <div className="row">
-                      <div className="col-lg-4">
+                      <div className="col-lg-4 bg-dark">
                         <h4 className="text-white text-center">Responsavel:</h4>
                       </div>
                       <div className="col-lg-8">
