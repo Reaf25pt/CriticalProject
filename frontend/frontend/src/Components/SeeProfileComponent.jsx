@@ -60,9 +60,9 @@ function ProfileSee({ onEdit }) {
           <div class="p-5  bg-secondary h-100 rounded-5">
             <div className="bg-white h-100 ">
               {user.bio ? (
-                <textarea class="text-dark bg-white h-100 w-100 rounded-2">
+                <div class="text-dark bg-white h-100 w-100 rounded-2">
                   {user.bio}
-                </textarea>
+                </div>
               ) : (
                 <textarea
                   class="text-dark bg-white h-100 w-100 rounded-2"

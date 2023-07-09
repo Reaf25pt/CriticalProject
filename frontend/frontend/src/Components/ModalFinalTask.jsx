@@ -149,7 +149,7 @@ function ModalFinalTask({ setProjects }) {
             className="row d-flex justify-content-around bg-secondary 
           rounded-5 p-4"
           >
-            <div className="col-lg-4">
+            <div className="col-lg-8">
               <div className="row ">
                 <div className="col-lg-12 ">
                   <div className="row mb-3">
@@ -176,11 +176,11 @@ function ModalFinalTask({ setProjects }) {
                       />
                     </div>
                   </div>
-                  <div className="row mb-3">
+                  <div className="row mb-3 mt-5">
                     <div className="col-lg-6">
-                      <label className="text-white">
-                        Data de apresentação *
-                      </label>
+                      <h5 className="text-white">Data de apresentação: *</h5>
+                    </div>
+                    <div className="col-lg-6">
                       <InputComponent
                         placeholder={" *"}
                         id="startDate"
@@ -190,8 +190,7 @@ function ModalFinalTask({ setProjects }) {
                         onChange={handleChange}
                         // defaultValue={formatDate(task.startDate)}
                       />
-                    </div>
-                    {/*   <div className="col-lg-6">
+                      {/*   <div className="col-lg-6">
                       <label className="text-white">Data de fim *</label>
 
                       <InputComponent
@@ -203,11 +202,12 @@ function ModalFinalTask({ setProjects }) {
                         onChange={handleChange}
                       />
                     </div> */}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-lg-6 d-flex align-items-center ">
+            <div class="col-lg-4 d-flex align-items-center ">
               <TextAreaComponent
                 placeholder={"Descrição da tarefa *"}
                 id="details"

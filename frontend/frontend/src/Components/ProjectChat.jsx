@@ -89,9 +89,15 @@ function ProjectChat({ project }) {
   };
 
   return (
-    <div className="container">
-      <div className="row overflow-auto">
-        <div className="col-lg-6 bg-secondary rounded-4 mx-auto p-5 mt-5">
+    <div className="container-fluid">
+      <div
+        className="row overflow-auto d-flex flex-column-reverse m-0  "
+        style={{ height: "80vh" }}
+      >
+        <div
+          className="col-lg-6 bg-secondary rounded-4 mx-auto p-5 mt-5"
+          style={{ minHeight: "80vh" }}
+        >
           {messages.length !== 0 ? (
             <div
               style={{
@@ -100,75 +106,81 @@ function ProjectChat({ project }) {
                 overflowY: "auto",
               }}
             >
-              {messages.map((message, index) => (
-                <div key={index}>
-                  {message.userSenderId === user.userId ? (
-                    <MessageBox
-                      position={"right"}
-                      type="text"
-                      title={
-                        message.userSenderFirstName +
-                        " " +
-                        message.userSenderLastName
-                      }
-                      date={message.creationTime}
-                      text={message.message}
-                    />
-                  ) : (
-                    <MessageBox
-                      position={"left"}
-                      type="text"
-                      title={
-                        message.userSenderFirstName +
-                        " " +
-                        message.userSenderLastName
-                      }
-                      date={message.creationTime}
-                      text={message.message}
-                    />
-                  )}
-                </div>
-              ))}
+              {messages
+                .sort((a, b) => a.id - b.id)
+                .map((message) => (
+                  <div key={message.id}>
+                    {message.userSenderId === user.userId ? (
+                      <MessageBox
+                        position={"right"}
+                        type="text"
+                        title={
+                          message.userSenderFirstName +
+                          " " +
+                          message.userSenderLastName
+                        }
+                        date={message.creationTime}
+                        text={message.message}
+                      />
+                    ) : (
+                      <MessageBox
+                        position={"left"}
+                        type="text"
+                        title={
+                          message.userSenderFirstName +
+                          " " +
+                          message.userSenderLastName
+                        }
+                        date={message.creationTime}
+                        text={message.message}
+                      />
+                    )}
+                  </div>
+                ))}
             </div>
           ) : (
-            <p>Inicie conversa com os restantes membros do projecto</p>
+            <div>
+              <h5 className="text-white">
+                Inicie conversa com os restantes membros do projecto
+              </h5>
+            </div>
           )}
-          <div>
-            <hr />
-
-            {project.statusInt === 5 || project.statusInt === 6 ? (
-              <InputComponent
-                placeholder="Chat desactivado"
-                className="bg-dark  p-4 rounded-5 "
-                value={inputValue}
-                disabled
-                // onChange={(event) => setInputValue(event.target.value)}
-                rightButtons={
-                  <Button
-                    text="Enviar"
-                    className="bg-secondary text-white"
-                    // onClick={handleSendMessage}
-                    defaultValue={""}
-                  />
-                }
-              />
-            ) : (
-              <Input
-                placeholder="Escreva a sua mensagem"
-                className="bg-dark  p-4 rounded-5 "
-                value={inputValue}
-                onChange={(event) => setInputValue(event.target.value)}
-                rightButtons={
-                  <Button
-                    text="Enviar"
-                    className="bg-secondary text-white"
-                    onClick={handleSendMessage}
-                    defaultValue={""}
-                  />
-                }
-              />
-            )}
-          </div>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-lg-6 mx-auto">
+          {project.statusInt === 5 || project.statusInt === 6 ? (
+            <InputComponent
+              placeholder="Chat desactivado"
+              className="bg-dark  p-4 rounded-5 "
+              value={inputValue}
+              disabled
+              // onChange={(event) => setInputValue(event.target.value)}
+              rightButtons={
+                <Button
+                  text="Enviar"
+                  className="bg-secondary text-white"
+                  // onClick={handleSendMessage}
+                  defaultValue={""}
+                />
+              }
+            />
+          ) : (
+            <Input
+              placeholder="Escreva a sua mensagem"
+              className="bg-dark  p-2 rounded-5 "
+              value={inputValue}
+              onChange={(event) => setInputValue(event.target.value)}
+              rightButtons={
+                <Button
+                  text="Enviar"
+                  className="bg-black text-white"
+                  onClick={handleSendMessage}
+                  defaultValue={""}
+                />
+              }
+            />
+          )}
         </div>
       </div>
     </div>
