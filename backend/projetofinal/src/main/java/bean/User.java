@@ -14,7 +14,7 @@ import mail.AskRecoverPassword;
 import mail.ValidateNewAccount;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.jboss.logging.Logger;
 
 
 import java.io.Serializable;
@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @RequestScoped
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
+    private static final org.jboss.logging.Logger LOGGER = Logger.getLogger(User.class);
 
     @Inject
     private HttpServletRequest request;
