@@ -42,6 +42,7 @@ function ProfileOpen() {
       })
       .then((user) => {
         setUserProfile(user);
+        console.log(user);
 
         // navigate("/home", { replace: true });
       });
@@ -49,8 +50,6 @@ function ProfileOpen() {
 
   const fullName = userProfile.firstName + " " + userProfile.lastName;
   const renderLink = (rowData) => {
-    /*   console.log(rowData.id);
-    console.log(typeof rowData.id); */
     return (
       <Link to={`/home/projects/${rowData.id}`}>
         <OverlayTrigger
@@ -141,17 +140,14 @@ function ProfileOpen() {
                   <div class="col-12 col-sm-12 col-md-12 col-lg-8 mt-3 ">
                     <div class="p-5  bg-secondary h-100 rounded-5">
                       <div className="bg-white h-100 ">
-                        {userProfile.bio ? (
-                          <textarea class="text-dark bg-white h-100 w-100 rounded-2">
+                        {userProfile.bio !== null ? (
+                          <div class="text-dark bg-white h-100 w-100 rounded-2">
                             {userProfile.bio}
-                          </textarea>
+                          </div>
                         ) : (
-                          <textarea
-                            class="text-dark bg-white h-100 w-100 rounded-2"
-                            disabled
-                          >
+                          <div class="text-dark bg-white h-100 w-100 rounded-2">
                             Biografia não disponibilizada
-                          </textarea>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -159,115 +155,129 @@ function ProfileOpen() {
                 </div>
               </div>
             </div>
-            <div class="row mt-5 mb-5 d-flex justify-content-start">
-              <div class="col-12 col-sm-12 col-md-12 col-lg-6 mb-5 ">
+            <div class="row mt-5 mb-5 d-flex justify-content-around">
+              <div class="col-12 col-sm-12 col-md-12 col-lg-4 mb-5 ">
                 <div className="row">
                   <h3 className="bg-white text-center rounded-5 p-0">
                     Skills:
                   </h3>{" "}
                 </div>
-                <div className="row">
-                  {userProfile.skills && userProfile.skills.length !== 0 ? (
-                    <div className="row">
-                      {userProfile.skills.map((skill) =>
-                        skill.skillType === 0 ? (
-                          <div
-                            key={skill.id}
-                            className="col-7 col-lg-7 mx-auto   bg-danger m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
-                          >
-                            <div className="col-lg-10 ">
-                              <h4>{skill.title} </h4>{" "}
-                            </div>
+                {userProfile.skills && userProfile.skills.length !== 0 ? (
+                  <div
+                    className="row overflow-auto"
+                    style={{ maxHeight: "200px" }}
+                  >
+                    {userProfile.skills.map((skill) =>
+                      skill.skillType === 0 ? (
+                        <div
+                          key={skill.id}
+                          className="col-7 col-lg-7 mx-auto   bg-danger m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
+                        >
+                          <div className="col-lg-10 ">
+                            <h4>{skill.title} </h4>{" "}
                           </div>
-                        ) : skill.skillType === 1 ? (
-                          <div
-                            key={skill.id}
-                            className="col-7 col-lg-7  mx-auto  bg-success m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
-                          >
-                            <div className="col-lg-10  ">
-                              {" "}
-                              <h4>{skill.title} </h4>{" "}
-                            </div>
+                        </div>
+                      ) : skill.skillType === 1 ? (
+                        <div
+                          key={skill.id}
+                          className="col-7 col-lg-7  mx-auto  bg-success m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
+                        >
+                          <div className="col-lg-10  ">
+                            {" "}
+                            <h4>{skill.title} </h4>{" "}
                           </div>
-                        ) : skill.skillType === 2 ? (
-                          <div
-                            key={skill.id}
-                            className=" col-7  col-lg-7 bg-primary d-flex mx-auto  m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
-                          >
-                            <div className="col-lg-10 overflow-auto">
-                              {" "}
-                              <h4>{skill.title} </h4>{" "}
-                            </div>
+                        </div>
+                      ) : skill.skillType === 2 ? (
+                        <div
+                          key={skill.id}
+                          className=" col-7  col-lg-7 bg-primary d-flex mx-auto  m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1"
+                        >
+                          <div className="col-lg-10 overflow-auto">
+                            {" "}
+                            <h4>{skill.title} </h4>{" "}
                           </div>
-                        ) : (
-                          <div
-                            key={skill.id}
-                            className="col-7 col-lg-7 mx-auto  bg-warning d-flex mx-auto   m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1 "
-                          >
-                            <div className="col-lg-10">
-                              {" "}
-                              <h4>{skill.title} </h4>{" "}
-                            </div>
+                        </div>
+                      ) : (
+                        <div
+                          key={skill.id}
+                          className="col-7 col-lg-7 mx-auto  bg-warning d-flex mx-auto   m-0 rounded-2 d-flex align-items-center text-white border border-white mb-1 "
+                        >
+                          <div className="col-lg-10">
+                            {" "}
+                            <h4>{skill.title} </h4>{" "}
                           </div>
-                        )
-                      )}
-                    </div>
-                  ) : (
-                    <p class="bg-white">
-                      {fullName} não tem skills associadas ao seu perfil
-                    </p>
-                  )}
-                </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-6 ">
-                  <div className="row">
-                    <h3 className="bg-white text-center rounded-5 p-0">
-                      Interesses:
-                    </h3>{" "}
-                  </div>
-                  <div className="row d-flex  ">
-                    {userProfile.hobbies && userProfile.hobbies !== 0 ? (
-                      <div className="row d-flex  ">
-                        {userProfile.hobbies.map((hobby) => (
-                          <div
-                            key={hobby.id}
-                            className="col-6 bg-dark mx-auto m-1 p-2 rounded-2 d-flex align-items-center text-white border border-white mb-1"
-                          >
-                            <div className="col-lg-10">{hobby.title} </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p class="bg-white">
-                        {fullName} não tem interesses associados ao seu perfil
-                      </p>
+                        </div>
+                      )
                     )}
                   </div>
+                ) : (
+                  <h4 class="text-white" style={{ fontWeight: "bolder" }}>
+                    {fullName} não tem skills associadas ao seu perfil
+                  </h4>
+                )}
+              </div>
+
+              <div class="col-12 col-sm-12 col-md-12 col-lg-4 ">
+                <div className="row">
+                  <h3 className="bg-white text-center rounded-5 p-0">
+                    Interesses:
+                  </h3>{" "}
+                </div>
+                <div className="row d-flex  ">
+                  {userProfile.hobbies && userProfile.hobbies.length !== 0 ? (
+                    <div
+                      className="row d-flex  overflow-auto "
+                      style={{ maxHeight: "200px" }}
+                    >
+                      {userProfile.hobbies.map((hobby) => (
+                        <div
+                          key={hobby.id}
+                          className=" col-10 col-lg-10 bg-dark mx-auto m-1 p-2 rounded-2 text-white border border-white mb-1"
+                        >
+                          <h5 className="text-center">{hobby.title} </h5>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <h4 class="text-white" style={{ fontWeight: "bolder" }}>
+                      {fullName} não tem interesses associados ao seu perfil
+                    </h4>
+                  )}
                 </div>
               </div>
               <div class="row mt-5">
-                <div class="col-auto col-sm-auto col-md-12 col-lg-8 p-4 bg-secondary rounded-3 mx-auto">
+                <div class="col-auto col-sm-auto col-md-12 col-lg-6 p-4 bg-secondary rounded-3 mx-auto">
                   <div className="">
                     <h3 className="bg-white text-center text-nowrap rounded-5 p-0  ">
                       Projectos:
                     </h3>
-                    <DataTable
-                      value={userProfile.projects}
-                      selectionMode="single "
-                      removableSort
+                    <div
+                      className="row d-flex  overflow-auto "
+                      style={{ maxHeight: "200px" }}
                     >
-                      <Column field="title" header="Nome do Projeto" sortable />
-                      <Column field="status" header="Estado" sortable />
-                      <Column
-                        field="creationDate"
-                        header="Data de Registo"
-                        sortable
-                        body={(rowData) =>
-                          convertTimestampToDate(rowData.creationDate)
-                        }
-                      />
+                      <DataTable
+                        value={userProfile.projects}
+                        selectionMode="single "
+                        removableSort
+                      >
+                        <Column
+                          field="title"
+                          header="Nome do Projeto"
+                          sortable
+                        />
+                        <Column field="status" header="Estado" sortable />
+                        <Column
+                          field="creationDate"
+                          header="Data de Registo"
+                          sortable
+                          body={(rowData) =>
+                            convertTimestampToDate(rowData.creationDate)
+                          }
+                        />
 
-                      <Column body={renderLink} header="#" />
-                    </DataTable>
+                        <Column body={renderLink} header="#" />
+                      </DataTable>
+                    </div>
                   </div>
                 </div>
               </div>

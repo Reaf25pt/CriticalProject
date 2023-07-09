@@ -62,20 +62,25 @@ function ProjectMembersInvited({ showProjects, setMembers }) {
   if (showPendingInvites.length === 0) {
     return (
       <div className="row mt-5">
-        <h5 className="text-white">Não há pedidos à espera de resposta</h5>
+        <h5 className="text-white" style={{ fontWeight: "bolder" }}>
+          Não há pedidos à espera de resposta
+        </h5>
       </div>
     );
   }
   return (
-    <div className="col-8 col-sm-10 col-md-7 col-lg-5 mx-auto bg-secondary mt-5 rounded-5 ">
-      <div>
+    <div className="container-fluid">
+      <div className="row  mx-auto">
         <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">
           Convites pendentes
         </h3>
+      </div>
+      <div className="row overflow-auto" style={{ maxHeight: "50vh" }}>
         {showPendingInvites.map((member, index) => (
           <div
             key={index}
-            className="row bg-white text-black mb-3 rounded-3 w-50 mx-auto align-items-center"
+            className="row bg-white text-black mb-3 p-2 rounded-3  
+          w-75 mx-auto d-flex justify-content-around d-flex align-items-center"
           >
             <div className="col-lg-2 ">
               {member.userInvitedPhoto === null ? (
@@ -96,10 +101,10 @@ function ProjectMembersInvited({ showProjects, setMembers }) {
                 />
               )}
             </div>
-            <div className="col-lg-6 ">
+            <div className="col-lg-6 text-center">
               {member.userInvitedFirstName} {member.userInvitedLastName}
             </div>
-            <div className="col-lg-6 ">
+            <div className="col-lg-2 ">
               <OverlayTrigger
                 placement="top"
                 overlay={<Tooltip>Aceitar pedido</Tooltip>}
@@ -114,7 +119,7 @@ function ProjectMembersInvited({ showProjects, setMembers }) {
                 </span>
               </OverlayTrigger>
             </div>
-            <div className="col-lg-6 ">
+            <div className="col-lg-2 ">
               <OverlayTrigger
                 placement="top"
                 overlay={<Tooltip>Recusar pedido</Tooltip>}

@@ -98,8 +98,8 @@ function InviteMember({ projId }) {
   };
 
   return (
-    <div className="mx-auto col-10 col-md-8 col-lg-6">
-      <div className="mt-5 p-5 bg-secondary rounded-5 ">
+    <div className="container-fluid">
+      <div className="mt-2 p-5 bg-secondary rounded-5 ">
         <div className="row mb-3 ">
           <div className="col ">
             <div className="form-outline">
@@ -116,7 +116,10 @@ function InviteMember({ projId }) {
                 onChange={handleChange}
                 // onBlur={() => setSuggestions(null)}
               />
-              <div className="dropdown bg-white">
+              <div
+                className="dropdown bg-white"
+                style={{ position: "absolute" }}
+              >
                 {suggestions &&
                   suggestions
                     /*  .filter((item) => {
