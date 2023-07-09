@@ -59,7 +59,7 @@ function ModalDeleteTask({ task, set, setTriggerList }) {
       <OverlayTrigger placement="top" overlay={<Tooltip>Apagar</Tooltip>}>
         <span data-bs-toggle="tooltip" data-bs-placement="top">
           {" "}
-          <BsFillTrashFill onClick={handleShow} size={40} color="red" />
+          <BsFillTrashFill onClick={handleShow} size={30} color="white" />
         </span>
       </OverlayTrigger>
 
