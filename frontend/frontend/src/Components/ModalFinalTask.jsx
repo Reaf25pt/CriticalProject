@@ -14,11 +14,12 @@ import ProjectMembersSelect from "./ProjectMembersSelect";
 import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
 import { BsFillPencilFill } from "react-icons/bs";
 import { projOpenStore } from "../stores/projOpenStore";
+import { toast, Toaster } from "react-hot-toast";
 
 import { userStore } from "../stores/UserStore";
 import Modal from "react-bootstrap/Modal";
 
-function ModalFinalTask({ setProjects }) {
+function ModalFinalTask() {
   const [show, setShow] = useState(false);
   const user = userStore((state) => state.user);
   const handleClose = () => setShow(false);
@@ -59,16 +60,23 @@ function ModalFinalTask({ setProjects }) {
           projId: id,
         },
         body: JSON.stringify(finalTask),
-      }).then((response) => {
-        if (response.status === 200) {
-          setProject([]);
-          alert("Status alterado");
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            return response.json();
+          } else {
+            throw new Error("Pedido não satisfeito");
+          }
+        })
+        .then((data) => {
+          setProject(data);
+          handleClose();
 
-          //navigate("/home", { replace: true });
-        } else {
-          alert("Algo correu mal. Tente novamente");
-        }
-      });
+          // toast.success("Papel alterado");
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
     }
 
     /* fetch(`http://localhost:8080/projetofinal/rest/project/${id}/task`, {
@@ -113,7 +121,7 @@ function ModalFinalTask({ setProjects }) {
             <ButtonComponent
               onClick={handleShow}
               type="button"
-              name="Mudar status: ready"
+              name="Mudar estado: READY"
               // onClick={() => handleProjectStatus(1)}
             />
           </div>
@@ -130,6 +138,8 @@ function ModalFinalTask({ setProjects }) {
         size="lg"
       >
         <Modal.Header closeButton>
+          <Toaster position="top-right" />
+
           <Modal.Title>
             Alterar estado do projecto para READY
             {/* <FormattedMessage

@@ -40,9 +40,6 @@ function FormTask() {
     setActiveId(id === activeId ? null : id);
   };
 
-  console.log("user");
-  console.log(user);
-
   const formatDate = (dateString) => {
     const options = { year: "numeric", month: "numeric", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
@@ -211,7 +208,7 @@ function FormTask() {
       credentials.taskOwnerId === "-1"
     ) {
       alert("Insira os dados assinalados como obrigatórios");
-    } else if (credentials.startDate > credentials.finishDate) {
+    } else if (credentials.startDate >= credentials.finishDate) {
       alert("Insira uma data de fim posterior à data de início indicada");
     } else {
       var newTask = credentials;

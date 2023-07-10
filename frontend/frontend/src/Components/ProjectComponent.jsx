@@ -5,6 +5,7 @@ import ButtonComponent from "./ButtonComponent";
 import ModalFinalTask from "./ModalFinalTask";
 import { toast, Toaster } from "react-hot-toast";
 import { projOpenStore } from "../stores/projOpenStore";
+import ModalCancelProject from "./ModalCancelProject";
 
 function ProjectComponent({ toggleComponent }) {
   const user = userStore((state) => state.user);
@@ -136,7 +137,7 @@ function ProjectComponent({ toggleComponent }) {
                         <div className="col-lg-12">
                           <ButtonComponent
                             type="button"
-                            name="Mudar status: planning"
+                            name="Mudar estado: PLANNING"
                             onClick={() => handleProjectStatus(0)}
                           />
                         </div>
@@ -147,7 +148,7 @@ function ProjectComponent({ toggleComponent }) {
                           <div className="col-lg-12">
                             <ButtonComponent
                               type="button"
-                              name="Mudar status: in progress"
+                              name="Mudar estado: IN PROGRESS"
                               onClick={() => handleProjectStatus(4)}
                             />
                           </div>
@@ -158,7 +159,7 @@ function ProjectComponent({ toggleComponent }) {
                         <div className="col-lg-12">
                           <ButtonComponent
                             type="button"
-                            name="Mudar status: finished"
+                            name="Mudar estado: FINISHED"
                             onClick={() => handleProjectStatus(6)}
                           />
                         </div>
@@ -166,16 +167,17 @@ function ProjectComponent({ toggleComponent }) {
                     ) : null}
 
                     {project.statusInt !== 6 && project.statusInt !== 5 ? (
-                      <div className="row mx-auto justify-content-around mt-5">
+                      <ModalCancelProject />
+                    ) : /*   <div className="row mx-auto justify-content-around mt-5">
                         <div className="col-lg-12">
                           <ButtonComponent
                             type="button"
-                            name="Cancelar"
+                            name="Cancelar projecto"
                             onClick={() => handleProjectStatus(5)}
                           />
                         </div>
-                      </div>
-                    ) : project.statusInt !== 6 ? (
+                      </div> */
+                    project.statusInt !== 6 ? (
                       <div className="row mx-auto justify-content-around mt-5">
                         <div className="col-lg-12">
                           <ButtonComponent

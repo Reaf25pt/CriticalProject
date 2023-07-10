@@ -381,7 +381,9 @@ public class Project {
             if (!res) {
                 r = Response.status(404).entity("Not found!").build();
             } else {
-                r = Response.status(200).entity("Success").build();
+                List<Task> tasks = projBean.getTasksList(projId);
+
+                r = Response.status(200).entity(tasks).build();
 
             }
         }
@@ -416,7 +418,9 @@ public class Project {
                 r = Response.status(404).entity("Not found!").build();
 
             } else {
-                r = Response.status(200).entity("Success").build();
+                List<Task> tasks = projBean.getTasksList(projId);
+
+                r = Response.status(200).entity(tasks).build();
             }
         }
         return r;
@@ -451,7 +455,7 @@ public class Project {
             } else {
                 List<Task> tasks = projBean.getTasksList(projId);
 
-                r = Response.status(200).entity("Success").build();
+                r = Response.status(200).entity(tasks).build();
             }
         }
         return r;
