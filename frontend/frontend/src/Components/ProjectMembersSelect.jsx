@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { userStore } from "../stores/UserStore";
+import { projOpenStore } from "../stores/projOpenStore";
 
 function ProjectMembersSelect(props) {
   const user = userStore((state) => state.user);
-  const [projMembers, setProjMembers] = useState([]);
+  const members = projOpenStore((state) => state.members);
 
-  useEffect(() => {
+  /* useEffect(() => {
     fetch(
       `http://localhost:8080/projetofinal/rest/project/${props.projId}/members`,
       {
@@ -21,7 +22,7 @@ function ProjectMembersSelect(props) {
         setProjMembers(data);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, []);*/
 
   return (
     <div className="arrow-select-container">
@@ -32,12 +33,12 @@ function ProjectMembersSelect(props) {
         required={props.required}
         placeholder={props.placeholder}
         className="form-control"
-        listMembers={props.listMembers}
-        projId={props.projId}
+        // listMembers={props.listMembers}
+        // projId={props.projId}
       >
         <option value="-1">{props.placeholder} </option>
         {/*  {Object.entries(props.listMembers).map(([key, member]) => ( */}
-        {projMembers.map((member) => (
+        {members.map((member) => (
           <option key={member.userInvitedId} value={member.userInvitedId}>
             {member.userInvitedFirstName} {member.userInvitedLastName}
           </option>

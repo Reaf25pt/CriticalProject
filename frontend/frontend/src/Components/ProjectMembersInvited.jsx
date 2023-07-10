@@ -68,6 +68,8 @@ function ProjectMembersInvited() {
       });
   }
 
+  console.log(pendingInvites.filter((invite) => invite.selfInvitation).length);
+
   function fetchMembers() {
     fetch(`http://localhost:8080/projetofinal/rest/project/${id}/members`, {
       method: "GET",
@@ -83,7 +85,7 @@ function ProjectMembersInvited() {
       .catch((err) => console.log(err));
   }
 
-  if (pendingInvites.filter((invite) => invite.selfinvitation).length === 0) {
+  if (pendingInvites.filter((invite) => invite.selfInvitation).length === 0) {
     return (
       <div className="row mt-5">
         <h5 className="text-white" style={{ fontWeight: "bolder" }}>
@@ -101,7 +103,7 @@ function ProjectMembersInvited() {
       </div>
       <div className="row overflow-auto" style={{ maxHeight: "50vh" }}>
         {pendingInvites
-          .filter((invite) => invite.selfinvitation)
+          .filter((invite) => invite.selfInvitation)
           .map((member, index) => (
             <div
               key={index}

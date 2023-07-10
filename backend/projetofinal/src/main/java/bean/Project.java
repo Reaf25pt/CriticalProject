@@ -56,6 +56,12 @@ public class Project implements Serializable {
     public Project() {
     }
 
+    /**
+     * Converts project entity to DTO, including skills and keywords associated with project
+     *
+     * @param p represents project entity
+     * @return Project DTO
+     */
     public dto.Project convertProjEntityToDto(entity.Project p) {
 
         dto.Project projDto = new dto.Project();
@@ -75,29 +81,27 @@ public class Project implements Serializable {
         projDto.setStatusInt(p.getStatus().ordinal());
         projDto.setAvailableSpots(getNumberOfAvailableSpots(p));
 
-
         projDto.setMembersNumber(p.getMembersNumber());
         projDto.setCreationDate(p.getCreationDate());
         projDto.setFinishedDate(p.getFinishDate());
 
         if (p.getListKeywords() != null) {
-            // converter keyword ENT to DTO
-
             projDto.setKeywords(convertListKeywordsDTO(p.getListKeywords()));
         }
 
         if (p.getListSkills() != null) {
-            // converter skill ENT to DTO
-
             projDto.setSkills(convertListSkillsDTO(p.getListSkills()));
         }
-
         return projDto;
     }
 
-
+    /**
+     * Converts a list of keyword entities into list of keyword DTOs
+     *
+     * @param listKeywords representes list of keyword entities
+     * @return list of keyword DTOs
+     */
     private List<Keyword> convertListKeywordsDTO(List<entity.Keyword> listKeywords) {
-        // convert keyword ENTITY  to keyword DTO list
 
         List<Keyword> listKeywordDTO = new ArrayList<>();
 
@@ -105,15 +109,18 @@ public class Project implements Serializable {
             Keyword keyw = new Keyword();
             keyw.setId(k.getId());
             keyw.setTitle(k.getTitle());
-
             listKeywordDTO.add(keyw);
         }
-
         return listKeywordDTO;
     }
 
+    /**
+     * Converts a list of skill entities into list of skill DTOs
+     *
+     * @param listSkills representes list of skill entities
+     * @return list of skill DTOs
+     */
     public List<Skill> convertListSkillsDTO(List<entity.Skill> listSkills) {
-        // convert skill ENTITY list to skill DTO list
 
         List<Skill> listSkillsDTO = new ArrayList<>();
 
@@ -122,13 +129,20 @@ public class Project implements Serializable {
             skill.setId(s.getSkillId());
             skill.setTitle(s.getTitle());
             skill.setSkillType(s.getType().ordinal());
-
             listSkillsDTO.add(skill);
         }
-
         return listSkillsDTO;
     }
 
+    /**
+     * Creates and persists in database a new project
+     * Associates keywords and skills with new project
+     * Defines token that makes the request has project manager
+     *
+     * @param project contains information to define new project
+     * @param token   represents session of logged user that makes the request
+     * @return true if new project is persisted in database successfully
+     */
     public boolean createNewProject(dto.Project project, String token) {
 
         boolean res = false;
@@ -146,27 +160,6 @@ public class Project implements Serializable {
 
                 if (project.getOffice() != 20) {
                     newProjEnt.setOffice(setOffice(project.getOffice()));
-
-        /*    switch (project.getOffice()) {
-                case 0:
-                    newProjEnt.setOffice(Office.LISBOA);
-                    break;
-                case 1:
-                    newProjEnt.setOffice(Office.COIMBRA);
-                    break;
-                case 2:
-                    newProjEnt.setOffice(Office.PORTO);
-                    break;
-                case 3:
-                    newProjEnt.setOffice(Office.TOMAR);
-                    break;
-                case 4:
-                    newProjEnt.setOffice(Office.VISEU);
-                    break;
-                case 5:
-                    newProjEnt.setOffice(Office.VILAREAL);
-                    break;
-            }*/
                 }
 
                 if (project.getResources() != null) {
@@ -180,14 +173,11 @@ public class Project implements Serializable {
                 }
 
                 projDao.persist(newProjEnt);
-                // System.out.println(newProjEnt.getId());
-
 
                 LOGGER.info("User whose user ID is " + userEnt.getUserId() + " creates a new project, project ID: " + newProjEnt.getId() + ". IP Address of request is " + userBean.getIPAddress());
 
                 associateCreatorToProject(userEnt, newProjEnt);
 
-                //TODO log project before associating keywords? what if something goes wrong in that process?
                 associateKeywordsWithProject(project.getKeywords(), newProjEnt);
 
                 if (project.getSkills() != null || project.getSkills().size() != 0) {
@@ -197,12 +187,17 @@ public class Project implements Serializable {
                 res = true;
 
                 communicationBean.recordProjectCreation(newProjEnt, userEnt);
-
             }
         }
         return res;
     }
 
+    /**
+     * Defines user that creates a new project as its manager
+     *
+     * @param user    represents user that creates new project
+     * @param project represents new project
+     */
     private void associateCreatorToProject(entity.User user, entity.Project project) {
 
         ProjectMember projMember = new ProjectMember();
@@ -223,22 +218,28 @@ public class Project implements Serializable {
         projDao.merge(project);
         userDao.merge(user);
 
-        LOGGER.info("User whose ID is " + user.getUserId() + " is a manager of project, project ID: " + project.getId() + ". IP Address of request is " + userBean.getIPAddress());
+        LOGGER.info("User whose ID is " + user.getUserId() + " is defined as manager of project, project ID: " + project.getId() + ". IP Address of request is " + userBean.getIPAddress());
 
     }
 
+    /**
+     * Associates keyword(s) with given project
+     * First, all keywords associated with given project have such association deleted, so that updated list of keywords is associated with project thus preventing duplication or problems with hypothetical keywords that were no longer to be associated with project (intended to be removed)
+     * If keyword title is already persisted in dabatase, keyword is associated with project
+     * If keyword title is not found in database, a new keyword is created and persisted in dabatase. Keyword is then associated with project
+     *
+     * @param keywords   represents list of keywords to be associated with given project
+     * @param newProjEnt represents given project
+     */
     private void associateKeywordsWithProject(List<Keyword> keywords, entity.Project newProjEnt) {
-        // associar as keywords ao projecto. Se já existir na DB basta adicionar a relação senão é preciso criar a keyword e adicionar à DB
-        // se encontrar keyword entity pelo title, apenas associa ao proj.
 
         deleteKeywordsAssociatedWithProject(newProjEnt);
 
         for (Keyword k : keywords) {
-            System.out.println(k.getTitle());
             entity.Keyword keyw = keywordDao.findKeywordByTitle(k.getTitle().trim());
 
             if (keyw != null) {
-                // já existe na DB, verificar se já tem relação com proj. Se nao basta associar ao proj ---- adicionar a cada uma das listas ?!
+                // já existe na DB, verifica se já tem relação com proj. Desnecessário porque nunca vai ter relação com keywords, à partida
 
                 Long count = keywordDao.findRelationBetweenProjAndKeyword(keyw.getId(), newProjEnt.getId());
                 if (count == 0) {
@@ -250,13 +251,11 @@ public class Project implements Serializable {
                     keywordDao.merge(keyw);
 
                     LOGGER.info("Keyword " + keyw.getId() + " is associated with project, project ID: " + newProjEnt.getId() + ". IP Address of request is " + userBean.getIPAddress());
-
                 }
 
 
             } else {
-                // não existe keyword para o title usado. É necessário criar e adicionar à DB
-                System.out.println(k.getTitle());
+                // não existe keyword para o title - É necessário criar e adicionar à DB
                 entity.Keyword newKeyW = new entity.Keyword();
                 newKeyW.setTitle(k.getTitle().trim());
                 newKeyW.getListProject_Keywords().add(newProjEnt);
@@ -270,16 +269,17 @@ public class Project implements Serializable {
         }
     }
 
+    /**
+     * Deletes relationship keyword - project for all keywords associated with given project
+     * Allows to then add list of keywords to be associated with project, preventing duplications or problems with hypothetical keywords that were no longer to be associated with project (intended to be removed)
+     *
+     * @param newProjEnt represents given project
+     */
     private void deleteKeywordsAssociatedWithProject(entity.Project newProjEnt) {
-        // antes de adicionar keywords associadas a projecto, apaga todas as keywords associadas ao projecto
-        // permite lidar com keywords removidas ao editar o projecto
 
         List<entity.Keyword> list = keywordDao.findListOfKeywordsByProjId(newProjEnt.getId());
-        System.out.println(newProjEnt.getId());
 
         if (list != null) {
-
-            //remove cada relação entre keyword e project
             for (entity.Keyword k : list) {
 
                 k.getListProject_Keywords().remove(newProjEnt);
@@ -290,10 +290,16 @@ public class Project implements Serializable {
         }
     }
 
-
+    /**
+     * Associates skill(s) with given project
+     * First, all skills associated with given project have such association deleted, so that updated list of skills is associated with project thus preventing duplication or problems with hypothetical skills that were no longer to be associated with project (intended to be removed)
+     * If skill title is already persisted in dabatase, skill is associated with project
+     * If skill title is not found in database, a new skill is created and persisted in dabatase. Skill is then associated with project
+     *
+     * @param skills     represents list of skills to be associated with given project
+     * @param newProjEnt represents given project
+     */
     private void associateSkillsWithProject(List<Skill> skills, entity.Project newProjEnt) {
-        // associar as skills ao projecto. Se já existir na DB basta adicionar a relação senão é preciso criar a skill e adicionar à DB
-        // se encontrar skill entity pelo title, apenas associa ao proj.
 
         deleteSkillsAssociatedWithProject(newProjEnt);
 
@@ -302,7 +308,7 @@ public class Project implements Serializable {
             entity.Skill skill = skillDao.findSkillByTitle(s.getTitle().trim());
 
             if (skill != null) {
-                // já existe na DB, basta associar ao proj ---- adicionar a cada uma das listas ?!
+                // já existe na DB, basta associar ao proj
 
                 Long count = skillDao.findRelationBetweenProjAndSkill(skill.getSkillId(), newProjEnt.getId());
 
@@ -314,9 +320,7 @@ public class Project implements Serializable {
                     skillDao.merge(skill);
 
                     LOGGER.info("Skill " + skill.getSkillId() + " is associated with project, project ID: " + newProjEnt.getId() + ". IP Address of request is " + userBean.getIPAddress());
-
                 }
-
 
             } else {
                 // não existe skill para o title usado. É necessário criar e adicionar à DB
@@ -336,14 +340,17 @@ public class Project implements Serializable {
         }
     }
 
+    /**
+     * Deletes relationship skill - project for all skills associated with given project
+     * Allows to then add list of skills to be associated with project, preventing duplications or problems with hypothetical skills that were no longer to be associated with project (intended to be removed)
+     *
+     * @param newProjEnt represents given project
+     */
     private void deleteSkillsAssociatedWithProject(entity.Project newProjEnt) {
-        // antes de adicionar skills associadas a projecto, apaga todas as skills associadas ao projecto
-        // permite lidar com skills removidas ao editar o projecto
-        System.out.println("delete skills");
+
         List<entity.Skill> list = skillDao.findListOfSkillsByProjId(newProjEnt.getId());
 
         if (list != null) {
-            //remove cada relação entre keyword e project
             for (entity.Skill s : list) {
                 s.getListProject_Skills().remove(newProjEnt);
                 newProjEnt.getListSkills().remove(s);
@@ -366,12 +373,20 @@ public class Project implements Serializable {
         return res;
     }
 
-
+    /**
+     * Adds a ProjectMember relationship for user and project if it is not defined yet
+     * Updates existing ProjectMember relationship if it's already defined
+     * An existing relationship can be removed (user left project and wants to participate again or invited again)
+     * An existing relationship can be not removed and not answered - waiting for response. Nothing is changed
+     * An existing relationship can be not removed and answered - previous invitation refused but user is again invited or self-invites itself
+     * If tokenId === userId is a self-invite to participate in project, if not it's a user added by project manager
+     *
+     * @param projId identifies project
+     * @param userId identifies user to be added to given project
+     * @param token  identifies session that makes the request
+     * @return
+     */
     public boolean addMemberToProject(int projId, int userId, String token) {
-
-        // 1º valida se já há relação entre user convidado e projecto na tabela projectMember. Se houver, apenas actualiza as infos
-        // add member to given project. If userId of token == userId to add (self-invitation) sends notification to managers of project
-        // if token ID NOT == userID to invite, send notification to user invited
 
         boolean res = false;
 
@@ -381,12 +396,10 @@ public class Project implements Serializable {
 
         if (user != null && userEnt != null && project != null) {
 
-            // procurar se ja existe relação prévia entre user a ser convidado e projecto. Se encontrar, altera-se os campos para novo convite senão faz-se nova entrada na tabela
             ProjectMember pm = projMemberDao.findProjectMemberByProjectIdAndUserId(projId, userId);
-            // pm pode ou não estar answered / accepted / removed
-            if (pm != null) {
-                //existe relação pm -  se está removed, actualiza info pq a pessoa quer participar / foi novamente convidada.
 
+            if (pm != null) {
+                //existe relação pm
 
                 if (!pm.isRemoved()) {
                     // não está removed
@@ -400,30 +413,33 @@ public class Project implements Serializable {
 
                         if (userEnt.getUserId() == userId) {
                             // self-invitation to participate in project
-
                             pm.setSelfInvitation(true);
 
-                            projMemberDao.merge(pm);
                             pm.getProjectToParticipate().getListPotentialMembers().add(pm);
                             pm.getUserInvited().getListProjects().add(pm);
 
                             projDao.merge(pm.getProjectToParticipate());
                             userDao.merge(pm.getUserInvited());
+                            projMemberDao.merge(pm);
 
                             communicationBean.notifyNewPossibleProjectMember(pm, pm.getProjectToParticipate(), pm.getUserInvited(), false);
                             res = true;
+                            LOGGER.info("User ID " + userId + " asks to participate in project ID " + pm.getProjectToParticipate().getId() + ". IP Address of request is " + userBean.getIPAddress());
+
                         } else {
                             // not self-invitation
                             pm.setSelfInvitation(false);
-                            projMemberDao.merge(pm);
                             pm.getProjectToParticipate().getListPotentialMembers().add(pm);
                             pm.getUserInvited().getListProjects().add(pm);
 
                             projDao.merge(pm.getProjectToParticipate());
                             userDao.merge(pm.getUserInvited());
+                            projMemberDao.merge(pm);
 
                             communicationBean.notifyNewPossibleProjectMember(pm, pm.getProjectToParticipate(), pm.getUserInvited(), true);
                             res = true;
+                            LOGGER.info("User ID " + userId + " is invited to participate in project ID " + pm.getProjectToParticipate().getId() + " by project manager whose account ID is " + userEnt.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
+
                         }
                     } else {
                         // está à espera de resposta, não faz nada mesmo que o campo self-invitation pudesse ser alterado
@@ -431,7 +447,7 @@ public class Project implements Serializable {
                     }
 
                 } else {
-                    // está removido do projecto mas pode querer participar novamente
+                    // está removido do projecto mas pode querer participar novamente / novamente convidado
                     pm.setManager(false);
                     pm.setRemoved(false);
                     pm.setAccepted(false);
@@ -442,15 +458,17 @@ public class Project implements Serializable {
 
                         pm.setSelfInvitation(true);
 
-                        projMemberDao.merge(pm);
                         pm.getProjectToParticipate().getListPotentialMembers().add(pm);
                         pm.getUserInvited().getListProjects().add(pm);
 
                         projDao.merge(pm.getProjectToParticipate());
                         userDao.merge(pm.getUserInvited());
+                        projMemberDao.merge(pm);
 
                         communicationBean.notifyNewPossibleProjectMember(pm, pm.getProjectToParticipate(), pm.getUserInvited(), false);
                         res = true;
+                        LOGGER.info("User ID " + userId + " asks to participate in project ID " + pm.getProjectToParticipate().getId() + ". IP Address of request is " + userBean.getIPAddress());
+
                     } else {
                         // not self-invitation
                         pm.setSelfInvitation(false);
@@ -463,6 +481,8 @@ public class Project implements Serializable {
 
                         communicationBean.notifyNewPossibleProjectMember(pm, pm.getProjectToParticipate(), pm.getUserInvited(), true);
                         res = true;
+                        LOGGER.info("User ID " + userId + " is invited to participate in project ID " + pm.getProjectToParticipate().getId() + " by project manager whose account ID is " + userEnt.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
+
                     }
                 }
             } else {
@@ -470,15 +490,17 @@ public class Project implements Serializable {
                 // não há relação prévia. é preciso criar nova associação entre user e projecto
                 if (userEnt.getUserId() == userId) {
                     // self-invitation to participate in project
-                    //TODO colocar aqui o log de ter convite para participar no projecto ?!!?!
                     ProjectMember projMember = associateUserToProject(user, project, true);
                     communicationBean.notifyNewPossibleProjectMember(projMember, project, user, false);
                     res = true;
+                    LOGGER.info("User ID " + userId + " asks to participate in project ID " + pm.getProjectToParticipate().getId() + ". IP Address of request is " + userBean.getIPAddress());
+
                 } else {
                     // not self-invitation
                     ProjectMember projMember = associateUserToProject(user, project, false);
                     communicationBean.notifyNewPossibleProjectMember(projMember, project, user, true);
                     res = true;
+                    LOGGER.info("User ID " + userId + " is invited to participate in project ID " + pm.getProjectToParticipate().getId() + " by project manager whose account ID is " + userEnt.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
                 }
             }
         }
@@ -486,20 +508,19 @@ public class Project implements Serializable {
         return res;
     }
 
-    private ProjectMember associateUserToProject(entity.User user, entity.Project project, boolean selfInvite/*, boolean manager*/) {
-        // associa o membro ao projecto, inserindo a info na 3ª tabela e definindo a relação
-        // se boolean selfInvite == true, auto-convite .
+    /**
+     * Persists in table projectmembers a new association between user and project
+     *
+     * @param user       represents user to participate in project, if invite is accepted
+     * @param project    represents project
+     * @param selfInvite is true if user self-invites itself to participate in project; Is false if user is invited by project manager
+     * @return ProjectMember DTO that defines relationship between user and project
+     */
+    private ProjectMember associateUserToProject(entity.User user, entity.Project project, boolean selfInvite) {
 
         ProjectMember projMember = new ProjectMember();
         projMember.setProjectToParticipate(project);
         projMember.setUserInvited(user);
-      /*  if(manager) {
-            // relação GESTOR
-            projMember.setManager(true);
-        } else {
-            //relação PARTICIPANTE
-            projMember.setManager(false);}
-*/
         projMember.setManager(false);
         projMember.setAnswered(false);
         projMember.setAccepted(false);
@@ -511,7 +532,6 @@ public class Project implements Serializable {
             projMember.setSelfInvitation(false);
         }
 
-
         projMemberDao.persist(projMember);
 
         project.getListPotentialMembers().add(projMember);
@@ -519,25 +539,21 @@ public class Project implements Serializable {
 
         projDao.merge(project);
         userDao.merge(user);
-//int relationId = projMember.getId();
-        LOGGER.info("User whose ID is " + user.getUserId() + " is invited to participate in project, project ID: " + project.getId() + ". IP Address of request is " + userBean.getIPAddress());
-//TODO change log accordingly self-invitation or not ?!  colocar este log no método de addMember ?
 
-       /* if(manager) {
-            // relação GESTOR
-            LOGGER.info("User whose ID is " + user.getUserId()+" is a manager of project, project ID: "+project.getId()+". IP Address of request is " + userBean.getIPAddress());
 
-        } else {
-            //relação PARTICIPANTE
-            LOGGER.info("User whose ID is " + user.getUserId()+" participates in project, project ID: "+project.getId()+". IP Address of request is " + userBean.getIPAddress());
-        }*/
         return projMember;
     }
 
-
+    /**
+     * Verifies if user that makes the request is project manager to be allowed to complete the request
+     * There is only one entry in table ProjectMembers for each relationship between 1 user and 1 project
+     * Attributes that define such relationship are updated when necessary
+     *
+     * @param token  identifies session that makes the request
+     * @param projId identifies project
+     * @return true if token is indeed project manager
+     */
     public boolean isProjManager(String token, int projId) {
-        // check if token has permission to modify project's info (is projManager of given project)
-        // ir a tabela projMember buscar a entrada (assume-se apenas 1 relação entre proj e user que vai sendo actualizada) cujo user associado ao token tenha relação com o projecto cujo id== projId.
         boolean res = false;
 
         entity.User user = tokenDao.findUserEntByToken(token);
@@ -550,7 +566,6 @@ public class Project implements Serializable {
                         res = true;
                         // token que faz request é manager do projecto, tendo permissão para fazer o request
                     }
-
                 }
             }
         }
@@ -558,7 +573,12 @@ public class Project implements Serializable {
         return res;
     }
 
-    public List<dto.Project> getAllProjectsList(String token) {
+    /**
+     * Gets all projects persisted in database
+     *
+     * @return list of Project DTO
+     */
+    public List<dto.Project> getAllProjectsList() {
 
         List<dto.Project> projectsList = new ArrayList<>();
 
@@ -571,8 +591,15 @@ public class Project implements Serializable {
         return projectsList;
     }
 
+    /**
+     * Gets project information, including skills and keywords associated
+     * Includes information of token relationship with project: manager, normal member or app user
+     *
+     * @param token identifies session that makes the request
+     * @param id    identifies project
+     * @return Project DTO
+     */
     public dto.Project getProject(String token, int id) {
-        // Obter info de projecto pelo seu ID, incluindo lista de keywords e skills (pode ser nula). Enviar ainda o papel do token no projecto
 
         dto.Project project = new dto.Project();
 
@@ -583,7 +610,6 @@ public class Project implements Serializable {
             if (user != null) {
                 project = convertProjEntityToDto(projEnt);
 
-// definir relação do token com projecto: membro / gestor ou apenas alguém com interesse em ver detalhes do projecto
                 ProjectMember projMember = projMemberDao.findProjectMemberByProjectIdAndUserId(projEnt.getId(), user.getUserId());
 
                 if (projMember != null) {
@@ -610,8 +636,13 @@ public class Project implements Serializable {
         return project;
     }
 
+    /**
+     * Gets list of active project members (projectMembers accepted and not removed) of given project
+     *
+     * @param id identifies project
+     * @return list of ProjectMember DTO
+     */
     public List<dto.ProjectMember> getProjectMembers(int id) {
-        // obter lista de membros activos de um projecto pelo seu ID
 
         List<dto.ProjectMember> members = new ArrayList<>();
 
@@ -638,93 +669,161 @@ public class Project implements Serializable {
         return members;
     }
 
+    /**
+     * Get list of keywords whose name contains given input (title), to suggest
+     *
+     * @param title represents input that is written by user in frontend
+     * @return list of Keyword - DTO that contains information of given keyword
+     */
     public List<Keyword> getKeywordsList(String title) {
-        // lista de keywords da DB que match title inserido
 
         List<Keyword> listDto = new ArrayList<>();
 
         List<entity.Keyword> listEnt = keywordDao.findKeywordListContainingStr(title.toLowerCase());
 
         if (listEnt != null) {
-
             listDto = convertListKeywordsDTO(listEnt);
         }
         return listDto;
     }
 
+    /**
+     * Verifies needed validations to add a new task to a project, depending on project's status
+     * If project status is PLANNING, task can be added with no extra validation
+     * If project status is IN PROGRESS, task can only be added if its finish date is before final task start date
+     *
+     * @param projId identifies project
+     * @param task   represents task details to be persisted in database
+     * @param token  identifies session that makes the request
+     * @return true if task is added to given project successfully
+     */
+    public boolean addTaskDependingOnProjectStatus(int projId, Task task, String token) {
+        boolean res = false;
+        entity.Project project = projDao.findProjectById(projId);
+
+        if (project != null) {
+            if (project.getStatus() == StatusProject.PLANNING) {
+                res = addTaskToProject(projId, task, token);
+            } else if (project.getStatus() == StatusProject.PROGRESS) {
+                if (validateTaskDatesBeforeFinalTaskDates(task, project)) {
+                    res = addTaskToProject(projId, task, token);
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Verifies if finish date of task to be added to project is before final task start date
+     *
+     * @param task    represents task details to be persisted in database
+     * @param project represents project
+     * @return true if dates are valid and task can be added to given project
+     */
+    private boolean validateTaskDatesBeforeFinalTaskDates(Task task, entity.Project project) {
+        boolean res = false;
+        entity.Task finalTask = taskDao.findFinalTaskByProjectId(project.getId());
+        if (finalTask != null) {
+            if (finalTask.getStartDate().after(task.getFinishDate())) {
+                res = true;
+            }
+        }
+        return res;
+    }
+
+
+    /**
+     * Adds a new task to given project
+     * TaskOwner must be a project member (active and not removed)
+     * In case task to be added has pre-required tasks that must be associated with new task to be added, an association between new task and pre-required task is defined
+     * If new task dates clash with pre-required task dates, association between 2 tasks is not defined
+     *
+     * @param projId identifies project
+     * @param task   represents task details to be persisted in database
+     * @param token  identifies session that makes the request
+     * @return true if a new task is successfully persisted in database and associated with given project
+     */
     public boolean addTaskToProject(int projId, Task task, String token) {
-        // adiciona nova task ao projecto cujo Id == projId
         boolean res = false;
         entity.Task newTask = new entity.Task();
+        entity.User user = tokenDao.findUserEntByToken(token);
+        if (user != null) {
+            if (task != null) {
+                ProjectMember pm = projMemberDao.findActiveProjectMemberByProjectIdAndUserId(projId, task.getTaskOwnerId());
+                if (pm.getUserInvited() != null) {
 
-        if (task != null) {
+                    newTask.setTitle(task.getTitle());
+                    newTask.setStartDate(task.getStartDate());
+                    newTask.setFinishDate(task.getFinishDate());
+                    newTask.setDetails(task.getDetails());
 
+                    newTask.setAdditionalExecutors(task.getAdditionalExecutors());
+                    newTask.setTaskOwner(pm.getUserInvited());
 
-            newTask.setTitle(task.getTitle());
-            newTask.setStartDate(task.getStartDate());
-            System.out.println(task.getStartDate());
-            newTask.setFinishDate(task.getFinishDate());
-            System.out.println(task.getFinishDate());
-            newTask.setDetails(task.getDetails());
+                    newTask.setStatus(StatusTask.PLANNED);
 
-            newTask.setAdditionalExecutors(task.getAdditionalExecutors());
+                    newTask.setProject(projDao.findProjectById(projId));
+                    newTask.setFinalTask(false);
 
-            //TODO proteger de nulo - pesquisar user à parte e n directamente?
-            newTask.setTaskOwner(userDao.findUserById(task.getTaskOwnerId()));
+                    taskDao.persist(newTask);
 
-            newTask.setStatus(StatusTask.PLANNED);
+                    // persistir 1º tarefa para então associar tarefas precedentes se houver
 
-            newTask.setProject(projDao.findProjectById(projId));
-            newTask.setFinalTask(false);
+                    if (task.getPreRequiredTasks() != null) {
+                        associatePreRequiredTasksWithCurrentTask(task.getPreRequiredTasks(), newTask);
+                    }
 
-            taskDao.persist(newTask);
+                    res = true;
+                    LOGGER.info("Task ID " + newTask.getId() + " is added to project " + projId + " by user ID " + user.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
 
-            // persistir 1º tarefa para então associar tarefas precedentes se houver
-            System.out.println(task.getPreRequiredTasks().size());
-            System.out.println(task.getPreRequiredTasks());
-            if (task.getPreRequiredTasks() != null) {
-
-                associatePreRequiredTasksWithCurrentTask(task.getPreRequiredTasks(), newTask);
+                }
             }
-
-            res = true;
         }
 
         return res;
     }
 
+    /**
+     * Associates pre-required tasks to given task, if dates of given task do not clash with dates of pre-required task
+     * finishDate of pre-required task must be before startDate of given task
+     *
+     * @param preRequiredTasks represents list of pre-required tasks to be associated with given task
+     * @param currentTask      represents given task
+     */
     private void associatePreRequiredTasksWithCurrentTask(List<Task> preRequiredTasks, entity.Task currentTask) {
-        // associa cada preRequired task a current task
-        System.out.println(preRequiredTasks.size());
         for (Task t : preRequiredTasks) {
             entity.Task taskEnt = taskDao.find(t.getId());
             if (taskEnt.getFinishDate().before(currentTask.getStartDate())) {
 
-                // adicionar cada tarefa q seja pre requisito à lista da current task, desde que as datas não se sobreponham!!!
                 currentTask.getListPreRequiredTasks().add(taskDao.find(t.getId()));
             }
         }
-
         taskDao.merge(currentTask);
-        //TODO será necessário fazer merge de cada task t ? em teoria apenas a task tem lista de tarefas required
     }
 
+    /**
+     * Verifies if attributes mandatory to add new task to project are filled in: title, start and finish date and task details
+     * @param task represents task to be added
+     * @return true
+     */
     public boolean checkTaskInfo(Task task) {
-        // verifica se campos obrigatórios da task estão preenchidos
 
         boolean res = false;
 
         if (userBean.checkStringInfo(task.getTitle()) || task.getStartDate() == null || task.getFinishDate() == null || userBean.checkStringInfo(task.getDetails())) {
-            // TODO falta verificar se id de responsavel está definido ou por oposiçao definir user
             res = true;
         }
-
 
         return res;
     }
 
+    /**
+     * Gets list of all tasks associated with given project
+     *
+     * @param id identifies project
+     * @return list of Task DTO
+     */
     public List<Task> getTasksList(int id) {
-        // obter lista de tarefas associadas ao projecto ID
 
         List<Task> taskList = new ArrayList<>();
 
@@ -739,11 +838,15 @@ public class Project implements Serializable {
                 }
             }
         }
-
-
         return taskList;
     }
 
+    /**
+     * Converts task entity to task DTO
+     *
+     * @param t represents task entity
+     * @return task DTO
+     */
     private Task convertTaskEntToDto(entity.Task t) {
         Task task = new Task();
 
@@ -763,14 +866,16 @@ public class Project implements Serializable {
         if (t.getListPreRequiredTasks() != null) {
             task.setPreRequiredTasks(convertTaskEntToMinimalDto(t.getListPreRequiredTasks()));
         }
-
-
         return task;
     }
 
+    /**
+     * Converts task entity to task DTO containing minimal required information to display pre-required tasks
+     *
+     * @param listPreRequiredTasks represents list of pre-required tasks
+     * @return list of Task DTO
+     */
     private List<Task> convertTaskEntToMinimalDto(List<entity.Task> listPreRequiredTasks) {
-        // método que converte task entity em dto, apresentando apenas a info mínima: ID, title e status
-
         List<Task> list = new ArrayList<>();
 
         for (entity.Task t : listPreRequiredTasks) {
@@ -785,10 +890,15 @@ public class Project implements Serializable {
         return list;
     }
 
+    /**
+     * Verifies if user has an active project (one project whose status is not CANCELLED or FINISHED)
+     * User can only create a new project or participate in another if it has no active project
+     *
+     * @param token represents session of user that makes the request
+     * @return true if user has no active project, therefore can create or participate in project
+     */
     public boolean verifyIfUserHasActiveProject(String token) {
-        // verifica se user tem algum projecto 'activo'. Se tiver não poderá criar novo projecto nem participar noutro
         boolean res = false;
-
 
         entity.User user = tokenDao.findUserEntByToken(token);
         if (user != null) {
@@ -800,40 +910,44 @@ public class Project implements Serializable {
                     if (p.getStatus() != StatusProject.CANCELLED && p.getStatus() != StatusProject.FINISHED) {
                         count++;
                     }
-
                 }
-                System.out.println("count de projectos activos" + count);
                 if (count == 0) {
                     res = true;
                     // pode criar ou participar num proj
                 }
             }
-
         }
-        System.out.println("res metodo " + res);
         return res;
     }
 
-
+    /**
+     * Get list of skills whose name contains given input (str), to suggest
+     *
+     * @param str represents input that is written by user in frontend
+     * @return list of Skill - DTO that contains information of given skill
+     */
     public List<Skill> getSkillsList(String str) {
-        // retrieve list of skills that contain title
         List<Skill> listSkillDto = new ArrayList<>();
-
 
         List<entity.Skill> list = skillDao.findSkillListContainingStr(str.toLowerCase());
 
         if (list != null) {
             for (entity.Skill s : list) {
-
                 listSkillDto.add(userBean.convertToSkillDto(s));
             }
         }
         return listSkillDto;
     }
 
-
+    /**
+     * Edits project details, excluding execution plan and members
+     * Associates keywords and skills with given project
+     *
+     * @param token    identifies session that makes the request
+     * @param editProj contains project details
+     * @return true if project details are edited successfully
+     */
     public boolean editProjectInfo(String token, dto.Project editProj) {
-        // editar info do projecto
 
         boolean res = false;
         entity.User user = tokenDao.findUserEntByToken(token);
@@ -844,26 +958,6 @@ public class Project implements Serializable {
                 projEnt.setTitle(editProj.getTitle());
                 if (editProj.getOffice() != 20) {
                     projEnt.setOffice(setOffice(editProj.getOffice()));
-          /*      switch (editProj.getOffice()) {
-                    case 0:
-                        projEnt.setOffice(Office.LISBOA);
-                        break;
-                    case 1:
-                        projEnt.setOffice(Office.COIMBRA);
-                        break;
-                    case 2:
-                        projEnt.setOffice(Office.PORTO);
-                        break;
-                    case 3:
-                        projEnt.setOffice(Office.TOMAR);
-                        break;
-                    case 4:
-                        projEnt.setOffice(Office.VISEU);
-                        break;
-                    case 5:
-                        projEnt.setOffice(Office.VILAREAL);
-                        break;
-                }*/
                 }
                 projEnt.setDetails(editProj.getDetails());
                 projEnt.setResources(editProj.getResources());
@@ -871,24 +965,28 @@ public class Project implements Serializable {
                 projEnt.setMembersNumber(editProj.getMembersNumber());
                 projEnt.setCreationDate(editProj.getCreationDate());
 
-                projDao.merge(projEnt); // TODO será aqui ou depois de associar skills e keywords?
+                projDao.merge(projEnt);
 
                 associateKeywordsWithProject(editProj.getKeywords(), projEnt);
 
                 if (editProj.getSkills() != null || editProj.getSkills().size() != 0) {
-                    System.out.println("associar skills");
                     associateSkillsWithProject(editProj.getSkills(), projEnt);
                 }
-                projDao.merge(projEnt); // TODO será aqui ou antes de associar skills e keywords?
+                projDao.merge(projEnt);
                 res = true;
                 communicationBean.recordProjectEdition(projEnt, user);
+                LOGGER.info("User ID " + user.getUserId() + " edits details of project ID " + projEnt.getId() + ". IP Address of request is " + userBean.getIPAddress());
+
             }
         }
-
-
         return res;
     }
 
+    /**
+     * Gets StatusProject ENUM value according to statusInt value
+     * @param statusInt value correspondes to equivalent StatusProject
+     * @return StatusProject Enum
+     */
     private StatusProject setProjectStatus(int statusInt) {
         // define o status do projecto de acordo com info que vem do frontend
 
@@ -916,11 +1014,15 @@ public class Project implements Serializable {
             case 6:
                 st = StatusProject.FINISHED;
                 break;
-
         }
         return st;
     }
 
+    /**
+     * Gets Office ENUM value according to office value
+     * @param office value correspondes to equivalent Office
+     * @return Office Enum
+     */
     public Office setOffice(int office) {
         // define o office de acordo com info que vem do frontend
 
@@ -945,21 +1047,25 @@ public class Project implements Serializable {
             case 5:
                 value = Office.VILAREAL;
                 break;
-
-
         }
         return value;
     }
 
+    /**
+     * Gets list of users who can be suggested to be invited to participate in project, according to input inserted in frontend (name)
+     * Users whose name or nickname contain input (name)
+     * It will only show users who do not have an active project and are not contest managers (profile A)
+     *
+     * @param name
+     * @return
+     */
     public List<UserInfo> getPossibleMembers(String name) {
-        // retorna lista de users que não têm projecto activo nem são perfil A, podendo ser sugeridos
 
         // TODO prevenir sugerir users com convite pendente no projecto em questão?
 
         List<UserInfo> listToSuggest = new ArrayList<>();
         List<entity.User> tempList = new ArrayList<>();
 
-// implica ir buscar todos os utilizadores que n tenham projecto activo (passa pela tabela projMember e projecto, para obter o status)
         List<entity.User> matchingUsers = userDao.findUserContainingStr(name);
 
         if (matchingUsers != null) {
@@ -970,20 +1076,10 @@ public class Project implements Serializable {
                 tempList = matchingUsers.stream().filter(user -> !usersWithActiveProject.contains(user))
                         .filter(user -> !user.isContestManager())
                         .collect(Collectors.toList());
-                System.out.println(tempList.size());
-
-
             }
             if (!tempList.isEmpty()) {
                 // significa que tem users para apresentar. Converter para dto
                 for (entity.User u : tempList) {
-                  /*  UserInfo userDto = new UserInfo();
-                    userDto.setId(u.getUserId());
-                    userDto.setFirstName(u.getFirstName());
-                    userDto.setLastName(u.getLastName());
-                    userDto.setNickname(u.getNickname());
-                    userDto.setPhoto(u.getPhoto());*/
-
                     listToSuggest.add(convertUserToUserInfoDto(u));
                 }
             }
@@ -991,6 +1087,12 @@ public class Project implements Serializable {
         return listToSuggest;
     }
 
+    /**
+     * Convert User entity to UserInfo DTO, which contains minimal necessary information
+     *
+     * @param u represents User entity
+     * @return UserInfo DTO
+     */
     private UserInfo convertUserToUserInfoDto(entity.User u) {
         UserInfo userDto = new UserInfo();
         userDto.setId(u.getUserId());
@@ -1002,10 +1104,18 @@ public class Project implements Serializable {
         return userDto;
     }
 
+    /**
+     * Removes member from given project by updating ProjectMember that defines relationship between user and project (entry is not removed from database)
+     * Member can only be removed if project continues to have a manager after member removal
+     * Member can only be removed if all tasks where taskOwner is member to be removed and task status is NOT FINISHED have another project member designated taskOwner
+     *
+     * @param userId identifies user to be removed from project
+     * @param projId identifies project
+     * @param token  identifies session that makes the request
+     * @return true
+     */
     public boolean deleteProjMember(int userId, int projId, String token) {
-        // remove projMember relationship with project (não apaga na BD mas apenas setRemove = true
-        // só pode remover se ficar pelo menos 1 gestor no projecto após remoção.
-        // TODO verificar se inclui possibilidade de se auto-remover
+
         boolean delete = false;
 
         ProjectMember pm = projMemberDao.findProjectMemberByProjectIdAndUserId(projId, userId);
@@ -1014,35 +1124,22 @@ public class Project implements Serializable {
             boolean res = hasEnoughManagers(projId, userId);
 
             if (res) {
-                // pode remover user
-                // TODO à partida canceled e finished já n faz sentido aqui
-                if (pm.getProjectToParticipate().getStatus() == StatusProject.CANCELLED || pm.getProjectToParticipate().getStatus() == StatusProject.FINISHED) {
+                // tem managers suficientes
+                boolean canLeave = dealWithTasksBeforeLeavingProject(userId, pm.getProjectToParticipate());
+
+                if (canLeave) {
+                    // tarefas à responsabilidade do membro que vai sair têm novo responsável atribuído
                     pm.setRemoved(true);
                     projMemberDao.merge(pm);
                     communicationBean.notifyProjectMembersOfMemberLeavingProject(pm.getProjectToParticipate(), pm.getUserInvited());
+// TODO apenas notificar pessoa no caso de ser removida do projecto senão não entende pq ja n tem acesso ao projecto
                     delete = true;
+                    LOGGER.info("User ID " + userId + " no longer participates in project " + pm.getProjectToParticipate().getId() + ". IP Address of request is " + userBean.getIPAddress());
+
                     communicationBean.recordMemberRemovalFromProject(pm.getUserInvited(), pm.getProjectToParticipate());
-
-                } else {
-                    System.out.println("Proj not concluded / finished ");
-                    // TODO FALTA TESTAR : se for tem de alterar isso se projecto n estiver finished ou cancelled .
-                    boolean canLeave = dealWithTasksBeforeLeavingProject(userId, pm.getProjectToParticipate());
-
-                    if (canLeave) {
-                        System.out.println("pode sair");
-                        pm.setRemoved(true);
-                        projMemberDao.merge(pm);
-                        communicationBean.notifyProjectMembersOfMemberLeavingProject(pm.getProjectToParticipate(), pm.getUserInvited());
-// TODO Manter notificações ou apenas notificar pessoa no caso de ser removida do projecto senão não entende pq ja n tem acesso ao projecto
-                        delete = true;
-                        communicationBean.recordMemberRemovalFromProject(pm.getUserInvited(), pm.getProjectToParticipate());
-
-                    }
                 }
-
             }
         }
-
         return delete;
     }
 
@@ -1050,6 +1147,7 @@ public class Project implements Serializable {
      * Verifies if given project has enough managers to ensure that it will always have a project manager regardless of changes in members role
      * Method is called before changing user's profile to contest manager, before project member role is changed from project manager to 'normal' member, and before project member leaving project
      * If there is only 1 project manager, it need to be verified if userId is not a project manager, in which case it will not be possible to complete request
+     *
      * @param projId identifies project
      * @param userId identifies user whose project role/ participation might be altered
      * @return true if project has at least 2 project managers or in case project has 1 manager whose ID is not the same has userID whose role will be changed
@@ -1073,9 +1171,16 @@ public class Project implements Serializable {
         return res;
     }
 
+    /**
+     * Verifies if token has permission to add member (is project manager) or token who wants to participate in project has no active project (self-invitation)
+     * It is a self-invitation if userId is equal to token ID (userId from token's account)
+     *
+     * @param token  identifies session that makes the request
+     * @param projId identifies project
+     * @param userId identifies user to be invited to participate in project
+     * @return true if token has permission to complete request (either is a manager or has no active project)
+     */
     public boolean verifyPermissionToAddMember(String token, int projId, int userId) {
-        // verifica se token é gestor se for diferente do user id ou   se userid == token (auto-convite)
-
         boolean res = false;  // nao pode
 
         entity.User loggedUser = tokenDao.findUserEntByToken(token);
@@ -1090,8 +1195,15 @@ public class Project implements Serializable {
         return res;
     }
 
+    /**
+     * Verifies if token has permission to delete member (is project manager) or token itself wants to leave project
+     *
+     * @param token  identifies session that makes the request
+     * @param projId identifies project
+     * @param userId identifies user to leave project
+     * @return true if token has permission to complete request
+     */
     public boolean verifyPermissionToDeleteUser(String token, int projId, int userId) {
-        // verifica se token é gestor. se for diferente do user id ou se userID == token (auto-remove do projecto)
         boolean res = false; // n pode
 
         entity.User loggedUser = tokenDao.findUserEntByToken(token);
@@ -1109,9 +1221,14 @@ public class Project implements Serializable {
         return res;
     }
 
+    /**
+     * Verifies if project has available spots for participating members
+     * Compares number of active members (accepted and not removed) with maximum members project can have
+     *
+     * @param projId identifies project
+     * @return true if there are available spots
+     */
     public boolean verifyIfProjectHasAvailableSpots(int projId) {
-        //verifica se projecto tem vagas disponíveis para adicionar membro
-        // Compara o numero de membros activos com número máx de participantes que projecto pode ter
         boolean res = false;
         entity.Project project = projDao.findProjectById(projId);
         if (project != null) {
@@ -1122,13 +1239,16 @@ public class Project implements Serializable {
                     res = true;
                 }
             }
-
         }
         return res;
     }
 
+    /**
+     * Calculates number of available spots in given project
+     * @param p represents project
+     * @return int of available spots
+     */
     private int getNumberOfAvailableSpots(entity.Project p) {
-        //retorna número de vagas disponíveis
 
         int count = 0;
 
@@ -1138,19 +1258,25 @@ public class Project implements Serializable {
         } else {
             count = p.getMembersNumber();
         }
-
         return count;
     }
 
+    /**
+     * Modifies role that a member plays in given project: project manager (1) or 'normal' member (0)
+     * Role of a user can only be changed to normal (0) if project still has at least one project manager after role is changed
+     *
+     * @param userId identifies user whose role is to be changed
+     * @param projId identifies project
+     * @param token  identifies session that makes the request
+     * @param role   is 0 to change role to 'normal' member and 1 is to change role to project manager
+     * @return true if role is modified successfully
+     */
     public boolean changeMemberRole(int userId, int projId, String token, int role) {
-        // altera o papel do userId. 1 - gestor   /   0 - participante normal
 
         boolean res = false;
 
-        // encontrar relação entre user e projecto, para garantir que está válida
         ProjectMember pm = projMemberDao.findProjectMemberByProjectIdAndUserId(projId, userId);
         if (pm != null) {
-
             if (pm.isAccepted() && !pm.isRemoved()) {
 
                 if (role == 0) {
@@ -1159,56 +1285,64 @@ public class Project implements Serializable {
                         pm.setManager(false);
                         projMemberDao.merge(pm);
                         res = true;
+                        LOGGER.info("User ID " + userId + " is no longer project manager of project " + pm.getProjectToParticipate().getId() + ". IP Address of request is " + userBean.getIPAddress());
+//TODO ADD RECORD
                     }
                 } else if (role == 1) {
 
                     pm.setManager(true);
                     projMemberDao.merge(pm);
                     res = true;
+                    LOGGER.info("User ID " + userId + " is now a project manager of project " + pm.getProjectToParticipate().getId() + ". IP Address of request is " + userBean.getIPAddress());
+//TODO ADD RECORD
                 }
             }
         }
         return res;
     }
 
+    /**
+     * Modifies project status
+     * Some project status (PROPOSED and APPROVED) are defined elsewhere as those are automatic based on contest appplication
+     *
+     * @param token     identifies session that makes the request
+     * @param projId    identifies project
+     * @param status    value represents new status project. Values are the same defined for StatusProject ENUM. Value 7 means project is to be re-activated
+     * @param finalTask represents final task information that is added when project status is to be changed to READY
+     * @return true if project status is changed successfully
+     */
     public boolean editProjectStatus(String token, int projId, int status, Task finalTask) {
-        // altera estado do projecto, por intervenção de gestor do projecto
-        // apenas considera os estados planning, ready, in progress, cancelled, finished. os outros 2 serão automáticos
-// finalTask é apenas para o caso de alterar para ready e nunca se verifica se está null a n ser nesse caso
-        boolean res = false;
 
+        boolean res = false;
 
         entity.Project project = projDao.findProjectById(projId);
         if (project != null) {
             switch (status) {
                 case 0:
-                    // mudar para planning: proj está em ready e é preciso alterar status para permitir editar info do projecto
+                    // mudar para PLANNING: proj está em ready e é preciso alterar status para permitir editar info do projecto
                     res = changeProjStatusToPlanning(project, token);
                     break;
                 case 1:
-                    //definir como ready: projecto está em planning. Proj ready é um projecto que está pronto para ser apresentado a um concurso
-                    // não permite edição de info e tem de se assegurar que tarefa final existe
+                    // mudar para READY: projecto está em planning. Proj ready é um projecto que está pronto para ser apresentado a um concurso
 
                     res = changeProjStatusToReady(project, finalTask, token);
                     break;
                 case 4:
-                    // definir como in progress, proj está approved
+                    // mudar para IN PROGRESS, proj está approved
                     res = changeProjStatusToProgress(project, token);
 
                     break;
                 case 5:
-                    // cancelar projecto pode ser feito em qq altura
-                    // TODO garantir que nada é editável, add members
+                    // CANCELAR projecto pode ser feito em qq altura
 
                     res = changeProjStatusToCancelled(project, token);
                     break;
                 case 6:
-
-                    //definir como finished: proj tem de estar in progress e verificar se precisa de ter tarefas todas concluidas ou outras verificações
+                    // mudar para FINISHED: proj tem de estar in progress e verificar se precisa de ter tarefas todas concluidas ou outras verificações
                     res = changeProjStatusToFinished(project, token);
                     break;
                 case 7:
-                    //definir como planning um projecto cancelado se não está associado a nenhum concurso
+                    // REACTIVAR projecto - PLANNING: um projecto cancelado se não está associado a nenhum concurso
                     // só pode acontecer se nenhum membro tem algum projecto activo no momento da reactivação
                     res = reactivateCancelledProj(project, token);
                     break;
@@ -1217,55 +1351,99 @@ public class Project implements Serializable {
         return res;
     }
 
+    /**
+     * Reactivates a CANCELLED project, setting its status as PLANNING
+     * Project must not participate in a contest
+     * Project members must not have another active project
+     * No project member must have Profile A (contest manager)
+     *
+     * @param project represents project
+     * @param token   identifies session that makes the request
+     * @return true if project is reactivated sucessfully
+     */
     private boolean reactivateCancelledProj(entity.Project project, String token) {
-        // reactiva um projecto, definindo como planning se não está associado a um concurso e todos os membros não tem proj activo
         boolean res = false;
-        // verificar 1º se projecto está aceite em algum concurso. neste caso n poderá ser reactivado
 
         ContestApplication application = applicationDao.findAcceptedApplicationForGivenProjectId(project.getId());
 
         if (application == null) {
-            if (verifyExistingMembersHaveNoActiveProject(project)) {
+            if (verifyExistingMembersHaveNoActiveProject(project) && verifyExistingMembersAreContestManagers(project)) {
 
-// n foi aceite em nenhum concurso - pode ser reactivado
                 project.setStatus(StatusProject.PLANNING);
                 projDao.merge(project);
                 res = true;
+
                 entity.User user = tokenDao.findUserEntByToken(token);
                 communicationBean.recordProjectStatusChange(project, user, 7);
-// TODO testar mas à partida nunca terá tarefa final associada neste ponto
+                LOGGER.info("Project " + project.getId() + " is reactivated by user ID " + user.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
+
             }
         }
 
         return res;
     }
 
+    /**
+     * Verifies if active members of given project have an active project (useful when given project is CANCELLED but to be reactivated)
+     * All members must have no active project so that CANCELLED project is reactivated
+     *
+     * @param project represents given project
+     * @return true if all members have no active project
+     */
     private boolean verifyExistingMembersHaveNoActiveProject(entity.Project project) {
-        // verifica se todos os membro estão livres para que o projecto cancelado possa ser reactivado e nenhum membro fique com 2 proj activos em simultaneo
         boolean res = false;
-        int count = 0;  // conta o número de membros com projecto activo. Se no final o valor n for 0, não pode reactiva projecto
+        int count = 0;  // conta o número de membros com projecto activo. Se no final o valor n for 0, não pode reactivar projecto
+
         List<entity.User> members = projMemberDao.findListOfUsersByProjectId(project.getId());
         if (members != null) {
             for (entity.User u : members) {
                 entity.Project activeProj = projMemberDao.findActiveProjectByUserId(u.getUserId());
                 if (project != null) {
                     // à partida nunca será o ID do projecto a ser reactivado
-                    System.out.println("confirmar que proj activo e proj a ser reactivado não é o mesmo, ID do 1º " + activeProj.getId() + "  ID do 2º " + project.getId());
                     count++;
-
                 }
             }
             if (count == 0) {
                 res = true;
             }
         }
-
-
         return res;
     }
 
+    /**
+     * Verifies if active members of given project are contest managers (profile A) - (useful when given project is CANCELLED but to be reactivated)
+     *
+     * @param project represents given project
+     * @return true if all members have profile B
+     */
+    private boolean verifyExistingMembersAreContestManagers(entity.Project project) {
+        boolean res = false;
+        int count = 0;  // conta o número de membros que são PERFIL A. Se no final o valor n for 0, não pode reactivar projecto
+
+        List<entity.User> members = projMemberDao.findListOfUsersByProjectId(project.getId());
+        if (members != null) {
+            for (entity.User u : members) {
+                if (u.isContestManager()) {
+                    count++;
+                }
+            }
+            if (count == 0) {
+                res = true;
+            }
+        }
+        return res;
+
+    }
+
+    /**
+     * Modifies project status to FINISHED
+     * All project tasks must be FINISHED
+     *
+     * @param project represents project
+     * @param token   identifies session that makes the request
+     * @return true if project status is modified sucessfully
+     */
     private boolean changeProjStatusToFinished(entity.Project project, String token) {
-        // define status de proj como finished, se todas as tarefas estiverem finished
         boolean res = false;
 
         Long count = taskDao.countNotFinishedTasksFromProjectByProjId(project.getId());
@@ -1276,18 +1454,24 @@ public class Project implements Serializable {
             res = true;
             entity.User user = tokenDao.findUserEntByToken(token);
             communicationBean.recordProjectStatusChange(project, user, 6);
-        }
+            LOGGER.info("Status of project " + project.getId() + " is FINISHED. Change by user ID " + user.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
 
+        }
         return res;
     }
 
+    /**
+     * Project status is modified to CANCELLED
+     * If project application is accepted in contest, final task is not deleted (project can never be reactivated)
+     * If not, final task is deleted - if reactivated, project status will be PLANNING
+     *
+     * @param project represents project
+     * @param token   identifies session that makes the request
+     * @return true if project is cancelled successfully
+     */
     private boolean changeProjStatusToCancelled(entity.Project project, String token) {
-        // status de projecto pode ser mudado para cancelled em qq altura. Consequências serão diferentes caso esteja aceite ou não em concurso
-
         boolean res = false;
 
-
-        // verificar se projecto está aceite em concurso. neste caso n apaga tarefa final, mas se não estiver em concurso ,apaga tarefa final para que possa mais tarde concorrer a outro concurso
         ContestApplication acceptedApplication = applicationDao.findAcceptedApplicationForGivenProjectId(project.getId());
 
         if (acceptedApplication == null) {
@@ -1298,6 +1482,8 @@ public class Project implements Serializable {
             res = true;
             entity.User user = tokenDao.findUserEntByToken(token);
             communicationBean.recordProjectStatusChange(project, user, 5);
+            LOGGER.info("Status of project " + project.getId() + " is CANCELLED. Change by user ID " + user.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
+
         } else {
             // projecto está em concurso. Cancela sem fazer mais nada
             project.setStatus(StatusProject.CANCELLED);
@@ -1305,16 +1491,21 @@ public class Project implements Serializable {
             res = true;
             entity.User user = tokenDao.findUserEntByToken(token);
             communicationBean.recordProjectStatusChange(project, user, 5);
+            LOGGER.info("Status of project " + project.getId() + " is CANCELLED. Change by user ID " + user.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
+
         }
-
-
-//TODO : Garantir que proj cancelado n pode adicionar membros / aceitar membros
 
         return res;
     }
 
+    /**
+     * Project status is modified to IN PROGRESS
+     *
+     * @param project represents project
+     * @param token   identifies session that makes the request
+     * @return true if project status is modified sucessfully
+     */
     private boolean changeProjStatusToProgress(entity.Project project, String token) {
-        // status de projecto tem de estar approved, data da finalTask foi validada no aceitar projecto
 
         boolean res = false;
         if (project.getStatus() == StatusProject.APPROVED) {
@@ -1323,19 +1514,25 @@ public class Project implements Serializable {
             res = true;
             entity.User user = tokenDao.findUserEntByToken(token);
             communicationBean.recordProjectStatusChange(project, user, 4);
+            LOGGER.info("Status of project " + project.getId() + " is IN PROGRESS. Change by user ID " + user.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
+
         }
         return res;
     }
 
+    /**
+     * Project status is modified to READY. Final task is added to project if finalTask startDate is after finishDate of every task associated with project
+     *
+     * @param finalTask represents final task information
+     * @param project   represents project
+     * @param token     identifies session that makes the request
+     * @return true if project status is modified sucessfully to READY and final task added to project
+     */
     private boolean changeProjStatusToReady(entity.Project project, Task finalTask, String token) {
-        // modifica apenas se proj status for ready. Tem de adicionar tarefa final ao projecto e só então mudar status
-
-        //TODO verificar se precisa de garantir / apagar q n tem tarefa final definida por ter antes passado por ready. será apagada sempre a partida
         boolean res = false;
 
         if (finalTask != null) {
-            if (verifyFinalTaskDateIsAfterAllProjectTasks(project, finalTask.getStartDate())) ;
-            {
+            if (verifyFinalTaskDateIsAfterAllProjectTasks(project, finalTask.getStartDate())) {
 
                 boolean res1 = addFinalTaskToProject(project, finalTask);
 
@@ -1345,6 +1542,8 @@ public class Project implements Serializable {
                     res = true;
                     entity.User user = tokenDao.findUserEntByToken(token);
                     communicationBean.recordProjectStatusChange(project, user, 1);
+                    LOGGER.info("Status of project " + project.getId() + " is READY. Change by user ID " + user.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
+
                 }
             }
         }
@@ -1352,8 +1551,15 @@ public class Project implements Serializable {
         return res;
     }
 
+    /**
+     * Verifies if startDate of final task is after finishDate of every other project tasks
+     * Final task, final presentation, can only be defined and occur after all other project tasks
+     *
+     * @param project   represents project
+     * @param startDate represents final task start date
+     * @return true if final task really is last task defined for given project
+     */
     private boolean verifyFinalTaskDateIsAfterAllProjectTasks(entity.Project project, Date startDate) {
-        // verifica se data escolhida para data final é mesmo após todas as outras tarefas do projecto
 
         boolean res = false;
         int count = 0;
@@ -1366,36 +1572,53 @@ public class Project implements Serializable {
                     count++;
                 }
             }
-
             if (count == 0) {
                 res = true;
                 // data é ok, tarefa final é mesmo a última tarefa do plano de execução
             }
         }
-
-
         return res;
     }
 
+    /**
+     * Adds final task to given project
+     * Final task title is predefined as 'Apresentação final'
+     * Final task is defined for 1 day - startDate and finalDate have same value
+     * Final task has no pre-required tasks defined
+     *
+     * @param project   represents project
+     * @param finalTask represents final task information
+     * @return true if final task is persisted in database and associated with project
+     */
     private boolean addFinalTaskToProject(entity.Project project, Task finalTask) {
-        // adiciona tarefa final ao projecto. Tem a particularidade de data inicial e data final ser igual e título é predefinido. Não tem tarefas precedentes, na prática são todas
         boolean res = false;
-        entity.Task taskEnt = new entity.Task();
-        taskEnt.setTitle("Apresentação final");
-        taskEnt.setStartDate(finalTask.getStartDate());
-        taskEnt.setFinishDate(finalTask.getStartDate());
-        taskEnt.setDetails(finalTask.getDetails());
-        taskEnt.setTaskOwner(userDao.findUserById(finalTask.getTaskOwnerId()));
-        taskEnt.setStatus(StatusTask.PLANNED);
-        taskEnt.setProject(project);
-        taskEnt.setFinalTask(true);
-        taskDao.persist(taskEnt);
-        res = true;
+        entity.User user = userDao.findUserById(finalTask.getTaskOwnerId());
+        if (user != null) {
+            entity.Task taskEnt = new entity.Task();
+            taskEnt.setTitle("Apresentação final");
+            taskEnt.setStartDate(finalTask.getStartDate());
+            taskEnt.setFinishDate(finalTask.getStartDate());
+            taskEnt.setDetails(finalTask.getDetails());
+            taskEnt.setTaskOwner(user);
+            taskEnt.setStatus(StatusTask.PLANNED);
+            taskEnt.setProject(project);
+            taskEnt.setFinalTask(true);
+            taskDao.persist(taskEnt);
+            res = true;
+            // TODO  notify task owner
+        }
         return res;
     }
 
+    /**
+     * Project status is modified to PLANNNING if it's currently READY
+     * FinalTask defined is deleted
+     *
+     * @param project represents project
+     * @param token   identifies session that makes the request
+     * @return true if project status is modified sucessfully to PLANNING
+     */
     private boolean changeProjStatusToPlanning(entity.Project project, String token) {
-        // modifica apenas se proj status é ready. Apaga tarefa final definida
         boolean res = false;
         if (project.getStatus() == StatusProject.READY) {
             project.setStatus(StatusProject.PLANNING);
@@ -1406,12 +1629,19 @@ public class Project implements Serializable {
             res = true;
             entity.User user = tokenDao.findUserEntByToken(token);
             communicationBean.recordProjectStatusChange(project, user, 0);
+            LOGGER.info("Status of project " + project.getId() + " is PLANNING. Change by user ID " + user.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
+
         }
         return res;
     }
 
+    /**
+     * Deletes from database (table task) final task of given project
+     * When project status is modified to PLANNING or CANCELLED with no contest associated final task is deleted
+     *
+     * @param id identifies project
+     */
     private void deleteFinalTaskOfProject(int id) {
-//TODO confirmar q funciona
         entity.Task finalTask = taskDao.findFinalTaskByProjectId(id);
         if (finalTask != null) {
             taskDao.remove(finalTask);
@@ -1423,7 +1653,8 @@ public class Project implements Serializable {
      * A new task owner is assigned from list of project managers (minu userId if it is project manager) - because they are the only ones that can modify project plan, they can easily change that if they want to
      * Assigning directly to normal project member meant that they would have to wait for a project manager to change in case they could not complete task
      * Method is called before changing user's profile to contest manager, and before project member leaving project
-     * @param userId identifies user whose participation in project will end
+     *
+     * @param userId  identifies user whose participation in project will end
      * @param project identifies project
      * @return true if user has no tasks to be dealt with or if all tasks where dealt with successfully (new task owner assigned)
      */
@@ -1466,6 +1697,7 @@ public class Project implements Serializable {
 
     /**
      * Allows to choose random user from users list, when assigning a new task owner
+     *
      * @param tempList represents list of users (specifically list of managers of given project)
      * @return User randomly choosen
      */
@@ -1475,40 +1707,33 @@ public class Project implements Serializable {
         return tempList.get(index);
     }
 
+    /**
+     * Verifies if project status is PLANNING or IN PROGRESS
+     * Members might be added / removed , tasks might be added, edited, removed if project status is PLANNING or IN PROGRESS
+     *
+     * @param projId identifies project
+     * @return true if project status does not allow changes
+     */
     public boolean verifyProjectStatusToModifyTask(int projId) {
-        // impedir caso projecto tenha status finished, cancelled, proposed, approved, ready pq nestes casos o plano de execução não pode ser alterado
-        // vale para adicionar, editar, apagar tarefa
-        // vale para membro sair de projecto
         boolean res = false;
         entity.Project project = projDao.findProjectById(projId);
         if (project != null) {
             if (project.getStatus() == StatusProject.READY || project.getStatus() == StatusProject.PROPOSED || project.getStatus() == StatusProject.APPROVED || project.getStatus() == StatusProject.CANCELLED || project.getStatus() == StatusProject.FINISHED) {
                 res = true;
-                // tarefas do plano de execução não poderão ser alteradas
+                // plano de execução, membros não podem sair
             }
-
         }
         return res;
     }
 
-   /* public boolean verifyProjectStatus(int projId) {
-        // membro só pode sair do projecto nas fases em que n há bloqueio de alterações relacionadas com candidatura a concurso
-        boolean res = false;
-        entity.Project project = projDao.findProjectById(projId);
-        if(project!=null){
-            if (project.getStatus()==StatusProject.READY ||project.getStatus()==StatusProject.PROPOSED || project.getStatus()==StatusProject.APPROVED){
-                res = true;
-                // membro n pode sair do projecto
-            }
-
-        }
-        return res;
-    }
-*/
-
-
+    /**
+     * Verifies if given task is associated with given project
+     *
+     * @param taskId identifies task
+     * @param projId identifies project
+     * @return true if task is associated with given project
+     */
     public boolean verifyIfTaskBelongsToProject(int taskId, int projId) {
-        // verifica se task realmente está associada ao projecto
         boolean res = false;
         entity.Task task = taskDao.find(taskId);
 
@@ -1517,28 +1742,27 @@ public class Project implements Serializable {
                 res = true;
             }
         }
-
         return res;
     }
 
+    /**
+     * Removes task from database only if it has no association with any other tasks and is not final task
+     * Removes association between task and project and between task and user (taskOwner)
+     *
+     * @param token  identifies session that makes the request
+     * @param taskId identifies task to be deleted
+     * @return true if task is deleted from database along with its associations with project and user
+     */
     public boolean deleteTask(String token, int taskId) {
-        // apaga tarefa da BD se não tiver associação com nenhuma outra tarefa, nos 2 sentidos. Nunca pode apagar final task manualmente
-        // TODO nao finalizado, encontrar todas as tasks que tenham a que sera apagada associada ???
 
         boolean res = false;
         entity.Task taskEnt = taskDao.find(taskId);
         if (taskEnt != null && !taskEnt.isFinalTask()) {
 
             List<entity.Task> listTasksWhichCurrentTaskIsPreRequired = findTasksWhoHaveCurrentTaskAsPrecedent(taskEnt);
-            // tarefa a ser apagar pode ser precedente de outras tarefas
-            //TODO Decidir o que fazer, permitir. agora apaga apenas se n tiver relação com outras?!
+
             if (listTasksWhichCurrentTaskIsPreRequired.isEmpty() && taskEnt.getListPreRequiredTasks().isEmpty()) {
-                      /*  if(taskEnt.getListPreRequiredTasks()!=null){
-                /*for (entity.Task t : taskEnt.getListPreRequiredTasks()){
-                    taskEnt.getListPreRequiredTasks().remove(t);*/
-             /*   taskEnt.getListPreRequiredTasks().clear();
-                    taskDao.merge(taskEnt);
-                }*/
+
                 entity.Project projEnt = taskEnt.getProject();
 
                 if (projEnt != null) {
@@ -1563,8 +1787,14 @@ public class Project implements Serializable {
         return res;
     }
 
+    /**
+     * Finds all tasks of given project who have current task as pre-required task
+     * Useful to find tasks associated with current task, whether before deleting task or editing task dates
+     *
+     * @param taskEnt represents current task
+     * @return list of Task entities associated with current task
+     */
     private List<entity.Task> findTasksWhoHaveCurrentTaskAsPrecedent(entity.Task taskEnt) {
-        // método que procura lista de tarefas que tenham taskEnt como pre required
 
         List<entity.Task> list = new ArrayList<>();
         List<entity.Task> allTasks = taskDao.findAll();
@@ -1576,14 +1806,16 @@ public class Project implements Serializable {
                 }
             }
         }
-
-
         return list;
     }
 
-
+    /**
+     * Verifies if project status is IN PROGRESS, so that task status can be modified
+     *
+     * @param projId identifies task
+     * @return true if task status cannot be altered
+     */
     public boolean verifyProjectStatusToEditTaskStatus(int projId) {
-//status  de tarefa apenas pode ser alterado se projecto estiver em fase IN PROGRESS
         boolean res = false;
         entity.Project project = projDao.findProjectById(projId);
         if (project != null) {
@@ -1591,14 +1823,22 @@ public class Project implements Serializable {
                 res = true;
                 // status de tarefas do plano de execução não poderá ser alterado
             }
-
         }
         return res;
     }
 
+    /**
+     * Validates all hypothetical scenarios regarding task dates before edit task details
+     * Dates must not collide with dates of tasks which are associated with given task
+     * If project is IN PROGRESS, dates must be within ONGOING period of contest and if task to be edited is final task, dates must be after finishDate of all project tasks
+     * If startDate is edited, must verify finishDate of pre-required tasks
+     * If finishDate is edited must verify startDate of tasks who have current task as pre-required task
+     *
+     * @param token    identifies session that makes the request
+     * @param editTask contains task information to be edited
+     * @return true
+     */
     public boolean editTask(String token, Task editTask) {
-        // editar tarefa: preciso sempre garantir que datas não impactam outras tarefas associadas. Projecto in progress tb precisa de verificar data de concurso e, se for final task tb precisa de verificar que data é posterior a datas de todas as outras tarefas
-
 
         boolean res = false;
         boolean res1 = false;
@@ -1607,40 +1847,31 @@ public class Project implements Serializable {
         entity.Task taskEnt = taskDao.find(editTask.getId());
 
         if (taskEnt != null) {
-// TODO falta testar
-            if (taskEnt.getProject().getStatus() != StatusProject.PROGRESS) {
-                // editar tarefa num projecto Planning, que não está em andamento. Não é preciso confirmar datas de concurso
+            if (taskEnt.getProject().getStatus() == StatusProject.PLANNING) {
+                // editar tarefa num projecto Planning - Não é preciso confirmar datas de concurso
 
                 if (editTask.getStartDate() != taskEnt.getStartDate()) {
-                    //significa que data inicio foi alterada e é preciso garantir que não interfere com datas de tarefas associadas, precendentes
-
+                    //significa que data inicio foi alterada e é preciso garantir que não interfere com datas de tarefas associadas, precedentes
                     res1 = checkNewDatesCompatibilityWithPreRequiredTasks(editTask);
-
-
                 }
                 if (editTask.getFinishDate() != taskEnt.getFinishDate()) {
                     //significa que data final foi alterada e é preciso garantir que não interfere com datas de tarefas associadas, que tenham esta tarefa como precedente
                     res2 = checkNewDatesCompatibilityWithAssociatedTasks(editTask, taskEnt);
                 }
-
                 if (!res1 && !res2) {
                     //ambos são false, significa que n há conflitos de datas. A tarefa pode ser editada
-
                     res = taskCanBeEdited(taskEnt, editTask);
 
                 }
             } else {
-                // tarefa pertence a projecto in progress. Começar por verificar se datas alteradas são compatíveis com datas de concurso
-                // verificar, no caso de ser tarefa final, se alguma tarefa é posterior porque n pode ser
+                // tarefa pertence a projecto in progress. Verificar periodo do concurso e final task dates
 
                 if (contestBean.newDatesAreWithinContestPeriod(taskEnt, editTask) && !taskEnt.isFinalTask()) {
                     // datas são compatíveis com concurso e não sendo final task, não precisa de verificação extra
 
                     if (editTask.getStartDate() != taskEnt.getStartDate()) {
                         //significa que data inicio foi alterada e é preciso garantir que não interfere com datas de tarefas associadas, precendentes
-
                         res1 = checkNewDatesCompatibilityWithPreRequiredTasks(editTask);
-
 
                     }
                     if (editTask.getFinishDate() != taskEnt.getFinishDate()) {
@@ -1650,89 +1881,77 @@ public class Project implements Serializable {
 
                     if (!res1 && !res2) {
                         //ambos são false, significa que n há conflitos de datas. A tarefa pode ser editada
-
                         res = taskCanBeEdited(taskEnt, editTask);
 
                     }
-
 
                 } else if (contestBean.newDatesAreWithinContestPeriod(taskEnt, editTask) && taskEnt.isFinalTask()) {
                     // precisa de verificar datas da final task n colidem com datas de restantes tarefas do projecto
 
                     if (verifyFinalTaskDateIsAfterAllProjectTasks(taskEnt.getProject(), editTask.getStartDate())) {
-                        // A tarefa pode ser editada
+                        // A tarefa pode ser editada. Sendo final task n precisa de verificar todas as outras tarefas
 
                         res = taskCanBeEdited(taskEnt, editTask);
-
                     }
-
-
                 }
             }
-
         }
         return res;
     }
 
-
+    /**
+     * Edits task details
+     *
+     * @param taskEnt  represents task entity to be edited
+     * @param editTask represents task information to edit
+     * @return true if task is edited successfully
+     */
     private boolean taskCanBeEdited(entity.Task taskEnt, Task editTask) {
-        // método onde realmente edita a tarefa, depois de verificadas as possíveis condicionantes das datas
         boolean res = false;
+        if (editTask != null) {
+            taskEnt.setTitle(editTask.getTitle());
+            taskEnt.setStartDate(editTask.getStartDate());
+            taskEnt.setFinishDate(editTask.getFinishDate());
+            taskEnt.setDetails(editTask.getDetails());
+            taskEnt.setAdditionalExecutors(editTask.getAdditionalExecutors());
 
-        taskEnt.setTitle(editTask.getTitle());
-        taskEnt.setStartDate(editTask.getStartDate());
-        taskEnt.setFinishDate(editTask.getFinishDate());
-        taskEnt.setDetails(editTask.getDetails());
-        taskEnt.setAdditionalExecutors(editTask.getAdditionalExecutors());
+            if (taskEnt.getTaskOwner().getUserId() != editTask.getTaskOwnerId()) {
+                //alteração de membro responsável. Verificar se é membro do projecto
+                ProjectMember pm = projMemberDao.findProjectMemberByProjectIdAndUserId(taskEnt.getProject().getId(), editTask.getTaskOwnerId());
 
-        if (taskEnt.getTaskOwner().getUserId() != editTask.getTaskOwnerId()) {
-            //alteração de membro responsável. Verificar se é membro do projecto
-            // TODO redundante pq no frontend so aparecem membros
-            ProjectMember pm = projMemberDao.findProjectMemberByProjectIdAndUserId(taskEnt.getProject().getId(), editTask.getTaskOwnerId());
-
-            if (pm != null) {
-                if (pm.isAccepted() && !pm.isRemoved()) {
-                    // relação com projecto está activa
-                    entity.User user = userDao.findUserById(editTask.getTaskOwnerId());
-                    if (user != null) {
-                        taskEnt.setTaskOwner(user);
+                if (pm != null) {
+                    if (pm.isAccepted() && !pm.isRemoved()) {
+                        // relação com projecto está activa
+                        entity.User user = userDao.findUserById(editTask.getTaskOwnerId());
+                        if (user != null) {
+                            taskEnt.setTaskOwner(user);
+                        }
                     }
                 }
             }
+            taskDao.merge(taskEnt); // merge antes de associar, pq lá já faz merge da taskEnt e resultava na duplicação das pre required tasks
+            if (editTask.getPreRequiredTasks() != null || editTask.getPreRequiredTasks().size() != 0) {
+
+                taskEnt.getListPreRequiredTasks().clear();
+                taskDao.merge(taskEnt);
+
+                associatePreRequiredTasksWithCurrentTask(editTask.getPreRequiredTasks(), taskEnt);
+            }
+            res = true;
+            LOGGER.info("Details of task ID " + taskEnt.getId() + " are edited. IP Address of request is " + userBean.getIPAddress());
+
         }
-        taskDao.merge(taskEnt); // merge antes de associar, pq lá já faz merge da taskEnt e resultava na duplicação das pre required tasks
-        if (editTask.getPreRequiredTasks() != null || editTask.getPreRequiredTasks().size() != 0) {
-
-            // deletePreRequiredTasksWithCurrentTask(taskEnt);
-            taskEnt.getListPreRequiredTasks().clear();
-            taskDao.merge(taskEnt);
-
-            associatePreRequiredTasksWithCurrentTask(editTask.getPreRequiredTasks(), taskEnt);
-        }
-
-        res = true;
-
-
         return res;
     }
 
-/*
-    private void deletePreRequiredTasksWithCurrentTask( entity.Task currentTask) {
-        // apaga cada preRequired task a current task  //
-        System.out.println("metodo apagar pre required ");
-        List<entity.Task> tempList = currentTask.getListPreRequiredTasks();
-
-        for(entity.Task t : tempList){
-            currentTask.getListPreRequiredTasks().remove(t);
-            System.out.println("apaga task " + t.getId());
-        }
-        taskDao.merge(currentTask);
-    }
-*/
-
+    /**
+     * Verifies if start date of given task is after finish date of every pre-required task of given task
+     * For that verification, list of pre-required tasks evaluated is the one sent from frontend because list associated with task entity might have differences (that might be one of the changes to make with task editing)
+     *
+     * @param editTask represents task with information to edit
+     * @return true if there is conflict between dates
+     */
     private boolean checkNewDatesCompatibilityWithPreRequiredTasks(Task editTask) {
-        //significa que data inicio foi alterada e é preciso garantir que não interfere com datas de tarefas associadas, precendentes
-        // comparar nova data inserida com data final de todas as tarefas que venham do frontend como sendo precedentes, pq lista actual na BD pode n igual
         boolean res = false;
         int count = 0;
 
@@ -1742,12 +1961,9 @@ public class Project implements Serializable {
                 entity.Task taskE = taskDao.find(t.getId());
 
                 if (!taskE.getFinishDate().before(editTask.getStartDate())) {
-                    System.out.println("finish " + taskE.getFinishDate());
-                    System.out.println("start " + editTask.getStartDate());
                     //significa que data não é compatível
                     count++;
                 }
-
             }
             if (count != 0) {
                 // significa que há conflito de datas com alguma tarefa
@@ -1757,9 +1973,13 @@ public class Project implements Serializable {
         return res;
     }
 
+    /**
+     * Verifies if finish date of given task is before start date of every task which have given task as pre-required
+     *
+     * @param editTask represents task with information to edit
+     * @return true if there is conflict between dates
+     */
     private boolean checkNewDatesCompatibilityWithAssociatedTasks(Task editTask, entity.Task taskEnt) {
-        //significa que data final foi alterada e é preciso garantir que não interfere com datas de tarefas associadas, que tenham esta tarefa como precedente
-        // é preciso obter lista de tarefas que tenham a tarefa a editar como sendo prerequired e comparar a nova data final com data de inicio de cada uma dessas tarefas
         boolean res = false;
 
         int count = 0;
@@ -1768,11 +1988,9 @@ public class Project implements Serializable {
 
         if (tasksWhoHaveCurrentTaskAsPrecedent != null) {
             for (entity.Task t : tasksWhoHaveCurrentTaskAsPrecedent) {
-                // para cada tarefa, comparar data de inicio da tarefa t com nova data final do DTO
-                if (!t.getStartDate().after(editTask.getFinishDate())) {
+                if (!editTask.getFinishDate().before(t.getStartDate())) {
                     //significa que data não é compatível
-                    System.out.println("finish " + editTask.getFinishDate());
-                    System.out.println("start " + t.getStartDate());
+
                     count++;
                 }
             }
@@ -1781,13 +1999,16 @@ public class Project implements Serializable {
                 res = true;
             }
         }
-
-
         return res;
     }
 
+    /**
+     * Verifies task status is NOT FINISHED, so that it can be edited
+     *
+     * @param id identfies task
+     * @return true if task status is FINISHED, therefore it cannot be edited
+     */
     public boolean verifyTaskStatusToEditTask(int id) {
-        // verifica se status da tarefa é planning ou in progress, para que possa ser alterada
         boolean res = false;
 
         entity.Task task = taskDao.find(id);
@@ -1797,15 +2018,19 @@ public class Project implements Serializable {
                 // tarefa n pode ser alterada
             }
         }
-
-
         return res;
     }
 
+    /**
+     * Edits task status according to information sent from frontend
+     * StatusInfo = 1 edits to PROGRESS; statusInfo = 2 edits to FINISHED
+     * If given task has pre-required tasks, it needs to be verified, before status editing, if all pre-required tasks for given task are FINISHED. If not, status editing cannot happen
+     *
+     * @param token    identifies session that makes the request
+     * @param editTask contains information to edit task status: taskId and statusInfo
+     * @return true if task status is edited
+     */
     public boolean editTaskStatus(String token, Task editTask) {
-        // editar status da tarefa: tarefa pode passar de planned para in progress  ou de in progress para finished, nunca 'retroceder na escala'
-        // envia do frontend statusInfo = 1  para mudar para IN PROGRESS  / statusInfo = 2 para mudar para FINISHED
-
         boolean res = false;
 
         entity.Task taskEnt = taskDao.find(editTask.getId());
@@ -1820,6 +2045,7 @@ public class Project implements Serializable {
                         res = true;
                         entity.User user = tokenDao.findUserEntByToken(token);
                         communicationBean.recordTaskStatusEdit(user, taskEnt, 1);
+                        LOGGER.info("User ID " + user.getUserId() + " edits status of task " + editTask.getId() + " to IN PROGRESS. IP Address of request is " + userBean.getIPAddress());
 
 
                     } else if (editTask.getStatusInfo() == 2 && taskEnt.getStatus().ordinal() == 1) {
@@ -1831,6 +2057,8 @@ public class Project implements Serializable {
                         res = true;
                         entity.User user = tokenDao.findUserEntByToken(token);
                         communicationBean.recordTaskStatusEdit(user, taskEnt, 2);
+                        LOGGER.info("User ID " + user.getUserId() + " edits status of task " + editTask.getId() + " to FINISHED. IP Address of request is " + userBean.getIPAddress());
+
                     } else {
                         res = false;
                     }
@@ -1844,6 +2072,8 @@ public class Project implements Serializable {
                     res = true;
                     entity.User user = tokenDao.findUserEntByToken(token);
                     communicationBean.recordTaskStatusEdit(user, taskEnt, 1);
+                    LOGGER.info("User ID " + user.getUserId() + " edits status of task " + editTask.getId() + " to IN PROGRESS. IP Address of request is " + userBean.getIPAddress());
+
                 } else if (editTask.getStatusInfo() == 2 && taskEnt.getStatus().ordinal() == 1) {
                     taskEnt.setStatus(StatusTask.FINISHED);
                     taskDao.merge(taskEnt);
@@ -1853,6 +2083,8 @@ public class Project implements Serializable {
                     res = true;
                     entity.User user = tokenDao.findUserEntByToken(token);
                     communicationBean.recordTaskStatusEdit(user, taskEnt, 2);
+                    LOGGER.info("User ID " + user.getUserId() + " edits status of task " + editTask.getId() + " to FINISHED. IP Address of request is " + userBean.getIPAddress());
+
                 } else {
                     res = false;
                 }
@@ -1861,9 +2093,14 @@ public class Project implements Serializable {
         return res;
     }
 
+    /**
+     * Verifies if all pre-required tasks of given task are FINISHED (useful to edit given task status)
+     *
+     * @param listPreRequiredTasks represents list of pre-required tasks whose status needs to be checked
+     * @return true if all pre-required tasks are FINISHED
+     */
     private boolean checkPreRequiredTasksAreFinished(List<entity.Task> listPreRequiredTasks) {
-        // verifica se tarefas precedentes estão concluídas para que status de task possa ser alterado
-        // se count for diferente de 0, significa que alguma tarefa precedente n está concluída, n podendo mudar status da tarefa
+
         boolean res = true;
         int count = 0;
         for (entity.Task t : listPreRequiredTasks) {
@@ -1873,17 +2110,21 @@ public class Project implements Serializable {
         }
 
         if (count != 0) {
+            // alguma pre-required task não está finished
             res = false;
         }
-
         return res;
     }
 
+    /**
+     * Verifies if token is project manager or taskOwner, since those are the only project members that can edit task status
+     *
+     * @param token  identifies session that makes the request
+     * @param taskId identifies task
+     * @return true if token is allowed to edit task status
+     */
     public boolean verifyPermissionToEditTaskStatus(String token, int taskId) {
-        // verifica se token é gestor do projecto ou owner da tarefa - únicas pessoas com autorização para editar status de tarefa
         boolean res = false;
-
-
         entity.Task task = taskDao.find(taskId);
         if (task != null) {
 
@@ -1897,18 +2138,19 @@ public class Project implements Serializable {
                     // token é owner da tarefa, podendo alterar o seu status
                     res = true;
                 }
-
             }
-
-
         }
-
-
         return res;
     }
 
+    /**
+     * Verifies if project status is PLANNING
+     * Project details (excluding execution plan) can only be modified when project status is PLANNING
+     *
+     * @param id identifies project
+     * @return true if project status is NOT PLANNING
+     */
     public boolean verifyPermisionToEditProjectInfo(int id) {
-        // verifica se status do projecto é planning, pois só assim os detalhes do projecto podem ser alterados
         boolean res = false;
 
         entity.Project project = projDao.findProjectById(id);
@@ -1919,7 +2161,6 @@ public class Project implements Serializable {
                 // projecto n pode ser editado
             }
         }
-
         return res;
     }
 
@@ -1928,7 +2169,8 @@ public class Project implements Serializable {
      * Verifies if project has a final task defined whose date is compatible with contest's final days
      * Verifies if all tasks defined in project execution plan are within contest ONGOING period
      * These are mandatory validations to apply to given contest
-     * @param token identifies session that makes the request
+     *
+     * @param token     identifies session that makes the request
      * @param contestId identifies contest
      * @return true if project checks all validations: status is READY, all tasks, including final task defined within contest ONGOING period
      */
@@ -1952,7 +2194,8 @@ public class Project implements Serializable {
 
     /**
      * Verifies if all tasks defined in project execution plan are within contest ONGOING period
-     * @param project represents project
+     *
+     * @param project   represents project
      * @param contestId identifies contest
      * @return true if there is any task where start date or finish date is not within contest ONGOING period
      */
@@ -1980,7 +2223,8 @@ public class Project implements Serializable {
 
     /**
      * Verifies if project status is READY and has a final task defined whose date is compatible with contest's final days
-     * @param project represents active project
+     *
+     * @param project   represents active project
      * @param contestId identifies contest
      * @return true if project can apply to contest: status is READY and final task is within contest ONGOING period
      */
@@ -2002,6 +2246,7 @@ public class Project implements Serializable {
 
     /**
      * Verifies if final task date is compatible with contest's final days
+     *
      * @param finalTask represents final task of active project
      * @param contestId identifies contest
      * @return true if final task date is within contest ONGOING period
@@ -2019,9 +2264,13 @@ public class Project implements Serializable {
         return res;
     }
 
-
+    /**
+     * Get list of potential members of given project (waiting for response - not answered)
+     *
+     * @param id identifies project
+     * @return list of PotentialProjMember DTO
+     */
     public List<PotentialProjMember> getPotentialProjectMembers(int id) {
-        // obter lista de membros à espera de resposta para participar de um projecto pelo seu ID
 
         List<dto.PotentialProjMember> list = new ArrayList<>();
 
@@ -2040,19 +2289,22 @@ public class Project implements Serializable {
                     pm.setUserInvitedPhoto(p.getUserInvited().getPhoto());
                 }
                 pm.setAnswered(p.isAnswered());
-                System.out.println(p.isAnswered() + " " + p.getId());
                 pm.setSelfInvitation(p.isSelfInvitation());
 
                 list.add(pm);
             }
         }
-
         return list;
     }
 
+    /**
+     * Verifies of token is an active project member, since those are the only ones who have access to some project information: chat, records, tasks
+     *
+     * @param projId identifies project
+     * @param token  identifies session that makes the request
+     * @return true if token is indeed an active project member
+     */
     public boolean isProjMember(int projId, String token) {
-        // verifica se token é membro do projecto, podendo ter acesso a chat / histórico
-
         boolean res = false;
 
         entity.User user = tokenDao.findUserEntByToken(token);
@@ -2060,8 +2312,7 @@ public class Project implements Serializable {
             ProjectMember projMember = projMemberDao.findProjectMemberByProjectIdAndUserId(projId, user.getUserId());
 
             if (projMember != null) {
-                if (!projMember.isRemoved()) {
-
+                if (projMember.isAccepted() && !projMember.isRemoved()) {
                     res = true;
                     // token que faz request é membro do projecto, tendo permissão para fazer o request
                 }
@@ -2071,8 +2322,14 @@ public class Project implements Serializable {
         return res;
     }
 
+    /**
+     * Get list of records of given project
+     * Reverses list to present most recent ones at the top in frontend
+     *
+     * @param projId identifies project
+     * @return list of ProjectHistory DTO
+     */
     public List<ProjectHistory> getProjectRecords(int projId) {
-        // obter lista de todas as actividades registadas que digam respeito ao projId
 
         List<ProjectHistory> recordsList = new ArrayList<>();
 
@@ -2084,14 +2341,16 @@ public class Project implements Serializable {
             }
             Collections.reverse(recordsList);
         }
-
-
         return recordsList;
     }
 
+    /**
+     * Converts ProjectHistory entity to ProjectHistory DTO
+     *
+     * @param r represents ProjectHistory entity
+     * @return ProjectHistory DTO
+     */
     private ProjectHistory convertRecordEntToDto(entity.ProjectHistory r) {
-        // converte entity to DTO
-        System.out.println("metodo converter");
         ProjectHistory recordDto = new ProjectHistory();
         recordDto.setId(r.getId());
         recordDto.setMessage(r.getMessage());
@@ -2107,46 +2366,54 @@ public class Project implements Serializable {
         recordDto.setAuthorFirstName(r.getAuthor().getFirstName());
         recordDto.setAuthorLastName(r.getAuthor().getLastName());
 
-        System.out.println("metodo converter saida ");
         return recordDto;
     }
 
+    /**
+     * Updates ProjectMember attributes that define relationship between given user and given project
+     * Project Manager accepts (1) or rejects (0) other user self-invitation to participate in project
+     * If user is to be accepted to participate in project, it needs to be first verified if there are available spots in project
+     * After being accepted in project, user's pending invitations for other projects are rejected
+     *
+     * @param projMemberId identifies ProjectMember (entry in corresponding table)
+     * @param projId       identfies project
+     * @param token        identifies session that makes the request
+     * @param answer       is 0 if participation in project is to be rejected and 1 if it is to be accepted
+     * @return true
+     */
     public boolean replyToSelfInvitation(int projMemberId, int projId, String token, int answer) {
-        // actualiza relação projMember, respeitante ao user e projecto. answer == 0  -> gestor recusa membro ; answer == 1 -> gestor aceita membro
-        // verificar se há vagas disponíveis no caso de answer == 1 (aceitar)
-        System.out.println("metodo resposta a self invite " + answer + projId + projMemberId);
+
         boolean res = false;
 
         entity.User loggedUser = tokenDao.findUserEntByToken(token);
         if (loggedUser != null) {
             ProjectMember pm = projMemberDao.find(projMemberId);
 
-
             if (pm != null) {
-                System.out.println("pm not null");
-
                 if (answer == 0) {
-                    // sendo recusa não precisa de mais nenhuma validação
+                    // REJECT não precisa de mais nenhuma validação
                     pm.setAnswered(true);
                     pm.setAccepted(false);
                     projMemberDao.merge(pm);
                     res = true;
+                    LOGGER.info("User ID " + pm.getUserInvited().getUserId() + " is rejected to participate in project ID " + pm.getProjectToParticipate().getId() + " by user ID " + loggedUser.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
+
                     communicationBean.recordManagerResponseToSelfInvitation(loggedUser, pm.getUserInvited(), pm.getProjectToParticipate(), answer);
                     communicationBean.notifyPotentialMemberOfSelfInvitationResponse(pm, answer);
 
                 } else if (answer == 1) {
-                    // pedido aceite. é preciso garantir que há vagas disponíveis
-                    // contar quantos projMembers aceites e not removed existem e comparar com vagas que projecto determina
+                    // ACCEPT é preciso garantir que há vagas disponíveis
 
                     if (verifyIfProjectHasAvailableSpots(projId)) {
-                        // há vagas, a pessoa pode ter o seu pedido efectivamente aceite
                         pm.setAnswered(true);
                         pm.setAccepted(true);
                         projMemberDao.merge(pm);
                         res = true;
+                        LOGGER.info("User ID " + pm.getUserInvited().getUserId() + " is accepted to participate in project ID " + pm.getProjectToParticipate().getId() + " by user ID " + loggedUser.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
+
                         communicationBean.recordManagerResponseToSelfInvitation(loggedUser, pm.getUserInvited(), pm.getProjectToParticipate(), answer);
                         communicationBean.notifyPotentialMemberOfSelfInvitationResponse(pm, answer);
-
+                        userBean.refusePendingInvitations(pm.getUserInvited().getUserId());
 
                         // TODO verificar limite vagas do projecto e recusar os outros ou verificar à entrada e não deixar botões disponvieis no frontend se n der pra adicionar mais membros?
 
@@ -2158,8 +2425,14 @@ public class Project implements Serializable {
         return res;
     }
 
+    /**
+     * Gets list of project chat messages of given project
+     *
+     * @param token  identifies session that makes the request
+     * @param projId identifies project
+     * @return list of ProjectChat DTO
+     */
     public List<ProjectChat> getProjectChatList(String token, int projId) {
-        // obter lista de mensagens do chat de projecto, pelo seu ID
 
         List<ProjectChat> listDto = new ArrayList<>();
 
@@ -2167,12 +2440,16 @@ public class Project implements Serializable {
         if (listEnt != null) {
             for (ProjectChatMessage m : listEnt) {
                 listDto.add(convertProjChatEntToDto(m));
-
             }
         }
         return listDto;
     }
 
+    /**
+     * Converts ProjectChatMessage entity to ProjectChatMessage DTO
+     * @param m represents ProjectChatMessage entity
+     * @return ProjectChatMessage DTO
+     */
     private ProjectChat convertProjChatEntToDto(ProjectChatMessage m) {
         ProjectChat message = new ProjectChat();
         message.setChatMessageId(m.getId());
@@ -2187,9 +2464,14 @@ public class Project implements Serializable {
         return message;
     }
 
+    /**
+     * Verifies project status is not CANCELLED or FINISHED
+     * Project chat can only be used to exchange messages while project status is not CANCELLED or FINISHED
+     *
+     * @param projId identifies project
+     * @return true if there is no permission to chat
+     */
     public boolean verifyPermissionToChat(int projId) {
-        // chat apenas funciona para envio de mensagens se status do projecto não for CANCELLED ou FINISHED
-
 
         boolean res = false;
         entity.Project project = projDao.findProjectById(projId);
@@ -2201,8 +2483,15 @@ public class Project implements Serializable {
         return res;
     }
 
+    /**
+     * Adds a new message and associates it to given project
+     *
+     * @param projId  identifies project
+     * @param message represents message details
+     * @param token   identifies session that makes the request
+     * @return ProjectChat DTO
+     */
     public ProjectChat addMessageToProjectChat(int projId, ProjectChat message, String token) {
-        // adiciona nova mensagem ao chat do projecto
         ProjectChat messageDto = new ProjectChat();
 
         entity.User user = tokenDao.findUserEntByToken(token);
@@ -2218,17 +2507,19 @@ public class Project implements Serializable {
 
                 messageDto = convertProjChatEntToDto(newMessage);
 
-          communicationBean.notifyProjectChatRealTime(messageDto, project);
-
+                communicationBean.notifyProjectChatRealTime(messageDto, project);
             }
         }
         return messageDto;
     }
 
+    /**
+     * Verifies project status is IN PROGRESS because only then a manual record can be added
+     *
+     * @param projId identifies project
+     * @return true if record is persisted successfully in database
+     */
     public boolean verifyPermissionToAddManualRecord(int projId) {
-        // verifica se project status é IN PROGRESS pois apenas nesta altura poderá adicionar registo histórico manual
-
-
         boolean res = false;
         entity.Project project = projDao.findProjectById(projId);
         if (project != null) {
@@ -2238,11 +2529,17 @@ public class Project implements Serializable {
         }
         return res;
 
-
     }
 
+    /**
+     * Adds manual record to given project. It might or might not have a task to associate record with
+     *
+     * @param projId identifies project
+     * @param record representes record details
+     * @param token  identifies session that makes the request
+     * @return ProjectHistory DTO
+     */
     public ProjectHistory addManualRecord(int projId, ProjectHistory record, String token) {
-        // adiciona registo manual, com ou sem tarefa associada
 
         ProjectHistory recordDto = new ProjectHistory();
 
@@ -2266,63 +2563,69 @@ public class Project implements Serializable {
                 }
 
                 recordDao.persist(recordEnt);
-                System.out.println("record ent " + record.getId() + record.getMessage());
                 recordDto = convertRecordEntToDto(recordEnt);
-                System.out.println("record dto " + recordDto.getId() + recordDto.getMessage());
-
-
+                LOGGER.info("A new manual record ID " + recordEnt.getId() + " is associated with project ID: " + projId + " by user ID " + user.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
             }
         }
         return recordDto;
     }
 
-    public List<dto.Project> filterWinnerProjects(String token) {
-        // filtrar projectos que sejam vencedores nalgum concurso
-List<dto.Project> projects = new ArrayList<>();
-List<entity.Project> list = contestDao.findListOfWinnerProjects();
+    /**
+     * Filters projects that were declared winner in a contest
+     *
+     * @return list of Project DTO
+     */
+    public List<dto.Project> filterWinnerProjects() {
+        List<dto.Project> projects = new ArrayList<>();
+        List<entity.Project> list = contestDao.findListOfWinnerProjects();
 
-if(list!=null){
-for (entity.Project p:list){
-    projects.add(convertProjEntityToDto(p));
-}
-}
-return projects;
+        if (list != null) {
+            for (entity.Project p : list) {
+                projects.add(convertProjEntityToDto(p));
+            }
+        }
+        return projects;
     }
 
-    public List<dto.Project> filterProjectsByNameSkillsAndKeywords(String token, String str) {
-        // filtrar projectos que tenham nome ou alguma keyword/ skill que faça match com str
-List<dto.Project> list = new ArrayList<>();
-Set<entity.Project> mergeSet = new HashSet<>();
-List<entity.Project> projSkills= skillDao.filterProjectsWhoHaveSkillMatchingStr(str.toLowerCase());
-List<entity.Project> projKeywords= keywordDao.filterProjectsWhoHaveKeywordMatchingStr(str.toLowerCase());
-List<entity.Project> projTitle = projDao.findProjectListContainingStr((str.toLowerCase()));
+    /**
+     * Filters projects whose name contains given input (str) or has associated a skill or a keyword whose name contains given input
+     *
+     * @param str represents input that is written by user in frontend
+     * @return list of Project DTO
+     */
+    public List<dto.Project> filterProjectsByNameSkillsAndKeywords(String str) {
+        List<dto.Project> list = new ArrayList<>();
+        Set<entity.Project> mergeSet = new HashSet<>();
+        List<entity.Project> projSkills = skillDao.filterProjectsWhoHaveSkillMatchingStr(str.toLowerCase());
+        List<entity.Project> projKeywords = keywordDao.filterProjectsWhoHaveKeywordMatchingStr(str.toLowerCase());
+        List<entity.Project> projTitle = projDao.findProjectListContainingStr((str.toLowerCase()));
 
-if(projSkills!=null){
-    System.out.println(projSkills.size());
-    mergeSet.addAll(projSkills);
-}
+        if (projSkills != null) {
+            System.out.println(projSkills.size());
+            mergeSet.addAll(projSkills);
+        }
 
-if(projKeywords!=null){
-    System.out.println(projKeywords.size());
-    mergeSet.addAll(projKeywords);
-}
+        if (projKeywords != null) {
+            System.out.println(projKeywords.size());
+            mergeSet.addAll(projKeywords);
+        }
 
-if(projTitle!=null){
-    System.out.println(projTitle.size());
-    mergeSet.addAll(projTitle);
+        if (projTitle != null) {
+            System.out.println(projTitle.size());
+            mergeSet.addAll(projTitle);
 
-}
+        }
 
-List<entity.Project> mergeList=new ArrayList<>(mergeSet);
+        List<entity.Project> mergeList = new ArrayList<>(mergeSet);
 
-if(mergeList!=null) {
-    for (entity.Project p:mergeList){
-        System.out.println(p.getTitle());
-        list.add(convertProjEntityToDto(p));
-    }
-    System.out.println(list.size());
-}
+        if (mergeList != null) {
+            for (entity.Project p : mergeList) {
+                System.out.println(p.getTitle());
+                list.add(convertProjEntityToDto(p));
+            }
+            System.out.println(list.size());
+        }
 
-return list;
+        return list;
     }
 }

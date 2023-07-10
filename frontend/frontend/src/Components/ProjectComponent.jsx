@@ -237,7 +237,7 @@ function ProjectComponent({ toggleComponent }) {
           <div className="row rounded-5 p-1 mb-1 bg-white">
             <h4 className="text-center ">Palavras-Chave</h4>
           </div>
-          {project.keywords.length > 0 ? (
+          {project.keywords && project.keywords.length > 0 ? (
             <div
               className="row mt-3 overflow-auto"
               style={{ maxHeight: "200px" }}
@@ -259,7 +259,7 @@ function ProjectComponent({ toggleComponent }) {
           <div className="row p-1 m-1  bg-white rounded-5">
             <h4 className="text-center">Skills</h4>
           </div>
-          {project.skills.length > 0 ? (
+          {project.skills && project.skills.length > 0 ? (
             <div
               className="row mt-3 overflow-auto"
               style={{ maxHeight: "200px" }}

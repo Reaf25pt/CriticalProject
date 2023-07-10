@@ -17,6 +17,7 @@ import java.util.List;
 @NamedQuery(name = "ProjectMember.findActiveProjectByUserId", query = "SELECT p.projectToParticipate FROM ProjectMember p WHERE p.userInvited.userId = :userId AND p.projectToParticipate.status NOT IN (:cancelled, :finished) AND p.accepted = true AND p.removed = false ")
 @NamedQuery(name = "ProjectMember.findListOfPotentialMembersByProjectId", query = "SELECT p FROM ProjectMember p WHERE p.projectToParticipate.id = :id AND  p.answered = false ")
 @NamedQuery(name = "ProjectMember.findListOfPotentialMembersByUserId", query = "SELECT p FROM ProjectMember p WHERE p.userInvited.id = :id AND p.answered = false ")
+@NamedQuery(name = "ProjectMember.findActiveProjectMemberByProjectIdAndUserId", query = "SELECT p FROM ProjectMember p WHERE p.projectToParticipate.id = :projId AND p.userInvited.userId = :userId AND p.accepted = true AND p.removed = false")
 
 public class ProjectMember implements Serializable {
 

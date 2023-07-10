@@ -314,8 +314,8 @@ function FormTask() {
                       onChange={handleChange}
                       placeholder={"Membro responsável *"}
                       local={"Membro responsável *"}
-                      listMembers={members}
-                      projId={id}
+                      // listMembers={members}
+                      // projId={id}
                     />
                   </div>
                 </div>

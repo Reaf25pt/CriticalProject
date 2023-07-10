@@ -21,6 +21,7 @@ public class Project {
     @Inject
     User userBean;
 
+    // GET ALL PROJECTS OR SOME BASED ON FILTER INPUT INSERTED IN FRONTEND
     @GET
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -39,12 +40,12 @@ public class Project {
             userBean.updateSessionTime(token);
             List<dto.Project> projects = new ArrayList<>();
             if (queryWinner) {
-                projects = projBean.filterWinnerProjects(token);
+                projects = projBean.filterWinnerProjects();
             } else if (!userBean.checkStringInfo(global)) {
-                projects = projBean.filterProjectsByNameSkillsAndKeywords(token, global);
+                projects = projBean.filterProjectsByNameSkillsAndKeywords( global);
             }  else {
 
-                projects = projBean.getAllProjectsList(token);
+                projects = projBean.getAllProjectsList();
             }
             if (projects == null || projects.size() == 0) {
                 r = Response.status(404).entity(projects).build();
@@ -84,7 +85,7 @@ public class Project {
         return r;
     }
 
-    // EDIT PROJECT INFO
+    // EDIT PROJECT INFO - refers to details and not execution plan
     @PATCH
     @Path("/project")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -98,7 +99,6 @@ public class Project {
 
         } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, editProj.getId()) || projBean.verifyPermisionToEditProjectInfo(editProj.getId())) {
             r = Response.status(403).entity("Forbidden!").build();
-// TODO só pode editar info do projecto (n se refere a plano de execucao) no modo planning
         } else {
 
             userBean.updateSessionTime(token);
@@ -118,20 +118,17 @@ public class Project {
     }
 
 
-    // ADICIONAR MEMBRO A PROJECTO (convite ou self-invite)
+    // ADICIONAR MEMBRO A PROJECTO (convite por gestor do projecto ou self-invite)
     @POST
     @Path("/newmember")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addMember(@HeaderParam("projId") int projId, @HeaderParam("userId") int userId, @HeaderParam("token") String token) {
-        // TODO send id de proj e user ou objecto com + info?? SE for ID, como verificar se a info vem nula?
         Response r = null;
 
         if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
         } else if (!userBean.checkUserPermission(token) || projBean.verifyProjectStatusToModifyTask(projId) || !projBean.verifyIfProjectHasAvailableSpots(projId) || !projBean.verifyPermissionToAddMember(token, projId, userId)) {
-            // só pode adicionar membro a projecto se status for planning ou in progress
-            //TODO falta testar verify permission
 
             r = Response.status(403).entity("Forbidden!").build();
         } else {
@@ -165,7 +162,7 @@ public class Project {
         } else {
             userBean.updateSessionTime(token);
 
-            boolean res = projBean.addTaskToProject(projId, task, token);
+            boolean res = projBean.addTaskDependingOnProjectStatus(projId, task, token);
 
             if (!res) {
                 r = Response.status(404).entity("Something went wrong!").build();
@@ -265,7 +262,7 @@ public class Project {
     }
 
 
-    // DELETE MEMBER FROM PROJECT - na verdade não remove da DB, apenas actualiza info do atributo removed do projMember
+    // DELETE MEMBER FROM PROJECT - na verdade não remove da DB, apenas actualiza info do atributo removed do projMember que define a relação
     @PATCH
     @Path("/member")
     @Produces(MediaType.APPLICATION_JSON)
@@ -276,13 +273,11 @@ public class Project {
         if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
         } else if (!userBean.checkUserPermission(token) || projBean.verifyProjectStatusToModifyTask(projId) || !projBean.verifyPermissionToDeleteUser(token, projId, userId)) {
-            // TODO membro pode sair em que fases do proj ? neste momento n pode sair em ready, proposed, approved, nem finished, nem cancelled
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
 
             boolean res = projBean.deleteProjMember(userId, projId, token);
-            // TODO falta record no historico e pensar melhor validações. o que fazer se sair de cancelado mas ele voltar? é q n se pode mudar nada no cancelado mas saindo tem de sair de tarefas
 
             if (!res) {
                 r = Response.status(404).entity("Not found").build();
@@ -329,7 +324,6 @@ public class Project {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response editProjectStatus(@HeaderParam("token") String token, @HeaderParam("status") int status, @HeaderParam("projId") int projId, Task finalTask) {
-// TODO pode ser necessário alterar info que vem do frontend
         Response r = null;
 
         if (userBean.checkStringInfo(token)) {
@@ -342,7 +336,6 @@ public class Project {
 
             userBean.updateSessionTime(token);
 
-            // TODO testar
             boolean res = projBean.editProjectStatus(token, projId, status, finalTask);
 
             if (!res) {
@@ -372,7 +365,6 @@ public class Project {
 
         } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId) || !projBean.verifyIfTaskBelongsToProject(taskId, projId) || projBean.verifyProjectStatusToModifyTask(projId)) {
             r = Response.status(403).entity("Forbidden!").build();
-//TODO alterar metodo para casos em q pode apagar ou n tarefa. se tem precedentes ou n ??
         } else {
 
             userBean.updateSessionTime(token);
@@ -408,8 +400,6 @@ public class Project {
             r = Response.status(403).entity("Forbidden!").build();
 
         } else {
-
-
             userBean.updateSessionTime(token);
 
             boolean res = projBean.editTask(token, editTask);
@@ -454,7 +444,6 @@ public class Project {
 
             } else {
                 List<Task> tasks = projBean.getTasksList(projId);
-
                 r = Response.status(200).entity(tasks).build();
             }
         }
@@ -470,8 +459,6 @@ public class Project {
     public Response getTasksofProject(@HeaderParam("token") String token, @PathParam("projId") int projId) {
 
         Response r = null;
-
-        // TODO verificar permissão. se user tem acesso a tarefas?! só acede a tab no frontend se for membro do projecto
 
         if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
@@ -493,34 +480,6 @@ public class Project {
         return r;
     }
 
-    // GET LIST OF ALL PROJECTS IN DB
-    @GET
-    @Path("/allprojects")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllProjects(@HeaderParam("token") String token) {
-
-        // verificar se token tem sessão iniciada e válida, se sim actualizar session time
-        Response r = null;
-
-        if (userBean.checkStringInfo(token)) {
-            r = Response.status(401).entity("Unauthorized!").build();
-        } else if (!userBean.checkUserPermission(token)) {
-            r = Response.status(403).entity("Forbidden!").build();
-        } else {
-            userBean.updateSessionTime(token);
-
-            List<dto.Project> projects = projBean.getAllProjectsList(token);
-
-            if (projects == null || projects.size() == 0) {
-                r = Response.status(404).entity(projects).build();
-            } else {
-
-                r = Response.status(200).entity(projects).build();
-            }
-        }
-
-        return r;
-    }
 
     // GET PROJECT BY PROJECT ID
     @GET
@@ -590,7 +549,6 @@ public class Project {
         if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
         } else if (!userBean.checkUserPermission(token)) {
-//TODO não verifica se é gestor de projecto pq senão useEffect no frontend pode rebentar
             r = Response.status(403).entity("Forbidden!").build();
         } else {
             userBean.updateSessionTime(token);
@@ -656,7 +614,6 @@ public class Project {
             if (list == null || list.size() == 0) {
                 r = Response.status(404).entity(list).build();
             } else {
-
                 r = Response.status(200).entity(list).build();
             }
         }

@@ -1102,7 +1102,7 @@ public class User implements Serializable {
      *
      * @param userId identifies user whose pending invitations must be refused
      */
-    private void refusePendingInvitations(int userId) {
+    public void refusePendingInvitations(int userId) {
         List<entity.ProjectMember> listPotentialpm = projMemberDao.findListOfPotentialMembersByUserId(userId);
         if (listPotentialpm != null) {
             for (entity.ProjectMember p : listPotentialpm) {
@@ -1110,7 +1110,7 @@ public class User implements Serializable {
                 projMemberDao.merge(p);
             }
         }
-        // TODO add logger, decide if do so when accepting in other project
+        // TODO add logger, decide if do so when accepting in other project. DELETE NOTIFICATIONS FOR SUCH PM
     }
 
     /**

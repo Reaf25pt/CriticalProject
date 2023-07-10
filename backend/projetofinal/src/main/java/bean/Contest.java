@@ -602,14 +602,17 @@ public class Contest {
         return res;
     }
 
+    /**
+     * Verifies if start date of given task is equal or after start date of contest and finish Date of given task is equal or before finish Date of contest
+     * @param editTask represents task with information to edit
+     * @param taskEnt represents task entity of given task, to access project id
+     * @return true if dates of given task are within ONGOING period of contest
+     */
     public boolean newDatesAreWithinContestPeriod(entity.Task taskEnt, Task editTask) {
-        // TODO falta java doc
-        // verifica se datas de uma tarefa editada estão dentro do periodo de execução do concurso
-        // startDate da task igual ou after startDate do concurso
-        // finishDate da task igual ou anterior a finishDate do concurso
+
         boolean res = false;
         ContestApplication acceptedApplication = applicationDao.findAcceptedApplicationForGivenProjectId(taskEnt.getProject().getId());
-        // representa a candidatura aceita do projecto da tarefa.
+        // representa a candidatura aceite do projecto da tarefa
 
         if (acceptedApplication != null) {
             entity.Contest contest = acceptedApplication.getContest();
@@ -617,10 +620,7 @@ public class Contest {
             if ((editTask.getStartDate().equals(contest.getStartDate()) || editTask.getStartDate().after(contest.getStartDate())) && (editTask.getFinishDate().equals(contest.getFinishDate()) || editTask.getFinishDate().before(contest.getFinishDate()))) {
                 res = true;
             }
-
         }
-
-
         return res;
     }
 
