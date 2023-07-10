@@ -90,33 +90,15 @@ function ModalCancelProject() {
 
   return (
     <>
-      <OverlayTrigger
-        placement="top"
-        overlay={
-          <Tooltip /* defaultMessage="Apagar" */ id="userHobbyDeleteTooltip">
-            {/* <FormattedMessage
-                id="deleteTaskDetail.tooltip"
-                defaultMessage="Apagar"
-              /> */}
-            {/*    Editar tarefa */}
-          </Tooltip>
-        }
-      >
-        {/*  <FontAwesomeIcon onClick={handleShow} icon={faTrash} /> */}
-
-        <div className="row mx-auto justify-content-around mt-5">
-          <div className="col-lg-12">
-            <ButtonComponent
-              onClick={handleShow}
-              type="button"
-              name="Cancelar projecto"
-              // onClick={() => handleProjectStatus(1)}
-            />
-          </div>
+      <div className="row mx-auto justify-content-around mt-5">
+        <div className="col-lg-12">
+          <ButtonComponent
+            onClick={handleShow}
+            type="button"
+            name="Cancelar projecto"
+          />
         </div>
-        {/*  <BsXLg onClick={handleShow} /> */}
-        {/*  <FontAwesomeIcon onClick={handleShow} icon={faToggleOn} /> */}
-      </OverlayTrigger>
+      </div>
 
       <Modal
         show={show}
@@ -137,7 +119,16 @@ function ModalCancelProject() {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Ao confirmar, o projecto será cancelado.</p>
+          <p>Ao confirmar, o projecto será cancelado. </p>
+          <p>
+            Se o projecto foi aprovado para participar num concurso, já não
+            poderá ser reactivado.{" "}
+          </p>
+          <p>
+            Caso contrário, o projecto pode voltar a ser activado se, há data da
+            reactivação, os seus membros não tiverem nenhum projecto activo nem
+            tiverem permissão de gestor de concurso.
+          </p>
         </Modal.Body>
         <Modal.Footer id="modalFooter">
           <Col xs={4} className="closeBtnSeeTask">

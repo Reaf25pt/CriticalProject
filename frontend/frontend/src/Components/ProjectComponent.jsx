@@ -14,6 +14,8 @@ function ProjectComponent({ toggleComponent }) {
   const members = projOpenStore((state) => state.members);
   const pendingInvites = projOpenStore((state) => state.pendingInvites);
   const setPendingInvites = projOpenStore((state) => state.setPendingInvites);
+  const setTasks = projOpenStore((state) => state.setTasks);
+  const { id } = useParams();
 
   const handleProjectStatus = (event) => {
     var status;
@@ -50,12 +52,29 @@ function ProjectComponent({ toggleComponent }) {
       })
       .then((data) => {
         setProject(data);
+        if (status === 0) {
+          fetchTasks();
+        }
         toast.success("Estado alterado");
       })
       .catch((error) => {
         toast.error(error.message);
       });
   };
+  function fetchTasks() {
+    fetch(`http://localhost:8080/projetofinal/rest/project/tasks/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        token: user.token,
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        setTasks(data);
+      })
+      .catch((err) => console.log(err));
+  }
 
   const handleParticipation = (event) => {
     event.preventDefault();
@@ -71,8 +90,6 @@ function ProjectComponent({ toggleComponent }) {
     })
       .then((response) => {
         if (response.status === 200) {
-          toast.success("Pedido efectuado");
-
           return response.json();
         } else {
           throw new Error("Pedido não satisfeito");
@@ -80,6 +97,7 @@ function ProjectComponent({ toggleComponent }) {
       })
       .then((data) => {
         setPendingInvites(data);
+        toast.success("Pedido efectuado");
       })
       .catch((error) => {
         toast.error(error.message);
@@ -193,7 +211,8 @@ function ProjectComponent({ toggleComponent }) {
               ) : !user.contestManager &&
                 !project.member &&
                 user.noActiveProject &&
-                project.availableSpots !== 0 ? (
+                project.availableSpots > 0 &&
+                (project.statusInt === 0 || project.statusInt === 4) ? (
                 <div className="row mx-auto justify-content-around mt-5">
                   <div className="col-lg-12">
                     <ButtonComponent

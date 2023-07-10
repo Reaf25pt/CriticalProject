@@ -97,7 +97,9 @@ function ProjectAllTasksSelect({
             {/*   {Object.entries(projTasks).map(([key, task]) => ( */}
             {tasks
               .filter((task) => {
-                return task.id !== editTaskId;
+                return (
+                  task.id !== editTaskId && task.title !== "Apresentação final"
+                );
               })
               .map((task) => (
                 <option key={task.id} value={task.id}>

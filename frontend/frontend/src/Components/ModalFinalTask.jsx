@@ -27,6 +27,7 @@ function ModalFinalTask() {
   const [credentials, setCredentials] = useState();
   const { id } = useParams();
   const setProject = projOpenStore((state) => state.setProjOpen);
+  const setTasks = projOpenStore((state) => state.setTasks);
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -41,6 +42,7 @@ function ModalFinalTask() {
     event.preventDefault();
 
     if (
+      !credentials ||
       !credentials.startDate ||
       !credentials.details ||
       !credentials.taskOwnerId ||
@@ -71,12 +73,28 @@ function ModalFinalTask() {
         .then((data) => {
           setProject(data);
           handleClose();
+          fetchTasks();
 
           // toast.success("Papel alterado");
         })
         .catch((error) => {
           toast.error(error.message);
         });
+    }
+
+    function fetchTasks() {
+      fetch(`http://localhost:8080/projetofinal/rest/project/tasks/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          token: user.token,
+        },
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          setTasks(data);
+        })
+        .catch((err) => console.log(err));
     }
 
     /* fetch(`http://localhost:8080/projetofinal/rest/project/${id}/task`, {
@@ -102,33 +120,15 @@ function ModalFinalTask() {
 
   return (
     <>
-      <OverlayTrigger
-        placement="top"
-        overlay={
-          <Tooltip /* defaultMessage="Apagar" */ id="userHobbyDeleteTooltip">
-            {/* <FormattedMessage
-                id="deleteTaskDetail.tooltip"
-                defaultMessage="Apagar"
-              /> */}
-            {/*    Editar tarefa */}
-          </Tooltip>
-        }
-      >
-        {/*  <FontAwesomeIcon onClick={handleShow} icon={faTrash} /> */}
-
-        <div className="row mx-auto justify-content-around mt-5">
-          <div className="col-lg-12">
-            <ButtonComponent
-              onClick={handleShow}
-              type="button"
-              name="Mudar estado: READY"
-              // onClick={() => handleProjectStatus(1)}
-            />
-          </div>
+      <div className="row mx-auto justify-content-around mt-5">
+        <div className="col-lg-12">
+          <ButtonComponent
+            onClick={handleShow}
+            type="button"
+            name="Mudar estado: READY"
+          />
         </div>
-        {/*  <BsXLg onClick={handleShow} /> */}
-        {/*  <FontAwesomeIcon onClick={handleShow} icon={faToggleOn} /> */}
-      </OverlayTrigger>
+      </div>
 
       <Modal
         show={show}

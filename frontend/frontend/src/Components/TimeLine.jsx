@@ -144,12 +144,12 @@ function TimeLine() {
               <select
                 name="task"
                 id="task"
-                placeholder={"Tarefa "}
-                local={"Tarefa "}
+                placeholder={"Escolha tarefa "}
+                local={"Escolha tarefa "}
                 //taskList={showTasks}
                 onChange={handleChange}
               >
-                <option value="0">Tarefa</option>
+                <option value="0">Escolha tarefa</option>
                 {tasks.map((task) => (
                   <option key={task.id} value={task.id}>
                     {task.title}

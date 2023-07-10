@@ -45,7 +45,7 @@ public class Contest implements Serializable {
 
     @Column(name = "rules", nullable = true, unique = false, updatable = true)
     private String rules;
-    //TODO rules ser nullable ou não ?!
+
 
     @Column(name = "maxNumberProjects", nullable = false, unique = false, updatable = true)
     private int maxNumberProjects;

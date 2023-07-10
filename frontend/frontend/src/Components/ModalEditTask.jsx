@@ -57,8 +57,6 @@ function ModalEditTask({ task, formatDate }) {
     })
       .then((response) => {
         if (response.status === 200) {
-          toast.success("Tarefa editada");
-
           return response.json();
         } else {
           throw new Error("Pedido não satisfeito");
@@ -67,6 +65,7 @@ function ModalEditTask({ task, formatDate }) {
       .then((data) => {
         setTasks(data);
         handleClose();
+        toast.success("Tarefa editada");
       })
       .catch((error) => {
         toast.error(error.message);
@@ -75,7 +74,10 @@ function ModalEditTask({ task, formatDate }) {
 
   return (
     <>
-      <OverlayTrigger placement="top" overlay={<Tooltip>Editar</Tooltip>}>
+      <OverlayTrigger
+        placement="top"
+        overlay={<Tooltip>Editar tarefa</Tooltip>}
+      >
         <span data-bs-toggle="tooltip" data-bs-placement="top">
           {" "}
           <BsFillPencilFill onClick={handleShow} size={30} color="white" />

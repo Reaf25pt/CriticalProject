@@ -54,7 +54,10 @@ function ModalDeleteProjMember({ member }) {
 
   return (
     <>
-      <OverlayTrigger placement="top" overlay={<Tooltip>Remover</Tooltip>}>
+      <OverlayTrigger
+        placement="top"
+        overlay={<Tooltip>Remover membro</Tooltip>}
+      >
         <span data-bs-toggle="tooltip" data-bs-placement="top">
           {" "}
           <BsXLg onClick={handleShow} size={25} color="red" />

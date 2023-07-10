@@ -268,8 +268,6 @@ function FormTask() {
     })
       .then((response) => {
         if (response.status === 200) {
-          toast.success("Estado da tarefa alterado");
-
           return response.json();
         } else {
           throw new Error("Pedido não satisfeito");
@@ -277,6 +275,7 @@ function FormTask() {
       })
       .then((data) => {
         setTasks(data);
+        toast.success("Estado da tarefa alterado");
       })
       .catch((error) => {
         toast.error(error.message);
@@ -287,7 +286,8 @@ function FormTask() {
     <div className="container-fluid mt-5">
       <Toaster position="top-right" />
 
-      {!user.contestManager ? (
+      {project.manager &&
+      (project.statusInt === 0 || project.statusInt === 4) ? (
         <div
           className="row d-flex justify-content-around bg-secondary 
           rounded-5 p-4"
@@ -436,27 +436,19 @@ function FormTask() {
                         <h4 className="text-white">{task.title}</h4>
                       </div>
                       <div className="col-lg-3">
-                        {!user.contestManager &&
-                        task.statusInfo !== 2 &&
-                        (project.statusInt === 0 || project.statusInt === 4) ? (
-                          <ModalEditTask
-                            task={task}
-                            //set={setTask}
-                            formatDate={formatDate}
-                            // setTriggerList={setTriggerList}
-                          />
+                        {project.manager &&
+                        (project.statusInt === 0 || project.statusInt === 4) &&
+                        task.statusInfo !== 2 ? (
+                          <ModalEditTask task={task} formatDate={formatDate} />
                         ) : null}
-                        {!user.contestManager &&
-                        task.statusInfo !== 2 &&
-                        project.statusInt === 0 ? (
-                          <ModalDeleteTask
-                            task={task}
-                            // set={setTask}
-                            // setTriggerList={setTriggerList}
-                          />
+                        {project.manager &&
+                        project.statusInt === 0 &&
+                        task.statusInfo !== 2 ? (
+                          <ModalDeleteTask task={task} />
                         ) : null}
 
-                        {!user.contestManager &&
+                        {(project.manager ||
+                          task.taskOwnerId === user.userId) &&
                         project.statusInt === 4 &&
                         task.statusInfo === 0 ? (
                           <button
@@ -467,7 +459,7 @@ function FormTask() {
                           </button>
                         ) : task.statusInfo === 1 ? (
                           <button name={"statusFinished"} onClick={handleClick}>
-                            Tarefa concluída
+                            Concluir tarefa
                           </button>
                         ) : null}
                       </div>

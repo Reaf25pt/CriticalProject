@@ -61,7 +61,10 @@ function ModalDeleteTask({ task }) {
 
   return (
     <>
-      <OverlayTrigger placement="top" overlay={<Tooltip>Apagar</Tooltip>}>
+      <OverlayTrigger
+        placement="top"
+        overlay={<Tooltip>Apagar tarefa</Tooltip>}
+      >
         <span data-bs-toggle="tooltip" data-bs-placement="top">
           {" "}
           <BsFillTrashFill onClick={handleShow} size={30} color="white" />
@@ -86,21 +89,17 @@ function ModalDeleteTask({ task }) {
         </Modal.Header>
         <Modal.Body>
           <p>
+            Ao confirmar, está a eliminar a tarefa{" "}
+            <span className="name">{task.title}</span>.
+          </p>
+          <p>
+            O pedido só será satisfeito se a tarefa não tiver outras associadas.
+          </p>{" "}
+          <p>
             {" "}
-            Só é permitido eliminar uma tarefa que não tenha associação com
-            nenhuma outra tarefa. Por favor, garanta que não há nenhuma tarefa
-            precedente ou que a tarefa a eliminar não seja requisito obrigatório
-            para que outra possa ser executada. Ao confirmar, está a eliminar a
-            tarefa{" "}
-            {/* <FormattedMessage
-              id="deleteTaskModalText1.tooltip"
-              defaultMessage="Ao confirmar, está a apagar a actividade"
-            />{" "} */}
-            <span className="name">{task.title}</span>
-            {/*  <FormattedMessage
-              id="deleteTaskModalText2.tooltip"
-              defaultMessage=" e todos os seus detalhes. \n\n  Não será possível recuperar esta informação"
-            /> */}
+            Por favor, garanta que não há nenhuma tarefa precedente ou que a
+            tarefa a eliminar não seja requisito obrigatório para que outra
+            possa ser executada.
           </p>
         </Modal.Body>
         <Modal.Footer id="modalFooter">

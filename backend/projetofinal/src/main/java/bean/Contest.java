@@ -652,7 +652,7 @@ public class Contest {
      * @return true if all final tasks dates have passed - a winner can be declared
      */
     private boolean checkProjectsAcceptedFinalTaskDates(int contestId) {
-        // TODO poderia verificar se todos os prjectos estão finished e task final finished mas isso poderia significar que o concurso nunca poderia ficar concluído por algum gestor de projecto não marcar o projecto / task final como finished
+        // TODO poderia verificar se todos os projectos estão finished e task final finished mas isso poderia significar que o concurso nunca poderia ficar concluído por algum gestor de projecto não marcar o projecto / task final como finished
         boolean res = false;
 
         List<Project> projectsAccepted = applicationDao.findAcceptedProjectsForGivenContestId(contestId);

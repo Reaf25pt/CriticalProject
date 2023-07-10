@@ -194,7 +194,10 @@ function ProjectOpen() {
         >
           <div className="row mx-auto d-flex justify-content-around">
             <div className="col-lg-7">
-              {project.manager ? <InviteMember /> : null}
+              {project.manager &&
+              (project.statusInt === 0 || project.statusInt === 4) ? (
+                <InviteMember />
+              ) : null}
             </div>{" "}
           </div>
           <div className="row d-flex justify-content-around">
@@ -202,7 +205,10 @@ function ProjectOpen() {
               <ProjectMembersList />
             </div>
             <div className="col-lg-5">
-              {project.manager ? <ProjectMembersInvited /> : null}
+              {project.manager &&
+              (project.statusInt === 0 || project.statusInt === 4) ? (
+                <ProjectMembersInvited />
+              ) : null}
             </div>
           </div>
         </div>
