@@ -238,8 +238,7 @@ public class Communication implements Serializable {
 
 
                     if (answer == 1) {
-                        // convite aceite. Tem de verificar se vagas do projecto foi atingido. Se sim, é preciso recusar os restantes convites pendentes para o projecto em causa
-                        // TODO verificar limite vagas do projecto e recusar os outros ou verificar à entrada e não deixar botões disponvieis no frontend se n der pra adicionar mais membros?
+                        // convite aceite
                         LOGGER.info("User ID " + projMember.getUserInvited().getUserId() + " accepted to participate in project ID " + projMember.getProjectToParticipate().getId() + ". IP Address of request is " + userBean.getIPAddress());
 
                     } else if (answer == 0) {

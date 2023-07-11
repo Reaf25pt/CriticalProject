@@ -4,6 +4,7 @@ import InputComponent from "./InputComponent";
 import { contestOpenStore } from "../stores/ContestOpenStore";
 import { userStore } from "../stores/UserStore";
 import { useState } from "react";
+import { toast, Toaster } from "react-hot-toast";
 
 function EditContestComponent({ toggleComponent }) {
   const contest = contestOpenStore((state) => state.contest);
@@ -58,20 +59,26 @@ function EditContestComponent({ toggleComponent }) {
       })
         .then((response) => {
           if (response.status === 200) {
+            toggleComponent();
             return response.json();
+          } else {
+            throw new Error("Pedido não satisfeito");
           }
         })
         .then((data) => {
           setContestOpen(data);
-          toggleComponent();
-          alert("Concurso editado com sucesso");
+          toast.success("Concurso editado");
         })
-        .catch((err) => console.log(err));
+        .catch((error) => {
+          toast.error(error.message);
+        });
     }
   };
 
   return (
     <div class="container-fluid">
+      <Toaster position="top-right" />
+
       <div className="row mt-5">
         <div className="col-lg-6 mx-auto bg-secondary rounded-3 p-5 mx-auto">
           <div className="row mb-5">

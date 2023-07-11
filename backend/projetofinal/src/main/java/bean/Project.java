@@ -1089,8 +1089,6 @@ public class Project implements Serializable {
      */
     public List<UserInfo> getPossibleMembers(String name) {
 
-        // TODO prevenir sugerir users com convite pendente no projecto em questão?
-
         List<UserInfo> listToSuggest = new ArrayList<>();
         List<entity.User> tempList = new ArrayList<>();
 
@@ -2449,8 +2447,6 @@ public class Project implements Serializable {
                         communicationBean.recordManagerResponseToSelfInvitation(loggedUser, pm.getUserInvited(), pm.getProjectToParticipate(), answer);
                         communicationBean.notifyPotentialMemberOfSelfInvitationResponse(pm, answer);
                         userBean.refusePendingInvitations(pm.getUserInvited().getUserId());
-
-                        // TODO verificar limite vagas do projecto e recusar os outros ou verificar à entrada e não deixar botões disponvieis no frontend se n der pra adicionar mais membros?
 
                     }
                 }

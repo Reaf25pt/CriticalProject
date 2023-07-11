@@ -73,13 +73,14 @@ public class Contest {
         } else {
 
             userBean.updateSessionTime(token);
+            boolean res = contestBean.canEditContestInfo(token, editContest);
 
-            dto.Contest contest = contestBean.editContestInfo(token, editContest);
-
-            if (contest == null) {
+            if (!res) {
                 r = Response.status(404).entity("Not found!").build();
 
             } else {
+                dto.Contest contest = contestBean.editContestInfo(token, editContest);
+
                 r = Response.status(200).entity(contest).build();
             }
         }

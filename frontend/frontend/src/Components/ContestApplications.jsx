@@ -15,13 +15,16 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 
 function ContestApplications() {
-  const [show, setShow] = useState(false);
+  const [showR, setShowR] = useState(false);
+  const [showA, setShowA] = useState(false);
   const user = userStore((state) => state.user);
   const navigate = useNavigate();
   const updateUser = userStore((state) => state.updateUser);
   const { id } = useParams();
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleCloseA = () => setShowA(false);
+  const handleShowA = () => setShowA(true);
+  const handleCloseR = () => setShowR(false);
+  const handleShowR = () => setShowR(true);
   const setProjList = contestOpenStore((state) => state.setProjectList);
   const projList = contestOpenStore((state) => state.projectList);
   const pendingApplications = projList.filter((item) => !item.answered);
@@ -85,13 +88,13 @@ function ContestApplications() {
                     <BsCheck2
                       size={30}
                       color="green"
-                      onClick={handleShow}
+                      onClick={handleShowA}
                     />{" "}
                   </span>
                 </OverlayTrigger>
                 <Modal
-                  show={show}
-                  onHide={handleClose}
+                  show={showA}
+                  onHide={handleCloseA}
                   backdrop="static"
                   keyboard={false}
                   size="lg"
@@ -104,13 +107,13 @@ function ContestApplications() {
                   <Modal.Body>
                     <p>
                       Tem a certeza que quer aceitar este projecto a concurso?
-                      Uma vez confirmada esta operação não a poderá reverter.
-                      Clique no botão Confirmar para aceitar candidatura
+                      Uma vez confirmada esta operação não a poderá reverter.{" "}
                     </p>
+                    <p>Clique no botão Confirmar para aceitar candidatura</p>
                   </Modal.Body>
                   <Modal.Footer id="modalFooter">
                     <Col xs={4} className="closeBtnSeeTask">
-                      <Button variant="secondary" onClick={handleClose}>
+                      <Button variant="secondary" onClick={handleCloseA}>
                         Fechar
                       </Button>
                     </Col>
@@ -139,14 +142,14 @@ function ContestApplications() {
                     <BsXLg
                       size={30}
                       color="red"
-                      onClick={handleShow}
+                      onClick={handleShowR}
                       //  onClick={() => handleApplication(0, application.id)}
                     />
                   </span>
                 </OverlayTrigger>
                 <Modal
-                  show={show}
-                  onHide={handleClose}
+                  show={showR}
+                  onHide={handleCloseR}
                   backdrop="static"
                   keyboard={false}
                   size="lg"
@@ -158,14 +161,14 @@ function ContestApplications() {
                   </Modal.Header>
                   <Modal.Body>
                     <p>
-                      Tem a certeza que quer recusar este projecto a concurso?
-                      Uma vez confirmada esta operação não a poderá reverter.
-                      Clique no botão Confirmar para recusar candidatura
+                      Tem a certeza que quer recusar este projecto a concurso?{" "}
+                      Uma vez confirmada esta operação não a poderá reverter.{" "}
                     </p>
+                    <p>Clique no botão Confirmar para recusar candidatura</p>
                   </Modal.Body>
                   <Modal.Footer id="modalFooter">
                     <Col xs={4} className="closeBtnSeeTask">
-                      <Button variant="secondary" onClick={handleClose}>
+                      <Button variant="secondary" onClick={handleCloseR}>
                         Fechar
                       </Button>
                     </Col>

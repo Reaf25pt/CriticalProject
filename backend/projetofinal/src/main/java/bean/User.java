@@ -1110,6 +1110,7 @@ public class User implements Serializable {
                 projMemberDao.merge(p);
             }
         }
+        //TODO
         // TODO add logger, decide if do so when accepting in other project. DELETE NOTIFICATIONS FOR SUCH PM
     }
 

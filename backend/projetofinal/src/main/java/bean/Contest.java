@@ -17,6 +17,7 @@ import org.jboss.logging.Logger;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RequestScoped
 public class Contest {
@@ -60,7 +61,7 @@ public class Contest {
         if (contestInfo != null) {
             entity.User user = tokenDao.findUserEntByToken(token);
             if (user != null) {
-                if (!verifyOpenCallDates(contestInfo.getStartOpenCall(), contestInfo.getFinishOpenCall())) {
+                if (!verifyOpenCallDates(contestInfo.getStartOpenCall(), contestInfo.getFinishOpenCall(), 0)) {
 
                     entity.Contest contest = new entity.Contest();
                     contest.setTitle(contestInfo.getTitle());
@@ -96,22 +97,30 @@ public class Contest {
      * @param finishOpenCall refers to finishing day of open call of given contest
      * @return true if dates overlap any other existing contest's open call (therefore, not allowing creating or editing contest)
      */
-    private boolean verifyOpenCallDates(Date startOpenCall, Date finishOpenCall) {
+    private boolean verifyOpenCallDates(Date startOpenCall, Date finishOpenCall, int contestId) {
 
         boolean res = false;
         int count = 0;  // contador para número de ocorrências que não permitem validar as datas
 
         List<entity.Contest> listAllContests = contestDao.findAll();
-        for (entity.Contest c : listAllContests) {
-            if (!startOpenCall.after(c.getFinishOpenCall()) || !finishOpenCall.before(c.getStartOpenCall())) {
+        List<entity.Contest> tempList;
+        if(contestId!=0){
+            // to not compare dates with its own entity
+            tempList = listAllContests.stream().filter(contest -> contest.getId() != contestId).collect(Collectors.toList());
+        } else{
+           tempList = listAllContests;
+        }
+
+
+        for (entity.Contest c : tempList) {
+            if (startOpenCall.after(c.getFinishOpenCall()) || finishOpenCall.before(c.getStartOpenCall())) {
                 count++;
             }
         }
 
-        if (count != 0) {
+        if (count != tempList.size()) {
             res = true; // datas não permitem que novo concurso seja criado
         }
-
         return res;
     }
 
@@ -225,7 +234,32 @@ public class Contest {
     }
 
     /**
-     * Edits contest information
+     * Checks if contest information can be edited
+     * Dates must be sequential (startOpenCall before finishOpenCall before startDate before FinishDate) and this is verified in frontend
+     * Verifies if openCall dates overlap any existing openCall periods of any other contest, to make sure that only 1 OPEN contest exists
+     *
+     * @param token       identifies session that makes the request
+     * @param editContest contains information to edit given contest
+     * @return true if contest info can be edited
+     */
+    public boolean canEditContestInfo(String token, dto.Contest editContest) {
+
+        boolean res = false;
+        User user = tokenDao.findUserEntByToken(token);
+        if (user != null) {
+            entity.Contest contestEnt = contestDao.find(editContest.getId());
+
+            if (contestEnt != null) {
+                if (!verifyOpenCallDates(editContest.getStartOpenCall(), editContest.getFinishOpenCall(), editContest.getId())) {
+
+                    res = true;
+            }
+        }}
+        return res;
+    }
+
+    /**
+     * Edits contest information after checking dates
      * Dates must be sequential (startOpenCall before finishOpenCall before startDate before FinishDate) and this is verified in frontend
      * Verifies if openCall dates overlap any existing openCall periods of any other contest, to make sure that only 1 OPEN contest exists
      *
@@ -233,6 +267,7 @@ public class Contest {
      * @param editContest contains information to edit given contest
      * @return Contest DTO
      */
+
     public dto.Contest editContestInfo(String token, dto.Contest editContest) {
 
         dto.Contest contestDto = new dto.Contest();
@@ -241,9 +276,7 @@ public class Contest {
             entity.Contest contestEnt = contestDao.find(editContest.getId());
 
             if (contestEnt != null) {
-                if (!verifyOpenCallDates(editContest.getStartOpenCall(), editContest.getFinishOpenCall())) {
-
-                    contestEnt.setTitle(editContest.getTitle());
+                  contestEnt.setTitle(editContest.getTitle());
                     contestEnt.setStartOpenCall(editContest.getStartOpenCall());
                     contestEnt.setFinishOpenCall(editContest.getFinishOpenCall());
                     contestEnt.setStartDate(editContest.getStartDate());
@@ -256,10 +289,8 @@ public class Contest {
                     communicationBean.notifyAllContestManagers(1, contestEnt.getTitle());
                     contestDto = convertContestEntToDto(contestEnt);
                     LOGGER.info("Contest: " + editContest.getTitle() + " information is edited by user " + user.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
-
-                }
-            }
-        }
+           
+        }}
 
         return contestDto;
     }
@@ -421,7 +452,6 @@ public class Contest {
                             communicationBean.recordProjectStatusChange(project, null, 2);
                             res = true;
                             LOGGER.info("Project ID " + project.getId()+": " + project.getTitle() + " has applied to contest " + contestId+ ". IP Address of request is " + userBean.getIPAddress());
-
 
                         }
                     } else {
@@ -652,7 +682,6 @@ public class Contest {
      * @return true if all final tasks dates have passed - a winner can be declared
      */
     private boolean checkProjectsAcceptedFinalTaskDates(int contestId) {
-        // TODO poderia verificar se todos os projectos estão finished e task final finished mas isso poderia significar que o concurso nunca poderia ficar concluído por algum gestor de projecto não marcar o projecto / task final como finished
         boolean res = false;
 
         List<Project> projectsAccepted = applicationDao.findAcceptedProjectsForGivenContestId(contestId);
