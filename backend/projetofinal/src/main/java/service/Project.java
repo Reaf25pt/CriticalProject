@@ -27,8 +27,7 @@ public class Project {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getALl(/*@DefaultValue("ola")*/ @QueryParam("queryWinner") boolean queryWinner, @QueryParam("global") String global,  @HeaderParam("token") String token) {
-        System.out.println(queryWinner);
-        System.out.println(global);
+
 
         Response r = null;
 
@@ -437,7 +436,7 @@ public class Project {
 
             userBean.updateSessionTime(token);
 
-            boolean res = projBean.editTaskStatus(token, editTask);
+            boolean res = projBean.validateEditTaskStatus(token, editTask);
 
             if (!res) {
                 r = Response.status(404).entity("Not found!").build();

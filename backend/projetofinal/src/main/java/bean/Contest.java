@@ -547,7 +547,6 @@ public class Contest {
                         projDao.merge(applicationEnt.getProject());
 
                         communicationBean.recordProjectApplicationResult(null, applicationEnt.getProject(), answer);
-                        //TODO testar notificacoes
                         verifyLimitApplicationsToContestHasBeanReached(applicationEnt.getContest());
                         res = true;
                         LOGGER.info("Project ID " + applicationEnt.getProject().getId()+": " + applicationEnt.getProject().getTitle() + " application to contest " + applicationEnt.getContest().getId()+ " has been accepted. IP Address of request is " + userBean.getIPAddress());
@@ -601,7 +600,6 @@ public class Contest {
                 a.setAnswered(true);
                 a.setAccepted(false);
                 applicationDao.merge(a);
-                // TODO testar
                 communicationBean.recordProjectApplicationResult(null, a.getProject(), 0);
                 LOGGER.info("Application of project: " + a.getProject().getTitle() + " to contest:  " + contest.getTitle() + " has been rejected. IP Address of request is " + userBean.getIPAddress());
 

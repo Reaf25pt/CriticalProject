@@ -46,6 +46,8 @@ public class User implements Serializable {
     dao.Hobby hobbyDao;
     @EJB
     dao.Skill skillDao;
+    @EJB
+    dao.Notification notifDao;
 
     public User() {
     }
@@ -693,7 +695,7 @@ public class User implements Serializable {
                 // significa que hobby já está na DB -> verificar se já existe relação hobby-user para, n havendo, adicionar a lista de user
 
                 Long res = hobbyDao.findRelationBetweenUserAndHobby(hobby.getHobbyId(), user.getUserId());
-                System.out.println(res);
+
                 if (res == 0) {
                     user.getListHobbies().add(hobby);
                     hobby.getListUsers_Hobbies().add(user);
@@ -1055,7 +1057,7 @@ public class User implements Serializable {
 
                     entity.ProjectMember pm = projMemberDao.findActiveProjectMemberByUserId(userId);
                     if (pm != null) {
-                        System.out.println("ID proj member " + pm.getId());
+
                         if (projBean.hasEnoughManagers(pm.getProjectToParticipate().getId(), userId)) {
                             // projecto fica com gestor depois de pessoa sair. Senao não pode ser alterado
 
@@ -1099,6 +1101,8 @@ public class User implements Serializable {
 
     /**
      * Refuses pending invitations to participate in given project, by setting attribute answered to true
+     * Finds ProjectMember relationship where userId is user invited and it's not answered
+     * If it's not self-invitation, must delete notification where user would answer to invite
      *
      * @param userId identifies user whose pending invitations must be refused
      */
@@ -1108,10 +1112,26 @@ public class User implements Serializable {
             for (entity.ProjectMember p : listPotentialpm) {
                 p.setAnswered(true);
                 projMemberDao.merge(p);
+
+                if (!p.isSelfInvitation()){
+                    entity.Notification notif = notifDao.findNotificationByUserIdAndProjectMember(userId, p.getId());
+                    if (notif!=null){
+                        p.getNotificationList().remove(notif);
+
+                        entity.User user = userDao.findUserById(userId);
+                        if (user!=null){
+                            user.getUserNotificationList().remove(notif);
+                            userDao.merge(user);
+                        }
+                        projMemberDao.merge(p);
+                        notifDao.remove(notif);
+                    }
+                }
+                LOGGER.info("User ID is " + userId + " invite to participate in project ID " + p.getProjectToParticipate().getId() + " is rejected. IP Address of request is " + getIPAddress());
+
             }
         }
-        //TODO
-        // TODO add logger, decide if do so when accepting in other project. DELETE NOTIFICATIONS FOR SUCH PM
+
     }
 
     /**
@@ -1202,7 +1222,6 @@ public class User implements Serializable {
                 profile.setLastName(user.getLastName());
                 profile.setOffice(user.getOffice().getCity());
                 profile.setOfficeInfo(user.getOffice().ordinal());
-                // TODO testar q nulos não partem o programa - n permitir que projecto tenha office nulo
                 profile.setNickname(user.getNickname());
                 profile.setPhoto(user.getPhoto());
                 profile.setBio(user.getBio());

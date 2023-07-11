@@ -11,11 +11,14 @@ public class TimerBean {
     @EJB
     ConfigurationBean configBean;
     @Inject
+Communication communicationBean;
 
-
-    @Schedule(second = "0", minute = "0", hour = "*")
+    @Schedule(/*second = "0", */minute = "*/30", hour = "*")
     public void automaticTimeout() {
-        System.out.println("Timer ");
+
+        communicationBean.notifyContestManagersImportantActionNeeded();
+        communicationBean.notifyProjectMembersContestApproachesEnding();
+
 
     }
 

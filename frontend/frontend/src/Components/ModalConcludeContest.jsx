@@ -134,7 +134,7 @@ function ModalConcludeContest() {
                           {projList
                             .filter(
                               (proj) =>
-                                proj.accepted /* && proj.projectStatusInt === 6 */
+                                proj.accepted && proj.projectStatusInt === 6
                             )
                             .map((proj) => (
                               <option key={proj.id} value={proj.projectId}>

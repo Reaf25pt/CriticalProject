@@ -14,6 +14,7 @@ import org.jboss.logging.Logger;
 import websocket.Notifier;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,13 +41,18 @@ public class Communication implements Serializable {
     dao.PersonalMessage personalChatDao;
     @Inject
     bean.User userBean;
+    @EJB
+    dao.Project projDao;
+    @EJB
+    dao.Contest contestDao;
 
     /**
      * Notifies user that has been invited to participate in project
+     *
      * @param projMember represents ProjectMember relationship between user and project
-     * @param project represents project
-     * @param user represents user invited to participate in project
-     * @param isInvited is true if user is invited by project manager; is false if it's a self-invitation
+     * @param project    represents project
+     * @param user       represents user invited to participate in project
+     * @param isInvited  is true if user is invited by project manager; is false if it's a self-invitation
      */
     public void notifyNewPossibleProjectMember(ProjectMember projMember, Project project, User user, boolean isInvited) {
 
@@ -256,8 +262,9 @@ public class Communication implements Serializable {
     /**
      * Notifies project members if user accepted invitation made by project manager to participate in project
      * Notifies project managers if user rejected invitation made by project manager to participate in project
+     *
      * @param projMember represents ProjectMember that defines relationship between user and project
-     * @param answer value = 0 to reject invitation; value = 1 to accept invitation
+     * @param answer     value = 0 to reject invitation; value = 1 to accept invitation
      */
     private void notifyRelevantPartsOfInvitationResponse(ProjectMember projMember, int answer) {
 
@@ -301,8 +308,9 @@ public class Communication implements Serializable {
 
     /**
      * Notifies project members of answer to contest application
+     *
      * @param project represents project
-     * @param answer value = 0 if application is rejected; value = 1 if application is accepted
+     * @param answer  value = 0 if application is rejected; value = 1 if application is accepted
      */
     public void notifyProjectMembersOfApplicationResponse(Project project, int answer) {
 
@@ -336,20 +344,21 @@ public class Communication implements Serializable {
 
     /**
      * Notifies user excluded from project by project manager so that it understands why no longer can access full project information
+     *
      * @param project represents project
-     * @param user represents user excluded
+     * @param user    represents user excluded
      */
     public void notifyUserHasBeenExcludedFromProject(Project project, User user) {
 
-                Notification notif = new Notification();
-                notif.setCreationTime(Date.from(Instant.now()));
-                notif.setSeen(false);
-                notif.setNeedsInput(false);
-                notif.setMessage("Foi excluído do projecto " + project.getTitle());
-                notif.setMessageEng("You have been excluded from project " + project.getTitle());
-                notif.setNotificationOwner(user);
-                notifDao.persist(notif);
-                notifyRealTime(notif, user);
+        Notification notif = new Notification();
+        notif.setCreationTime(Date.from(Instant.now()));
+        notif.setSeen(false);
+        notif.setNeedsInput(false);
+        notif.setMessage("Foi excluído do projecto " + project.getTitle());
+        notif.setMessageEng("You have been excluded from project " + project.getTitle());
+        notif.setNotificationOwner(user);
+        notifDao.persist(notif);
+        notifyRealTime(notif, user);
 
     }
 
@@ -378,7 +387,8 @@ public class Communication implements Serializable {
 
     /**
      * Notifies user that task of which it was responsible has been deleted
-     * @param user represents user
+     *
+     * @param user      represents user
      * @param taskTitle identifies task
      */
     public void notifyTaskWasRemoved(User user, String taskTitle) {
@@ -397,7 +407,29 @@ public class Communication implements Serializable {
     }
 
     /**
+     * Notifies project member that given task which was its responsability to complete is no longer (person is notified to make sure it knows)
+     *
+     * @param user      represents member to be notified, and previous owner of task
+     * @param taskTitle identifies task
+     */
+    public void notifyTaskIsNoLongerMemberResponsability(User user, String taskTitle) {
+        Notification notif = new Notification();
+        notif.setCreationTime(Date.from(Instant.now()));
+        notif.setSeen(false);
+        notif.setNeedsInput(false);
+        // notif.setProjectMember(projMember);
+
+        notif.setMessage("Atenção, tarefa " + taskTitle + " deixou de ser da sua responsabilidade");
+        notif.setMessageEng("Attention, task " + taskTitle + " is no longer your responsability");
+
+        notif.setNotificationOwner(user);
+        notifDao.persist(notif);
+        notifyRealTime(notif, user);
+    }
+
+    /**
      * Notify project members that task has been concluded
+     *
      * @param taskEnt represents task entity
      */
     public void notifyAllMembersTaskIsFinished(Task taskEnt) {
@@ -424,7 +456,9 @@ public class Communication implements Serializable {
 
     /**
      * Notifies all contest managers of important events: new contest created, contest edited, new project application received for given contest
-     * @param value value = 0 if new contest has been created; value = 1 if contest has been edited; value = 2 if contest received project application
+     * Notifies automatically if date to open or close contest application period or if date to ONGOING start or finish are due tomorrow
+     *
+     * @param value        value = 0 if new contest has been created; value = 1 if contest has been edited; value = 2 if contest received project application
      * @param contestTitle identifies contest
      */
     public void notifyAllContestManagers(int value, String contestTitle) {
@@ -444,13 +478,28 @@ public class Communication implements Serializable {
                 } else if (value == 1) {
                     // info de concurso foi editada
                     notif.setMessage("Informação do concurso " + contestTitle + " foi editada");
-                    notif.setMessageEng("Details of contest " + contestTitle + "have been edited");
+                    notif.setMessageEng("Details of contest " + contestTitle + " have been edited");
                 } else if (value == 2) {
                     // projecto concorreu a concurso
                     notif.setMessage("Nova candidatura recebida para o concurso " + contestTitle);
                     notif.setMessageEng("There is a new application for contest " + contestTitle);
+                } else if (value == 3) {
+                    // open call should open tomorrow
+                    notif.setMessage("Open call do concurso " + contestTitle + " deverá começar amanhã");
+                    notif.setMessageEng("Open call for contest " + contestTitle + " should open tomorrow");
+                } else if (value == 4) {
+                    // open call should close tomorrow
+                    notif.setMessage("Open call do concurso " + contestTitle + " deverá fechar amanhã");
+                    notif.setMessageEng("Open call for contest " + contestTitle + " should close tomorrow");
+                } else if (value == 5) {
+                    // ONGOING deverá abrir amanhã
+                    notif.setMessage("Fase ONGOING do concurso " + contestTitle + " deverá começar amanhã");
+                    notif.setMessageEng("ONGOING phase of contest " + contestTitle + " should open tomorrow");
+                } else if (value == 6) {
+                    // ONGOING deverá fechar amanhã
+                    notif.setMessage("Fase ONGOING do concurso " + contestTitle + " deverá fechar amanhã");
+                    notif.setMessageEng("ONGOING phase of contest " + contestTitle + " should close tomorrow");
                 }
-
                 notif.setNotificationOwner(u);
                 notifDao.persist(notif);
                 notifyRealTime(notif, u);
@@ -460,6 +509,7 @@ public class Communication implements Serializable {
 
     /**
      * Notifies all users with valid account that a given contest has opened to applications
+     *
      * @param contest represents contest
      */
     public void notifyAllUsers(Contest contest) {
@@ -486,6 +536,7 @@ public class Communication implements Serializable {
     /**
      * Notifies all active members of accepted projects in given contest that contest is ONGOING
      * It means that projects can start being executed
+     *
      * @param contest represents given contest
      */
     public void notifyProjectMembersExecutionHasStarted(Contest contest) {
@@ -520,6 +571,7 @@ public class Communication implements Serializable {
     /**
      * Notifies all active members of accepted projects in given contest that contest has FINISHED
      * Informs which project has been declared winner
+     *
      * @param contest represents contest
      */
     public void notifyContestHasFinished(Contest contest) {
@@ -551,6 +603,7 @@ public class Communication implements Serializable {
 
     /**
      * Notifies all users of which project has been declared winner of given contest
+     *
      * @param contest represents contest
      */
     public void notifyContestHasWinner(Contest contest) {
@@ -571,18 +624,20 @@ public class Communication implements Serializable {
                 notifDao.persist(notif);
                 notifyRealTime(notif, u);
             }
-        }}
+        }
+    }
 
     /**
      * Records in project history given project has been created
+     *
      * @param newProjEnt represents new project
-     * @param user representes who created project
+     * @param user       representes who created project
      */
     public void recordProjectCreation(Project newProjEnt, User user) {
 
         ProjectHistory record = new ProjectHistory();
         record.setCreationTime(Date.from(Instant.now()));
-        record.setMessage("Projecto criado por "+user.getFirstName() +" " + user.getLastName()+". Estado: Planning");
+        record.setMessage("Projecto criado por " + user.getFirstName() + " " + user.getLastName() + ". Estado: Planning");
         record.setAuthor(user);
         record.setProject(newProjEnt);
         recordDao.persist(record);
@@ -590,14 +645,15 @@ public class Communication implements Serializable {
 
     /**
      * Records in project history given project has been edited
+     *
      * @param project represents project
-     * @param user represents user who edited
+     * @param user    represents user who edited
      */
     public void recordProjectEdition(Project project, User user) {
 
         ProjectHistory record = new ProjectHistory();
         record.setCreationTime(Date.from(Instant.now()));
-        record.setMessage("Informação geral do projecto editada por " +user.getFirstName() +" " + user.getLastName());
+        record.setMessage("Informação geral do projecto editada por " + user.getFirstName() + " " + user.getLastName());
         record.setAuthor(user);
         record.setProject(project);
         recordDao.persist(record);
@@ -605,9 +661,10 @@ public class Communication implements Serializable {
 
     /**
      * Records in project history given project status has been modified
+     *
      * @param project represents project
-     * @param user represents user responsible for status editing if it modified manually by someone
-     * @param status value defines new project status
+     * @param user    represents user responsible for status editing if it modified manually by someone
+     * @param status  value defines new project status
      */
     public void recordProjectStatusChange(Project project, User user, int status) {
 
@@ -650,8 +707,9 @@ public class Communication implements Serializable {
 
     /**
      * Records in project history that one of its tasks has had status modified
-     * @param user represents user that modified task status
-     * @param task represents task
+     *
+     * @param user   represents user that modified task status
+     * @param task   represents task
      * @param status value defines new task status
      */
     public void recordTaskStatusEdit(User user, Task task, int status) {
@@ -674,9 +732,10 @@ public class Communication implements Serializable {
 
     /**
      * Records in project history whether user invited to participate in project by project manager accepts (1) or rejects (0) invitation
-     * @param user represents user invited
+     *
+     * @param user    represents user invited
      * @param project represents project
-     * @param answer value identifies whether invitation was accepted (1) or rejected (0)
+     * @param answer  value identifies whether invitation was accepted (1) or rejected (0)
      */
     public void recordMemberInvitationResponse(User user, Project project, int answer) {
 
@@ -700,7 +759,8 @@ public class Communication implements Serializable {
 
     /**
      * Records in project history when a member leaves project, either excluded or left by choice
-     * @param user represents user that left project
+     *
+     * @param user    represents user that left project
      * @param project represents project
      */
     public void recordMemberRemovalFromProject(User user, Project project) {
@@ -715,11 +775,40 @@ public class Communication implements Serializable {
     }
 
     /**
+     * Records in project history when member role in given project is changed
+     *
+     * @param token  identifies session that makes the request
+     * @param userId identifies member whose role is modified
+     * @param projId identifies project
+     * @param role   value = 0 when role is modified to 'normal'; value = 1 when role is modified to project manager
+     */
+    public void recordProjectMemberRoleChange(String token, int userId, int projId, int role) {
+        Project project = projDao.findProjectById(projId);
+        if (project != null) {
+            User loggedUser = tokenDao.findUserEntByToken(token);
+            User member = userDao.findUserById(userId);
+            if (loggedUser != null && member != null) {
+                ProjectHistory record = new ProjectHistory();
+                record.setCreationTime(Date.from(Instant.now()));
+                record.setAuthor(loggedUser);
+                record.setProject(project);
+                if (role == 0) {
+                    record.setMessage(member.getFirstName() + " " + member.getLastName() + " já não é gestor do projecto");
+                } else if (role == 1) {
+                    record.setMessage(member.getFirstName() + " " + member.getLastName() + " é gestor do projecto");
+                }
+                recordDao.persist(record);
+            }
+        }
+    }
+
+    /**
      * Records in project history whether user that self-invites itself to participate in project is accepted (1) or rejected (0) by project manager
+     *
      * @param manager represents project manager
-     * @param user represents user who wants to participate in project
+     * @param user    represents user who wants to participate in project
      * @param project represents project
-     * @param answer value identifies whether invitation was accepted (1) or rejected (0)
+     * @param answer  value identifies whether invitation was accepted (1) or rejected (0)
      */
     public void recordManagerResponseToSelfInvitation(User manager, User user, Project project, int answer) {
         // guarda registo no histórico do projecto da resposta que gestor deu a um pedido para participar no projecto
@@ -773,9 +862,10 @@ public class Communication implements Serializable {
 
     /**
      * Records in project history whether project application to contest was accepted (1) or rejected (0)
-     * @param user represents contest manager responsible for decision. Will not be persisted in database so that it is not identified in project history
+     *
+     * @param user    represents contest manager responsible for decision. Will not be persisted in database so that it is not identified in project history
      * @param project represents project
-     * @param answer value identifies whether application was accepted (1) or rejected (0)
+     * @param answer  value identifies whether application was accepted (1) or rejected (0)
      */
     public void recordProjectApplicationResult(User user, Project project, int answer) {
         ProjectHistory record = new ProjectHistory();
@@ -798,7 +888,8 @@ public class Communication implements Serializable {
 
     /**
      * Records in project history that given project was declared winner of contest
-     * @param user represents contest manager responsible for decision. Will not be persisted in database so that it is not identified in project history
+     *
+     * @param user    represents contest manager responsible for decision. Will not be persisted in database so that it is not identified in project history
      * @param project represents project
      * @param contest identifies contest
      */
@@ -817,7 +908,8 @@ public class Communication implements Serializable {
      * Gets list of contacts (users) of given token
      * Contact is another user with whom token has sent or received personal messages
      * If idToChat has a value that is not 0, means that token wants to start conversation with corresponding user. User is added to contacts list
-     * @param token identifies session that makes the request
+     *
+     * @param token    identifies session that makes the request
      * @param idToChat identifies user with whom token wants to start a conversation
      * @return list of UserInfo DTO
      */
@@ -881,6 +973,7 @@ public class Communication implements Serializable {
 
     /**
      * Gets all personal messages sent or received by token
+     *
      * @param token identifies session that makes the request
      * @return list of PersonalMessage DTO
      */
@@ -914,6 +1007,7 @@ public class Communication implements Serializable {
 
     /**
      * Notifies in real-time project chat with new messages
+     *
      * @param message represents message sent
      * @param project represents project
      */
@@ -963,7 +1057,8 @@ public class Communication implements Serializable {
 
     /**
      * Gets list of messages exchanged between token and contact
-     * @param token identifies session that makes the request
+     *
+     * @param token     identifies session that makes the request
      * @param contactId identified contact (another app user)
      * @return list of PersonalMessage DTO
      */
@@ -985,6 +1080,7 @@ public class Communication implements Serializable {
 
     /**
      * Converts PersonalMessage entity to PersonalMessage DTO
+     *
      * @param m represents PersonalMessage entity
      * @return PersonalMessage DTO
      */
@@ -1035,5 +1131,82 @@ public class Communication implements Serializable {
             }
         }
         return dto;
+    }
+
+    /**
+     * Notifies automatically all contest managers that important action is needed tomorrow
+     * If date to open or close contest application period or if date to ONGOING start or finish are due tomorrow
+     */
+    public void notifyContestManagersImportantActionNeeded() {
+        Date today = Date.from(Instant.now());
+        Long oneDay = (long) (24 * 60 * 60 * 1000);
+        Date todayPlusOne = new Date(today.getTime() + oneDay);
+
+        List<Contest> all = contestDao.findAll();
+
+        if (all != null) {
+            for (Contest c : all) {
+                if (c.getStartOpenCall().after(today) && c.getStartOpenCall().before(todayPlusOne)) {
+                    // contest open call opens tomorrow
+                    notifyAllContestManagers(3, c.getTitle());
+                }
+                if (c.getFinishOpenCall().after(today) && c.getFinishOpenCall().before((todayPlusOne))) {
+                    notifyAllContestManagers(4, c.getTitle());
+                }
+                if (c.getStartDate().after(today) && c.getStartDate().before((todayPlusOne))) {
+                    notifyAllContestManagers(5, c.getTitle());
+                }
+                if (c.getFinishDate().after(today) && c.getFinishDate().before((todayPlusOne))) {
+                    notifyAllContestManagers(6, c.getTitle());
+                }
+            }
+        }
+    }
+
+    /**
+     * Notifies automatically all project members of accepted projects that contest finish date is due in 7 days
+     */
+    public void notifyProjectMembersContestApproachesEnding() {
+        Date today = Date.from(Instant.now());
+        Long oneDay = (long) (24 * 60 * 60 * 1000);
+        Date todayPlus7Days = new Date(today.getTime() + 7 * oneDay);
+
+        List<Contest> all = contestDao.findAll();
+
+        if (all != null) {
+            for (Contest c : all) {
+                if (c.getFinishDate().after(today) && c.getFinishDate().before((todayPlus7Days))) {
+                    notifyProjectMembers(c);
+                }
+        }
+    }}
+    /**
+     * Notifies automatically all project members of accepted projects that contest finish date is due in 7 days
+     * @Param c representes contest
+     */
+    private void notifyProjectMembers(Contest c) {
+
+        List<Project> projects = applicationDao.findAcceptedProjectsForGivenContestId(c.getId());
+        if (projects!=null){
+            for (Project p : projects){
+                List <User> projectMembers = projMemberDao.findListOfUsersByProjectId(p.getId());
+                if (projectMembers!=null){
+                    for (User u:projectMembers){
+                        Notification notif = new Notification();
+                        notif.setCreationTime(Date.from(Instant.now()));
+                        notif.setSeen(false);
+                        notif.setNeedsInput(false);
+                        // notif.setProjectMember(projMember);
+
+                        notif.setMessage("O concurso " + c.getTitle() + " terminará dentro de 7 dias");
+                        notif.setMessageEng("Contest " + c.getTitle() + " will finish in 7 days");
+
+                        notif.setNotificationOwner(u);
+                        notifDao.persist(notif);
+                        notifyRealTime(notif, u);
+                    }
+                }
+            }
+        }
     }
 }
