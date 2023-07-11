@@ -113,7 +113,7 @@ public class Communication {
         return r;
     }
 
-    // RESPONDER A CONVITE PARA PARTICIPAR EM PROJECTO: true== 1 ACCEPT INVITE/ false ==0 REFUSE INVITE
+    // RESPONDER A CONVITE FEITO POR GESTOR DE PROJECTO PARA PARTICIPAR EM PROJECTO: true== 1 ACCEPT INVITE/ false ==0 REFUSE INVITE
     @POST
     @Path("/invitation/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -194,7 +194,6 @@ public class Communication {
 
                 r = Response.status(200).entity(newMessage).build();
             }
-
         }
 
         return r;
@@ -278,7 +277,6 @@ public class Communication {
 
         } else {
             userBean.updateSessionTime(token);
-
 
             List<PersonalMessage> list = comBean.getMessagesForSpecificContact(token, contactId);
 

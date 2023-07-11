@@ -195,6 +195,7 @@ function ProjectOpen() {
           <div className="row mx-auto d-flex justify-content-around">
             <div className="col-lg-7">
               {project.manager &&
+              project.availableSpots > 0 &&
               (project.statusInt === 0 || project.statusInt === 4) ? (
                 <InviteMember />
               ) : null}

@@ -594,6 +594,7 @@ public class Project implements Serializable {
     /**
      * Gets project information, including skills and keywords associated
      * Includes information of token relationship with project: manager, normal member or app user
+     * Includes information if project is a winner of contest
      *
      * @param token identifies session that makes the request
      * @param id    identifies project
@@ -631,9 +632,33 @@ public class Project implements Serializable {
                     project.setMember(false);
                     project.setManager(false);
                 }
+                if (projEnt.getStatus() == StatusProject.FINISHED) {
+                    //could be a winner
+                    project.setWinner(checksIfProjectIsWinner(id));
+                } else {
+                    project.setWinner(false);
+                }
             }
         }
         return project;
+    }
+
+    /**
+     * Checks if project has been declared winner of contest
+     * @param id identifies project
+     * @return true if project is winner of contest
+     */
+    private boolean checksIfProjectIsWinner(int id) {
+        boolean res=false;
+        List< dto.Project> winnerProjects = filterWinnerProjects();
+        if (winnerProjects!=null){
+            for (dto.Project p : winnerProjects){
+                if (p.getId()==id){
+                    res=true;
+                }
+            }
+        }
+        return res;
     }
 
     /**
@@ -803,6 +828,7 @@ public class Project implements Serializable {
 
     /**
      * Verifies if attributes mandatory to add new task to project are filled in: title, start and finish date and task details
+     *
      * @param task represents task to be added
      * @return true
      */
@@ -984,6 +1010,7 @@ public class Project implements Serializable {
 
     /**
      * Gets StatusProject ENUM value according to statusInt value
+     *
      * @param statusInt value correspondes to equivalent StatusProject
      * @return StatusProject Enum
      */
@@ -1020,6 +1047,7 @@ public class Project implements Serializable {
 
     /**
      * Gets Office ENUM value according to office value
+     *
      * @param office value correspondes to equivalent Office
      * @return Office Enum
      */
@@ -1131,8 +1159,15 @@ public class Project implements Serializable {
                     // tarefas à responsabilidade do membro que vai sair têm novo responsável atribuído
                     pm.setRemoved(true);
                     projMemberDao.merge(pm);
-                    communicationBean.notifyProjectMembersOfMemberLeavingProject(pm.getProjectToParticipate(), pm.getUserInvited());
-// TODO apenas notificar pessoa no caso de ser removida do projecto senão não entende pq ja n tem acesso ao projecto
+
+                    entity.User loggedUser = tokenDao.findUserEntByToken(token);
+                    if(loggedUser!=null){
+                        if (loggedUser.getUserId()!=userId){
+                            // pessoa foi excluída do projecto. Notificar pessoa porque senão não perceberá porque deixa de ter acesso a página completa do projecto
+                          // communicationBean.notifyProjectMembersOfMemberLeavingProject(pm.getProjectToParticipate(), pm.getUserInvited());
+                            communicationBean.notifyUserHasBeenExcludedFromProject(pm.getProjectToParticipate(), pm.getUserInvited());
+                        }
+                    }
                     delete = true;
                     LOGGER.info("User ID " + userId + " no longer participates in project " + pm.getProjectToParticipate().getId() + ". IP Address of request is " + userBean.getIPAddress());
 
@@ -1245,6 +1280,7 @@ public class Project implements Serializable {
 
     /**
      * Calculates number of available spots in given project
+     *
      * @param p represents project
      * @return int of available spots
      */
@@ -1925,6 +1961,7 @@ public class Project implements Serializable {
                         entity.User user = userDao.findUserById(editTask.getTaskOwnerId());
                         if (user != null) {
                             taskEnt.setTaskOwner(user);
+                            // TODO add notification that one lost task and one got new task
                         }
                     }
                 }
@@ -2053,7 +2090,6 @@ public class Project implements Serializable {
                         taskDao.merge(taskEnt);
                         // avisar todos os membros do projecto que tarefa está concluída, em x de avisar potenciais tarefas que precisem desta para avançar
                         communicationBean.notifyAllMembersTaskIsFinished(taskEnt);
-                        //TODO decidir se manter notificação ou apenas registar no historico
                         res = true;
                         entity.User user = tokenDao.findUserEntByToken(token);
                         communicationBean.recordTaskStatusEdit(user, taskEnt, 2);
@@ -2079,7 +2115,6 @@ public class Project implements Serializable {
                     taskDao.merge(taskEnt);
                     // avisar todos os membros do projecto que tarefa está concluída, em x de avisar potenciais tarefas que precisem desta para avançar
                     communicationBean.notifyAllMembersTaskIsFinished(taskEnt);
-                    //TODO decidir se manter notificação ou apenas registar no historico
                     res = true;
                     entity.User user = tokenDao.findUserEntByToken(token);
                     communicationBean.recordTaskStatusEdit(user, taskEnt, 2);
@@ -2447,6 +2482,7 @@ public class Project implements Serializable {
 
     /**
      * Converts ProjectChatMessage entity to ProjectChatMessage DTO
+     *
      * @param m represents ProjectChatMessage entity
      * @return ProjectChatMessage DTO
      */

@@ -31,6 +31,8 @@ public class Project {
 
     private boolean member;
 
+    private boolean isWinner;
+
     public Project(int id, String title, Office office, String details, String resources, StatusProject status, int membersNumber, Date creationDate) {
         this.id = id;
         this.title = title;
@@ -172,5 +174,13 @@ public class Project {
 
     public void setAvailableSpots(int availableSpots) {
         this.availableSpots = availableSpots;
+    }
+
+    public boolean isWinner() {
+        return isWinner;
+    }
+
+    public void setWinner(boolean winner) {
+        isWinner = winner;
     }
 }

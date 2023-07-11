@@ -223,6 +223,9 @@ function ProjectComponent({ toggleComponent }) {
                   </div>
                 </div>
               ) : null}
+              {project.statusInt === 6 && project.winner ? (
+                <p>Vencedor</p>
+              ) : null}
             </div>
           </div>
           <div className="col-lg-4 ">
