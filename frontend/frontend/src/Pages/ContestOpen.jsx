@@ -231,13 +231,16 @@ function ContestOpen() {
                       <Column body={winner} header="" />
                     </DataTable>
                   </div>
+                  <div className="col-lg-5">
+                    {" "}
+                    <ContestApplications
+                    // pendingApplications={pendingApplications}
+                    // setProjects={setProjects}
+                    />
+                  </div>
                 </div>
               </div>
-
-              <ContestApplications
-              // pendingApplications={pendingApplications}
-              // setProjects={setProjects}
-              />
+              <div></div>
             </div>
           </div>
         </div>
