@@ -152,11 +152,13 @@ function ModalFinalTask() {
           <p>
             Para alterar o estado do projecto com sucesso tem de definir uma
             tarefa final com a duração de 1 dia, que diz respeito à apresentação
-            final do projecto nos dias finais do concurso. Tenha atenção para a
-            data inserida: uma data posterior à conclusão do concurso a que
-            pretende concorrer comprometerá a sua candidatura.{" "}
+            final do projecto nos dias finais do concurso.{" "}
+          </p>{" "}
+          <p>
+            {" "}
+            Tenha atenção para a data inserida: datas posteriores à conclusão do
+            concurso a que pretende concorrer comprometerá a sua candidatura.{" "}
           </p>
-
           <div
             className="row d-flex justify-content-around bg-secondary 
           rounded-5 p-4"

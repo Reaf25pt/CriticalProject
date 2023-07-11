@@ -192,7 +192,7 @@ function ContestApplications() {
                   </Modal>
                 </div>
                 <div className="col-lg-2">
-                  <Link to={`/home/projects/${application.id}`}>
+                  <Link to={`/home/projects/${application.projectId}`}>
                     <OverlayTrigger
                       placement="top"
                       overlay={<Tooltip>Ver projecto</Tooltip>}

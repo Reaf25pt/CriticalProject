@@ -289,7 +289,7 @@ public class Contest {
                     communicationBean.notifyAllContestManagers(1, contestEnt.getTitle());
                     contestDto = convertContestEntToDto(contestEnt);
                     LOGGER.info("Contest: " + editContest.getTitle() + " information is edited by user " + user.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
-           
+
         }}
 
         return contestDto;

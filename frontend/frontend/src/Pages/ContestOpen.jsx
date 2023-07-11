@@ -69,10 +69,10 @@ function ContestOpen() {
 
   const renderLink = (rowData) => {
     return (
-      <Link to={`/home/projects/${rowData.id}`}>
+      <Link to={`/home/projects/${rowData.projectId}`}>
         <OverlayTrigger
           placement="top"
-          overlay={<Tooltip>Ver detalhes</Tooltip>}
+          overlay={<Tooltip>Ver projecto</Tooltip>}
         >
           <span data-bs-toggle="tooltip" data-bs-placement="top">
             {" "}

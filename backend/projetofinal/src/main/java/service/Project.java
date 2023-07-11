@@ -363,7 +363,7 @@ public class Project {
         if (userBean.checkStringInfo(token)) {
             r = Response.status(401).entity("Unauthorized!").build();
 
-        } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId) || !projBean.verifyIfTaskBelongsToProject(taskId, projId) || projBean.verifyProjectStatusToModifyTask(projId)) {
+        } else if (!userBean.checkUserPermission(token) || !projBean.isProjManager(token, projId) || !projBean.verifyIfTaskBelongsToProject(taskId, projId) || !projBean.verifyProjectIsPlanning(projId)) {
             r = Response.status(403).entity("Forbidden!").build();
         } else {
 

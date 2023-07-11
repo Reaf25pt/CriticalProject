@@ -332,28 +332,7 @@ public class Communication implements Serializable {
             }
         }
     }
-/*
-    public void notifyProjectMembersOfMemberLeavingProject(Project project, User user) {
-        // Notifica membros do projecto que membro user saiu do projecto
-       // redundante com record. Pode-se remover notificação
 
-        List<User> membersList = projMemberDao.findListOfUsersByProjectId(project.getId());
-
-        if (membersList != null) {
-            for (User u : membersList) {
-                Notification notif = new Notification();
-                notif.setCreationTime(Date.from(Instant.now()));
-                notif.setSeen(false);
-                notif.setNeedsInput(false);
-                // notif.setProjectMember(projMember);
-                notif.setMessage(user.getFirstName() + " " + user.getLastName() + " saiu do projecto " + project.getTitle());
-                notif.setMessageEng(user.getFirstName() + " " + user.getLastName() + " has left project " + project.getTitle());
-                notif.setNotificationOwner(u);
-                notifDao.persist(notif);
-                notifyRealTime(notif, u);
-            }
-        }
-    }*/
 
     /**
      * Notifies user excluded from project by project manager so that it understands why no longer can access full project information
@@ -594,35 +573,48 @@ public class Communication implements Serializable {
             }
         }}
 
-
+    /**
+     * Records in project history given project has been created
+     * @param newProjEnt represents new project
+     * @param user representes who created project
+     */
     public void recordProjectCreation(Project newProjEnt, User user) {
-        // guarda registo no histórico do projecto da sua criação
 
         ProjectHistory record = new ProjectHistory();
         record.setCreationTime(Date.from(Instant.now()));
-        record.setMessage("Projecto criado: " + newProjEnt.getTitle() + ". Estado: Planning");
+        record.setMessage("Projecto criado por "+user.getFirstName() +" " + user.getLastName()+". Estado: Planning");
         record.setAuthor(user);
         record.setProject(newProjEnt);
         recordDao.persist(record);
     }
 
+    /**
+     * Records in project history given project has been edited
+     * @param project represents project
+     * @param user represents user who edited
+     */
     public void recordProjectEdition(Project project, User user) {
-        // guarda registo no histórico do projecto da sua edição
 
         ProjectHistory record = new ProjectHistory();
         record.setCreationTime(Date.from(Instant.now()));
-        record.setMessage("Informação geral editada");
+        record.setMessage("Informação geral do projecto editada por " +user.getFirstName() +" " + user.getLastName());
         record.setAuthor(user);
         record.setProject(project);
         recordDao.persist(record);
     }
 
+    /**
+     * Records in project history given project status has been modified
+     * @param project represents project
+     * @param user represents user responsible for status editing if it modified manually by someone
+     * @param status value defines new project status
+     */
     public void recordProjectStatusChange(Project project, User user, int status) {
-        // guarda registo no histórico do projecto da mudança de status
 
         ProjectHistory record = new ProjectHistory();
         record.setCreationTime(Date.from(Instant.now()));
         if (user != null) {
+            // alterações automáticas não têm user atribuído
             record.setAuthor(user);
         }
         record.setProject(project);
@@ -656,8 +648,13 @@ public class Communication implements Serializable {
         recordDao.persist(record);
     }
 
+    /**
+     * Records in project history that one of its tasks has had status modified
+     * @param user represents user that modified task status
+     * @param task represents task
+     * @param status value defines new task status
+     */
     public void recordTaskStatusEdit(User user, Task task, int status) {
-        // guarda registo no histórico do projecto da mudança de status de tarefa
 
         ProjectHistory record = new ProjectHistory();
         record.setCreationTime(Date.from(Instant.now()));
@@ -675,8 +672,13 @@ public class Communication implements Serializable {
         recordDao.persist(record);
     }
 
+    /**
+     * Records in project history whether user invited to participate in project by project manager accepts (1) or rejects (0) invitation
+     * @param user represents user invited
+     * @param project represents project
+     * @param answer value identifies whether invitation was accepted (1) or rejected (0)
+     */
     public void recordMemberInvitationResponse(User user, Project project, int answer) {
-        // guarda registo no histórico do projecto da resposta a um convite para participar no projecto
 
         ProjectHistory record = new ProjectHistory();
         record.setCreationTime(Date.from(Instant.now()));
@@ -696,18 +698,29 @@ public class Communication implements Serializable {
         recordDao.persist(record);
     }
 
+    /**
+     * Records in project history when a member leaves project, either excluded or left by choice
+     * @param user represents user that left project
+     * @param project represents project
+     */
     public void recordMemberRemovalFromProject(User user, Project project) {
-        // guarda registo no histórico do projecto da saída de um membro do projecto
 
         ProjectHistory record = new ProjectHistory();
         record.setCreationTime(Date.from(Instant.now()));
-        record.setAuthor(user);  // TODO diferenciar quem remove ?
+        record.setAuthor(user);
         record.setProject(project);
         record.setMessage(user.getFirstName() + " " + user.getLastName() + " saiu do projecto");
 
         recordDao.persist(record);
     }
 
+    /**
+     * Records in project history whether user that self-invites itself to participate in project is accepted (1) or rejected (0) by project manager
+     * @param manager represents project manager
+     * @param user represents user who wants to participate in project
+     * @param project represents project
+     * @param answer value identifies whether invitation was accepted (1) or rejected (0)
+     */
     public void recordManagerResponseToSelfInvitation(User manager, User user, Project project, int answer) {
         // guarda registo no histórico do projecto da resposta que gestor deu a um pedido para participar no projecto
         // manager do projecto é author da resposta ao pedido. user é a pessoa que pediu para participar
@@ -731,7 +744,7 @@ public class Communication implements Serializable {
     }
 
 
-    public void notifyPotentialMemberOfSelfInvitationResponse(ProjectMember pm, int answer) {
+ /*   public void notifyPotentialMemberOfSelfInvitationResponse(ProjectMember pm, int answer) {
         // notifica user que pedido para participar em projecto foi aceite (1) ou recusado (0)
 
         Notification notif = new Notification();
@@ -756,12 +769,15 @@ public class Communication implements Serializable {
         notif.setNotificationOwner(pm.getUserInvited());
         notifDao.persist(notif);
         notifyRealTime(notif, pm.getUserInvited());
-    }
+    }*/
 
+    /**
+     * Records in project history whether project application to contest was accepted (1) or rejected (0)
+     * @param user represents contest manager responsible for decision. Will not be persisted in database so that it is not identified in project history
+     * @param project represents project
+     * @param answer value identifies whether application was accepted (1) or rejected (0)
+     */
     public void recordProjectApplicationResult(User user, Project project, int answer) {
-        // guarda registo no histórico do projecto de ser aceite (1) / rejeitado (0) a concurso
-        //TODO faz sentido identificar o gestor de concurso, autor da decisão?
-        System.out.println("record application response");
         ProjectHistory record = new ProjectHistory();
         record.setCreationTime(Date.from(Instant.now()));
         if (user != null) {
@@ -776,24 +792,24 @@ public class Communication implements Serializable {
         } else if (answer == 1) {
             //aceite
             record.setMessage("A candidatura para participar no concurso foi aceite");
-
         }
-
-        System.out.println("FIM record application response");
-
         recordDao.persist(record);
     }
 
+    /**
+     * Records in project history that given project was declared winner of contest
+     * @param user represents contest manager responsible for decision. Will not be persisted in database so that it is not identified in project history
+     * @param project represents project
+     * @param contest identifies contest
+     */
     public void recordProjectDeclaredWinner(User user, Project project, Contest contest) {
-        // guarda registo no histórico do projecto ser declarado vencedor do concurso
-        //TODO faz sentido identificar o gestor de concurso, autor da decisão?
+
         ProjectHistory record = new ProjectHistory();
         record.setCreationTime(Date.from(Instant.now()));
         record.setAuthor(user);
         record.setProject(project);
 
         record.setMessage("O projecto foi declarado vencedor no concurso " + contest.getTitle());
-
         recordDao.persist(record);
     }
 
@@ -896,7 +912,11 @@ public class Communication implements Serializable {
 
     }
 
-
+    /**
+     * Notifies in real-time project chat with new messages
+     * @param message represents message sent
+     * @param project represents project
+     */
     public void notifyProjectChatRealTime(ProjectChat message, Project project) {
         // envia mensagem em tempo-real por chat do projecto a todos os tokens cujo user seja membro activo do projecto
 
@@ -907,7 +927,6 @@ public class Communication implements Serializable {
                 List<String> listTokens = tokenDao.findTokenListByUserId(u.getUserId());
                 if (listTokens != null) {
                     for (String t : listTokens) {
-// TODO falta testar socket
                         websocket.ProjectChat.sendNotification(message, t);
                     }
 

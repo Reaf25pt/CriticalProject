@@ -16,7 +16,9 @@ import jakarta.ejb.Stateless;
 
 @Stateless
 public class ConfigurationBean {
-
+    /**
+     * Allows to write logs in a file
+     */
     String filename = "project-critical.log";
     String pattern = "%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %m%n";
     ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();

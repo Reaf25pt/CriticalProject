@@ -1628,10 +1628,15 @@ public class Project implements Serializable {
         boolean res = false;
         entity.User user = userDao.findUserById(finalTask.getTaskOwnerId());
         if (user != null) {
+            Long timestamp = finalTask.getStartDate().getTime();
+            Long oneDay = (long) (24*60*60*1000);
+            Date finishDate= new Date(timestamp+oneDay);
+
             entity.Task taskEnt = new entity.Task();
             taskEnt.setTitle("Apresentação final");
             taskEnt.setStartDate(finalTask.getStartDate());
-            taskEnt.setFinishDate(finalTask.getStartDate());
+            taskEnt.setFinishDate(finishDate);
+          //  taskEnt.setFinishDate(finalTask.getStartDate());
             taskEnt.setDetails(finalTask.getDetails());
             taskEnt.setTaskOwner(user);
             taskEnt.setStatus(StatusTask.PLANNED);
@@ -1743,7 +1748,7 @@ public class Project implements Serializable {
 
     /**
      * Verifies if project status is PLANNING or IN PROGRESS
-     * Members might be added / removed , tasks might be added, edited, removed if project status is PLANNING or IN PROGRESS
+     * Members might be added / removed , tasks might be added, edited if project status is PLANNING or IN PROGRESS
      *
      * @param projId identifies project
      * @return true if project status does not allow changes
@@ -1755,6 +1760,24 @@ public class Project implements Serializable {
             if (project.getStatus() == StatusProject.READY || project.getStatus() == StatusProject.PROPOSED || project.getStatus() == StatusProject.APPROVED || project.getStatus() == StatusProject.CANCELLED || project.getStatus() == StatusProject.FINISHED) {
                 res = true;
                 // plano de execução, membros não podem sair
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Verifies if project status is PLANNING
+     * Task might be removed if project status is PLANNING
+     *
+     * @param projId identifies project
+     * @return true if project status allows changes
+     */
+    public boolean verifyProjectIsPlanning (int projId) {
+        boolean res = false;
+        entity.Project project = projDao.findProjectById(projId);
+        if (project != null) {
+            if (project.getStatus() == StatusProject.PLANNING ){
+                res = true;
             }
         }
         return res;
@@ -2067,7 +2090,7 @@ public class Project implements Serializable {
      */
     public boolean editTaskStatus(String token, Task editTask) {
         boolean res = false;
-
+// TODO incluir final task
         entity.Task taskEnt = taskDao.find(editTask.getId());
 
         if (taskEnt != null) {
@@ -2432,7 +2455,7 @@ public class Project implements Serializable {
                     LOGGER.info("User ID " + pm.getUserInvited().getUserId() + " is rejected to participate in project ID " + pm.getProjectToParticipate().getId() + " by user ID " + loggedUser.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
 
                     communicationBean.recordManagerResponseToSelfInvitation(loggedUser, pm.getUserInvited(), pm.getProjectToParticipate(), answer);
-                    communicationBean.notifyPotentialMemberOfSelfInvitationResponse(pm, answer);
+                   // communicationBean.notifyPotentialMemberOfSelfInvitationResponse(pm, answer);
 
                 } else if (answer == 1) {
                     // ACCEPT é preciso garantir que há vagas disponíveis
@@ -2445,7 +2468,7 @@ public class Project implements Serializable {
                         LOGGER.info("User ID " + pm.getUserInvited().getUserId() + " is accepted to participate in project ID " + pm.getProjectToParticipate().getId() + " by user ID " + loggedUser.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
 
                         communicationBean.recordManagerResponseToSelfInvitation(loggedUser, pm.getUserInvited(), pm.getProjectToParticipate(), answer);
-                        communicationBean.notifyPotentialMemberOfSelfInvitationResponse(pm, answer);
+                     //   communicationBean.notifyPotentialMemberOfSelfInvitationResponse(pm, answer);
                         userBean.refusePendingInvitations(pm.getUserInvited().getUserId());
 
                     }
