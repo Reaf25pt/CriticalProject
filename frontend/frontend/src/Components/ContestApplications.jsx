@@ -67,127 +67,150 @@ function ContestApplications() {
     );
   } else if (user.contestManager) {
     return (
-      <div className="col-8 col-sm-10 col-md-7 col-lg-5 mx-auto bg-secondary mt-5 rounded-5 ">
-        <div>
-          <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">
+      <div className="container">
+        <div className="row ">
+          <h3 className="bg-white mt-5 text-center rounded-5 mb-3 ">
             Candidaturas pendentes
           </h3>
-          {pendingApplications.map((application, index) => (
-            <div
-              key={index}
-              className="row bg-white text-black mb-3 rounded-3 w-50 mx-auto align-items-center"
-            >
-              <div className="col-lg-6 ">{application.projectTitle}</div>
-              <div className="col-lg-6 ">
-                <OverlayTrigger
-                  placement="top"
-                  overlay={<Tooltip>Aceitar candidatura</Tooltip>}
-                >
-                  <span data-bs-toggle="tooltip" data-bs-placement="top">
-                    {" "}
-                    <BsCheck2
-                      size={30}
-                      color="green"
-                      onClick={handleShowA}
-                    />{" "}
-                  </span>
-                </OverlayTrigger>
-                <Modal
-                  show={showA}
-                  onHide={handleCloseA}
-                  backdrop="static"
-                  keyboard={false}
-                  size="lg"
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title>
-                      Aceitar candidatura do projecto {application.projectTitle}
-                    </Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <p>
-                      Tem a certeza que quer aceitar este projecto a concurso?
-                      Uma vez confirmada esta operação não a poderá reverter.{" "}
-                    </p>
-                    <p>Clique no botão Confirmar para aceitar candidatura</p>
-                  </Modal.Body>
-                  <Modal.Footer id="modalFooter">
-                    <Col xs={4} className="closeBtnSeeTask">
-                      <Button variant="secondary" onClick={handleCloseA}>
-                        Fechar
-                      </Button>
-                    </Col>
-                    <Col xs={4}>
-                      <Button
-                        onClick={() => handleApplication(1, application.id)}
-                        className="button"
-                        type="submit"
-                        variant="outline-primary"
-                      >
-                        {" "}
-                        Confirmar
-                      </Button>
-                    </Col>
-                  </Modal.Footer>
-                </Modal>
-              </div>
+          <div className="row overflow-auto " style={{ maxHeight: "50vh" }}>
+            {pendingApplications.map((application, index) => (
+              <div
+                key={index}
+                className="row w-75 bg-white text-black mb-2 rounded-3  mx-auto  p-2 "
+              >
+                <div className="col-lg-6 ">
+                  <h5 className="text-center">{application.projectTitle}</h5>
+                </div>
+                <div className="col-lg-2 ">
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={<Tooltip>Aceitar candidatura</Tooltip>}
+                  >
+                    <span data-bs-toggle="tooltip" data-bs-placement="top">
+                      {" "}
+                      <BsCheck2
+                        size={30}
+                        color="green"
+                        onClick={handleShowA}
+                      />{" "}
+                    </span>
+                  </OverlayTrigger>
+                  <Modal
+                    show={showA}
+                    onHide={handleCloseA}
+                    backdrop="static"
+                    keyboard={false}
+                    size="lg"
+                  >
+                    <Modal.Header closeButton>
+                      <Modal.Title>
+                        Aceitar candidatura do projecto{" "}
+                        {application.projectTitle}
+                      </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      <p>
+                        Tem a certeza que quer aceitar este projecto a concurso?
+                        Uma vez confirmada esta operação não a poderá reverter.{" "}
+                      </p>
+                      <p>Clique no botão Confirmar para aceitar candidatura</p>
+                    </Modal.Body>
+                    <Modal.Footer id="modalFooter">
+                      <Col xs={4} className="closeBtnSeeTask">
+                        <Button variant="secondary" onClick={handleCloseA}>
+                          Fechar
+                        </Button>
+                      </Col>
+                      <Col xs={4}>
+                        <Button
+                          onClick={() => handleApplication(1, application.id)}
+                          className="button"
+                          type="submit"
+                          variant="outline-primary"
+                        >
+                          {" "}
+                          Confirmar
+                        </Button>
+                      </Col>
+                    </Modal.Footer>
+                  </Modal>
+                </div>
 
-              <div className="col-lg-6 ">
-                <OverlayTrigger
-                  placement="top"
-                  overlay={<Tooltip>Recusar candidatura</Tooltip>}
-                >
-                  <span data-bs-toggle="tooltip" data-bs-placement="top">
-                    {" "}
-                    <BsXLg
-                      size={30}
-                      color="red"
-                      onClick={handleShowR}
-                      //  onClick={() => handleApplication(0, application.id)}
-                    />
-                  </span>
-                </OverlayTrigger>
-                <Modal
-                  show={showR}
-                  onHide={handleCloseR}
-                  backdrop="static"
-                  keyboard={false}
-                  size="lg"
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title>
-                      Recusar candidatura do projecto {application.projectTitle}
-                    </Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <p>
-                      Tem a certeza que quer recusar este projecto a concurso?{" "}
-                      Uma vez confirmada esta operação não a poderá reverter.{" "}
-                    </p>
-                    <p>Clique no botão Confirmar para recusar candidatura</p>
-                  </Modal.Body>
-                  <Modal.Footer id="modalFooter">
-                    <Col xs={4} className="closeBtnSeeTask">
-                      <Button variant="secondary" onClick={handleCloseR}>
-                        Fechar
-                      </Button>
-                    </Col>
-                    <Col xs={4}>
-                      <Button
-                        onClick={() => handleApplication(0, application.id)}
-                        className="button"
-                        type="submit"
-                        variant="outline-primary"
-                      >
+                <div className="col-lg-2 ">
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={<Tooltip>Recusar candidatura</Tooltip>}
+                  >
+                    <span data-bs-toggle="tooltip" data-bs-placement="top">
+                      {" "}
+                      <BsXLg
+                        size={30}
+                        color="red"
+                        onClick={handleShowR}
+                        //  onClick={() => handleApplication(0, application.id)}
+                      />
+                    </span>
+                  </OverlayTrigger>
+                  <Modal
+                    show={showR}
+                    onHide={handleCloseR}
+                    backdrop="static"
+                    keyboard={false}
+                    size="lg"
+                  >
+                    <Modal.Header closeButton>
+                      <Modal.Title>
+                        Recusar candidatura do projecto{" "}
+                        {application.projectTitle}
+                      </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      <p>
+                        Tem a certeza que quer recusar este projecto a concurso?
+                        Uma vez confirmada esta operação não a poderá reverter.
+                      </p>
+                      <p>Clique no botão Confirmar para recusar candidatura</p>
+                    </Modal.Body>
+                    <Modal.Footer id="modalFooter">
+                      <Col xs={4} className="closeBtnSeeTask">
+                        <Button variant="secondary" onClick={handleCloseR}>
+                          Fechar
+                        </Button>
+                      </Col>
+                      <Col xs={4}>
+                        <Button
+                          onClick={() => handleApplication(0, application.id)}
+                          className="button"
+                          type="submit"
+                          variant="outline-primary"
+                        >
+                          {" "}
+                          Confirmar
+                        </Button>
+                      </Col>
+                    </Modal.Footer>
+                  </Modal>
+                </div>
+                <div className="col-lg-2">
+                  <Link to={`/home/projects/${application.id}`}>
+                    <OverlayTrigger
+                      placement="top"
+                      overlay={<Tooltip>Ver projecto</Tooltip>}
+                    >
+                      <span data-bs-toggle="tooltip" data-bs-placement="top">
                         {" "}
-                        Confirmar
-                      </Button>
-                    </Col>
-                  </Modal.Footer>
-                </Modal>
+                        <BsEyeFill
+                          size={25}
+                          color="black"
+                          //onClick={() => handleSeeProfile(item.id)}
+                        />
+                      </span>
+                    </OverlayTrigger>
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     );
