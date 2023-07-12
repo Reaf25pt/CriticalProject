@@ -22,6 +22,7 @@ function GeneratePdf() {
       .then((resp) => resp.json())
       .then((data) => {
         setStats(data);
+        console.log(data);
       })
       .catch((err) => console.log(err));
   }, []);

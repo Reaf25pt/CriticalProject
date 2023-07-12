@@ -425,6 +425,7 @@ public class Project {
 
         Response r = null;
 
+
         if (userBean.checkStringInfo(token) || editTask == null) {
             r = Response.status(401).entity("Unauthorized!").build();
 

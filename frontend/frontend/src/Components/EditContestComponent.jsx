@@ -38,7 +38,10 @@ function EditContestComponent({ toggleComponent }) {
     } else if (
       credentials.startOpenCall >= credentials.finishOpenCall ||
       credentials.finishOpenCall >= credentials.startDate ||
-      credentials.startDate >= credentials.finishDate
+      credentials.startDate >= credentials.finishDate ||
+      credentials.finishDate <= credentials.startDate ||
+      credentials.finishDate <= credentials.startOpenCall ||
+      credentials.finishDate <= credentials.finishOpenCall
     ) {
       toast.error(
         "Reveja as datas inseridas: a fase de candidaturas tem de ser anterior ao início da execução"

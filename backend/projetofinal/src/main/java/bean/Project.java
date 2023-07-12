@@ -2097,11 +2097,13 @@ public class Project implements Serializable {
         entity.Task taskEnt = taskDao.find(editTask.getId());
 
         if (taskEnt != null) {
-            if (taskEnt.getListPreRequiredTasks() != null) {
+            if ( taskEnt.getListPreRequiredTasks().size()!=0) {
+
                 if (checkPreRequiredTasksAreFinished(taskEnt.getListPreRequiredTasks())) {
                     res = editTaskStatusAfterValidateEverything(taskEnt, editTask, token);
                 }
             } else {
+
                 // lista de tarefas precedentes é nula, pode editar status sem verificar mais nada se n for finalTask. se for finalTask tem de verificar q todas as tarefas do projecto estão finished
                 if (!taskEnt.isFinalTask()) {
                     res = editTaskStatusAfterValidateEverything(taskEnt, editTask, token);
@@ -2132,7 +2134,6 @@ public class Project implements Serializable {
                     count++; // conta tasks não acabadas
                 }
             }
-
             if (count != 0) {
                 res = true; // n pode alterar status de final task
             }
@@ -2443,12 +2444,12 @@ public class Project implements Serializable {
             recordDto.setTaskId(r.getTask().getId());
             recordDto.setTaskTitle(r.getTask().getTitle());
         }
-
-        recordDto.setAuthorId(r.getAuthor().getUserId());
-        recordDto.setAuthorPhoto(r.getAuthor().getPhoto());
-        recordDto.setAuthorFirstName(r.getAuthor().getFirstName());
-        recordDto.setAuthorLastName(r.getAuthor().getLastName());
-
+if(r.getAuthor()!=null) {
+    recordDto.setAuthorId(r.getAuthor().getUserId());
+    recordDto.setAuthorPhoto(r.getAuthor().getPhoto());
+    recordDto.setAuthorFirstName(r.getAuthor().getFirstName());
+    recordDto.setAuthorLastName(r.getAuthor().getLastName());
+}
         return recordDto;
     }
 

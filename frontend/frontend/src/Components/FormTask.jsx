@@ -18,6 +18,7 @@ import ModalEditTask from "./ModalEditTask";
 import ModalDeleteTask from "./ModalDeleteTask";
 import { projOpenStore } from "../stores/projOpenStore";
 import { toast, Toaster } from "react-hot-toast";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function FormTask() {
   const user = userStore((state) => state.user);
@@ -230,18 +231,22 @@ function FormTask() {
     }
   };
 
-  const handleClick = (event) => {
-    if (event.target.name === "statusInProgress") {
-      var editTask = {
+  function handleClick(taskId, statusInfo) {
+    var editTask = { id: taskId, statusInfo: statusInfo };
+
+    /* if (event.target.name === "statusInProgress") {
+      editTask = {
         id: activeId,
         statusInfo: 1,
       };
     } else if (event.target.name === "statusFinished") {
-      var editTask = {
+      editTask = {
         id: activeId,
         statusInfo: 2,
       };
-    }
+    }*/
+
+    console.log(editTask);
 
     fetch(`http://localhost:8080/projetofinal/rest/project/${id}/task`, {
       method: "PUT",
@@ -265,7 +270,7 @@ function FormTask() {
       .catch((error) => {
         toast.error(error.message);
       });
-  };
+  }
 
   return (
     <div className="container-fluid mt-5">
@@ -437,12 +442,24 @@ function FormTask() {
                         project.statusInt === 4 &&
                         task.statusInfo === 0 ? (
                           <div>
-                            <BsPlayBtnFill
-                              name={"statusInProgress"}
-                              onClick={handleClick}
-                              size={40}
-                              cursor={"pointer"}
-                            />
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={<Tooltip>Iniciar tarefa</Tooltip>}
+                            >
+                              <span
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                              >
+                                {" "}
+                                <BsPlayBtnFill
+                                  name={"statusInProgress"}
+                                  // onClick={handleClick}
+                                  size={40}
+                                  cursor={"pointer"}
+                                  onClick={() => handleClick(task.id, 1)}
+                                />
+                              </span>
+                            </OverlayTrigger>
 
                             {/* <button
                               name={"statusInProgress"}
@@ -453,12 +470,25 @@ function FormTask() {
                           </div>
                         ) : task.statusInfo === 1 ? (
                           <div>
-                            <BsFillPatchCheckFill
-                              name={"statusFinished"}
-                              onClick={handleClick}
-                              size={40}
-                              cursor={"pointer"}
-                            />
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={<Tooltip>Concluir tarefa</Tooltip>}
+                            >
+                              <span
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                              >
+                                {" "}
+                                <BsFillPatchCheckFill
+                                  name={"statusFinished"}
+                                  // onClick={handleClick}
+                                  size={40}
+                                  cursor={"pointer"}
+                                  onClick={() => handleClick(task.id, 2)}
+                                />
+                              </span>
+                            </OverlayTrigger>
+
                             {/* <button name={"statusFinished"} onClick={handleClick}>
                             Concluir tarefa
                           </button> */}

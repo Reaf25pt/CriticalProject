@@ -14,7 +14,7 @@ function ContestComponent({ toggleComponent }) {
   const ownProj = userStore((state) => state.ownProj);
   const setProjList = contestOpenStore((state) => state.setProjectList);
   const projList = contestOpenStore((state) => state.projectList);
-  const answeredProjects = projList.filter((item) => item.answered); // projectos já respondidos
+  const acceptedProjects = projList.filter((item) => item.accepted); // projectos já respondidos
 
   const convertTimestampToDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -24,7 +24,7 @@ function ContestComponent({ toggleComponent }) {
   const renderApplyButton =
     ownProj &&
     ownProj.id !== 0 &&
-    !answeredProjects.some(
+    !acceptedProjects.some(
       (project) => project.id === ownProj.id
       // botão para candidatar a projecto só aparece se projecto activo do token não estiver na lista de respondidos
     );
@@ -103,7 +103,7 @@ function ContestComponent({ toggleComponent }) {
                     Projectos participantes
                   </h5>
                   <h3 className="text-center text-white bg-warning rounded-3 p-2 mt-3">
-                    {answeredProjects.length} / {contest.maxNumberProjects}
+                    {acceptedProjects.length} / {contest.maxNumberProjects}
                   </h3>
                 </div>
               ) : (

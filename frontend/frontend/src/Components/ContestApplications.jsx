@@ -58,6 +58,8 @@ function ContestApplications() {
         setProjList(data);
       })
       .catch((err) => console.log(err));
+    handleCloseA();
+    handleCloseR();
   }
 
   if (pendingApplications.length === 0 && user.contestManager) {

@@ -16,6 +16,8 @@ function ProjectsCreate() {
   const [credentials, setCredentials] = useState({});
   const navigate = useNavigate();
   const user = userStore((state) => state.user);
+  const updateUser = userStore((state) => state.updateUser);
+
   const [keywords, setKeywords] = useState([]); // lista para enviar para backend
   const addKeywords = (newKeyword) => {
     setKeywords((state) => [...state, newKeyword]);
@@ -89,6 +91,7 @@ function ProjectsCreate() {
         body: JSON.stringify(project),
       }).then((response) => {
         if (response.status === 200) {
+          updateUser("noActiveProject", false);
           navigate("/home/projects", { replace: true });
         } else {
           toast.error("Pedido não satisfeito");
