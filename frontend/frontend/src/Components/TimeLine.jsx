@@ -48,7 +48,7 @@ function TimeLine() {
 
   const customizedContent = (item) => {
     return (
-      <div className="card bg-secondary text-white">
+      <div className="card bg-secondary text-white text-center ">
         <div className="card-body">
           <h5 className="card-title">
             {item.authorFirstName} {item.authorLastName}
@@ -57,9 +57,10 @@ function TimeLine() {
           {item.taskId === 0 ? (
             <h8>{formatDate(item.creationTime)}</h8>
           ) : (
-            <h8>
-              {formatDate(item.creationTime)} {item.taskTitle}
-            </h8>
+            <div>
+              <h4>{item.taskTitle}</h4>
+              <h8>{formatDate(item.creationTime)} </h8>
+            </div>
           )}
           {/*   <h8>{formatDate(item.creationTime)}</h8> */}
           <hr />
@@ -164,7 +165,7 @@ function TimeLine() {
 
         {recordList && recordList.length > 0 ? (
           <div
-            className="col-lg-8"
+            className="col-lg-6"
             style={{
               maxHeight: "700px",
               marginTop: "20px",
