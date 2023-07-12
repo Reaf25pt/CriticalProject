@@ -224,7 +224,14 @@ function ProjectComponent({ toggleComponent }) {
                 </div>
               ) : null}
               {project.statusInt === 6 && project.winner ? (
-                <p>Vencedor</p>
+                <div className="row mt-3 bg-warning w-75 p-2 mx-auto rounded-5 border border-white border border-2">
+                  <h3
+                    className="text-white text-center "
+                    style={{ fontWeight: "bolder" }}
+                  >
+                    Vencedor
+                  </h3>
+                </div>
               ) : null}
             </div>
           </div>

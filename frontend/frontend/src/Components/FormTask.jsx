@@ -215,7 +215,6 @@ function FormTask() {
             );
 
             return response.json();
-            //navigate("/home", { replace: true });
           } else {
             throw new Error("Pedido não satisfeito");
           }
@@ -227,24 +226,11 @@ function FormTask() {
       clearInputFields();
       setPreReqTasks([]);
       setCredentials([]);
-      //setTriggerList("");
     }
   };
 
   function handleClick(taskId, statusInfo) {
     var editTask = { id: taskId, statusInfo: statusInfo };
-
-    /* if (event.target.name === "statusInProgress") {
-      editTask = {
-        id: activeId,
-        statusInfo: 1,
-      };
-    } else if (event.target.name === "statusFinished") {
-      editTask = {
-        id: activeId,
-        statusInfo: 2,
-      };
-    }*/
 
     console.log(editTask);
 
@@ -349,14 +335,6 @@ function FormTask() {
                       preReqTasks={preReqTasks}
                       setPreReqTasks={setPreReqTasks}
                       addPreReqTask={addPreReqTask}
-                      // triggerList={triggerList}
-                      //  resetInput={input}
-                      /* name="preRequiredTasks"
-                    id="preRequiredTasks"
-                    onChange={handleChange}
-                    placeholder={"Tarefas precedentes "}
-                    local={"Tarefas precedentes "}
-                    taskList={task} */
                     />
                   </div>
                 </div>
@@ -373,12 +351,6 @@ function FormTask() {
               onChange={handleChange}
               defaultValue={""}
             />
-            {/*    <textarea
-              class="text-dark bg-white rounded-2 w-100 h-75 "
-              placeholder="Descrição da Tarefa"
-              name="bio"
-              type="text"
-            ></textarea> */}
           </div>{" "}
           <div className="col-lg-2 d-flex align-items-center">
             <ButtonComponent name={"Adicionar tarefa"} onClick={handleSubmit} />
@@ -400,7 +372,7 @@ function FormTask() {
                   <div className="col-lg-7 m-0">
                     <h6> {task.title}</h6>
                   </div>
-                  <div className="col-lg-3 bg-dark p-1 rounded-5">
+                  <div className="col-lg-3 p-1 rounded-5 bg-dark">
                     <h6 className="text-white text-center">
                       {convertWord(task.status)}
                     </h6>
@@ -453,20 +425,13 @@ function FormTask() {
                                 {" "}
                                 <BsPlayBtnFill
                                   name={"statusInProgress"}
-                                  // onClick={handleClick}
                                   size={40}
                                   cursor={"pointer"}
                                   onClick={() => handleClick(task.id, 1)}
+                                  color="white"
                                 />
                               </span>
                             </OverlayTrigger>
-
-                            {/* <button
-                              name={"statusInProgress"}
-                              onClick={handleClick}
-                            >
-                              Iniciar execução
-                            </button> */}
                           </div>
                         ) : task.statusInfo === 1 ? (
                           <div>
@@ -485,13 +450,10 @@ function FormTask() {
                                   size={40}
                                   cursor={"pointer"}
                                   onClick={() => handleClick(task.id, 2)}
+                                  color="white"
                                 />
                               </span>
                             </OverlayTrigger>
-
-                            {/* <button name={"statusFinished"} onClick={handleClick}>
-                            Concluir tarefa
-                          </button> */}
                           </div>
                         ) : null}
                       </div>
@@ -569,122 +531,6 @@ function FormTask() {
           </div>
         ))}
       </div>
-      {/* <div className="col-lg-6 bg-secondary rounded-5 p-3">
-          <div className="">
-            <h3 className="bg-white rounded-5 text-center">Lista de Tarefas</h3>
-            <div>
-              {showTasks && showTasks.length !== 0 ? (
-                <div className="accordion ">
-                  {showTasks.map((task) => (
-                    <div className="accordion-item " key={task.id}>
-                      <div className="accordion-header  ">
-                        <div className="row d-flex justify-content-between  ">
-                          <button
-                            style={{ background: "#C01722" }}
-                            className={`accordion-button text-white d-flex justify-content-between  ${
-                              activeId === task.id ? "active" : ""
-                            }`}
-                            type="button"
-                            onClick={() => toggleAccordion(task.id)}
-                          >
-                            <div className="col-lg-9"> {task.title}</div>
-                            <div className="bg-dark p-1">
-                              {convertWord(task.status)}
-                            </div>
-                          </button>
-                        </div>
-                      </div>
-                      <div
-                        className={`accordion-collapse collapse  ${
-                          activeId === task.id ? "show" : ""
-                        }`}
-                      >
-                        <div className="accordion-body ">
-                          {" "}
-                          <div className="row">
-                            <div className="col-lg-8">
-                              <h5 className="row mb-3">
-                                {" "}
-                                Início: {formatDate(task.startDate)}
-                              </h5>
-                              <h5 className="row mb-3">
-                                {" "}
-                                Fim: {formatDate(task.finishDate)}
-                              </h5>
-                            </div>
-                            <div className="col-lg-3 d-flex">
-                              {!user.contestManager &&
-                              task.statusInfo !== 2 &&
-                              (projInfo.statusInt === 0 ||
-                                projInfo.statusInt === 4) ? (
-                                <ModalEditTask
-                                  task={task}
-                                  set={setTask}
-                                  formatDate={formatDate}
-                                  setTriggerList={setTriggerList}
-                                />
-                              ) : null}
-                              {!user.contestManager &&
-                              task.statusInfo !== 2 &&
-                              projInfo.statusInt === 0 ? (
-                                <ModalDeleteTask
-                                  task={task}
-                                  set={setTask}
-                                  setTriggerList={setTriggerList}
-                                />
-                              ) : null}
-
-                              {!user.contestManager &&
-                              projInfo.statusInt === 4 &&
-                              task.statusInfo === 0 ? (
-                                <button
-                                  name={"statusInProgress"}
-                                  onClick={handleClick}
-                                >
-                                  Iniciar execução
-                                </button>
-                              ) : task.statusInfo === 1 ? (
-                                <button
-                                  name={"statusFinished"}
-                                  onClick={handleClick}
-                                >
-                                  Tarefa concluída
-                                </button>
-                              ) : null}
-                            </div>
-                            <hr />
-
-                            <div className="row">
-                              {" "}
-                              <h4 className="p-0">Descrição:</h4>
-                              {task.details}
-                              <hr />
-                            </div>
-
-                            {task.additionalExecutors ? (
-                              <div className="row">
-                                <h4 className="p-0">Executores adicionais:</h4>{" "}
-                                {task.additionalExecutors}
-                                <hr />
-                              </div>
-                            ) : null}
-
-                            <h4 className="row d-flex justify-content-end">
-                              Responsável: {task.taskOwnerFirstName}{" "}
-                              {task.taskOwnerLastName}
-                            </h4>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}{" "}
-                </div>
-              ) : (
-                <p>Não há tarefas definidas</p>
-              )}
-            </div>
-          </div>
-        </div> */}
 
       <div className="row mt-4 w-75  p-3 rounded-4 mx-auto">
         {tasks && tasks.length > 0 && (
