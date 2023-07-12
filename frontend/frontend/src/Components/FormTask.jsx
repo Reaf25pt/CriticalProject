@@ -6,8 +6,11 @@ import TextAreaComponent from "./TextAreaComponent";
 import { userStore } from "../stores/UserStore";
 import { useParams } from "react-router-dom";
 import { Chart } from "react-google-charts";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import { BsFillArrowRightSquareFill } from "react-icons/bs";
+import {
+  BsFillArrowRightSquareFill,
+  BsPlayBtnFill,
+  BsFillPatchCheckFill,
+} from "react-icons/bs";
 
 import ProjectMembersSelect from "./ProjectMembersSelect";
 import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
@@ -417,7 +420,7 @@ function FormTask() {
                       <div className="col-lg-5">
                         <h4 className="text-white">{task.title}</h4>
                       </div>
-                      <div className="col-lg-3">
+                      <div className="col-lg-4 d-flex justify-content-around">
                         {project.manager &&
                         (project.statusInt === 0 || project.statusInt === 4) &&
                         task.statusInfo !== 2 ? (
@@ -433,16 +436,31 @@ function FormTask() {
                           task.taskOwnerId === user.userId) &&
                         project.statusInt === 4 &&
                         task.statusInfo === 0 ? (
-                          <button
-                            name={"statusInProgress"}
-                            onClick={handleClick}
-                          >
-                            Iniciar execução
-                          </button>
+                          <div>
+                            <BsPlayBtnFill
+                              name={"statusInProgress"}
+                              onClick={handleClick}
+                              size={40}
+                            />
+
+                            {/* <button
+                              name={"statusInProgress"}
+                              onClick={handleClick}
+                            >
+                              Iniciar execução
+                            </button> */}
+                          </div>
                         ) : task.statusInfo === 1 ? (
-                          <button name={"statusFinished"} onClick={handleClick}>
+                          <div>
+                            <BsFillPatchCheckFill
+                              name={"statusFinished"}
+                              onClick={handleClick}
+                              size={40}
+                            />
+                            {/* <button name={"statusFinished"} onClick={handleClick}>
                             Concluir tarefa
-                          </button>
+                          </button> */}
+                          </div>
                         ) : null}
                       </div>
                     </div>
