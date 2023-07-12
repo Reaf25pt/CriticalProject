@@ -78,12 +78,17 @@ function ContactChat({ selectedUser }) {
 
   return (
     <div className="container-fluid ">
+      <div className="row rounded-2 mx-auto" style={{ background: "#C01722" }}>
+        <h3 className="text-white">
+          {selectedUser.firstName} {selectedUser.lastName}
+        </h3>
+      </div>
       <div
         className="row overflow-auto d-flex flex-column-reverse m-0  "
         style={{ height: "80vh" }}
       >
         <div
-          className="col-lg-12 bg-secondary rounded-4  p-5 "
+          className="col-lg-12 bg-secondary rounded-2  p-5 "
           style={{ minHeight: "80vh" }}
         >
           {contactMessages.length !== 0 ? (
@@ -117,7 +122,12 @@ function ContactChat({ selectedUser }) {
                 ))}
             </div>
           ) : (
-            <p>Inicie conversa com {selectedUser.firstName}</p>
+            <div>
+              <h3 className="text-white">
+                Inicie conversa com {selectedUser.firstName}{" "}
+                {selectedUser.lastName}
+              </h3>
+            </div>
           )}
         </div>
       </div>

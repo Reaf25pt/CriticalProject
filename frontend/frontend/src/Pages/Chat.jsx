@@ -81,7 +81,7 @@ function Chat() {
           <div>
             {contacts.map((user) => (
               <div
-                className="row d-flex justify-content-between mb-3 p-2 rounded-5 align-items-center  mx-auto"
+                className="row d-flex justify-content-between mb-3 p-2 rounded-5 align-items-center  mx-auto bg-white"
                 key={user.id}
                 onClick={() => setUserToChat(user)}
                 /* style={{
@@ -128,7 +128,14 @@ function Chat() {
                       ).length
                     }
                   </span>
-                ) : null}
+                ) : (
+                  <span
+                    className="col-lg-2 text-danger "
+                    style={{ fontSize: "20px" }}
+                  >
+                    0
+                  </span>
+                )}
               </div>
             ))}
           </div>
@@ -138,7 +145,10 @@ function Chat() {
             <ContactChat selectedUser={selectedUser} />
           ) : (
             <Container>
-              <div> Seleccione uma caixa de mensagens</div>
+              <div className="" style={{ minHeight: "50px" }}>
+                <h2 className="text-white">Bemvindo ao chat pessoal</h2>
+                <h4 className="text-white">Selecione uma caixa de mensagens</h4>
+              </div>
             </Container>
           )}
         </div>
