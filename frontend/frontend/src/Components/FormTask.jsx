@@ -441,6 +441,7 @@ function FormTask() {
                               name={"statusInProgress"}
                               onClick={handleClick}
                               size={40}
+                              cursor={"pointer"}
                             />
 
                             {/* <button
@@ -456,6 +457,7 @@ function FormTask() {
                               name={"statusFinished"}
                               onClick={handleClick}
                               size={40}
+                              cursor={"pointer"}
                             />
                             {/* <button name={"statusFinished"} onClick={handleClick}>
                             Concluir tarefa
