@@ -11,6 +11,7 @@ import { Column } from "primereact/column";
 import { Tag } from "primereact/tag";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import ContestApplications from "../Components/ContestApplications";
+import { toast, Toaster } from "react-hot-toast";
 
 function ContestOpen() {
   const [showComponentA, setShowComponentA] = useState(true);
@@ -53,13 +54,12 @@ function ContestOpen() {
       .then((resp) => resp.json())
       .then((data) => {
         setProjList(data);
-
-        console.log(data);
       })
       .catch((err) => console.log(err));
   }, []);
 
   const answeredProjects = projList.filter((item) => item.answered);
+  const acceptedProjects = projList.filter((item) => item.accepted);
 
   // const pendingApplications = projList.filter((item) => !item.answered);
 
@@ -113,32 +113,9 @@ function ContestOpen() {
     }
   };
 
-  /*
-  const declareWinner = (projId) => {
-    // event.preventDefault();
-    console.log(projId);
-
-    fetch("http://localhost:8080/projetofinal/rest/contest/application", {
-      method: "PUT",
-      headers: {
-        Accept: "**",
-        "Content-Type": "application/json",
-        token: user.token,
-        contestId: contest.id,
-        projId: projId,
-      },
-    }).then((response) => {
-      if (response.status === 200) {
-        alert("Vencedor declarado");
-        //navigate("/home", { replace: true });
-      } else {
-        alert("Algo correu mal");
-      }
-    });
-  };*/
-
   return (
     <div>
+      <Toaster position="top-right" />
       <div>
         <ul className="nav nav-tabs" id="myTab" role="tablist">
           <li className="nav-item" role="presentation">
@@ -198,48 +175,89 @@ function ContestOpen() {
               role="tabpanel"
               aria-labelledby="profile-tab"
             >
-              <div>
-                <div className="row mx-auto">
-                  <div className="col-lg-6 mx-auto mt-5 bg-secondary p-3 rounded-4">
-                    <DataTable
-                      value={answeredProjects}
-                      selectionMode="single  "
-                      removableSort
-                      paginator
-                      rows={5}
-                      rowsPerPageOptions={[5, 10, 25, 50]}
-                      emptyMessage="Nenhum projecto encontrado"
-                    >
-                      <Column
-                        field="projectTitle"
-                        header="Nome do Projeto"
-                        style={{
-                          textAlign: "center",
-                          fontSize: "20px",
-                          fontWeight: "bolder",
-                        }}
-                        sortable
-                      />
+              {user.contestManager ? (
+                <div>
+                  <div className="row mx-auto">
+                    <div className="col-lg-6 mx-auto mt-5 bg-secondary p-3 rounded-4">
+                      <DataTable
+                        value={answeredProjects}
+                        selectionMode="single  "
+                        removableSort
+                        paginator
+                        rows={5}
+                        rowsPerPageOptions={[5, 10, 25, 50]}
+                        emptyMessage="Nenhum projecto encontrado"
+                      >
+                        <Column
+                          field="projectTitle"
+                          header="Nome do Projeto"
+                          style={{
+                            textAlign: "center",
+                            fontSize: "20px",
+                            fontWeight: "bolder",
+                          }}
+                          sortable
+                        />
 
-                      <Column
-                        field="accepted"
-                        body={answer}
-                        header="Candidatura"
-                        sortable
-                      />
-                      <Column body={renderLink} header="" />
-                      <Column body={winner} header="" />
-                    </DataTable>
-                  </div>
-                  <div className="col-lg-5">
-                    {" "}
-                    <ContestApplications
-                    // pendingApplications={pendingApplications}
-                    // setProjects={setProjects}
-                    />
+                        <Column
+                          field="accepted"
+                          body={answer}
+                          header="Candidatura"
+                          sortable
+                        />
+                        <Column body={renderLink} header="" />
+                        <Column body={winner} header="" />
+                      </DataTable>
+                    </div>
+                    {contest.statusInt === 1 ? (
+                      <div className="col-lg-5">
+                        {" "}
+                        <ContestApplications
+                        // pendingApplications={pendingApplications}
+                        // setProjects={setProjects}
+                        />
+                      </div>
+                    ) : null}
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div>
+                  <div className="row mx-auto">
+                    <div className="col-lg-6 mx-auto mt-5 bg-secondary p-3 rounded-4">
+                      <DataTable
+                        value={acceptedProjects}
+                        selectionMode="single  "
+                        removableSort
+                        paginator
+                        rows={5}
+                        rowsPerPageOptions={[5, 10, 25, 50]}
+                        emptyMessage="Nenhum projecto encontrado"
+                      >
+                        <Column
+                          field="projectTitle"
+                          header="Nome do Projeto"
+                          style={{
+                            textAlign: "center",
+                            fontSize: "20px",
+                            fontWeight: "bolder",
+                          }}
+                          sortable
+                        />
+
+                        <Column
+                          field="accepted"
+                          body={answer}
+                          header="Candidatura"
+                          sortable
+                        />
+                        <Column body={renderLink} header="" />
+                        <Column body={winner} header="" />
+                      </DataTable>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div></div>
             </div>
           </div>

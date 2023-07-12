@@ -65,7 +65,7 @@ function InviteMember() {
       credentials.nameInput === undefined ||
       credentials.nameInput === "undefined"
     ) {
-      alert("Insira nome ");
+      toast.error("Insira nome ");
     } else {
       /*  const userToInvite = {
         id: credentials.id,

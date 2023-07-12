@@ -4,6 +4,7 @@ import InputComponent from "../Components/InputComponent";
 import ButtonComponent from "../Components/ButtonComponent";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
+import { toast, Toaster } from "react-hot-toast";
 
 function ChangePassword() {
   const { token } = useParams();
@@ -22,9 +23,6 @@ function ChangePassword() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    /*  console.log(credentials.password);
-    console.log(credentials.password2); */
-
     if (credentials.password === credentials.password2) {
       fetch("http://localhost:8080/projetofinal/rest/user/newpasswordvialink", {
         method: "POST",
@@ -36,16 +34,16 @@ function ChangePassword() {
         },
       }).then((response) => {
         if (response.status === 200) {
-          alert("Password alterada com sucesso");
+          toast.success("Password alterada com sucesso");
+          navigate("/", { replace: true });
         } else if (response.status === 400) {
-          alert("O link expirou. Receberá um novo link no email");
+          toast.error("O link expirou. Receberá um novo link no email");
         } else {
-          alert("Algo correu mal. Contacte os nossos serviços");
+          toast.error("Pedido não satisfeito");
         }
-        navigate("/", { replace: true });
       });
     } else {
-      alert(
+      toast.error(
         "As passwords inseridas não são iguais. Escreva a mesma password nos 2 campos"
       );
     }
@@ -53,6 +51,8 @@ function ChangePassword() {
 
   return (
     <div className="container-fluid vh-100 position-relative">
+      <Toaster position="top-right" />
+
       <div className="row h-50">
         <div className="col-12" style={{ background: "#C01722" }}></div>
       </div>

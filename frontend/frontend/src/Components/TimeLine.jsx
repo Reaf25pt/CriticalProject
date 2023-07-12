@@ -77,30 +77,12 @@ function TimeLine() {
       return { ...values, [name]: value };
     });
   };
-  /*
-  useEffect(() => {
-    fetch(`http://localhost:8080/projetofinal/rest/project/tasks/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        token: user.token,
-      },
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        setShowTasks(data);
-      })
-      .catch((err) => console.log(err));
-  }, [task]);*/
 
   const addRecord = (event) => {
     event.preventDefault();
 
-    console.log(credentials);
-    console.log(credentials.record);
-
     if (!credentials.record || credentials.record === "") {
-      alert("Tem de inserir texto");
+      toast.error("Tem de inserir texto");
     } else {
       var newRecord = {
         taskId: credentials.task,
@@ -137,6 +119,8 @@ function TimeLine() {
         overflowY: "auto",
       }} */
     >
+      <Toaster position="top-right" />
+
       <div className="row mt-5 d-flex justify-content-around">
         {project.statusInt === 4 ? (
           <div className="col-lg-4">

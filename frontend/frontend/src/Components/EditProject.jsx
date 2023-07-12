@@ -37,7 +37,7 @@ function EditProject({ toggleComponent }) {
     event.preventDefault();
 
     if (keywords.length === 0) {
-      alert("Tem de inserir 1 palavra-chave");
+      toast.error("Tem de inserir 1 palavra-chave");
     } else if (
       credentials.title === null ||
       credentials.title === "undefined" ||
@@ -53,7 +53,9 @@ function EditProject({ toggleComponent }) {
       credentials.details === undefined ||
       credentials.details === ""
     ) {
-      alert("Insira o nome, local de trabalho e/ou descrição do projecto");
+      toast.error(
+        "Insira o nome, local de trabalho e/ou descrição do projecto"
+      );
     } else {
       var project = {
         id: credentials.id,

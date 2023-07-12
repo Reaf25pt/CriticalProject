@@ -10,6 +10,7 @@ import Keyword from "../Components/Keyword";
 import SkillsProject from "../Components/SkillsProject";
 import SkillProjectCreate from "./SkillProjectCreate";
 import KeywordProjectCreate from "./KeywordProjectCreate";
+import { toast, Toaster } from "react-hot-toast";
 
 function ProjectsCreate() {
   const [credentials, setCredentials] = useState({});
@@ -37,7 +38,7 @@ function ProjectsCreate() {
     event.preventDefault();
 
     if (keywords.length === 0) {
-      alert("Tem de inserir 1 palavra-chave");
+      toast.error("Tem de inserir 1 palavra-chave");
     } else if (
       credentials.projectName === null ||
       credentials.projectName === "undefined" ||
@@ -48,7 +49,7 @@ function ProjectsCreate() {
       credentials.details === undefined ||
       credentials.details === ""
     ) {
-      alert("Insira, pelo menos, o nome e descrição do projecto");
+      toast.error("Insira, pelo menos, o nome e descrição do projecto");
     } else {
       if (
         credentials.office === null ||
@@ -88,10 +89,9 @@ function ProjectsCreate() {
         body: JSON.stringify(project),
       }).then((response) => {
         if (response.status === 200) {
-          alert("Projecto criado com sucesso");
           navigate("/home/projects", { replace: true });
         } else {
-          alert("Algo correu mal");
+          toast.error("Pedido não satisfeito");
         }
       });
     }
@@ -99,6 +99,8 @@ function ProjectsCreate() {
 
   return (
     <div>
+      <Toaster position="top-right" />
+
       <ul className="nav nav-tabs" id="myTab" role="tablist">
         <li className="nav-item" role="presentation">
           <button

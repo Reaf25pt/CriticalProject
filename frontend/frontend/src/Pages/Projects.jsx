@@ -56,7 +56,6 @@ function Projects() {
   };
 
   const clearFilter = () => {
-    console.log("clear " + filters);
     setFilters({
       //  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
       // title: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -111,8 +110,6 @@ function Projects() {
 
     // setFilters(_filters);
     setGlobalFilterValue(value);
-    console.log(globalFilterValue);
-    console.log(filters);
   };
 
   /*   const onTitleChange = (e) => {
@@ -167,8 +164,6 @@ function Projects() {
       //  .then((data) => {
       setAllShowProjects(data);
       setLoading(false);
-
-      console.log(data);
     };
 
     handleFetchData();
@@ -276,7 +271,7 @@ function Projects() {
                     return ` ${calculateMembers} / ${showAllProjects.membersNumber}`;
 
                     /* (showAllProjects) =>
-                                         ` ${showAllProjects.availableSpots} / ${showAllProjects.membersNumber}` / (${showAllProjects.membersNumber}-${showAllProjects.availableSpots})
+                     ` ${showAllProjects.availableSpots} / ${showAllProjects.membersNumber}` / (${showAllProjects.membersNumber}-${showAllProjects.availableSpots})
                      
                   */
                   }}

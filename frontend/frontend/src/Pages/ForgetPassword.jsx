@@ -5,6 +5,7 @@ import logo from "../images/logo-criticalsoftware.png";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LinkButton from "../Components/LinkButton";
+import { toast, Toaster } from "react-hot-toast";
 
 function ForgetPassword() {
   const [credentials, setCredentials] = useState({});
@@ -31,14 +32,14 @@ function ForgetPassword() {
       },
     }).then((response) => {
       if (response.status === 200) {
-        alert(
+        toast.success(
           "Pedido efectuado com sucesso. Altere a password através do link que receberá no email inserido"
         );
         navigate("/", { replace: true });
         /*  } else if (response.status === 404) {
         alert("Não existe nenhuma conta associada ao email inserido"); */
       } else {
-        alert("Algo correu mal. Tente novamente");
+        toast.error("Algo correu mal. Tente novamente");
       }
       document.getElementById("emailInput").value = "";
     });
@@ -46,6 +47,8 @@ function ForgetPassword() {
 
   return (
     <div className="container-fluid vh-100 position-relative">
+      <Toaster position="top-right" />
+
       <div className="row h-50">
         <div className="col-12" style={{ background: "#C01722" }}></div>
       </div>
@@ -62,7 +65,7 @@ function ForgetPassword() {
               <div className="col-lg-10 text-dark d-flex align-items-center">
                 <h4 className="p-0 text-justify ">
                   Escreva o seu email e irá receber um link para alterar a sua
-                  password.
+                  password
                 </h4>
               </div>
               <div className="col-lg-2">
@@ -92,39 +95,6 @@ function ForgetPassword() {
         </div>
       </div>
     </div>
-    // <Container fluid>
-    //   <Row>
-    //     <MainTitle />
-    //   </Row>
-    //   <Row className="mb-5">
-    //     <SecondTitle name={"Esqueceu a password"} />
-    //   </Row>
-    //   <Row>
-    //     <Col md={11} className=" d-flex justify-content-around ">
-    //       <Form onSubmit={handleSubmit}>
-    //         <Row>
-    //           <Col>
-    //             <InputComponent
-    //               placeholder={"Email *"}
-    //               id="emailInput"
-    //               required
-    //               name="email"
-    //               type="text"
-    //               onChange={handleChange}
-    //             />
-    //           </Col>
-    //         </Row>
-    //         <ButtonComponent name={"Enviar email"} type="submit" />
-    //       </Form>
-    //     </Col>
-    //     <Col>
-    //       <LinkImageComponent to={"/"} />{" "}
-    //     </Col>
-    //   </Row>
-    //   <Row>
-    //     <Footer />
-    //   </Row>
-    // </Container>
   );
 }
 

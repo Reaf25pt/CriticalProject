@@ -26,12 +26,8 @@ function Chat() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const userId = queryParams.get("userId");
-  console.log(userId);
-  console.log(typeof userId);
 
   const idToChat = parseInt(userId);
-  console.log(idToChat);
-  console.log(typeof idToChat);
 
   useEffect(() => {
     fetch(
@@ -48,14 +44,11 @@ function Chat() {
       .then((response) => response.json())
       .then((response) => {
         setContacts(response);
-        console.log(response);
       });
   }, []);
 
   useEffect(() => {
     if (selectedUser !== prevSelectedUser.current) {
-      console.log(selectedUser);
-      console.log(prevSelectedUser);
       prevSelectedUser.current = selectedUser;
     }
   }, [selectedUser]);
@@ -71,8 +64,6 @@ function Chat() {
 
   const setUserToChat = (user) => {
     setSelectedUser(user);
-    console.log("selectuser");
-    console.log(selectedUser);
   };
 
   return (

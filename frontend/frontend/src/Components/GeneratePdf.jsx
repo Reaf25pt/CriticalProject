@@ -10,7 +10,6 @@ function GeneratePdf() {
   const { id } = useParams();
   const user = userStore((state) => state.user);
   const contest = contestOpenStore((state) => state.contest);
-  console.log(id);
 
   useEffect(() => {
     fetch(`http://localhost:8080/projetofinal/rest/contest/stats/${id}`, {
@@ -33,7 +32,6 @@ function GeneratePdf() {
 
     // Add a new page to the document
     const page = pdfDoc.addPage();
-    console.log(page.getSize);
 
     // Set the font and font size
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);

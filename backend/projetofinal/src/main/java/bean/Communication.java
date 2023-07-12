@@ -832,9 +832,12 @@ public class Communication implements Serializable {
         recordDao.persist(record);
     }
 
-
- /*   public void notifyPotentialMemberOfSelfInvitationResponse(ProjectMember pm, int answer) {
-        // notifica user que pedido para participar em projecto foi aceite (1) ou recusado (0)
+    /**
+     * Notifies user that self-invitation to participate in project was accepted (1) or rejected (0)
+     * @param pm represents ProjectMember that defines relationship between user and project
+     * @param answer value = 0 if self-invitation is rejected; value=1 if self-invitation is accepted
+     */
+    public void notifyPotentialMemberOfSelfInvitationResponse(ProjectMember pm, int answer) {
 
         Notification notif = new Notification();
         notif.setCreationTime(Date.from(Instant.now()));
@@ -844,21 +847,20 @@ public class Communication implements Serializable {
 
         if (answer == 0) {
             // pedido recusado
-            notif.setMessage("O pedido de " + pm.getUserInvited().getFirstName() + " " + pm.getUserInvited().getLastName() + " para participar no projecto " + pm.getProjectToParticipate().getTitle() + " foi recusado");
-            notif.setMessageEng("Self-invite of " + pm.getUserInvited().getFirstName() + " " + pm.getUserInvited().getLastName() + " to participate in the project " + pm.getProjectToParticipate().getTitle() + " has been refused");
+            notif.setMessage("O seu pedido para participar no projecto " + pm.getProjectToParticipate().getTitle() + " foi recusado");
+            notif.setMessageEng("Your self-invite of to participate in project " + pm.getProjectToParticipate().getTitle() + " has been rejected");
 
 
         } else if (answer == 1) {
             // pedido aceite
-            notif.setMessage("O pedido de " + pm.getUserInvited().getFirstName() + " " + pm.getUserInvited().getLastName() + " para participar no projecto " + pm.getProjectToParticipate().getTitle() + " foi aceite");
-            notif.setMessageEng("Self-invite of " + pm.getUserInvited().getFirstName() + " " + pm.getUserInvited().getLastName() + " to participate in the project " + pm.getProjectToParticipate().getTitle() + " has been accepted");
-
+            notif.setMessage("O seu pedido para participar no projecto " + pm.getProjectToParticipate().getTitle() + " foi aceite");
+            notif.setMessageEng("Your self-invite of to participate in project " + pm.getProjectToParticipate().getTitle() + " has been accepted");
         }
 
         notif.setNotificationOwner(pm.getUserInvited());
         notifDao.persist(notif);
         notifyRealTime(notif, pm.getUserInvited());
-    }*/
+    }
 
     /**
      * Records in project history whether project application to contest was accepted (1) or rejected (0)

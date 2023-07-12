@@ -68,7 +68,7 @@ function ProjectMembersInvited() {
       });
   }
 
-  console.log(pendingInvites.filter((invite) => invite.selfInvitation).length);
+  //console.log(pendingInvites.filter((invite) => invite.selfInvitation).length);
 
   function fetchMembers() {
     fetch(`http://localhost:8080/projetofinal/rest/project/${id}/members`, {
@@ -96,6 +96,8 @@ function ProjectMembersInvited() {
   }
   return (
     <div className="container-fluid">
+      <Toaster position="top-right" />
+
       <div className="row  mx-auto">
         <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">
           Convites pendentes

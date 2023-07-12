@@ -7,6 +7,7 @@ import ButtonComponent from "../Components/ButtonComponent";
 import { userStore } from "../stores/UserStore";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast, Toaster } from "react-hot-toast";
 
 function ContestCreate() {
   const [credentials, setCredentials] = useState({});
@@ -30,7 +31,7 @@ function ContestCreate() {
       credentials.finishOpenCall >= credentials.startDate ||
       credentials.startDate >= credentials.finishDate
     ) {
-      alert(
+      toast.error(
         "Reveja as datas inseridas: a fase de candidaturas tem de ser anterior ao início da execução"
       );
     } else {
@@ -46,10 +47,9 @@ function ContestCreate() {
         body: JSON.stringify(newContest),
       }).then((response) => {
         if (response.status === 200) {
-          alert("Consurso criado com sucesso");
           navigate("/home/contests", { replace: true });
         } else {
-          alert("Algo correu mal");
+          toast.error("Pedido não satisfeito");
         }
       });
     }
@@ -57,6 +57,8 @@ function ContestCreate() {
 
   return (
     <div>
+      <Toaster position="top-right" />
+
       <ul className="nav nav-tabs" id="myTab" role="tablist">
         <li className="nav-item" role="presentation">
           <button
@@ -208,38 +210,6 @@ function ContestCreate() {
         </div>
       </div>
     </div>
-    // <Container fluid>
-    //   <Container fluid className="mb-5">
-    //     <SecondTitle name={"Criar concurso"} />
-    //   </Container>{" "}
-    //   <Container className="d-flex justify-content-center">
-    //     <Form>
-    //       <Row className={style.boxform}>
-    //         <InputComponent placeholder={"Titulo*"} />
-    //         <Col>
-    //           <InputComponent placeholder={"Data Inicio*"} />
-    //         </Col>
-    //         <Col>
-    //           <InputComponent placeholder={"Data Fim*"} />
-    //         </Col>
-    //         <InputComponent placeholder={"Nº Max de Projetos*"} />
-    //       </Row>
-    //       <Row className={style.boxform}>
-    //         <Col md={8}>
-    //           <TextAreaComponent name={"Descrição"} />
-    //         </Col>
-    //         <Col md={4}>
-    //           <TextAreaComponent name={"Regras"} />
-    //         </Col>
-    //       </Row>
-    //       <Container fluid className="mb-5 w-25 p-3 d-flex ">
-    //         <Col>
-    //           <ButtonComponent name={"Adicionar"} />
-    //         </Col>
-    //       </Container>
-    //     </Form>
-    //   </Container>
-    // </Container>
   );
 }
 

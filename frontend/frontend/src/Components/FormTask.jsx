@@ -33,9 +33,6 @@ function FormTask() {
 
   const [selectedTask, setSelectedTask] = useState(null);
 
-  // const [input, setInput] = useState("-1");
-  // const [triggerList, setTriggerList] = useState("-1");
-
   const toggleAccordion = (id) => {
     setActiveId(id === activeId ? null : id);
   };
@@ -149,21 +146,6 @@ function FormTask() {
 
   var data2 = [columns, ...rows];
 
-  /*useEffect(() => {
-    fetch(`http://localhost:8080/projetofinal/rest/project/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        token: user.token,
-      },
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        setProjInfo(data);
-      })
-      .catch((err) => console.log(err));
-  }, []);*/
-
   function convertWord(word) {
     // Convert the word to lowercase first
     var lowercaseWord = word.toLowerCase();
@@ -207,9 +189,9 @@ function FormTask() {
       !credentials.taskOwnerId ||
       credentials.taskOwnerId === "-1"
     ) {
-      alert("Insira os dados assinalados como obrigatórios");
+      toast.error("Insira os dados assinalados como obrigatórios");
     } else if (credentials.startDate >= credentials.finishDate) {
-      alert("Insira uma data de fim posterior à data de início indicada");
+      toast.error("Insira uma data de fim posterior à data de início indicada");
     } else {
       var newTask = credentials;
       newTask.preRequiredTasks = preReqTasks;

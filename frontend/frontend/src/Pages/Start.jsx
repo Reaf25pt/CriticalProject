@@ -42,7 +42,6 @@ function Start() {
   }, []);
 
   const array = [ownProj];
-  console.log(array);
 
   const renderLink = (rowData) => {
     return (
@@ -196,7 +195,7 @@ function Start() {
                 ) : (
                   <div className="row mt-5">
                     <h5 className="text-white" style={{ fontWeight: "bolder" }}>
-                      Não tem projecto activo.
+                      Não tem projecto activo
                     </h5>
                   </div>
                 )}

@@ -1,12 +1,15 @@
 import ButtonComponent from "../Components/ButtonComponent";
 
 import { userStore } from "../stores/UserStore";
+import { toast, Toaster } from "react-hot-toast";
 
 function ProfileSee({ onEdit }) {
   const user = userStore((state) => state.user);
   const fullName = user.firstName + " " + user.lastName;
   return (
     <div className="container-fluid">
+      <Toaster position="top-right" />
+
       <div className="row d-flex">
         <div class="col-12 col-sm-12 col-md-12 col-lg-4 mt-3 ">
           <div class="p-5 mb-4 bg-secondary h-100 rounded-5 ">

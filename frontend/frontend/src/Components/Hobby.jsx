@@ -6,6 +6,7 @@ import SkillCss from "../Components/SkillCss.css";
 import ModalDeleteHobby from "../Components/ModalDeleteHobby";
 import ButtonComponent from "./ButtonComponent";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { toast, Toaster } from "react-hot-toast";
 
 function Hobby() {
   const [credentials, setCredentials] = useState({});
@@ -76,7 +77,7 @@ function Hobby() {
       credentials.hobbyInput === undefined ||
       credentials.hobbyInput === "undefined"
     ) {
-      alert("Insira nome ");
+      toast.error("Insira nome ");
     } else {
       const title = credentials.hobbyInput;
 
@@ -93,7 +94,7 @@ function Hobby() {
             return response.json();
             //navigate("/home", { replace: true });
           } else {
-            alert("Algo correu mal. Tente novamente");
+            toast.error("Pedido não satisfeito");
           }
         })
         .then((response) => {
@@ -115,6 +116,8 @@ function Hobby() {
 
   return (
     <div className="container-fluid">
+      <Toaster position="top-right" />
+
       <div class=" bg-secondary rounded-3 p-4 h-100 ">
         <div className="row">
           <h3 className="bg-white text-center rounded-5 p-0">

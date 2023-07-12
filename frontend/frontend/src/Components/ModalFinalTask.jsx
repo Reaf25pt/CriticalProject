@@ -48,7 +48,7 @@ function ModalFinalTask() {
       !credentials.taskOwnerId ||
       credentials.taskOwnerId === "-1"
     ) {
-      alert("Insira os dados em falta");
+      toast.error("Insira os dados em falta");
     } else {
       var finalTask = credentials;
       var status = 1;
@@ -96,31 +96,13 @@ function ModalFinalTask() {
         })
         .catch((err) => console.log(err));
     }
-
-    /* fetch(`http://localhost:8080/projetofinal/rest/project/${id}/task`, {
-      method: "PATCH",
-      headers: {
-        Accept: "**",
-        "Content-Type": "application/json",
-        token: user.token,
-      },
-      body: JSON.stringify(editedTask),
-    }).then((response) => {
-      if (response.status === 200) {
-        handleClose();
-      } else if (response.status === 403) {
-        alert("Não tem autorização para efectuar este pedido");
-        /*  } else if (response.status === 404) {
-        alert("Actividade não encontrada"); */
-    /*  } else {
-        alert("Algo correu mal");
-      }
-    });*/
   };
 
   return (
     <>
       <div className="row mx-auto justify-content-around mt-5">
+        <Toaster position="top-right" />
+
         <div className="col-lg-12">
           <ButtonComponent
             onClick={handleShow}

@@ -12,6 +12,7 @@ import { messageStore } from "../stores/MessageStore";
 
 import Logout from "./Logout";
 import { useState, useEffect } from "react";
+import { toast, Toaster } from "react-hot-toast";
 
 function Sidebar() {
   const user = userStore((state) => state.user);
@@ -95,6 +96,8 @@ function Sidebar() {
 
   return (
     <div className="container-fluid ">
+      <Toaster position="top-right" />
+
       <div className="row flex-nowrap min-vh-100">
         <div
           className="col-1 col-md-auto col-xl-2 px-sm-2 px-0 "

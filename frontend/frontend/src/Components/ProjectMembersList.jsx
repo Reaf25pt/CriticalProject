@@ -39,7 +39,7 @@ function ProjectMembersList() {
           navigate("/home/start", { replace: true });
           clearProject();
         } else {
-          throw new Error("Pedido não satisfeito");
+          toast.error("Pedido não satisfeito");
         }
       })
       .catch((error) => {
@@ -87,7 +87,6 @@ function ProjectMembersList() {
   return (
     <div className="container">
       <Toaster position="top-right" />
-
       <div>
         <h3 className="bg-white mt-5 text-center rounded-5 mb-3 ">
           Membros do Projetos
@@ -268,6 +267,8 @@ function ProjectMembersList() {
         </div>
 
         <div className="row mt-4">
+          {/*     <Toaster position="top-right" /> */}
+
           {project.member &&
           (project.statusInt === 0 || project.statusInt === 4) ? (
             <div className="col-lg-6 mx-auto mb-4">

@@ -7,6 +7,7 @@ import ModalDeleteUserSkill from "../Components/ModalDeleteUserSkill";
 import SkillCss from "../Components/SkillCss.css";
 import ButtonComponent from "./ButtonComponent";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { toast, Toaster } from "react-hot-toast";
 
 function Skill() {
   const [credentials, setCredentials] = useState({});
@@ -84,7 +85,7 @@ function Skill() {
       credentials.skillType === undefined
       /*  Acho que basta ter undefined */
     ) {
-      alert("Insira nome e / ou categoria ");
+      toast.error("Insira nome e / ou categoria ");
     } else {
       const skill = {
         title: credentials.skillInput,
@@ -104,7 +105,7 @@ function Skill() {
             return response.json();
             //navigate("/home", { replace: true });
           } else {
-            alert("Algo correu mal. Tente novamente");
+            toast.error("Pedido não satisfeito");
           }
         })
         .then((response) => {
@@ -128,6 +129,8 @@ function Skill() {
 
   return (
     <div className=" bg-secondary rounded-3 p-4 h-100">
+      <Toaster position="top-right" />
+
       <div className="row">
         <h3 className="bg-white text-center text-nowrap rounded-5 p-0  ">
           As Minhas Skills:

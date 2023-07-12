@@ -16,6 +16,7 @@ import { classNames } from "primereact/utils";
 import { FaSearch } from "react-icons/fa";
 import InputComponent from "../Components/InputComponent";
 import { start } from "@popperjs/core";
+import { toast, Toaster } from "react-hot-toast";
 
 function Contest() {
   const user = userStore((state) => state.user);
@@ -211,8 +212,6 @@ function Contest() {
 
     // setFilters(_filters);
     setTitle(value);
-    console.log(title);
-    console.log(filters);
   };
 
   const filterClearTemplate = (options) => {
@@ -278,6 +277,8 @@ function Contest() {
   const header = renderHeader();
   return (
     <div>
+      <Toaster position="top-right" />
+
       <ul className="nav nav-tabs" id="myTab" role="tablist">
         <li className="nav-item" role="presentation">
           <button

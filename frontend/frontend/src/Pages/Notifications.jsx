@@ -10,6 +10,7 @@ import {
 } from "react-icons/bs";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { notificationStore } from "../stores/NotificationStore";
+import { toast, Toaster } from "react-hot-toast";
 
 function Notifications() {
   const user = userStore((state) => state.user);
@@ -22,11 +23,6 @@ function Notifications() {
   const filterNotification = notificationStore(
     (state) => state.filterNotification
   );
-  // const [showAllNotifications, setShowAllNotifications] = useState([]);
-  // const [notification, setNotification] = useState([]);
-
-  console.log("notificaçoes");
-  console.log(notifications);
 
   const convertTimestampToDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -52,7 +48,6 @@ function Notifications() {
   }
 
   function handleRead(id) {
-    console.log(id);
     fetch(
       `http://localhost:8080/projetofinal/rest/communication/notification/${id}`,
       {
@@ -87,22 +82,24 @@ function Notifications() {
     )
       .then((response) => {
         if (response.status === 200) {
-          alert("notif respondida");
           return response.json();
 
           //navigate("/home", { replace: true });
         } else {
-          alert("Algo correu mal. Tente novamente");
+          toast.error("Pedido não satisfeito");
         }
       })
       .then((response) => {
         updateNotifications(response);
+        toast.success("Convite respondido");
         //filterNotification(response);
       });
   }
 
   return (
     <div>
+      <Toaster position="top-right" />
+
       <ul className="nav nav-tabs" id="myTab" role="tablist">
         <li className="nav-item" role="presentation">
           <button
@@ -131,7 +128,7 @@ function Notifications() {
             <div
               className="notifications-container"
               style={{
-                maxHeight: "700px",
+                maxHeight: "750px",
                 marginTop: "50px",
                 overflowY: "auto",
               }}

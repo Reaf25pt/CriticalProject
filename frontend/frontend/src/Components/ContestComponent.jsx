@@ -5,6 +5,7 @@ import { userStore } from "../stores/UserStore";
 import ModalConcludeContest from "./ModalConcludeContest";
 import ModalChangeContestStatus from "./ModalChangeContestStatus";
 import GeneratePdf from "./GeneratePdf";
+import { toast, Toaster } from "react-hot-toast";
 
 function ContestComponent({ toggleComponent }) {
   const contest = contestOpenStore((state) => state.contest);
@@ -50,16 +51,18 @@ function ContestComponent({ toggleComponent }) {
       },
     }).then((response) => {
       if (response.status === 200) {
-        alert("Candidatura com sucesso");
+        toast.success("Candidatura efectuada com sucesso");
         //navigate("/home", { replace: true });
       } else {
-        alert("Algo correu mal");
+        toast.error("Pedido não satisfeito");
       }
     });
   };
 
   return (
     <div class="container-fluid">
+      <Toaster position="top-right" />
+
       <div className="row mt-3  p-2">
         {user.contestManager && contest.statusInt === 3 ? (
           <div className="col-lg-2">

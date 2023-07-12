@@ -44,7 +44,6 @@ function ContactChat({ selectedUser }) {
       .then((response) => response.json())
       .then((response) => {
         updateMessages(response);
-        console.log(response);
       });
   }, [selectedUser]);
 

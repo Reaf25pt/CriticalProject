@@ -36,7 +36,7 @@ function ModalDeleteProjMember({ member }) {
     })
       .then((response) => {
         if (response.status === 200) {
-          toast.success("Pedido efectuado");
+          toast.success("Membro removido");
 
           return response.json();
         } else {

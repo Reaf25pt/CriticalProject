@@ -12,6 +12,7 @@ import { BsEyeFill } from "react-icons/bs";
 import { Rating } from "primereact/rating";
 import { useParams } from "react-router-dom";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { toast, Toaster } from "react-hot-toast";
 
 function ProfileOpen() {
   const user = userStore((state) => state.user);
@@ -37,12 +38,11 @@ function ProfileOpen() {
           return response.json();
           //navigate("/home", { replace: true });
         } else {
-          alert("Algo correu mal. Tente novamente");
+          toast.error("Pedido não satisfeito");
         }
       })
       .then((user) => {
         setUserProfile(user);
-        console.log(user);
 
         // navigate("/home", { replace: true });
       });
@@ -67,6 +67,8 @@ function ProfileOpen() {
 
   return (
     <div>
+      <Toaster position="top-right" />
+
       <ul className="nav nav-tabs" id="myTab" role="tablist">
         <li className="nav-item" role="presentation">
           <button

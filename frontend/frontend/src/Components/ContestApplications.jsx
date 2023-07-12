@@ -10,6 +10,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import { contestOpenStore } from "../stores/ContestOpenStore";
 import Modal from "react-bootstrap/Modal";
+import { toast, Toaster } from "react-hot-toast";
 
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
@@ -44,13 +45,13 @@ function ContestApplications() {
     })
       .then((response) => {
         if (response.status === 200) {
-          alert("candidatura respondida");
+          toast.success("Candidatura respondida");
           return response.json();
 
           //navigate("/home", { replace: true });
         } else {
-          alert("Algo correu mal. Tente novamente");
-          throw new Error("Request failed");
+          toast.error("Pedido não satisfeito");
+          // throw new Error("Request failed");
         }
       })
       .then((data) => {
@@ -68,6 +69,8 @@ function ContestApplications() {
   } else if (user.contestManager) {
     return (
       <div className="container">
+        <Toaster position="top-right" />
+
         <div className="row ">
           <h3 className="bg-white mt-5 text-center rounded-5 mb-3 ">
             Candidaturas pendentes

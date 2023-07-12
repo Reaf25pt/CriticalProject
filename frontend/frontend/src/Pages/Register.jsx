@@ -104,61 +104,6 @@ function Register() {
                 onChange={handleChange}
               />
             </div>{" "}
-            {/* <div className="row">
-              <div className="col">
-                <InputComponent
-                  placeholder={"Primeiro Nome *"}
-                  id="firstNameInput"
-                  required
-                  name="firstName"
-                  type="text"
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="col">
-                {" "}
-                <InputComponent
-                  placeholder={"Último Nome *"}
-                  id="lastNameInput"
-                  required
-                  name="lastName"
-                  type="text"
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="col">
-                {" "}
-                <InputComponent
-                  placeholder={"Alcunha"}
-                  id="nicknameInput"
-                  name="nickname"
-                  type="text"
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="col">
-                {" "}
-                <InputComponent
-                  placeholder={"Foto"}
-                  id="photoInput"
-                  name="photo"
-                  type="url"
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-            <div className="row">
-              <SelectComponent
-                name="office"
-                id="officeInput"
-                required
-                onChange={handleChange}
-                placeholder={"Selecione uma opção *"}
-              />
-            </div> */}
             <div className="row mb-2">
               <div className="row mb-2">
                 <ButtonComponent name={"Registar"} type={"submit"} />

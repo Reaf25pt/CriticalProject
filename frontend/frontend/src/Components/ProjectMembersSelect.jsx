@@ -6,24 +6,6 @@ function ProjectMembersSelect(props) {
   const user = userStore((state) => state.user);
   const members = projOpenStore((state) => state.members);
 
-  /* useEffect(() => {
-    fetch(
-      `http://localhost:8080/projetofinal/rest/project/${props.projId}/members`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          token: user.token,
-        },
-      }
-    )
-      .then((resp) => resp.json())
-      .then((data) => {
-        setProjMembers(data);
-      })
-      .catch((err) => console.log(err));
-  }, []);*/
-
   return (
     <div className="arrow-select-container">
       <select

@@ -34,17 +34,17 @@ function EditContestComponent({ toggleComponent }) {
       !credentials.details ||
       !credentials.rules
     ) {
-      alert("Insira os dados assinalados como obrigatórios");
+      toast.error("Insira os dados assinalados como obrigatórios");
     } else if (
       credentials.startOpenCall >= credentials.finishOpenCall ||
       credentials.finishOpenCall >= credentials.startDate ||
       credentials.startDate >= credentials.finishDate
     ) {
-      alert(
+      toast.error(
         "Reveja as datas inseridas: a fase de candidaturas tem de ser anterior ao início da execução"
       );
     } else if (credentials.maxNumberProjects <= 0) {
-      alert("Insira um número de participantes válido");
+      toast.error("Insira um número de participantes válido");
     } else {
       var editedContest = credentials;
 

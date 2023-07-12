@@ -17,6 +17,7 @@ import { contestOpenStore } from "../stores/ContestOpenStore";
 
 import { userStore } from "../stores/UserStore";
 import Modal from "react-bootstrap/Modal";
+import { toast, Toaster } from "react-hot-toast";
 
 function ModalChangeContestStatus() {
   const [show, setShow] = useState(false);
@@ -52,12 +53,12 @@ function ModalChangeContestStatus() {
     })
       .then((response) => {
         if (response.status === 200) {
-          alert("Status alterado");
+          toast.success("Status alterado");
           return response.json();
           //navigate("/home", { replace: true });
         } else {
-          alert("Algo correu mal. Tente novamente");
-          throw new Error("Algo correu mal");
+          toast.error("Pedido não satisfeito");
+          //throw new Error("Algo correu mal");
         }
       })
       .then((data) => {
@@ -108,6 +109,8 @@ function ModalChangeContestStatus() {
         size="lg"
       >
         <Modal.Header closeButton>
+          <Toaster position="top-right" />
+
           {contest.statusInt === 0 ? (
             <Modal.Title>Abrir candidadaturas a concurso</Modal.Title>
           ) : contest.statusInt === 1 ? (

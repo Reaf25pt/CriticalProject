@@ -7,6 +7,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import InputComponent from "../Components/InputComponent";
 import ButtonComponent from "../Components/ButtonComponent";
 import SelectSkillType from "../Components/SelectSkillType";
+import { toast, Toaster } from "react-hot-toast";
 
 function SkillsProject({ skills, setSkills, addSkills }) {
   const [credentials, setCredentials] = useState({});
@@ -14,10 +15,6 @@ function SkillsProject({ skills, setSkills, addSkills }) {
   const [search, setSearch] = useState("");
   const [selectedValue, setSelectedValue] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  /*   const [keywords, setKeywords] = useState([]); // lista para enviar para backend
-  const addKeyword = (newKeyword) => {
-    setKeywords((state) => [...state, newKeyword]);
-  }; */
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -76,7 +73,7 @@ function SkillsProject({ skills, setSkills, addSkills }) {
       credentials.skillType === undefined ||
       credentials === {}
     ) {
-      alert("Insira nome e / ou categoria de skill ");
+      toast.error("Insira nome e / ou categoria de skill ");
     } else {
       var newSkill;
       if (credentials.id) {
@@ -115,21 +112,12 @@ function SkillsProject({ skills, setSkills, addSkills }) {
       updateSkills.splice(position, 1);
       return updateSkills;
     });
-    /*   setKeywords((prevKeywords) => {
-      const updateKeywords = [...prevKeywords];
-      updateKeywords.splice(position, 1);
-      return updateKeywords;
-
-
-
-        const removeKeywords = (position) => {
-   
-  };
-    }); */
   };
 
   return (
     <div className="cointaner-fluid">
+      <Toaster position="top-right" />
+
       <div className="row mt-3">
         <div className="col-lg-6">
           <InputComponent

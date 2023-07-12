@@ -5,6 +5,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { BsArrowDown, BsSearch, BsXLg } from "react-icons/bs";
+import { toast, Toaster } from "react-hot-toast";
 
 import { userStore } from "../stores/UserStore";
 import Modal from "react-bootstrap/Modal";
@@ -34,11 +35,11 @@ function ModalDeleteHobby({ hobby, set, setS }) {
         setS([]);
         handleClose();
       } else if (response.status === 403) {
-        alert("Não tem autorização para efectuar este pedido");
+        toast.error("Não tem autorização para efectuar este pedido");
         /*  } else if (response.status === 404) {
         alert("Actividade não encontrada"); */
       } else {
-        alert("Algo correu mal");
+        toast.error("Pedido não satisfeito");
       }
     });
   };
@@ -75,6 +76,8 @@ function ModalDeleteHobby({ hobby, set, setS }) {
         keyboard={false}
       >
         <Modal.Header closeButton>
+          <Toaster position="top-right" />
+
           <Modal.Title>
             Apagar interesse
             {/* <FormattedMessage

@@ -14,6 +14,7 @@ import ProjectMembersSelect from "./ProjectMembersSelect";
 import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
 import { BsFillPencilFill } from "react-icons/bs";
 import { contestOpenStore } from "../stores/ContestOpenStore";
+import { toast, Toaster } from "react-hot-toast";
 
 import { userStore } from "../stores/UserStore";
 import Modal from "react-bootstrap/Modal";
@@ -39,14 +40,13 @@ function ModalConcludeContest() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(credentials.projectWinner);
 
     if (
       !credentials ||
       !credentials.projectWinner ||
       credentials.projectWinner === "-1"
     ) {
-      alert("Escolha um projecto vencedor");
+      toast.error("Escolha um projecto vencedor");
     } else {
       fetch("http://localhost:8080/projetofinal/rest/contest/application", {
         method: "PUT",
@@ -60,12 +60,12 @@ function ModalConcludeContest() {
       })
         .then((response) => {
           if (response.status === 200) {
-            alert("Vencedor declarado");
+            toast.success("Vencedor declarado");
             return response.json();
             //navigate("/home", { replace: true });
           } else {
-            alert("Algo correu mal");
-            throw new Error("Request failed");
+            toast.error("Pedido não satisfeito");
+            // throw new Error("Request failed");
           }
         })
         .then((data) => {
@@ -100,6 +100,8 @@ function ModalConcludeContest() {
         size="lg"
       >
         <Modal.Header closeButton>
+          <Toaster position="top-right" />
+
           <Modal.Title>
             Escolher projecto vencedor e terminar concurso
           </Modal.Title>
@@ -107,6 +109,9 @@ function ModalConcludeContest() {
         <Modal.Body>
           <p>
             Seleccione o projecto vencedor para dar por concluído o concurso.
+          </p>
+          <p>
+            {" "}
             Atenção, uma vez concluída a operação com sucesso não poderá
             reverter nem alterar detalhes do concurso.
           </p>

@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { BsEyeFill } from "react-icons/bs";
 import { Rating } from "primereact/rating";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { toast, Toaster } from "react-hot-toast";
 
 function Profile() {
   const user = userStore((state) => state.user);
@@ -87,7 +88,7 @@ function Profile() {
           return response.json();
           //navigate("/home", { replace: true });
         } else {
-          alert("Algo correu mal. Tente novamente");
+          toast.error("Pedido não satisfeito");
         }
       })
       .then((loggedUser) => {
@@ -129,6 +130,8 @@ function Profile() {
 
   return (
     <div>
+      <Toaster position="top-right" />
+
       <ul className="nav nav-tabs" id="myTab" role="tablist">
         <li className="nav-item" role="presentation">
           <button

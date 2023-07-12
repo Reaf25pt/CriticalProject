@@ -79,6 +79,8 @@ function ModalDeleteTask({ task }) {
         size="xl"
       >
         <Modal.Header closeButton>
+          <Toaster position="top-right" />
+
           <Modal.Title>
             Eliminar tarefa
             {/* <FormattedMessage

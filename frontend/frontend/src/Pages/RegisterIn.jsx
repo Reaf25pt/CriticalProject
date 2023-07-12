@@ -35,7 +35,7 @@ function RegisterIn() {
       credentials.office === undefined
       /*  Acho que basta ter undefined */
     ) {
-      alert("Seleccione o local de trabalho");
+      toast.error("Seleccione o local de trabalho");
     } else {
       const newInfo = {
         firstName: credentials.firstName,
@@ -155,9 +155,6 @@ function RegisterIn() {
                       onChange={handleChange}
                       title="Url deve terminar em .jpg, .gif ou .png"
                       pattern="(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)"
-
-                      /*  // TODO colocar accept para limitar file a text https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file
-                       */
                     />
                   </div>
                 </div>

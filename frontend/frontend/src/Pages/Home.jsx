@@ -4,6 +4,7 @@ import RegisterIn from "./RegisterIn";
 import { userStore } from "../stores/UserStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { toast, Toaster } from "react-hot-toast";
 
 function Home() {
   const user = userStore((state) => state.user);
@@ -25,6 +26,8 @@ function Home() {
   if (user.fillInfo) {
     return (
       <div>
+        <Toaster position="top-right" />
+
         <div>
           <Sidebar />
         </div>
@@ -34,6 +37,7 @@ function Home() {
 
   return (
     <div>
+      <Toaster position="top-right" />
       <div>
         {/* <Sidebar /> */}
         <RegisterIn />

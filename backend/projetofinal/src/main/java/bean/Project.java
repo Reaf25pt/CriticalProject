@@ -2480,7 +2480,7 @@ public class Project implements Serializable {
                     LOGGER.info("User ID " + pm.getUserInvited().getUserId() + " is rejected to participate in project ID " + pm.getProjectToParticipate().getId() + " by user ID " + loggedUser.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
 
                     communicationBean.recordManagerResponseToSelfInvitation(loggedUser, pm.getUserInvited(), pm.getProjectToParticipate(), answer);
-                    // communicationBean.notifyPotentialMemberOfSelfInvitationResponse(pm, answer);
+                    communicationBean.notifyPotentialMemberOfSelfInvitationResponse(pm, answer);
 
                 } else if (answer == 1) {
                     // ACCEPT é preciso garantir que há vagas disponíveis
@@ -2493,7 +2493,7 @@ public class Project implements Serializable {
                         LOGGER.info("User ID " + pm.getUserInvited().getUserId() + " is accepted to participate in project ID " + pm.getProjectToParticipate().getId() + " by user ID " + loggedUser.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
 
                         communicationBean.recordManagerResponseToSelfInvitation(loggedUser, pm.getUserInvited(), pm.getProjectToParticipate(), answer);
-                        //   communicationBean.notifyPotentialMemberOfSelfInvitationResponse(pm, answer);
+                        communicationBean.notifyPotentialMemberOfSelfInvitationResponse(pm, answer);
                         userBean.refusePendingInvitations(pm.getUserInvited().getUserId());
 
                     }

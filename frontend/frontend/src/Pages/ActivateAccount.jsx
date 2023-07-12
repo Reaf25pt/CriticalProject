@@ -2,16 +2,14 @@ import ButtonComponent from "../Components/ButtonComponent";
 
 import { Link, useNavigate, useParams } from "react-router-dom";
 import logo from "../images/logo-criticalsoftware.png";
+import { toast, Toaster } from "react-hot-toast";
 
 function ActivateAccount() {
   const { token } = useParams();
   const navigate = useNavigate();
 
   const handleClick = (event) => {
-    console.log("clique ");
     event.preventDefault();
-
-    console.log("clique ");
 
     fetch("http://localhost:8080/projetofinal/rest/user/accountvalidation", {
       method: "POST",
@@ -22,18 +20,20 @@ function ActivateAccount() {
       },
     }).then((response) => {
       if (response.status === 200) {
-        alert("Conta activada com sucesso");
+        toast.success("Conta activada com sucesso");
+        navigate("/", { replace: true });
       } else if (response.status === 400) {
-        alert("O link expirou. Receberá um novo link no email");
+        toast.error("O link expirou. Receberá um novo link no email");
       } else {
-        alert("Algo correu mal. Contacte os nossos serviços");
+        toast.error("Pedido não satisfeito");
       }
-      navigate("/", { replace: true });
     });
   };
 
   return (
     <div className="container-fluid vh-100 position-relative">
+      <Toaster position="top-right" />
+
       <div className="row h-50">
         <div className="col-12" style={{ background: "#C01722" }}></div>
       </div>

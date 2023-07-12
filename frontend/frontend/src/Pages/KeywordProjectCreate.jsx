@@ -5,6 +5,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 import InputComponent from "../Components/InputComponent";
 import ButtonComponent from "../Components/ButtonComponent";
+import { toast, Toaster } from "react-hot-toast";
 
 function KeywordProjectCreate({ keywords, setKeywords, addKeywords }) {
   const [credentials, setCredentials] = useState({});
@@ -12,10 +13,6 @@ function KeywordProjectCreate({ keywords, setKeywords, addKeywords }) {
   const [search, setSearch] = useState("");
 
   const [suggestions, setSuggestions] = useState([]);
-  /*   const [keywords, setKeywords] = useState([]); // lista para enviar para backend
-  const addKeyword = (newKeyword) => {
-    setKeywords((state) => [...state, newKeyword]);
-  }; */
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -65,7 +62,7 @@ function KeywordProjectCreate({ keywords, setKeywords, addKeywords }) {
       credentials.keywordInput === "undefined" ||
       credentials === {}
     ) {
-      alert("Insira nome de palavra-chave");
+      toast.error("Insira nome de palavra-chave");
     } else {
       var newKeyword;
       if (credentials.id) {
@@ -101,6 +98,8 @@ function KeywordProjectCreate({ keywords, setKeywords, addKeywords }) {
   return (
     <>
       <div className="row mt-3 ">
+        <Toaster position="top-right" />
+
         <div className="col-lg-9 d-flex ">
           <div className="search-select-container">
             <InputComponent

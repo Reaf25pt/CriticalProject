@@ -5,6 +5,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import InputComponent from "../Components/InputComponent";
 import { BsEyeFill, BsEyeSlashFill, BsMessenger } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { toast, Toaster } from "react-hot-toast";
 
 function SearchUser() {
   const [credentials, setCredentials] = useState({});
@@ -62,6 +63,8 @@ function SearchUser() {
 
   return (
     <div className="form-outline">
+      <Toaster position="top-right" />
+
       <InputComponent
         type="search"
         class="form-control rounded "

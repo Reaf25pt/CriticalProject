@@ -25,21 +25,6 @@ function ProjectAllTasksSelect({
   const clearInputFields = () => {
     document.getElementById("preRequiredTasks").value = "-1";
   };
-  /*
-  useEffect(() => {
-    fetch(`http://localhost:8080/projetofinal/rest/project/tasks/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        token: user.token,
-      },
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        setProjTasks(data);
-      })
-      .catch((err) => console.log(err));
-  }, [triggerList]);*/
 
   const handleChange = (event) => {
     const selectedTask = event.target.options[event.target.selectedIndex];
@@ -57,7 +42,7 @@ function ProjectAllTasksSelect({
     event.preventDefault();
 
     if (Object.keys(task).length === 0) {
-      alert("Seleccione uma tarefa, se aplicável");
+      toast.error("Seleccione uma tarefa, se aplicável");
     } else {
       //var task = { id: credentials.id, title: credentials.title };
 
@@ -79,6 +64,8 @@ function ProjectAllTasksSelect({
 
   return (
     <div className="container">
+      <Toaster position="top-right" />
+
       <div className="row">
         <div className="col-lg-8">
           <select
