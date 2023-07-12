@@ -199,16 +199,38 @@ function Notifications() {
                         </div>
                         {item.needsInput ? (
                           <div className="col-lg-2 d-flex justify-content-around">
-                            <BsCheck2Circle
-                              color="green"
-                              size={40}
-                              onClick={() => handleInvitation(1, item.id)}
-                            />
-                            <BsXLg
-                              color="red"
-                              size={40}
-                              onClick={() => handleInvitation(0, item.id)}
-                            />
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={<Tooltip>Aceitar</Tooltip>}
+                            >
+                              <span
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                              >
+                                {" "}
+                                <BsCheck2Circle
+                                  color="green"
+                                  size={40}
+                                  onClick={() => handleInvitation(1, item.id)}
+                                />
+                              </span>
+                            </OverlayTrigger>
+                            <OverlayTrigger
+                              placement="top"
+                              overlay={<Tooltip>Recusar</Tooltip>}
+                            >
+                              <span
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                              >
+                                {" "}
+                                <BsXLg
+                                  color="red"
+                                  size={40}
+                                  onClick={() => handleInvitation(0, item.id)}
+                                />
+                              </span>
+                            </OverlayTrigger>
                           </div>
                         ) : null}
                       </div>

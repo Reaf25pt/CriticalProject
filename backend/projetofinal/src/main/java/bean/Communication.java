@@ -245,6 +245,7 @@ public class Communication implements Serializable {
 
                     if (answer == 1) {
                         // convite aceite
+                        userBean.refusePendingInvitations(user.getUserId()); // recusa outros convites para participar em outros projectos
                         LOGGER.info("User ID " + projMember.getUserInvited().getUserId() + " accepted to participate in project ID " + projMember.getProjectToParticipate().getId() + ". IP Address of request is " + userBean.getIPAddress());
 
                     } else if (answer == 0) {

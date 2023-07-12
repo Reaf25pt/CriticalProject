@@ -68,8 +68,8 @@ function ChangePassword() {
             <div className="row d-flex justify-content-around h-100 mb-3 ">
               <div className="col-lg-10 text-dark d-flex align-items-center">
                 <h4 className="p-0 text-justify ">
-                  Escreva o seu email e irá receber um link para alterar a sua
-                  password.
+                  Escreva e confirme a nova password. Depois de concluir poderá
+                  aceder de novo à sua conta
                 </h4>
               </div>
               <div className="col-lg-2">
@@ -104,9 +104,9 @@ function ChangePassword() {
             </div>
 
             <div className="row mb-2">
-              <span className="form-text">
+              {/*  <span className="form-text">
                 A senha deve ter entre 6 a 16 caracteres //{" "}
-              </span>
+              </span> */}
               <div className="row mt-3">
                 <ButtonComponent name={"Alterar"} type={"submit"} />
               </div>
