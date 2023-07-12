@@ -79,7 +79,7 @@ public class Token implements Serializable {
 
     // ASSOCIA TIME OUT PARA A SESSAO CRIADA DE 5 / 50MIN
     public long createTimeOutTimeStamp() {
-        final int timeOutSession = 3000000; // 50min
+        final int timeOutSession = 1800000; // 30min
         //final int timeOutSession = 300000; // 5min
 
         long timestamp = Calendar.getInstance().getTimeInMillis() + timeOutSession;

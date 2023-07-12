@@ -45,7 +45,7 @@ public class Project implements Serializable {
     @Column(name = "creationDate", nullable = false, unique = false, updatable = false)
     private Date creationDate;
 
-    @Column(name = "finishDate", nullable = true, unique = false, updatable = false)
+    @Column(name = "finishDate", nullable = true, unique = false, updatable = true)
     private Date finishDate;
 
 
