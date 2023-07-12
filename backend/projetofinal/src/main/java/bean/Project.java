@@ -1433,9 +1433,11 @@ public class Project implements Serializable {
             for (entity.User u : members) {
                 entity.Project activeProj = projMemberDao.findActiveProjectByUserId(u.getUserId());
                 if (project != null) {
+                    if(project.getStatus()!=StatusProject.CANCELLED && project.getStatus()!=StatusProject.FINISHED){
                     // à partida nunca será o ID do projecto a ser reactivado
                     count++;
-                }
+                }}
+
             }
             if (count == 0) {
                 res = true;

@@ -332,7 +332,6 @@ public class Project {
             r = Response.status(403).entity("Forbidden!").build();
 
         } else {
-
             userBean.updateSessionTime(token);
 
             boolean res = projBean.editProjectStatus(token, projId, status, finalTask);

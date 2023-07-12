@@ -35,7 +35,7 @@ INSERT INTO hobby (id, title) value (19, 'Tocar um instrumento');
 
 INSERT INTO skill (skillId, title, skillType) value (1, 'Java', 1);
 INSERT INTO skill (skillId, title, skillType) value (2, 'React', 2);
-INSERT INTO skill (skillId, title, skillType) value (3, 'Soldadiura', 3);
+INSERT INTO skill (skillId, title, skillType) value (3, 'Soldadura', 3);
 INSERT INTO skill (skillId, title, skillType) value (4, 'Business', 0);
 INSERT INTO skill (skillId, title, skillType) value (5, 'Python', 1);
 INSERT INTO skill (skillId, title, skillType) value (6, 'Javascript', 1);
