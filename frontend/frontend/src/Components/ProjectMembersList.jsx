@@ -46,6 +46,7 @@ function ProjectMembersList() {
           clearProject();
         } else {
           alert("Pedido não satisfeito");
+          handleClose();
         }
       })
       .catch((error) => {
@@ -224,7 +225,7 @@ function ProjectMembersList() {
           ))}
         </div>
 
-        <div className="col-lg-2 ">
+        <div className="row mt-4 ">
           <div className="row mt-4">
             {project.member &&
             members.length > 1 &&

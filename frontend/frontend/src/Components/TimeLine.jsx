@@ -17,6 +17,7 @@ function TimeLine() {
   const [newRecord, setNewRecord] = useState([]);
   const project = projOpenStore((state) => state.project);
   const tasks = projOpenStore((state) => state.tasks);
+  const members = projOpenStore((state) => state.members);
 
   useEffect(() => {
     fetch(`http://localhost:8080/projetofinal/rest/project/${id}/record`, {
@@ -31,7 +32,7 @@ function TimeLine() {
         setRecordList(data);
       })
       .catch((err) => console.log(err));
-  }, [newRecord]);
+  }, [newRecord, tasks, members]);
 
   // const customizedMarker = (item) => {
   //   return (
