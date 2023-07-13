@@ -8,6 +8,9 @@ import { BsStarFill } from "react-icons/bs";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { projOpenStore } from "../stores/projOpenStore";
 import { toast, Toaster } from "react-hot-toast";
+import Modal from "react-bootstrap/Modal";
+import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
 
 function ProjectMembersList() {
   const user = userStore((state) => state.user);
@@ -17,6 +20,9 @@ function ProjectMembersList() {
   const clearProject = projOpenStore((state) => state.clearProject);
   const members = projOpenStore((state) => state.members);
   const setMembers = projOpenStore((state) => state.setMembers);
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const handleRemove = (event) => {
     event.preventDefault();
@@ -218,7 +224,59 @@ function ProjectMembersList() {
           ))}
         </div>
 
-        <div className="row mt-4">
+        <div className="col-lg-2 ">
+          <div className="row mt-4">
+            {project.member &&
+            members.length > 1 &&
+            (project.statusInt === 0 || project.statusInt === 4) ? (
+              <div className="col-lg-6 mx-auto mb-4">
+                <ButtonComponent
+                  // onClick={handleRemove}
+                  onClick={handleShow}
+                  name={"Sair do projecto"}
+                ></ButtonComponent>
+              </div>
+            ) : null}
+          </div>
+          <Modal
+            show={show}
+            onHide={handleClose}
+            backdrop="static"
+            keyboard={false}
+            size="lg"
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Sair do projecto</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p>
+                Tem a certeza que quer deixar de participar neste projecto? Uma
+                vez confirmada esta operação não a poderá reverter.{" "}
+              </p>
+              <p>Clique no botão Confirmar para prosseguir</p>
+            </Modal.Body>
+            <Modal.Footer id="modalFooter">
+              <Col xs={4} className="closeBtnSeeTask">
+                <Button variant="secondary" onClick={handleClose}>
+                  Fechar
+                </Button>
+              </Col>
+              <Col xs={4}>
+                <Button
+                  onClick={handleRemove}
+                  className="button"
+                  type="submit"
+                  variant="outline-primary"
+                >
+                  {" "}
+                  Confirmar
+                </Button>
+              </Col>
+            </Modal.Footer>
+          </Modal>
+        </div>
+
+        {/*    <div className="row mt-4">
           {project.member &&
           members.length > 1 &&
           (project.statusInt === 0 || project.statusInt === 4) ? (
@@ -229,7 +287,7 @@ function ProjectMembersList() {
               ></ButtonComponent>
             </div>
           ) : null}
-        </div>
+        </div> */}
       </div>
     </div>
   );

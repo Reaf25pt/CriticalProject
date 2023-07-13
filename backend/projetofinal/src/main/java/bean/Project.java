@@ -827,7 +827,12 @@ if (verifyAllPreRequiredTasksDatesAreOk(task)){
         taskDao.merge(currentTask);
     }
 
-
+    /**
+     * Verifies if all pre-required tasks dates to associate with new task are compatible with new task dates
+     * Only if all are compatible, a new task is added
+     * @param task represents new task
+     * @return true if all dates are compatible
+     */
     public boolean verifyAllPreRequiredTasksDatesAreOk(Task task){
         boolean res=false;
 

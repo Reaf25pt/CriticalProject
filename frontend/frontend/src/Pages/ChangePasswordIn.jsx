@@ -35,10 +35,11 @@ function ChangePasswordIn() {
         },
       }).then((response) => {
         if (response.status === 200) {
-          localStorage.clear();
+          alert("Password alterada com sucesso");
+          /*  localStorage.clear();
           sessionStorage.clear();
           clearLoggedUser();
-          navigate("/", { replace: true });
+          navigate("/", { replace: true }); */
         } else if (response.status === 400) {
           toast.error(
             "Atenção, a password antiga que inseriu não está correcta"
