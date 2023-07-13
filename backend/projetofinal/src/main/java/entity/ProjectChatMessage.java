@@ -22,7 +22,7 @@ public class ProjectChatMessage implements Serializable {
     @Column(name = "creationTime", nullable = false, unique = false, updatable = false)
     private Date creationTime;
 
-    @Column(name = "message", nullable = false, unique = false, updatable = false)
+    @Column(name = "message", nullable = false, unique = false, updatable = false, columnDefinition = "TEXT")
     private String message;
 
     /*

@@ -30,10 +30,10 @@ public class Project implements Serializable {
     @Column(name = "office", nullable = true, unique = false, updatable = true)
     private Office office;
 
-    @Column(name = "details", nullable = false, unique = false, updatable = true)
+    @Column(name = "details", nullable = false, unique = false, updatable = true, columnDefinition = "TEXT")
     private String details;
 
-    @Column(name = "resources", nullable = true, unique = false, updatable = true)
+    @Column(name = "resources", nullable = true, unique = false, updatable = true, columnDefinition = "TEXT")
     private String resources;
 
     @Column(name = "status", nullable = false, unique = false, updatable = true)

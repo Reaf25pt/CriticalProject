@@ -35,7 +35,7 @@ public class Task implements Serializable {
     @Column(name = "finishDate", nullable = false, unique = false, updatable = true)
     private Date finishDate;
 
-    @Column(name = "details", nullable = false, unique = false, updatable = true)
+    @Column(name = "details", nullable = false, unique = false, updatable = true, columnDefinition = "TEXT")
     private String details;
 
     @Column(name = "finalTask", nullable = false, unique = false, updatable = true)
@@ -47,7 +47,7 @@ public class Task implements Serializable {
    // @Column(name = "owner", nullable = false, unique = false, updatable = true)
     //private int taskOwnerId;
 
-    @Column(name = "additionalExecutors", nullable = true, unique = false, updatable = true)
+    @Column(name = "additionalExecutors", nullable = true, unique = false, updatable = true, columnDefinition = "TEXT")
     private String additionalExecutors;
 
     @Column(name = "status", nullable = false, unique = false, updatable = true)

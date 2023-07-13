@@ -40,10 +40,10 @@ public class Contest implements Serializable {
     @Column(name = "finishOpenCall", nullable = false, unique = false, updatable = true)
     private Date finishOpenCall;
 
-    @Column(name = "details", nullable = true, unique = false, updatable = true)
+    @Column(name = "details", nullable = true, unique = false, updatable = true, columnDefinition = "TEXT")
     private String details;
 
-    @Column(name = "rules", nullable = true, unique = false, updatable = true)
+    @Column(name = "rules", nullable = true, unique = false, updatable = true, columnDefinition = "TEXT")
     private String rules;
 
 

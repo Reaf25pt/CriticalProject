@@ -776,7 +776,7 @@ public class Project implements Serializable {
             if (task != null) {
                 entity.ProjectMember pm = projMemberDao.findActiveProjectMemberByProjectIdAndUserId(projId, task.getTaskOwnerId());
                 if (pm.getUserInvited() != null) {
-
+if (verifyAllPreRequiredTasksDatesAreOk(task)){
                     newTask.setTitle(task.getTitle());
                     newTask.setStartDate(task.getStartDate());
                     newTask.setFinishDate(task.getFinishDate());
@@ -802,7 +802,7 @@ public class Project implements Serializable {
                     communicationBean.notifyNewOwnerOfTask(pm.getUserInvited(), task.getTitle());
                     LOGGER.info("Task ID " + newTask.getId() + " is added to project " + projId + " by user ID " + user.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
 
-                }
+                }}
             }
         }
 
@@ -825,6 +825,31 @@ public class Project implements Serializable {
             }
         }
         taskDao.merge(currentTask);
+    }
+
+
+    public boolean verifyAllPreRequiredTasksDatesAreOk(Task task){
+        boolean res=false;
+
+        if (task.getPreRequiredTasks()== null || task.getPreRequiredTasks().isEmpty()){
+            res=true;
+        } else {
+            int count =0;
+            for (Task t : task.getPreRequiredTasks()) {
+                entity.Task taskEnt = taskDao.find(t.getId());
+                if (taskEnt.getFinishDate().before(task.getStartDate())) {
+                    // data ok
+                    count++;
+
+                }}
+
+            if (count == task.getPreRequiredTasks().size()){
+                // all dates are ok
+                res=true;
+            }
+        }
+
+        return res;
     }
 
     /**

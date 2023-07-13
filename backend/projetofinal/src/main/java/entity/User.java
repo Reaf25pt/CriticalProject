@@ -47,7 +47,7 @@ public class User implements Serializable {
     @Column(name = "photo", nullable = true, unique = false, updatable = true)
     private String photo;
 
-    @Column(name = "bio", nullable = true, unique = false, updatable = true)
+    @Column(name = "bio", nullable = true, unique = false, updatable = true, columnDefinition = "TEXT")
     private String bio;
 
     @Column(name = "contestManager", nullable = false, unique = false, updatable = true)
