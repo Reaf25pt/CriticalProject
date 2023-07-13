@@ -85,8 +85,8 @@ function EditProject({ toggleComponent }) {
           }
         })
         .then((data) => {
-          setProject(data);
           toast.success("Projecto editado");
+          setProject(data);
         })
         .catch((error) => {
           toast.error(error.message);

@@ -39,11 +39,11 @@ function ProjectMembersList() {
           navigate("/home/start", { replace: true });
           clearProject();
         } else {
-          toast.error("Pedido não satisfeito");
+          alert("Pedido não satisfeito");
         }
       })
       .catch((error) => {
-        toast.error(error.message);
+        alert(error.message);
       });
   };
 
@@ -147,9 +147,7 @@ function ProjectMembersList() {
                               <input
                                 class="form-check-input bg-secondary"
                                 type="checkbox"
-                                //role="switch"
                                 id="flexSwitchCheckChecked"
-                                //checked
                                 defaultChecked
                                 onClick={(event) =>
                                   handleRole(
@@ -179,35 +177,9 @@ function ProjectMembersList() {
                             </OverlayTrigger>
                           </label>
                         </div>
-                        {/*    <div class="form-check form-switch">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="flexSwitchCheckDefault"
-                        />
-                        <label
-                          class="form-check-label"
-                          for="flexSwitchCheckDefault"
-                        >
-                          Default switch
-                        </label>
-                      </div> */}
                       </>
                     ) : (
                       <>
-                        {/*   <div class="form-check form-switch">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="flexSwitchCheckDefault"
-                        />
-                        <label
-                          class="form-check-label"
-                          for="flexSwitchCheckDefault"
-                        >
-                          Default switch
-                        </label>
-                      </div> */}
                         <div class="form-check form-switch">
                           <OverlayTrigger
                             placement="top"
@@ -221,7 +193,6 @@ function ProjectMembersList() {
                               <input
                                 class="form-check-input "
                                 type="checkbox"
-                                //  role="switch"
                                 id="flexSwitchCheckDefault"
                                 onClick={(event) =>
                                   handleRole(
@@ -243,33 +214,13 @@ function ProjectMembersList() {
                   </div>
                 </>
               ) : null}
-              {/* {member.manager ? (
-              <div className="col-lg-8 d-flex align-items-center">Gestor</div>
-            ) : (
-              <div className="col-lg-8 d-flex align-items-center">Membro</div>
-            )} */}
-              {/* {showProjects.manager ? (
-              <>
-                <div className="col-lg-1">
-                  <span class="material-icons-outlined"></span>
-                </div>
-                <div className="col-lg-2">
-                  <ModalDeleteProjMember
-                    member={member}
-                    set={setMembers}
-                    projId={showProjects.id}
-                  />
-                </div>
-              </>
-            ) : null} */}
             </div>
           ))}
         </div>
 
         <div className="row mt-4">
-          {/*     <Toaster position="top-right" /> */}
-
           {project.member &&
+          members.length > 1 &&
           (project.statusInt === 0 || project.statusInt === 4) ? (
             <div className="col-lg-6 mx-auto mb-4">
               <ButtonComponent

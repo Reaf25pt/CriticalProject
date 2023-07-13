@@ -20,7 +20,7 @@ function ActivateAccount() {
       },
     }).then((response) => {
       if (response.status === 200) {
-        toast.success("Conta activada com sucesso");
+        alert("Conta activada com sucesso");
         navigate("/", { replace: true });
       } else if (response.status === 400) {
         toast.error("O link expirou. Receberá um novo link no email");

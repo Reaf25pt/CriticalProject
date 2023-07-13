@@ -81,7 +81,7 @@ function InviteMember() {
       })
         .then((response) => {
           if (response.status === 200) {
-            toast.success("Convite enviado");
+            alert("Convite enviado");
 
             return response.json();
           } else {

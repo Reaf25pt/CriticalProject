@@ -35,9 +35,10 @@ function Register() {
         },
       }).then((response) => {
         if (response.status === 200) {
-          /*  toast.success(
+          alert(
             "Conta criada com sucesso. Active a conta através do link enviado para o email registado"
-          ); */
+          );
+
           navigate("/", { replace: true });
         } else {
           toast.error("Pedido não satisfeito");
