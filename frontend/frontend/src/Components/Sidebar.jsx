@@ -221,14 +221,7 @@ function Sidebar() {
                   alt=""
                 />
               )}
-              {/*  <img
-               
-                src="https://github.com/mdo.png"
-                alt="hugenerd"
-                width="30"
-                height="30"
-                class="rounded-circle"
-              /> */}
+            
               <span class="d-none d-sm-inline mx-1">{fullName}</span>
             </a>
             <ul

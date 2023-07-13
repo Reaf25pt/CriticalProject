@@ -97,7 +97,7 @@ function ProjectChat() {
         className="row overflow-auto d-flex flex-column-reverse m-0  "
         style={{ height: "85vh" }}
       >
-        <div className="col-lg-6 bg-secondary rounded-4 mx-auto p-1 ">
+        <div className="col-lg-6 bg-secondary rounded-4 mx-auto p-1 " style={{minHeight:"80vh"}}>
           {messages.length !== 0 ? (
             <div
               style={{
@@ -138,10 +138,10 @@ function ProjectChat() {
                 ))}
             </div>
           ) : (
-            <div>
-              <h5 className="text-white">
+            <div className="row mt-5">
+              <h4 className="text-white">
                 Inicie conversa com os restantes membros do projecto
-              </h5>
+              </h4>
             </div>
           )}
         </div>

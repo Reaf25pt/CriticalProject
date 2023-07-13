@@ -532,7 +532,7 @@ function FormTask() {
         ))}
       </div>
 
-      <div className="row mt-4 w-75  p-3 rounded-4 mx-auto">
+      <div className="row mt-4   p-3 rounded-4 ">
         {tasks && tasks.length > 0 && (
           <Chart
             chartType="Gantt"
