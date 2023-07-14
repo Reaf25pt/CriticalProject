@@ -505,14 +505,14 @@ public class Project implements Serializable {
                     entity.ProjectMember projMember = associateUserToProject(user, project, true);
                     communicationBean.notifyNewPossibleProjectMember(projMember, project, user, false);
                     res = true;
-                    LOGGER.info("User ID " + userId + " asks to participate in project ID " + pm.getProjectToParticipate().getId() + ". IP Address of request is " + userBean.getIPAddress());
+                    LOGGER.info("User ID " + userId + " asks to participate in project ID " + projId + ". IP Address of request is " + userBean.getIPAddress());
 
                 } else {
                     // not self-invitation
                     entity.ProjectMember projMember = associateUserToProject(user, project, false);
                     communicationBean.notifyNewPossibleProjectMember(projMember, project, user, true);
                     res = true;
-                    LOGGER.info("User ID " + userId + " is invited to participate in project ID " + pm.getProjectToParticipate().getId() + " by project manager whose account ID is " + userEnt.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
+                    LOGGER.info("User ID " + userId + " is invited to participate in project ID " + projId + " by project manager whose account ID is " + userEnt.getUserId() + ". IP Address of request is " + userBean.getIPAddress());
                 }
             }
         }

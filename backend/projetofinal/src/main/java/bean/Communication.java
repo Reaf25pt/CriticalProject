@@ -45,6 +45,8 @@ public class Communication implements Serializable {
     dao.Project projDao;
     @EJB
     dao.Contest contestDao;
+    @Inject
+    bean.Project projBean;
 
     /**
      * Notifies user that has been invited to participate in project
@@ -206,6 +208,7 @@ public class Communication implements Serializable {
     /**
      * Token answers to invitation made by project manager to participate in project, via notification if notification belongs to token
      * Updates ProjectMember that defines relationship between token and project
+     * Can only accept invitation if project has available spots
      * Automatically marks notification as seen
      *
      * @param token   identifies session that makes the request
@@ -222,37 +225,48 @@ public class Communication implements Serializable {
             Notification notif = notifDao.find(notifId);
             if (notif != null) {
                 if (notif.getNotificationOwner().getUserId() == user.getUserId()) {
-
-                    ProjectMember projMember = notif.getProjectMember();
-                    projMember.setAnswered(true);
-
-                    notif.setSeen(true);
-                    notif.setNeedsInput(false);
                     if (answer == 0) {
-                        // recusar convite para participar no projecto
+                        ProjectMember projMember = notif.getProjectMember();
+                        projMember.setAnswered(true);
+
+                        notif.setSeen(true);
+                        notif.setNeedsInput(false);
                         projMember.setAccepted(false);
+                        notifDao.merge(notif);
+                        projMemberDao.merge(projMember);
+
+                        notifyRelevantPartsOfInvitationResponse(projMember, answer);
+                        recordMemberInvitationResponse(user, projMember.getProjectToParticipate(), answer);
+                        LOGGER.info("User ID " + projMember.getUserInvited().getUserId() + " refused to participate in project ID " + projMember.getProjectToParticipate().getId() + ". IP Address of request is " + userBean.getIPAddress());
+
+                        notifDto = convertNotifEntToDto(notif);
 
                     } else if (answer == 1) {
-                        // aceitar convite para participar no projecto
-                        projMember.setAccepted(true);
+
+
+                        if (projBean.verifyIfProjectHasAvailableSpots(notif.getProjectMember().getProjectToParticipate().getId())) {
+
+
+                            ProjectMember projMember = notif.getProjectMember();
+                            projMember.setAnswered(true);
+
+                            notif.setSeen(true);
+                            notif.setNeedsInput(false);
+
+                            projMember.setAccepted(true);
+
+                            notifDao.merge(notif);
+                            projMemberDao.merge(projMember);
+
+                            notifyRelevantPartsOfInvitationResponse(projMember, answer);
+                            recordMemberInvitationResponse(user, projMember.getProjectToParticipate(), answer);
+
+                            userBean.refusePendingInvitations(user.getUserId()); // recusa outros convites para participar em outros projectos
+                            LOGGER.info("User ID " + projMember.getUserInvited().getUserId() + " accepted to participate in project ID " + projMember.getProjectToParticipate().getId() + ". IP Address of request is " + userBean.getIPAddress());
+
+                            notifDto = convertNotifEntToDto(notif);
+                        }
                     }
-                    notifDao.merge(notif);
-                    projMemberDao.merge(projMember);
-
-                    notifyRelevantPartsOfInvitationResponse(projMember, answer);
-                    recordMemberInvitationResponse(user, projMember.getProjectToParticipate(), answer);
-
-
-                    if (answer == 1) {
-                        // convite aceite
-                        userBean.refusePendingInvitations(user.getUserId()); // recusa outros convites para participar em outros projectos
-                        LOGGER.info("User ID " + projMember.getUserInvited().getUserId() + " accepted to participate in project ID " + projMember.getProjectToParticipate().getId() + ". IP Address of request is " + userBean.getIPAddress());
-
-                    } else if (answer == 0) {
-                        LOGGER.info("User ID " + projMember.getUserInvited().getUserId() + " refused to participate in project ID " + projMember.getProjectToParticipate().getId() + ". IP Address of request is " + userBean.getIPAddress());
-                    }
-
-                    notifDto = convertNotifEntToDto(notif);
                 }
             }
         }
@@ -835,7 +849,8 @@ public class Communication implements Serializable {
 
     /**
      * Notifies user that self-invitation to participate in project was accepted (1) or rejected (0)
-     * @param pm represents ProjectMember that defines relationship between user and project
+     *
+     * @param pm     represents ProjectMember that defines relationship between user and project
      * @param answer value = 0 if self-invitation is rejected; value=1 if self-invitation is accepted
      */
     public void notifyPotentialMemberOfSelfInvitationResponse(ProjectMember pm, int answer) {
@@ -1181,20 +1196,23 @@ public class Communication implements Serializable {
                 if (c.getFinishDate().after(today) && c.getFinishDate().before((todayPlus7Days))) {
                     notifyProjectMembers(c);
                 }
+            }
         }
-    }}
+    }
+
     /**
      * Notifies automatically all project members of accepted projects that contest finish date is due in 7 days
+     *
      * @Param c representes contest
      */
     private void notifyProjectMembers(Contest c) {
 
         List<Project> projects = applicationDao.findAcceptedProjectsForGivenContestId(c.getId());
-        if (projects!=null){
-            for (Project p : projects){
-                List <User> projectMembers = projMemberDao.findListOfUsersByProjectId(p.getId());
-                if (projectMembers!=null){
-                    for (User u:projectMembers){
+        if (projects != null) {
+            for (Project p : projects) {
+                List<User> projectMembers = projMemberDao.findListOfUsersByProjectId(p.getId());
+                if (projectMembers != null) {
+                    for (User u : projectMembers) {
                         Notification notif = new Notification();
                         notif.setCreationTime(Date.from(Instant.now()));
                         notif.setSeen(false);

@@ -190,6 +190,7 @@ function ContestCreate() {
                   name="details"
                   type="text"
                   onChange={handleChange}
+                  required
                 />
               </div>
               <div class="form-outline mb-4">

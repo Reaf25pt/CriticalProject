@@ -86,17 +86,7 @@ INSERT INTO keyword (id, title) value (12, 'IOS');
 INSERT INTO project (id, title, details, creationDate, membersNumber, status,office) value (1, 'Proj1', 'tbd', '2023-04-02', 3, 0,0 );
 INSERT INTO project (id, title, details, creationDate, membersNumber, status,office) value (2, 'Proj2', 'tbd', '2023-04-02', 5, 0,1);
 INSERT INTO project (id, title, details, creationDate, membersNumber, status,office) value (3, 'Proj3', 'tbd', '2023-04-02', 3, 0,2 );
-INSERT INTO project (id, title, details, creationDate, membersNumber, status,office) value (4, 'Proj4', 'tbd', '2023-04-02', 5, 0,3 );
-INSERT INTO project (id, title, details, creationDate, membersNumber, status,office) value (5, 'Proj5', 'tbd', '2023-04-02', 3, 0,4 );
-INSERT INTO project (id, title, details, creationDate, membersNumber, status,office) value (6, 'Proj6', 'tbd', '2023-04-02', 5, 0,5 );
-INSERT INTO project (id, title, details, creationDate, membersNumber, status,office) value (7, 'Proj7', 'tbd', '2023-04-02', 3, 0,0 );
-INSERT INTO project (id, title, details, creationDate, membersNumber, status,office) value (8, 'Proj8', 'tbd', '2023-04-02', 5, 0,1 );
-INSERT INTO project (id, title, details, creationDate, membersNumber, status,office) value (9, 'Proj9', 'tbd', '2023-04-02', 3, 0,2 );
-INSERT INTO project (id, title, details, creationDate, membersNumber, status,office) value (10, 'Proj10', 'tbd', '2023-04-02', 5, 0,3 );
-INSERT INTO project (id, title, details, creationDate, membersNumber, status,office) value (11, 'Proj11', 'tbd', '2023-04-02', 3, 0,4 );
-INSERT INTO project (id, title, details, creationDate, membersNumber, status,office) value (12, 'Proj12', 'tbd', '2023-04-02', 5, 0,5 );
-INSERT INTO project (id, title, details, creationDate, membersNumber, status,office) value (13, 'Proj13', 'tbd', '2023-04-02', 3, 0,0 );
-INSERT INTO project (id, title, details, creationDate, membersNumber, status,office) value (14, 'Proj14', 'tbd', '2023-04-02', 5, 0,1 );
+
 
 
 INSERT INTO skills_projects(skill_Id,project_Id) VALUE(1,1);
@@ -124,12 +114,12 @@ INSERT INTO keywords(keyword_Id, project_Id) VALUE(6,1);
 
 INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (1, true, true, true, false, true, 1, 1);
 INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (2, true, true, false, false, true, 1, 2);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (3, true, true, false, false, true, 1, 3);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (4, true, true, false, false, true, 1, 4);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (5, true, true, false, false, true, 1, 5);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (6, true, true, false, false, true, 1, 6);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (7, true, true, false, false, true, 1, 7);
-INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (8, true, true, false, false, true, 1, 8);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (3, true, true, false, false, true, 2, 3);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (4, true, true, false, false, true, 2, 4);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (5, true, true, true, false, true, 2, 5);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (6, true, true, false, false, true, 3, 6);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (7, true, true, false, false, true, 3, 7);
+INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (8, true, true, true, false, true, 3, 8);
 INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (9, true, true, false, false, true, 1, 9);
 INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite, projectToParticipate_id, userInvited_userId) VALUE (10, true, true, false, false, true, 1, 10);
 
@@ -138,17 +128,13 @@ INSERT INTO projectmembers (id, accepted, answered, manager, removed, selfInvite
 
 
 
-INSERT INTO contest (id, title, details, maxNumberProjects, rules, startDate, finishDate, startOpenCall,finishOpenCall,status) VALUE (1, "Teste", "Teste", 200,"regras", '2023-07-10', '2023-07-30', '2023-07-01', '2023-07-09',1);
+INSERT INTO contest (id, title, details, maxNumberProjects, rules, startDate, finishDate, startOpenCall,finishOpenCall,status) VALUE (1, 'Teste', 'Teste', 200,'regras', '2023-07-10', '2023-07-30', '2023-07-01', '2023-07-09',1);
 
 INSERT INTO contestapplication (id, accepted,answered, contest_id, project_id) VALUE (1, true, true, 1,1);
 INSERT INTO contestapplication (id, accepted,answered, contest_id, project_id) VALUE (2, true, true, 1,2);
 INSERT INTO contestapplication (id, accepted,answered, contest_id, project_id) VALUE (3, true, true, 1,3);
-INSERT INTO contestapplication (id, accepted,answered, contest_id, project_id) VALUE (4, true, true, 1,4);
-INSERT INTO contestapplication (id, accepted,answered, contest_id, project_id) VALUE (5, true, true, 1,5);
-INSERT INTO contestapplication (id, accepted,answered, contest_id, project_id) VALUE (6, true, true, 1,6);
-INSERT INTO contestapplication (id, accepted,answered, contest_id, project_id) VALUE (7, true, true, 1,7);
-INSERT INTO contestapplication (id, accepted,answered, contest_id, project_id) VALUE (8, true, true, 1,8);
-INSERT INTO contestapplication (id, accepted,answered, contest_id, project_id) VALUE (9, true, true, 1,9);
+
+
 
 
 
