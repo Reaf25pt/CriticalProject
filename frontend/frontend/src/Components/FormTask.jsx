@@ -210,9 +210,7 @@ function FormTask() {
       })
         .then((response) => {
           if (response.status === 200) {
-            toast.success(
-              "Atenção, a(s) tarefa(s) precedentes só serão admitidas se a data final for anterior à data de início da tarefa adicionada"
-            );
+
 
             return response.json();
           } else {

@@ -114,9 +114,9 @@ function App() {
           </form>
         </div>
       </div>
-      {/* <div className="row">
+      <div className="row">
         <Footer />
-      </div> */}
+      </div>
     </div>
   );
 }

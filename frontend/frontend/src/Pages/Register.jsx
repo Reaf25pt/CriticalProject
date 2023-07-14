@@ -36,7 +36,7 @@ function Register() {
       }).then((response) => {
         if (response.status === 200) {
           alert(
-            "Conta criada com sucesso. Active a conta através do link enviado para o email registado"
+            "Conta criada com sucesso. Ative a conta através do link enviado para o email registado."
           );
 
           navigate("/", { replace: true });
@@ -75,7 +75,7 @@ function Register() {
                 id="emailInput"
                 required
                 name="email"
-                type="text"
+                type="email"
                 onChange={handleChange}
               />
             </div>
@@ -88,7 +88,7 @@ function Register() {
                 type="password"
                 minLength={8}
                 title="Password válida deve ter no mínimo 8 caracteres e conter 1 letra maiúscula, 1 letra minúscula, 1 número e 1 símbolo !@#$&*"
-                // pattern="^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$"
+                pattern="^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$"
                 onChange={handleChange}
               />
             </div>
@@ -101,7 +101,7 @@ function Register() {
                 type="password"
                 minLength={8}
                 title="Password válida deve ter no mínimo 8 caracteres e conter 1 letra maiúscula, 1 letra minúscula, 1 número e 1 símbolo !@#$&*"
-                // pattern="^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$"
+                 pattern="^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$"
                 onChange={handleChange}
               />
             </div>{" "}

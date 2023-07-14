@@ -91,8 +91,9 @@ function ProjectsCreate() {
         body: JSON.stringify(project),
       }).then((response) => {
         if (response.status === 200) {
+          alert("Projeto criado com sucesso")
           updateUser("noActiveProject", false);
-          navigate("/home/projects", { replace: true });
+          navigate("/home/start", { replace: true });
         } else {
           toast.error("Pedido não satisfeito");
         }

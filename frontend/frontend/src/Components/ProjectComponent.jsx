@@ -97,8 +97,9 @@ function ProjectComponent({ toggleComponent }) {
       })
       .then((data) => {
         setPendingInvites(data);
-        toast.success("Pedido efectuado");
-      })
+        alert("Pedido efetuado")
+/*         toast.success("Pedido efectuado");
+ */      })
       .catch((error) => {
         toast.error(error.message);
       });
@@ -126,7 +127,7 @@ function ProjectComponent({ toggleComponent }) {
                   </h4>
                 )}
               </div>
-              <div className="row mt-3 mb-3 rounded-4 p-2 bg-danger  text-white  ">
+              <div className="row mt-3 mb-3 rounded-4 p-2 bg-danger  text-white mx-auto ">
                 <h5 className="text-center">{project.status}</h5>
               </div>
               <h2 className=" text-center text-white mb-1">

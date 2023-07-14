@@ -47,9 +47,10 @@ function ContestCreate() {
         body: JSON.stringify(newContest),
       }).then((response) => {
         if (response.status === 200) {
+          alert("Concurso criado com sucesso")
           navigate("/home/contests", { replace: true });
         } else {
-          toast.error("Pedido não satisfeito");
+          alert("Pedido não satisfeito");
         }
       });
     }

@@ -378,14 +378,14 @@ function GeneratePdf() {
       y: 100,
       size: 20,
     });
-    page.drawText(stats.averages[0], { x: 400, y: 100, size: 15 });
+    page.drawText(stats.averages[0] + " elemento(s)", { x: 400, y: 100, size: 15 });
 
     page.drawText("Tempo médio de execução dos projetos:  ", {
       x: 10,
       y: 50,
       size: 20,
     });
-    page.drawText(stats.averages[1], { x: 400, y: 50, size: 15 });
+    page.drawText(stats.averages[1] + " dia(s)", { x: 400, y: 50, size: 15 });
 
     // Serialize the PDF document to a Uint8Array
     const pdfBytes = await pdfDoc.save();

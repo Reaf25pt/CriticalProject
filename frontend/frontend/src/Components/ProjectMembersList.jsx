@@ -252,7 +252,7 @@ function ProjectMembersList() {
             <Modal.Body>
               <p>
                 Tem a certeza que quer deixar de participar neste projecto? Uma
-                vez confirmada esta operação não a poderá reverter.{" "}
+                vez confirmada esta operação não a poderá reverter.
               </p>
               <p>Clique no botão Confirmar para prosseguir</p>
             </Modal.Body>
@@ -277,18 +277,7 @@ function ProjectMembersList() {
           </Modal>
         </div>
 
-        {/*    <div className="row mt-4">
-          {project.member &&
-          members.length > 1 &&
-          (project.statusInt === 0 || project.statusInt === 4) ? (
-            <div className="col-lg-6 mx-auto mb-4">
-              <ButtonComponent
-                onClick={handleRemove}
-                name={"Sair do projecto"}
-              ></ButtonComponent>
-            </div>
-          ) : null}
-        </div> */}
+
       </div>
     </div>
   );

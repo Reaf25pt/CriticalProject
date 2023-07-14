@@ -199,9 +199,7 @@ function Skill() {
         </div>
       </div>
 
-      {/*  <span class="input-group-text border-0">
-          <BsSearch />
-        </span> */}
+   
 
       <div className="row overflow-auto" style={{ maxHeight: "200px" }}>
         {showSkills && showSkills.length !== 0 ? (
@@ -298,7 +296,7 @@ function Skill() {
             )}
           </div>
         ) : (
-          <p>Adicione as suas skills</p>
+          <h4 className="text-white">Adicione as suas skills</h4>
         )}
       </div>
     </div>

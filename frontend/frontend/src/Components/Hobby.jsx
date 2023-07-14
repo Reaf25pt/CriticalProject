@@ -192,7 +192,7 @@ function Hobby() {
               ))}
             </div>
           ) : (
-            <div>Adicione os seus interesses</div>
+            <h4 className="text-white">Adicione os seus interesses</h4>
           )}
         </div>
       </div>
