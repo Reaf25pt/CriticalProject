@@ -131,7 +131,7 @@ public class Communication {
             Notification notif = comBean.answerInvitation(token, id, answer);
 
             if (notif == null) {
-                r = Response.status(404).entity("No available spots").build();
+                r = Response.status(404).entity("Not found").build();
             } else {
                 List<Notification> list = comBean.getOwnNotificationList(token);
 

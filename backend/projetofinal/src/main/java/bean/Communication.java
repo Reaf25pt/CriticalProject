@@ -265,6 +265,22 @@ public class Communication implements Serializable {
                             LOGGER.info("User ID " + projMember.getUserInvited().getUserId() + " accepted to participate in project ID " + projMember.getProjectToParticipate().getId() + ". IP Address of request is " + userBean.getIPAddress());
 
                             notifDto = convertNotifEntToDto(notif);
+                        } else {
+                            ProjectMember projMember = notif.getProjectMember();
+                            projMember.setAnswered(true);
+
+                            notif.setSeen(true);
+                            notif.setNeedsInput(false);
+                            projMember.setAccepted(false);
+                            notifDao.merge(notif);
+                            projMemberDao.merge(projMember);
+
+                            notifyRelevantPartsOfInvitationResponse(projMember, 2);
+                            recordMemberInvitationResponse(user, projMember.getProjectToParticipate(), 2);
+                            LOGGER.info("User ID " + projMember.getUserInvited().getUserId() + " cannot participate in project ID " + projMember.getProjectToParticipate().getId() + ". There are no available spots. IP Address of request is " + userBean.getIPAddress());
+
+                            notifDto = convertNotifEntToDto(notif);
+
                         }
                     }
                 }
@@ -277,6 +293,7 @@ public class Communication implements Serializable {
     /**
      * Notifies project members if user accepted invitation made by project manager to participate in project
      * Notifies project managers if user rejected invitation made by project manager to participate in project
+     * Notifies project managers and user invited if invitation cannot be accepted because there are no available spots
      *
      * @param projMember represents ProjectMember that defines relationship between user and project
      * @param answer     value = 0 to reject invitation; value = 1 to accept invitation
@@ -318,8 +335,35 @@ public class Communication implements Serializable {
                     notifyRealTime(notif, u);
                 }
             }
+        } else if (answer==2){
+            //quer aceitar mas não pode por não haver available spots
+            List<User> managersList = projMemberDao.findListOfManagersByProjectId(projMember.getProjectToParticipate().getId());
+            if (managersList != null) {
+                for (User u : managersList) {
+                    Notification notif = new Notification();
+                    notif.setCreationTime(Date.from(Instant.now()));
+                    notif.setSeen(false);
+                    notif.setNeedsInput(false);
+                    notif.setProjectMember(projMember);
+                    notif.setMessage(projMember.getUserInvited().getFirstName() + " " + projMember.getUserInvited().getLastName() + " não conseguiu aceitar o convite para participar no projecto " + projMember.getProjectToParticipate().getTitle() + " por falta de vaga");
+                    notif.setMessageEng(projMember.getUserInvited().getFirstName() + " " + projMember.getUserInvited().getLastName() + " could not accept  to participate in the project " + projMember.getProjectToParticipate().getTitle() +" because there are no available spots");
+                    notif.setNotificationOwner(u);
+                    notifDao.persist(notif);
+                    notifyRealTime(notif, u);
+                }
         }
-    }
+            Notification notif = new Notification();
+            notif.setCreationTime(Date.from(Instant.now()));
+            notif.setSeen(false);
+            notif.setNeedsInput(false);
+            notif.setProjectMember(projMember);
+            notif.setMessage("O convite para participar no projecto " + projMember.getProjectToParticipate().getTitle() + " não pode ser aceite por falta de vaga");
+            notif.setMessageEng("Invitation to participate in project " + projMember.getProjectToParticipate().getTitle() +" could not be accepted because there are no available spots");
+            notif.setNotificationOwner(projMember.getUserInvited());
+            notifDao.persist(notif);
+            notifyRealTime(notif, projMember.getUserInvited());
+
+    }}
 
     /**
      * Notifies project members of answer to contest application
@@ -747,6 +791,7 @@ public class Communication implements Serializable {
 
     /**
      * Records in project history whether user invited to participate in project by project manager accepts (1) or rejects (0) invitation
+     * Records in project history if an invitation cannot be accepted because there are no available spots (2)
      *
      * @param user    represents user invited
      * @param project represents project
@@ -767,6 +812,10 @@ public class Communication implements Serializable {
             case 1:
                 //aceitou convite para participar no projecto
                 record.setMessage(user.getFirstName() + " " + user.getLastName() + " aceitou o convite para participar no projecto");
+                break;
+            case 2:
+                //não pode aceitar convite para participar no projecto
+                record.setMessage(user.getFirstName() + " " + user.getLastName() + " não pode aceitar o convite para participar no projecto, por falta de vagas");
                 break;
         }
         recordDao.persist(record);

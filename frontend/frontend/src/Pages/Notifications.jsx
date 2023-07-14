@@ -14,6 +14,7 @@ import { toast, Toaster } from "react-hot-toast";
 
 function Notifications() {
   const user = userStore((state) => state.user);
+  const setOwnProj = userStore((state) => state.setOwnProj);
 
   const updateNotifications = notificationStore(
     (state) => state.updateNotifications
@@ -86,14 +87,30 @@ function Notifications() {
 
           //navigate("/home", { replace: true });
         } else {
-          toast.error("Pedido não satisfeito");
+          alert("Pedido não satisfeito");
         }
       })
       .then((response) => {
         updateNotifications(response);
+        handleActiveProject();
         toast.success("Convite respondido");
         //filterNotification(response);
       });
+  }
+
+  function handleActiveProject() {
+    fetch(`http://localhost:8080/projetofinal/rest/user/activeproject`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        token: user.token,
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        setOwnProj(data);
+      })
+      .catch((err) => console.log(err));
   }
 
   return (
