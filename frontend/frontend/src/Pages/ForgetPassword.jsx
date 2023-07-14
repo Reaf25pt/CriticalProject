@@ -78,7 +78,7 @@ function ForgetPassword() {
                 id="emailInput"
                 required
                 name="email"
-                type="text"
+                type="email"
                 onChange={handleChange}
               />
             </div>

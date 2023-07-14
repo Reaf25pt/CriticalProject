@@ -53,6 +53,17 @@ public class User implements Serializable {
     }
 
     /**
+     * Setter needed for JUnit testing
+     * @param userDao
+     */
+    public void setUserDao(dao.User userDao) {
+        this.userDao = userDao;
+    }
+    public void setTokenDao(dao.Token tokenDao) {
+        this.tokenDao = tokenDao;
+    }
+
+    /**
      * Verifies if email and password used to login have some valid information
      *
      * @param email    represents email inserted when attempting login

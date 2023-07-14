@@ -55,6 +55,19 @@ public class Project implements Serializable {
     public Project() {
     }
 
+
+    /**
+     * Setter needed for JUnit testing
+     * @param userDao
+     */
+    public void setUserDao(dao.User userDao) {
+        this.userDao = userDao;
+    }
+    public void setTokenDao(dao.Token tokenDao) {
+        this.tokenDao = tokenDao;
+    }
+
+
     /**
      * Converts project entity to DTO, including skills and keywords associated with project
      *

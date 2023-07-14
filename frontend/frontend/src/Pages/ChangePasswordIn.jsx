@@ -3,7 +3,7 @@ import InputComponent from "../Components/InputComponent";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { userStore } from "../stores/UserStore";
-import { toast, Toaster } from "react-hot-toast";
+//import { toast, Toaster } from "react-hot-toast";
 
 function ChangePasswordIn() {
   const [credentials, setCredentials] = useState({});
@@ -41,15 +41,13 @@ function ChangePasswordIn() {
           clearLoggedUser();
           navigate("/", { replace: true }); */
         } else if (response.status === 400) {
-          toast.error(
-            "Atenção, a password antiga que inseriu não está correcta"
-          );
+          alert("Atenção, a password antiga que inseriu não está correcta");
         } else {
-          toast.error("Pedido não satisfeito");
+          alert("Pedido não satisfeito");
         }
       });
     } else {
-      toast.error(
+      alert(
         "As novas passwords inseridas não são iguais. Escreva a mesma password nos 2 campos"
       );
       document.getElementById("oldPasswordInput").value = "";
@@ -60,7 +58,7 @@ function ChangePasswordIn() {
 
   return (
     <div className="container">
-      <Toaster position="top-right" />
+      {/* <Toaster position="top-right" /> */}
 
       <div className="row justify-content-center">
         <div className="col-lg-5">
