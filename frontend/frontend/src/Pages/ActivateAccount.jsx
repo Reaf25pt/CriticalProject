@@ -32,8 +32,7 @@ function ActivateAccount() {
 
   return (
     <div className="container-fluid vh-100 position-relative">
-      <Toaster position="top-right" />
-
+      <Toaster />
       <div className="row h-50">
         <div className="col-12" style={{ background: "#C01722" }}></div>
       </div>

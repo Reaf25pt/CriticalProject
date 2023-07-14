@@ -6,7 +6,6 @@ import { userStore } from "../stores/UserStore";
 import TextAreaComponent from "./TextAreaComponent";
 import { Timeline } from "primereact/timeline";
 import { projOpenStore } from "../stores/projOpenStore";
-import { toast, Toaster } from "react-hot-toast";
 
 function TimeLine() {
   const user = userStore((state) => state.user);
@@ -84,7 +83,7 @@ function TimeLine() {
     event.preventDefault();
 
     if (!credentials.record || credentials.record === "") {
-      toast.error("Tem de inserir texto");
+      alert("Tem de inserir texto");
     } else {
       var newRecord = {
         taskId: credentials.task,
@@ -121,8 +120,6 @@ function TimeLine() {
         overflowY: "auto",
       }} */
     >
-      <Toaster position="top-right" />
-
       <div className="row mt-5 d-flex justify-content-around">
         {project.statusInt === 4 ? (
           <div className="col-lg-4">

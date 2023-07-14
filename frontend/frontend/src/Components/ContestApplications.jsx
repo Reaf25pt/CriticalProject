@@ -71,8 +71,7 @@ function ContestApplications() {
   } else if (user.contestManager) {
     return (
       <div className="container">
-        <Toaster position="top-right" />
-
+        <Toaster />
         <div className="row ">
           <h3 className="bg-white mt-5 text-center rounded-5 mb-3 ">
             Candidaturas pendentes

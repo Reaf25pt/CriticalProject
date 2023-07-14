@@ -6,7 +6,6 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 import InputComponent from "../Components/InputComponent";
 import ButtonComponent from "../Components/ButtonComponent";
-import { toast, Toaster } from "react-hot-toast";
 
 function Keyword({ keywords, setKeywords, addKeywords }) {
   const [credentials, setCredentials] = useState({});
@@ -67,7 +66,7 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
       credentials.keywordInput === "undefined" ||
       credentials === {}
     ) {
-      toast.error("Insira nome de palavra-chave");
+      alert("Insira nome de palavra-chave");
     } else {
       var newKeyword;
       if (credentials.id) {
@@ -103,8 +102,6 @@ function Keyword({ keywords, setKeywords, addKeywords }) {
   return (
     <>
       <div className="row mt-3 ">
-        <Toaster position="top-right" />
-
         <div className="col-lg-9 d-flex ">
           <div className="search-select-container">
             <InputComponent

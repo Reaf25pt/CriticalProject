@@ -14,7 +14,6 @@ import ProjectMembersSelect from "./ProjectMembersSelect";
 import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
 import { BsFillPencilFill } from "react-icons/bs";
 import { projOpenStore } from "../stores/projOpenStore";
-import { toast, Toaster } from "react-hot-toast";
 
 import { userStore } from "../stores/UserStore";
 import Modal from "react-bootstrap/Modal";
@@ -48,7 +47,7 @@ function ModalFinalTask() {
       !credentials.taskOwnerId ||
       credentials.taskOwnerId === "-1"
     ) {
-      toast.error("Insira os dados em falta");
+      alert("Insira os dados em falta");
     } else {
       var finalTask = credentials;
       var status = 1;
@@ -78,7 +77,7 @@ function ModalFinalTask() {
           // toast.success("Papel alterado");
         })
         .catch((error) => {
-          toast.error(error.message);
+          alert(error.message);
         });
     }
 
@@ -101,8 +100,6 @@ function ModalFinalTask() {
   return (
     <>
       <div className="row mx-auto justify-content-around mt-5">
-        <Toaster position="top-right" />
-
         <div className="col-lg-12">
           <ButtonComponent
             onClick={handleShow}
@@ -120,8 +117,6 @@ function ModalFinalTask() {
         size="lg"
       >
         <Modal.Header closeButton>
-          <Toaster position="top-right" />
-
           <Modal.Title>
             Alterar estado do projecto para READY
             {/* <FormattedMessage

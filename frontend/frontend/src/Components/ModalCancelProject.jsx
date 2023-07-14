@@ -14,7 +14,6 @@ import ProjectMembersSelect from "./ProjectMembersSelect";
 import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
 import { BsFillPencilFill } from "react-icons/bs";
 import { projOpenStore } from "../stores/projOpenStore";
-import { toast, Toaster } from "react-hot-toast";
 
 import { userStore } from "../stores/UserStore";
 import Modal from "react-bootstrap/Modal";
@@ -64,7 +63,7 @@ function ModalCancelProject() {
         // toast.success("Papel alterado");
       })
       .catch((error) => {
-        toast.error(error.message);
+        alert(error.message);
       });
   };
 
@@ -88,8 +87,6 @@ function ModalCancelProject() {
         size="lg"
       >
         <Modal.Header closeButton>
-          <Toaster position="top-right" />
-
           <Modal.Title>
             Cancelar projecto
             {/* <FormattedMessage

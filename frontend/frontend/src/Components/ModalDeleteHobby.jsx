@@ -76,8 +76,7 @@ function ModalDeleteHobby({ hobby, set, setS }) {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Toaster position="top-right" />
-
+          <Toaster />
           <Modal.Title>
             Apagar interesse
             {/* <FormattedMessage

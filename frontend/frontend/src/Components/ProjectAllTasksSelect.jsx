@@ -5,7 +5,6 @@ import ButtonComponent from "../Components/ButtonComponent";
 import { BsXLg, BsSearch } from "react-icons/bs";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { projOpenStore } from "../stores/projOpenStore";
-import { toast, Toaster } from "react-hot-toast";
 
 function ProjectAllTasksSelect({
   preReqTasks,
@@ -42,7 +41,7 @@ function ProjectAllTasksSelect({
     event.preventDefault();
 
     if (Object.keys(task).length === 0) {
-      toast.error("Seleccione uma tarefa, se aplicável");
+      alert("Seleccione uma tarefa, se aplicável");
     } else {
       //var task = { id: credentials.id, title: credentials.title };
 
@@ -64,8 +63,6 @@ function ProjectAllTasksSelect({
 
   return (
     <div className="container">
-      <Toaster position="top-right" />
-
       <div className="row">
         <div className="col-lg-8">
           <select

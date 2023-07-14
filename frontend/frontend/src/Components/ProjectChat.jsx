@@ -10,7 +10,6 @@ import { Button, MessageBox } from "react-chat-elements";
 import { Input } from "react-chat-elements";
 import InputComponent from "./InputComponent";
 import { projOpenStore } from "../stores/projOpenStore";
-import { toast, Toaster } from "react-hot-toast";
 
 function ProjectChat() {
   const [inputValue, setInputValue] = useState("");
@@ -97,7 +96,10 @@ function ProjectChat() {
         className="row overflow-auto d-flex flex-column-reverse m-0  "
         style={{ height: "85vh" }}
       >
-        <div className="col-lg-6 bg-secondary rounded-4 mx-auto p-1 " style={{minHeight:"80vh"}}>
+        <div
+          className="col-lg-6 bg-secondary rounded-4 mx-auto p-1 "
+          style={{ minHeight: "80vh" }}
+        >
           {messages.length !== 0 ? (
             <div
               style={{

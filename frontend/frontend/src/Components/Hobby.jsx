@@ -116,8 +116,7 @@ function Hobby() {
 
   return (
     <div className="container-fluid">
-      <Toaster position="top-right" />
-
+      <Toaster />
       <div class=" bg-secondary rounded-3 p-4 h-100 ">
         <div className="row">
           <h3 className="bg-white text-center rounded-5 p-0">

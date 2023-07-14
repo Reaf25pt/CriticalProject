@@ -91,7 +91,7 @@ function ProjectsCreate() {
         body: JSON.stringify(project),
       }).then((response) => {
         if (response.status === 200) {
-          alert("Projeto criado com sucesso")
+          alert("Projeto criado com sucesso");
           updateUser("noActiveProject", false);
           navigate("/home/start", { replace: true });
         } else {
@@ -103,8 +103,7 @@ function ProjectsCreate() {
 
   return (
     <div>
-      <Toaster position="top-right" />
-
+      <Toaster />
       <ul className="nav nav-tabs" id="myTab" role="tablist">
         <li className="nav-item" role="presentation">
           <button
@@ -141,7 +140,6 @@ function ProjectsCreate() {
                       name="projectName"
                       type="text"
                       onChange={handleChange}
-
                     />
                   </div>
                 </div>

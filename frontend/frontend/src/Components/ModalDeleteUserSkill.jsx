@@ -60,8 +60,7 @@ function ModalDeleteUserSkill({ skill, set, setS }) {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Toaster position="top-right" />
-
+          <Toaster />
           <Modal.Title>
             Apagar skill
             {/* <FormattedMessage

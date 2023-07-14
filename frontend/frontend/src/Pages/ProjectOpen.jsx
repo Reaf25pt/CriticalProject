@@ -17,7 +17,6 @@ import ProjectMembersList from "../Components/ProjectMembersList";
 import ProjectMembersInvited from "../Components/ProjectMembersInvited";
 import ProjectChat from "../Components/ProjectChat";
 import { projOpenStore } from "../stores/projOpenStore";
-import { toast, Toaster } from "react-hot-toast";
 
 function ProjectOpen() {
   const [showComponentA, setShowComponentA] = useState(true);
@@ -69,8 +68,6 @@ function ProjectOpen() {
 
   return (
     <div class="container-fluid">
-      <Toaster position="top-right" />
-
       <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item" role="presentation">
           <button

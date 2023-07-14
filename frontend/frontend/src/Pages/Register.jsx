@@ -57,11 +57,10 @@ function Register() {
 
   return (
     <div className="container-fluid bg-dark vh-100">
-      <Toaster position="top-right" />
+      <Toaster />{" "}
       <div className="row">
         <MainTitle />
       </div>
-
       <div className="row h-75 d-flex align-items-center justify-content-center">
         <div className="mx-auto col-8 col-md-8 col-lg-4 ">
           <form
@@ -101,7 +100,7 @@ function Register() {
                 type="password"
                 minLength={8}
                 title="Password válida deve ter no mínimo 8 caracteres e conter 1 letra maiúscula, 1 letra minúscula, 1 número e 1 símbolo !@#$&*"
-                 pattern="^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$"
+                pattern="^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$"
                 onChange={handleChange}
               />
             </div>{" "}

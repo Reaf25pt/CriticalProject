@@ -47,7 +47,7 @@ function ContestCreate() {
         body: JSON.stringify(newContest),
       }).then((response) => {
         if (response.status === 200) {
-          alert("Concurso criado com sucesso")
+          alert("Concurso criado com sucesso");
           navigate("/home/contests", { replace: true });
         } else {
           alert("Pedido não satisfeito");
@@ -58,8 +58,7 @@ function ContestCreate() {
 
   return (
     <div>
-      <Toaster position="top-right" />
-
+      <Toaster />
       <ul className="nav nav-tabs" id="myTab" role="tablist">
         <li className="nav-item" role="presentation">
           <button

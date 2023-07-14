@@ -17,7 +17,6 @@ import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
 import ModalEditTask from "./ModalEditTask";
 import ModalDeleteTask from "./ModalDeleteTask";
 import { projOpenStore } from "../stores/projOpenStore";
-import { toast, Toaster } from "react-hot-toast";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 function FormTask() {
@@ -193,9 +192,9 @@ function FormTask() {
       !credentials.taskOwnerId ||
       credentials.taskOwnerId === "-1"
     ) {
-      toast.error("Insira os dados assinalados como obrigatórios");
+      alert("Insira os dados assinalados como obrigatórios");
     } else if (credentials.startDate >= credentials.finishDate) {
-      toast.error("Insira uma data de fim posterior à data de início indicada");
+      alert("Insira uma data de fim posterior à data de início indicada");
     } else {
       var newTask = credentials;
       newTask.preRequiredTasks = preReqTasks;
@@ -210,8 +209,6 @@ function FormTask() {
       })
         .then((response) => {
           if (response.status === 200) {
-
-
             return response.json();
           } else {
             throw new Error("Pedido não satisfeito");
@@ -249,17 +246,15 @@ function FormTask() {
       })
       .then((data) => {
         setTasks(data);
-        toast.success("Estado da tarefa alterado");
+        alert("Estado da tarefa alterado");
       })
       .catch((error) => {
-        toast.error(error.message);
+        alert(error.message);
       });
   }
 
   return (
     <div className="container-fluid mt-5">
-      <Toaster position="top-right" />
-
       {project.manager &&
       (project.statusInt === 0 || project.statusInt === 4) ? (
         <div

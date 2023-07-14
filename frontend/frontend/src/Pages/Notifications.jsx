@@ -98,8 +98,7 @@ function Notifications() {
 
   return (
     <div>
-      <Toaster position="top-right" />
-
+      <Toaster />
       <ul className="nav nav-tabs" id="myTab" role="tablist">
         <li className="nav-item" role="presentation">
           <button

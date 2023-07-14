@@ -7,7 +7,6 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import InputComponent from "../Components/InputComponent";
 import ButtonComponent from "../Components/ButtonComponent";
 import SelectSkillType from "../Components/SelectSkillType";
-import { toast, Toaster } from "react-hot-toast";
 
 function SkillsProject({ skills, setSkills, addSkills }) {
   const [credentials, setCredentials] = useState({});
@@ -73,7 +72,7 @@ function SkillsProject({ skills, setSkills, addSkills }) {
       credentials.skillType === undefined ||
       credentials === {}
     ) {
-      toast.error("Insira nome e / ou categoria de skill ");
+      alert("Insira nome e / ou categoria de skill ");
     } else {
       var newSkill;
       if (credentials.id) {
@@ -116,8 +115,6 @@ function SkillsProject({ skills, setSkills, addSkills }) {
 
   return (
     <div className="cointaner-fluid">
-      <Toaster position="top-right" />
-
       <div className="row mt-3">
         <div className="col-lg-6">
           <InputComponent

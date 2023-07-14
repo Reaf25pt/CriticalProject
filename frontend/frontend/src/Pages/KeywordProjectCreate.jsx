@@ -98,8 +98,7 @@ function KeywordProjectCreate({ keywords, setKeywords, addKeywords }) {
   return (
     <>
       <div className="row mt-3 ">
-        <Toaster position="top-right" />
-
+        <Toaster />
         <div className="col-lg-9 d-flex ">
           <div className="search-select-container">
             <InputComponent

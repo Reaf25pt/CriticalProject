@@ -34,7 +34,7 @@ function ChangePassword() {
         },
       }).then((response) => {
         if (response.status === 200) {
-          toast.success("Password alterada com sucesso");
+          alert("Password alterada com sucesso");
           navigate("/", { replace: true });
         } else if (response.status === 400) {
           toast.error("O link expirou. Receberá um novo link no email");
@@ -51,7 +51,7 @@ function ChangePassword() {
 
   return (
     <div className="container-fluid vh-100 position-relative">
-      <Toaster position="top-right" />
+      <Toaster />
 
       <div className="row h-50">
         <div className="col-12" style={{ background: "#C01722" }}></div>

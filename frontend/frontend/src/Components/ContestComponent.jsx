@@ -61,7 +61,7 @@ function ContestComponent({ toggleComponent }) {
 
   return (
     <div class="container-fluid">
-      <Toaster position="top-right" />
+      <Toaster />
 
       <div className="row mt-3  p-2">
         {user.contestManager && contest.statusInt === 3 ? (

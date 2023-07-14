@@ -13,7 +13,6 @@ import TextAreaComponent from "./TextAreaComponent";
 import ProjectMembersSelect from "./ProjectMembersSelect";
 import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
 import { BsFillPencilFill } from "react-icons/bs";
-import { toast, Toaster } from "react-hot-toast";
 import { projOpenStore } from "../stores/projOpenStore";
 import { userStore } from "../stores/UserStore";
 import Modal from "react-bootstrap/Modal";
@@ -65,10 +64,10 @@ function ModalEditTask({ task, formatDate }) {
       .then((data) => {
         setTasks(data);
         handleClose();
-        toast.success("Tarefa editada");
+        alert("Tarefa editada");
       })
       .catch((error) => {
-        toast.error(error.message);
+        alert(error.message);
       });
   };
 
@@ -92,8 +91,6 @@ function ModalEditTask({ task, formatDate }) {
         size="xl"
       >
         <Modal.Header closeButton>
-          <Toaster position="top-right" />
-
           <Modal.Title>
             Editar tarefa
             {/* <FormattedMessage

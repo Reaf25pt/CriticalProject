@@ -6,7 +6,6 @@ import Button from "react-bootstrap/Button";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { BsArrowDown, BsSearch, BsXLg } from "react-icons/bs";
 import { projOpenStore } from "../stores/projOpenStore";
-import { toast, Toaster } from "react-hot-toast";
 
 import { userStore } from "../stores/UserStore";
 import Modal from "react-bootstrap/Modal";
@@ -36,7 +35,7 @@ function ModalDeleteProjMember({ member }) {
     })
       .then((response) => {
         if (response.status === 200) {
-          toast.success("Membro removido");
+          alert("Membro removido");
 
           return response.json();
         } else {
@@ -47,7 +46,7 @@ function ModalDeleteProjMember({ member }) {
         setMembers(data);
       })
       .catch((error) => {
-        toast.error(error.message);
+        alert(error.message);
       });
     handleClose();
   };
@@ -71,8 +70,6 @@ function ModalDeleteProjMember({ member }) {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Toaster position="top-right" />
-
           <Modal.Title>
             Remover membro do projecto
             {/* <FormattedMessage

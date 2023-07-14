@@ -8,7 +8,6 @@ import Keyword from "./Keyword";
 import SkillsProject from "./SkillsProject";
 import { userStore } from "../stores/UserStore";
 import { projOpenStore } from "../stores/projOpenStore";
-import { toast, Toaster } from "react-hot-toast";
 
 function EditProject({ toggleComponent }) {
   const project = projOpenStore((state) => state.project);
@@ -37,7 +36,7 @@ function EditProject({ toggleComponent }) {
     event.preventDefault();
 
     if (keywords.length === 0) {
-      toast.error("Tem de inserir 1 palavra-chave");
+      alert("Tem de inserir 1 palavra-chave");
     } else if (
       credentials.title === null ||
       credentials.title === "undefined" ||
@@ -53,9 +52,7 @@ function EditProject({ toggleComponent }) {
       credentials.details === undefined ||
       credentials.details === ""
     ) {
-      toast.error(
-        "Insira o nome, local de trabalho e/ou descrição do projecto"
-      );
+      alert("Insira o nome, local de trabalho e/ou descrição do projecto");
     } else {
       var project = {
         id: credentials.id,
@@ -85,11 +82,11 @@ function EditProject({ toggleComponent }) {
           }
         })
         .then((data) => {
-          toast.success("Projecto editado");
+          alert("Projecto editado");
           setProject(data);
         })
         .catch((error) => {
-          toast.error(error.message);
+          alert(error.message);
         });
     }
   };
@@ -97,7 +94,6 @@ function EditProject({ toggleComponent }) {
   return (
     <>
       <div className="container-fluid">
-        <Toaster position="top-right" />
         <div className="row mt-5 justify-content-around">
           <div className="col-lg-3 ">
             <div className="row bg-secondary justify-content-center rounded-5 p-4 mb-3">

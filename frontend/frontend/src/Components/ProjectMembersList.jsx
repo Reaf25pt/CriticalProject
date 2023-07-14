@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { BsStarFill } from "react-icons/bs";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { projOpenStore } from "../stores/projOpenStore";
-import { toast, Toaster } from "react-hot-toast";
 import Modal from "react-bootstrap/Modal";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
@@ -87,13 +86,12 @@ function ProjectMembersList() {
         // toast.success("Papel alterado");
       })
       .catch((error) => {
-        toast.error(error.message);
+        alert(error.message);
       });
   };
 
   return (
     <div className="container">
-      <Toaster position="top-right" />
       <div>
         <h3 className="bg-white mt-5 text-center rounded-5 mb-3 ">
           Membros do Projetos
@@ -276,8 +274,6 @@ function ProjectMembersList() {
             </Modal.Footer>
           </Modal>
         </div>
-
-
       </div>
     </div>
   );

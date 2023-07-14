@@ -63,8 +63,7 @@ function SearchUser() {
 
   return (
     <div className="form-outline">
-      <Toaster position="top-right" />
-
+      <Toaster />
       <InputComponent
         type="search"
         class="form-control rounded "

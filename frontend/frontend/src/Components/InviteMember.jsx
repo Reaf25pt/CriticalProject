@@ -3,7 +3,6 @@ import { userStore } from "../stores/UserStore";
 
 import ButtonComponent from "./ButtonComponent";
 import InputComponent from "../Components/InputComponent";
-import { toast, Toaster } from "react-hot-toast";
 import { projOpenStore } from "../stores/projOpenStore";
 
 function InviteMember() {
@@ -65,7 +64,7 @@ function InviteMember() {
       credentials.nameInput === undefined ||
       credentials.nameInput === "undefined"
     ) {
-      toast.error("Insira nome ");
+      alert("Insira nome ");
     } else {
       /*  const userToInvite = {
         id: credentials.id,
@@ -92,7 +91,7 @@ function InviteMember() {
           setPendingInvites(data);
         })
         .catch((error) => {
-          toast.error(error.message);
+          alert(error.message);
         });
 
       document.getElementById("nameInput").value = "";
@@ -112,8 +111,6 @@ function InviteMember() {
 
   return (
     <div className="container-fluid">
-      <Toaster position="top-right" />
-
       <div className="mt-2 p-5 bg-secondary rounded-5 ">
         <div className="row mb-3 ">
           <div className="col ">

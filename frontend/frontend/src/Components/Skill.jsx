@@ -129,8 +129,7 @@ function Skill() {
 
   return (
     <div className=" bg-secondary rounded-3 p-4 h-100">
-      <Toaster position="top-right" />
-
+      <Toaster />
       <div className="row">
         <h3 className="bg-white text-center text-nowrap rounded-5 p-0  ">
           As Minhas Skills:
@@ -198,8 +197,6 @@ function Skill() {
           </OverlayTrigger>
         </div>
       </div>
-
-   
 
       <div className="row overflow-auto" style={{ maxHeight: "200px" }}>
         {showSkills && showSkills.length !== 0 ? (

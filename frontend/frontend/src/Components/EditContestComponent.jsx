@@ -80,8 +80,7 @@ function EditContestComponent({ toggleComponent }) {
 
   return (
     <div class="container-fluid">
-      <Toaster position="top-right" />
-
+      <Toaster />
       <div className="row mt-5">
         <div className="col-lg-6 mx-auto bg-secondary rounded-3 p-5 mx-auto">
           <div className="row mb-5">

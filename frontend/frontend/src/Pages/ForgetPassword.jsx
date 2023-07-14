@@ -5,7 +5,7 @@ import logo from "../images/logo-criticalsoftware.png";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LinkButton from "../Components/LinkButton";
-import { toast, Toaster } from "react-hot-toast";
+//import { toast, Toaster } from "react-hot-toast";
 
 function ForgetPassword() {
   const [credentials, setCredentials] = useState({});
@@ -32,14 +32,14 @@ function ForgetPassword() {
       },
     }).then((response) => {
       if (response.status === 200) {
-        toast.success(
+        alert(
           "Pedido efectuado com sucesso. Altere a password através do link que receberá no email inserido"
         );
         navigate("/", { replace: true });
         /*  } else if (response.status === 404) {
         alert("Não existe nenhuma conta associada ao email inserido"); */
       } else {
-        toast.error("Algo correu mal. Tente novamente");
+        alert("Algo correu mal. Tente novamente");
       }
       document.getElementById("emailInput").value = "";
     });
@@ -47,8 +47,6 @@ function ForgetPassword() {
 
   return (
     <div className="container-fluid vh-100 position-relative">
-      <Toaster position="top-right" />
-
       <div className="row h-50">
         <div className="col-12" style={{ background: "#C01722" }}></div>
       </div>

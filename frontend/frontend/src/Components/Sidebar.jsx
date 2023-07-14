@@ -96,8 +96,7 @@ function Sidebar() {
 
   return (
     <div className="container-fluid ">
-      <Toaster position="top-right" />
-
+      <Toaster />
       <div className="row flex-nowrap min-vh-100">
         <div
           className="col-1 col-md-auto col-xl-2 px-sm-2 px-0 "
@@ -221,7 +220,6 @@ function Sidebar() {
                   alt=""
                 />
               )}
-            
               <span class="d-none d-sm-inline mx-1">{fullName}</span>
             </a>
             <ul

@@ -109,8 +109,7 @@ function ModalChangeContestStatus() {
         size="lg"
       >
         <Modal.Header closeButton>
-          <Toaster position="top-right" />
-
+          <Toaster />
           {contest.statusInt === 0 ? (
             <Modal.Title>Abrir candidadaturas a concurso</Modal.Title>
           ) : contest.statusInt === 1 ? (

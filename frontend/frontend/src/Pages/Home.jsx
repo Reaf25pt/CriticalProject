@@ -26,8 +26,7 @@ function Home() {
   if (user.fillInfo) {
     return (
       <div>
-        <Toaster position="top-right" />
-
+        <Toaster />
         <div>
           <Sidebar />
         </div>
@@ -37,7 +36,7 @@ function Home() {
 
   return (
     <div>
-      <Toaster position="top-right" />
+      <Toaster />{" "}
       <div>
         {/* <Sidebar /> */}
         <RegisterIn />

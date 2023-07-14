@@ -62,7 +62,7 @@ function App() {
 
   return (
     <div className="container-fluid vh-100 position-fixed  bg-dark ">
-      <Toaster position="top-right" />
+      <Toaster />
       <div className="row">
         <MainTitle />
       </div>

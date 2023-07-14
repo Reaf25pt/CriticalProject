@@ -13,7 +13,6 @@ import TextAreaComponent from "./TextAreaComponent";
 import ProjectMembersSelect from "./ProjectMembersSelect";
 import { BsFillTrashFill } from "react-icons/bs";
 import ProjectAllTasksSelect from "./ProjectAllTasksSelect";
-import { toast, Toaster } from "react-hot-toast";
 import { projOpenStore } from "../stores/projOpenStore";
 import { userStore } from "../stores/UserStore";
 import Modal from "react-bootstrap/Modal";
@@ -43,7 +42,7 @@ function ModalDeleteTask({ task }) {
     })
       .then((response) => {
         if (response.status === 200) {
-          toast.success("Tarefa apagada");
+          alert("Tarefa apagada");
 
           return response.json();
         } else {
@@ -55,7 +54,7 @@ function ModalDeleteTask({ task }) {
         handleClose();
       })
       .catch((error) => {
-        toast.error(error.message);
+        alert(error.message);
       });
   };
 
@@ -79,8 +78,6 @@ function ModalDeleteTask({ task }) {
         size="xl"
       >
         <Modal.Header closeButton>
-          <Toaster position="top-right" />
-
           <Modal.Title>
             Eliminar tarefa
             {/* <FormattedMessage

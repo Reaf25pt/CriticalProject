@@ -8,7 +8,6 @@ import { BsStarFill } from "react-icons/bs";
 import { BsEyeFill, BsCheck2, BsXLg } from "react-icons/bs";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { projOpenStore } from "../stores/projOpenStore";
-import { toast, Toaster } from "react-hot-toast";
 
 function ProjectMembersInvited() {
   const user = userStore((state) => state.user);
@@ -64,7 +63,7 @@ function ProjectMembersInvited() {
         fetchMembers();
       })
       .catch((error) => {
-        toast.error(error.message);
+        alert(error.message);
       });
   }
 
@@ -96,8 +95,6 @@ function ProjectMembersInvited() {
   }
   return (
     <div className="container-fluid">
-      <Toaster position="top-right" />
-
       <div className="row  mx-auto">
         <h3 className="bg-white mt-5 text-center text-nowrap rounded-5 mb-3 ">
           Convites pendentes

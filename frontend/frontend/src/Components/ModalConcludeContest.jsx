@@ -100,8 +100,7 @@ function ModalConcludeContest() {
         size="lg"
       >
         <Modal.Header closeButton>
-          <Toaster position="top-right" />
-
+          <Toaster />
           <Modal.Title>
             Escolher projecto vencedor e terminar concurso
           </Modal.Title>

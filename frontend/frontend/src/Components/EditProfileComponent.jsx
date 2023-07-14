@@ -15,8 +15,7 @@ function ProfileEdit({ onChange, onSubmit, onClick }) {
 
   return (
     <div className="container-fluid">
-      <Toaster position="top-right" />
-
+      <Toaster />
       <form className="row d-flex" onSubmit={onSubmit}>
         <div class="col-12 col-sm-12 col-md-12 col-lg-4 mt-3">
           <div class="p-5 mb-4 bg-secondary h-100 rounded-5 ">

@@ -3,7 +3,6 @@ import { userStore } from "../stores/UserStore";
 import { useParams } from "react-router-dom";
 import ButtonComponent from "./ButtonComponent";
 import ModalFinalTask from "./ModalFinalTask";
-import { toast, Toaster } from "react-hot-toast";
 import { projOpenStore } from "../stores/projOpenStore";
 import ModalCancelProject from "./ModalCancelProject";
 
@@ -55,10 +54,10 @@ function ProjectComponent({ toggleComponent }) {
         if (status === 0) {
           fetchTasks();
         }
-        toast.success("Estado alterado");
+        alert("Estado alterado");
       })
       .catch((error) => {
-        toast.error(error.message);
+        alert(error.message);
       });
   };
   function fetchTasks() {
@@ -97,18 +96,18 @@ function ProjectComponent({ toggleComponent }) {
       })
       .then((data) => {
         setPendingInvites(data);
-        alert("Pedido efetuado")
-/*         toast.success("Pedido efectuado");
- */      })
+        alert("Pedido efetuado");
+        /*         toast.success("Pedido efectuado");
+         */
+      })
       .catch((error) => {
-        toast.error(error.message);
+        alert(error.message);
       });
   };
 
   return (
     <>
       <div className="container-fluid">
-        <Toaster position="top-right" />
         <div className="row mt-5 justify-content-around">
           <div className="col-lg-3">
             <div className="row bg-secondary rounded-5 p-4 mb-3 d-flex">
