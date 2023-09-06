@@ -33,11 +33,216 @@ várias iniciativas desenvolvidas (projetos, concursos), permita acompanhar um p
 
 <h2>Requisitos 📋</h2>
 
+<div align='center'>
+<table >
+  <tr>
+    <th></th>
+    <th>Ação</th>
+    <th>Tipo de Utilizador</th>
+  </tr>
+  <tr>
+    <td>✅</td>
+    <td>Adicionar/editar concurso</td>
+    <td>Gestor de concursos</td>
+  </tr>
+  <tr>
+    <td>✅</td>
+    <td>Alterar estado</td>
+    <td>Gestor de concursos</td>
+  </tr>
+  <tr>
+    <td>✅</td>
+    <td>Aceitar ou rejeitar candidaturas</td>
+    <td>Gestor de concursos</td>
+  </tr>
+  <tr>
+    <td>✅</td>
+    <td>Escolher projeto vencedor</td>
+    <td>Gestor de concursos</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Criar ficheiro pdf com estatísticas do concurso</td>
+    <td>Gestor de concursos</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Editar projeto</td>
+    <td>Gestor de projeto</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Alterar estado do projeto</td>
+    <td>Gestor de projeto</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Submeter o projeto a concurso</td>
+    <td>Gestor de projeto</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Adicionar/Editar/Eliminar das tarefas</td>
+    <td>Gestor de projeto</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Convidar membros </td>
+    <td>Gestor de projeto</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Expulsar membros</td>
+    <td>Gestor de projeto</td>
+  </tr>
+  <tr>
+    <td>✅</td>
+    <td>Promover membro a gestor</td>
+    <td>Gestor de projeto</td>
+  </tr>
+  <tr>
+    <td>✅</td>
+    <td>Chat do projeto</td>
+    <td>Gestor projeto/Membro </td>
+  </tr>
+  <tr>
+    <td>✅</td>
+    <td>Registo atividades no histórico do projeto(manuais)</td>
+    <td>Gestor projeto/Membro </td>
+  </tr>
+  <tr>
+    <td>✅</td>
+    <td>Alterar estado das tarefas</td>
+    <td>Gestor projeto/Membro</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Sair do projeto</td>
+    <td>Membro</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Registo atividades no histórico(automáticas)</td>
+    <td>Sistema</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Notificações</td>
+    <td>Sistema</td>
+  </tr>
+
+  <tr>
+    <td>✅</td>
+    <td>Login</td>
+    <td>Utilizador</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Logout</td>
+    <td>Utilizador</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Esqueceu-se da password</td>
+    <td>Utilizador</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Editar perfil</td>
+    <td>Utilizador</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Adicionar/Editar/Eliminar Skills</td>
+    <td>Utilizador</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Pesquisar skill</td>
+    <td>Utilizador</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Adicionar/Editar/Eliminar Interesses</td>
+    <td>Utilizador</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Pesquisar interesses</td>
+    <td>Utilizador</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Enviar mensagens pessoais</td>
+    <td>Utilizador</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Consultar mensagens</td>
+    <td>Utilizador</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Pesquisar projetos</td>
+    <td>Utilizador</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Pesquisar por utilizador</td>
+    <td>Utilizador</td>
+  </tr>
+   <tr>
+    <td>✅</td>
+    <td>Pesquisar concursos</td>
+    <td>Utilizador</td>
+  </tr>
+    <tr>
+    <td>✅</td>
+    <td>Registar com email e password</td>
+    <td>Utilizador não autenticado</td>
+  </tr>
+    <tr>
+    <td>✅</td>
+    <td>Validar o email através de um link enviado para o email</td>
+    <td>Utilizador não autenticado</td>
+  </tr>
+    </tr>
+   <tr>
+    <td>✅</td>
+    <td>Validar o email através de um link enviado para o email</td>
+    <td>Utilizador não autenticado</td>
+  </tr>
+    <tr>
+    <td>✅</td>
+    <td>Criar projeto</td>
+    <td>Utilizador padrão</td>
+  </tr>
+    <tr>
+    <td>✅</td>
+    <td>Autoconvidar para projeto</td>
+    <td>Utilizador padrão</td>
+  </tr>
+  
+
+  
+</table>
+<div align="left">
+  <ul>
+  <li>Utilizador-Engloba qualquer utilizador autenticado.</li>
+  <li>Utilizador padrão-Utilizador autenticado, não é gestor de concurso, nem faz parte de nenhum projeto ativo. </li>
+</ul>
+
+
+</div>
+</div>
+
 
 
 
 
 <h2>Arquitetura do projeto 📏</h2>
+
+
 
 <h2>Imagens do layout 🖼️</h2>
 
