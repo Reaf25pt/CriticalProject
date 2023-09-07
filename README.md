@@ -2,7 +2,7 @@
 
 
 <h1>Objetivo do projeto ⭐</h1>
-<p> Este foi projeto final de curso, foi elaborada pela empresa <a href="https://criticalsoftware.com/">Critical Software</a>. Neste projeto de dois meses, serviu para avaliar os formandos sobre toda a matéria lecionada,
+<p> Este foi projeto final de curso, foi elaborada pela empresa <a href="https://criticalsoftware.com/">Critical Software</a>. Neste projeto de dois meses, serviu para avaliar os formandos sobre toda a matéria lecionada do curso,
 desde Java, Javascript, HTML, CSS,React Js, SQL, REST. Com este projeto adquirimos conhecimento de fullstack.</p>
 
 
