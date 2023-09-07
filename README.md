@@ -244,7 +244,7 @@ várias iniciativas desenvolvidas (projetos, concursos), permita acompanhar um p
 <img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/architecture.png"/>
 <div align='center'>
 <h3>UML</h3>
-<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/UML.png"/>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/UML_Critical.png"/>
 
   
 </div>
@@ -309,7 +309,7 @@ várias iniciativas desenvolvidas (projetos, concursos), permita acompanhar um p
 <img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/projectsaccepted.png"/>
 
 <h3>Perfil</h3>
-<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/profile1.png"/>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/profile.png"/>
 
 <h3>Perfil</h3>
 <img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/profile2.png"/>
