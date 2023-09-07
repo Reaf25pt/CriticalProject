@@ -234,18 +234,23 @@ várias iniciativas desenvolvidas (projetos, concursos), permita acompanhar um p
 
 
 </div>
-</div>
 
 
 
 
 
 <h2>Arquitetura do projeto 📏</h2>
-<div float='left'>
-<img height=500 width=500 src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/activateaccount.png"/>
-<img  height=500 width=500  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/allcontest.png"/>
-<img  height=500 width=500  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/allprojects.png"/>
+
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/architecture.png"/>
+<div align='center'>
+<h3>UML</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/UML.png"/>
+
+  
 </div>
+
+
+
 
 
 
@@ -254,9 +259,80 @@ várias iniciativas desenvolvidas (projetos, concursos), permita acompanhar um p
 
 <h2>Imagens do layout 🖼️</h2>
 
+<div align='center'>
+<h3>Registo</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/register.png"/>
+  
+<h3>Ativar a conta</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/activateaccount.png"/>
 
+<h3>Login</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/login.png"/>
+
+<h3>Esquece-se da password</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/forgetpassword.png"/>
+
+<h3>Primeiro Login</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/firstlogin.png"/>
+
+<h3>Página inicial</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/home.png"/>
+
+<h3>Pagina inicial</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/home2.png"/>
+
+<h3>Lista dos projetos</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/allprojects.png"/>
+
+<h3>Projeto</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/project.png"/>
+
+<h3>Membros do projeto</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/projectmembers.png"/>
+
+<h3>Chat de projeto</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/chatproject.png"/>
+
+<h3>Plano do projeto</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/projectplan.png"/>
+
+<h3>Histórico do projeto</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/historicproject.png"/>
+
+<h3>Lista dos concursos</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/allcontest.png"/>
+
+<h3>Concurso</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/contest.png"/>
+
+<h3>Projetos aceite no concurso</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/projectsaccepted.png"/>
+
+<h3>Perfil</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/profile1.png"/>
+
+<h3>Perfil</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/profile2.png"/>
+
+<h3>Alterar password</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/changepassword.png"/>
+
+<h3>Chat</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/chat.png"/>
+
+<h3>Notificações</h3>
+<img  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/notifications.png"/>
 
 </div>
+
+
+
+
+
+
+
+
+
 
 
 
