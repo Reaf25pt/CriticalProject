@@ -241,6 +241,14 @@ várias iniciativas desenvolvidas (projetos, concursos), permita acompanhar um p
 
 
 <h2>Arquitetura do projeto 📏</h2>
+<div float='left'>
+<img height=500 width=500 src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/activateaccount.png"/>
+<img  height=500 width=500  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/allcontest.png"/>
+<img  height=500 width=500  src="https://github.com/Reaf25pt/CriticalProject/blob/main/docs/layout/allprojects.png"/>
+</div>
+
+
+
 
 
 
